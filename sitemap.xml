@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://studioes.fr/</loc>
+    <lastmod>2026-10-08</lastmod>
+    <image:image><image:loc>https://studioes.fr/h/collectivite.jpg</image:loc></image:image>
+    <image:image><image:loc>https://studioes.fr/h/festival.jpg</image:loc></image:image>
+    <image:image><image:loc>https://studioes.fr/h/entreprise.jpg</image:loc></image:image>
+    <image:image><image:loc>https://studioes.fr/h/club.jpg</image:loc></image:image>
+    <image:image><image:loc>https://studioes.fr/h/mariage.jpg</image:loc></image:image>
+    <image:image><image:loc>https://studioes.fr/a/ewen-nb.jpg</image:loc></image:image>
+    <image:image><image:loc>https://studioes.fr/s/affiche.jpg</image:loc></image:image>
+    <image:image><image:loc>https://studioes.fr/s/brochure.jpg</image:loc></image:image>
+    <image:image><image:loc>https://studioes.fr/s/site.jpg</image:loc></image:image>
+  </url>
+</urlset>
