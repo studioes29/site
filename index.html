@@ -834,6 +834,17 @@ p,li,small,em,.me p{text-wrap:pretty}
 @media (max-width:820px){#declic>.wrap{margin-inline:12px;padding:28px 22px!important;border-radius:24px}}
 /* Brut / retouché : une image plus généreuse sur grand écran */
 @media (min-width:821px){.ba{width:calc(min(72svh,640px) * var(--ar))!important}}
+/* Plan large : même grille et même alignement que les autres rubriques */
+#offre .sup-pin>.wrap{width:100%;justify-self:stretch}
+#offre .pl-lead{font-family:var(--text)!important;font-weight:400!important;letter-spacing:0!important;color:rgba(25,25,25,.72)!important;max-width:26em!important}
+/* survol des paliers : décalage sans toucher à la mise en page */
+.steps button:hover{padding-left:0!important}
+.steps button>span,.steps button>i{transition:transform .4s var(--ease)}
+.steps button:hover>span,.steps button:hover>i{transform:translateX(6px)}
+@media (hover:none){.steps button:hover>span,.steps button:hover>i{transform:none}}
+/* Pied de page : filet fin avant le contenu */
+.foot{padding-top:0!important}
+.foot>.wrap::before{content:"";display:block;height:1px;background:rgba(225,219,196,.14);margin-bottom:clamp(56px,7vw,96px)}
 /* Contact */
 .me b{display:block;margin-bottom:2px}
 /* Pied de page */
