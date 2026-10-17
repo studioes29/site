@@ -133,7 +133,7 @@ const LAY = ['L', 'M', 'M', 'M', 'M', 'W', 'M', 'M'];
 function renderFeed() {
   const T = TABS.find(t => t[0] === st.tab); let h = '';
   ORD = T[2]().filter(Boolean); renderStories();
-  if (st.tab === 'web') h = CASES.map(c => `<a class="c ph k-site" href="${c.url}" style="${sz('L')}"><img class="bgi" src="${c.img}" alt="" loading="lazy"><span class="chip glass"><i></i>${c.k}</span><span class="bot"><h3>${c.t}</h3><span class="ic">${ico('ne')}</span></span></a>`).join('') + TX('i-web', 'Sites internet', 'Une page, quelques pages ou un site complet.', 'autre') + TX('i-app', 'Outils et applications', 'Espaces de travail, configurateurs, automatisations.', 'autre') + TX('i-star', 'Projets sur mesure', 'Un jeu, une application, une idée à construire.', 'autre') + TX('i-calc', 'Estimer mon projet', 'Une fourchette en quelques choix.', 'autre');
+  if (st.tab === 'web') h = CASES.map(c => `<a class="c ph k-site" href="${c.url}" style="${sz('L')}"><img class="bgi" src="${c.img}" alt="" loading="lazy"><span class="chip glass"><i></i>${c.k}</span><span class="bot"><h3>${c.t}</h3><span class="ic">${ico('ne')}</span></span></a>`).join('');
   else {
     const ph = T[2]().filter(Boolean), gr = T[3].map(byId).filter(Boolean), items = [];
     ph.forEach(r => items.push([r, 'p'])); gr.forEach(r => items.push([r, 'g']));
@@ -176,7 +176,7 @@ function dragScroll(el) {
 dragScroll(stories); dragScroll(tabs);
 
 /* ================= PORTFOLIO PLEIN ÉCRAN ================= */
-const CASES = [{id: 'pierceval-tattoo', t: 'Pierceval Tattoo', k: 'Site internet', q: 'pierceval tattoo tatouage piercing site internet web scaer', url: '/projets/pierceval-tattoo/', img: '/projets/pierceval-tattoo/img/cover.webp', ar: 1.43}];
+const CASES = [{id: 'la-soute', t: 'La Soute', k: 'Identité et site', q: 'la soute salle de spectacle concert saison brochure affiche identite site internet web billetterie', url: '/projets/la-soute/', img: '/projets/la-soute/img/cover.webp', ar: 1.43}, {id: 'pierceval-tattoo', t: 'Pierceval Tattoo', k: 'Site internet', q: 'pierceval tattoo tatouage piercing site internet web scaer', url: '/projets/pierceval-tattoo/', img: '/projets/pierceval-tattoo/img/cover.webp', ar: 1.43}];
 const SEAS = ['soute', 'ellipse', 'marelle', 'atrium'], CAMP = ['campagnes', 'recrutement', 'budget', 'festin', 'affiches'];
 const CH = [
   ['all', 'Tout', () => true], ['photo', 'Photographie', r => r.k !== 'g'], ['scene', 'Concerts', r => r.k === 'scene'], ['public', 'Festivals', r => r.k === 'public'],
@@ -214,7 +214,10 @@ function plImg() {
   const [v0, v1, v2] = $$('.v', plV);
   set($('img', v0), bigF(ph[0]));
   const i1 = $$('img', v1); set(i1[0], bigF(ph[1] || ph[0])); set(i1[1], BASE + 's/affiche.webp'); set(i1[2], BASE + 's/site.webp');
-  const tall = ph.slice(1).filter(f => FMAP[f][1][1] < 1.05), rest = ph.slice(1).filter(f => !tall.includes(f)), six = [...tall, ...rest];
+  /* photothèque : uniquement des verticales 3:4 ou 4:5, pour ne rien couper */
+  const pv = f => { const r = FMAP[f] && FMAP[f][1][1]; return r >= .7 && r <= .85; };
+  const k0 = FMAP[ph[0]][0].k, six = [...ph.slice(1).filter(pv)];
+  for (const r of REPS) { if (six.length >= 6) break; if (r.k !== k0 && k0 !== 'g') continue; const f = r.ph.map(p => p[0]).find(pv); if (f && !six.includes(f) && f !== ph[0]) six.push(f); }
   $$('img', v2).forEach((im, j) => set(im, smF(six[j % six.length])));
 }
 function plSnap(t, user) {

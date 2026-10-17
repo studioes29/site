@@ -78,7 +78,7 @@ h1 .se{display:block;margin-top:.12em;font-size:.36em;line-height:1;letter-spaci
 .ln>span{display:block;transform:translateY(105%);transition:transform 1.3s var(--e)}
 .go .ln>span{transform:none}
 .go .ln:nth-child(2)>span{transition-delay:.12s}
-.meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;margin:clamp(36px,5vw,64px) 0 0;padding:22px 0 0;border-top:1px solid var(--ln)}
+.meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin:clamp(36px,5vw,64px) 0 0;padding:22px 0 0;border-top:1px solid var(--ln)}
 .meta dt{font-size:13.5px;color:var(--fa);margin-bottom:6px}
 .meta dd{margin:0;font-size:15.5px;line-height:1.4}
 .meta a{text-decoration:underline;text-decoration-color:rgba(237,233,221,.35);text-underline-offset:3px}
@@ -118,6 +118,7 @@ h1 .se{display:block;margin-top:.12em;font-size:.36em;line-height:1;letter-spaci
 .ch .tx p b{color:var(--tx);font-weight:600}
 .n{display:block;margin-bottom:18px;font:400 15px/1 var(--sf);font-style:italic;color:var(--pink)}
 .vs{display:flex;flex-direction:column;gap:14px}
+.idt{width:min(100%,520px);border-radius:16px}
 .sw{display:flex;gap:10px;margin-top:26px}
 .sw i{flex:1;height:96px;border-radius:18px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);display:flex;align-items:flex-end;padding:10px 12px;font:500 12.5px/1 var(--f);font-style:normal;color:rgba(255,255,255,.75)}
 .sw i:nth-child(3),.sw i:nth-child(4){color:rgba(28,15,31,.7)}
@@ -225,9 +226,8 @@ ul.liv{margin:0;padding:0}
   <div class="k"><span>Site internet</span><span>2026</span><span>Scaër, Finistère</span></div>
   <h1 class="d" id="t"><span class="ln"><span>Pierceval Tattoo</span></span><span class="ln"><span class="se">Trente ans de métier, un premier site.</span></span></h1>
   <dl class="meta">
-    <div><dt>Client</dt><dd>Pierceval Tattoo, tatouage et piercing depuis 1995</dd></div>
+    <div><dt>Client</dt><dd>Pierceval Tattoo</dd></div>
     <div><dt>Intervention</dt><dd>Direction artistique, rédaction, design, développement</dd></div>
-    <div><dt>Fonctionnalités</dt><dd>Réservation, carte cadeau, suivi de cicatrisation</dd></div>
     <div><dt>En ligne</dt><dd><a href="https://piercevaltattoo.fr" target="_blank" rel="noopener">piercevaltattoo.fr</a></dd></div>
   </dl>
   <div class="dev">
@@ -236,29 +236,17 @@ ul.liv{margin:0;padding:0}
   </div>
 </section>
 
-<section class="w" aria-label="Le point de départ">
-  <div class="intro">
-    <h2 data-r>Le point de départ</h2>
-    <p data-r>Un studio ouvert depuis 1995, sans site, sans textes, sans photos professionnelles. Le projet part de ce que le studio montre déjà chaque jour&#8239;: <span class="se">sa carte de visite, sa carte cadeau, ses photos d'atelier</span> et les questions posées au téléphone.</p>
-  </div>
-  <div class="facts">
-    <div class="fact" data-r><b>1995</b><p>Trente ans d'activité, la première chose lue sur le site.</p></div>
-    <div class="fact" data-r><b>5<small> étapes</small></b><p>pour demander un rendez-vous, sans compte à créer.</p></div>
-    <div class="fact" data-r><b>24<small> h/24</small></b><p>pour offrir une carte cadeau, payée et reçue en PDF.</p></div>
-    <div class="fact" data-r><b>0<small> cookie</small></b><p>de suivi&#8239;: aucun bandeau à valider en arrivant.</p></div>
-  </div>
-</section>
 
 <div class="w">
 <section class="ch" aria-labelledby="c1">
   <div class="tx" data-r>
     <span class="n">01</span>
     <h2 class="d" id="c1">Une identité <span class="se">déjà connue</span></h2>
-    <p>L'aubergine et le rose de la carte de visite, le logo rond, le mélange d'une écriture grasse et d'une italique fine repris de la carte cadeau papier.</p>
-    <p>Rien n'a été réinventé&#8239;: les clients reconnaissent le studio dès la première page.</p>
+    <p>Le logo, la carte de visite et la carte cadeau du studio ont été dessinés par Studio ES. Le site en reprend l'aubergine, le rose et le mélange d'une écriture grasse et d'une italique fine&#8239;: les clients reconnaissent le studio dès la première page.</p>
     <div class="sw" aria-label="Palette du site"><i style="background:#1c0f1f">Encre</i><i style="background:#351d3a">Aubergine</i><i style="background:#e68dca">Rose</i><i style="background:#ece6df">Peau</i></div>
   </div>
   <div class="vs">
+    <img class="idt" data-r src="img/identite.webp" alt="Identité visuelle de Pierceval Tattoo dessinée par Studio ES" loading="lazy">
     <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span>piercevaltattoo.fr</span></div><img src="img/d-metiers.webp" width="1440" height="900" alt="Rubrique « Deux métiers, un seul studio » : une carte pour le tatouage, une pour le piercing" loading="lazy"></div>
   </div>
 </section>
@@ -266,11 +254,8 @@ ul.liv{margin:0;padding:0}
 <section class="ch" aria-labelledby="c2">
   <div class="tx" data-r>
     <span class="n">02</span>
-    <h2 class="d" id="c2">Réserver <span class="se">en cinq étapes</span></h2>
-    <p>Le tatouage et le piercing ne se réservent pas de la même façon. Chacun ouvre directement le bon formulaire&#8239;: <b>sur devis</b> avec l'acompte annoncé clairement pour le tatouage, <b>par créneaux de 30 minutes</b> pour le piercing.</p>
-    <ol class="steps"><li>La prestation</li><li>Le projet ou le piercing</li><li>Le jour</li><li>Les coordonnées</li><li>La vérification</li></ol>
-    <p style="margin-top:22px">Le calendrier ne propose que les jours ouverts. La demande arrive au studio avec un objet lisible d'un coup d'œil&#8239;:</p>
-    <span class="mail"><svg aria-hidden="true"><use href="#m"/></svg><span>Piercing · Louise Le Gall · mer. 21 oct., 11h00</span></span>
+    <h2 class="d" id="c2">Réserver <span class="se">en quelques gestes</span></h2>
+    <p>Le tatouage et le piercing ne se réservent pas de la même façon&#8239;: chacun a son propre parcours, et le calendrier ne propose que les jours ouverts.</p>
   </div>
   <div class="cascade">
     <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span>piercevaltattoo.fr</span></div><img src="img/d-rdv-type.webp" width="1440" height="880" alt="Étape 1 de la réservation : choix de la prestation" loading="lazy"></div>
@@ -284,8 +269,7 @@ ul.liv{margin:0;padding:0}
   <div class="tx" data-r>
     <span class="n">03</span>
     <h2 class="d" id="c3">Une galerie <span class="se">calme</span></h2>
-    <p>Neuf pièces choisies parmi les photos du studio, recadrées au même format et nettoyées de leurs filigranes. Un filtre pour trier, un clic pour agrandir.</p>
-    <p>Les tatouages reprenant une marque ou un personnage connu sont écartés&#8239;: leur diffusion sur un site commercial pose un problème de droits. Instagram prend le relais pour les pièces récentes.</p>
+    <p>Neuf pièces choisies parmi les photos du studio, recadrées au même format et nettoyées de leurs filigranes.</p>
   </div>
   <div class="pair">
     <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span>piercevaltattoo.fr</span></div><img src="img/d-real.webp" width="1440" height="899" alt="Galerie des réalisations avec filtres : noir et gris, couleur, lettrage" loading="lazy"></div>
@@ -300,9 +284,7 @@ ul.liv{margin:0;padding:0}
       <div data-r>
         <span class="n">04</span>
         <h2 class="d" id="c4">La carte cadeau, <span class="se">de l'achat au comptoir</span></h2>
-        <p>Un montant au choix, un paiement en ligne par Stripe, une carte en PDF téléchargée aussitôt, aux couleurs du studio. Offrir une séance devient possible à toute heure, sans passer au studio.</p>
-        <p>Au comptoir, une page réservée au studio vérifie chaque carte avant de l'accepter, puis la marque comme utilisée.</p>
-        <p class="big">852 milliards<small>de numéros possibles. Chacun est tiré au hasard et lié au paiement&#8239;: un numéro inventé ou recopié ne correspond à rien.</small></p>
+        <p>Achetée en ligne à toute heure, reçue aussitôt en PDF aux couleurs du studio, puis vérifiée au comptoir avant la séance.</p>
       </div>
       <div>
         <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span>piercevaltattoo.fr</span></div><img src="img/d-cadeau-ok.webp" width="1440" height="899" alt="Carte cadeau de 50 € prête à télécharger après l'achat" loading="lazy"></div>
@@ -321,8 +303,7 @@ ul.liv{margin:0;padding:0}
   <div class="tx" data-r>
     <span class="n">05</span>
     <h2 class="d" id="c5">Après <span class="se">la séance</span></h2>
-    <p>Trois questions&#8239;: tatouage ou piercing, lequel, et la date de la séance. Le site indique où en est la cicatrisation et les gestes du jour.</p>
-    <p>Une raison de revenir sur le site après la séance, et moins d'appels pour des questions de soin. Les durées restent indicatives&#8239;: les consignes données au studio passent avant.</p>
+    <p>Trois questions, et le site indique où en est la cicatrisation et les gestes du jour. Une raison de revenir après la séance.</p>
   </div>
   <div class="pair">
     <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span>piercevaltattoo.fr</span></div><img src="img/d-soins.webp" width="1440" height="787" alt="Suivi de cicatrisation : un piercing forward hélix à J+7" loading="lazy"></div>
@@ -334,8 +315,7 @@ ul.liv{margin:0;padding:0}
   <div class="tx" data-r>
     <span class="n">06</span>
     <h2 class="d" id="c6">Passer <span class="se">au studio</span></h2>
-    <p>Un plan dessiné d'après les données de l'IGN, aux couleurs du site, avec la rue tracée jusqu'au studio. Pas de carte Google intégrée&#8239;: pas de bandeau de cookies, une page plus légère.</p>
-    <p>Le jour en cours ressort dans les horaires, le numéro se compose d'un toucher, le bouton Itinéraire ouvre l'application de cartes du téléphone.</p>
+    <p>Un plan dessiné aux couleurs du site, la rue tracée jusqu'à la porte.</p>
   </div>
   <div class="vs">
     <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span>piercevaltattoo.fr</span></div><img src="img/d-contact.webp" width="1440" height="900" alt="Plan dessiné jusqu'au studio, horaires, téléphones et réseaux" loading="lazy"></div>
@@ -346,7 +326,7 @@ ul.liv{margin:0;padding:0}
 <section class="mob" aria-labelledby="c7">
   <div class="mob-h w" data-r>
     <h2 class="d" id="c7">Pensé pour <span class="se">le téléphone</span></h2>
-    <p>Les deux versions sont pensées séparément. Sur téléphone, un bouton rond reste à portée de pouce pendant toute la visite et ouvre un menu de six entrées, pas une de plus.</p>
+    <p>Une version pensée à part, avec un menu toujours à portée de pouce.</p>
   </div>
   <div class="rail" id="rail" aria-label="Écrans du site sur téléphone" tabindex="0">
     <figure><div class="phn"><img src="img/m-hero.webp" width="600" height="1298" alt="Accueil" loading="lazy"></div><figcaption>Accueil</figcaption></figure>
@@ -365,7 +345,7 @@ ul.liv{margin:0;padding:0}
   <div class="tx" data-r>
     <span class="n">07</span>
     <h2 class="d" id="c8">Le lancement <span class="se">sur Instagram</span></h2>
-    <p>Une série de stories pour faire connaître les trois nouveautés à la communauté du studio&#8239;: la réservation en ligne, la carte cadeau et le suivi de soins.</p>
+    <p>Une série de stories pour présenter le site à la communauté du studio.</p>
   </div>
   <div class="sto">
     <img data-r src="img/st-couverture-rdv.webp" width="540" height="960" alt="Story de lancement : la réservation en ligne" loading="lazy">

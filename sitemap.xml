@@ -13,4 +13,9 @@
     <image:image><image:loc>https://studioes.fr/projets/pierceval-tattoo/img/og.jpg</image:loc></image:image>
     <image:image><image:loc>https://studioes.fr/projets/pierceval-tattoo/img/cover.webp</image:loc></image:image>
   </url>
+  <url>
+    <loc>https://studioes.fr/projets/la-soute/</loc>
+    <lastmod>2026-10-17</lastmod>
+    <image:image><image:loc>https://studioes.fr/projets/la-soute/img/og.jpg</image:loc></image:image>
+  </url>
 </urlset>
