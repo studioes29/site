@@ -95,18 +95,18 @@ $('#hCard').onclick = () => { const r = FMAP[HERO[H.i]][0]; openSV(SCENE, SCENE.
 
 /* ================= LE TRAVAIL : stories + onglets par cible + grille ================= */
 /* notoriété des artistes : les plus connus en premier */
-const POP = ['philippe-katerine', 'matmatah', 'fatal-bazooka', 'la-fouine', 'gael-faye', 'rimk', 'danakil', 'axel-bauer', 'the-avener', 'synapson', 'bakermat', 'les-sheriff', 'biga-ranx', 'mentissa', 'bekar', 'kemmler', 'ramoneurs', 'dali', 'helena', 'franglish', 'genezio', 'sara-lugo', 'jahneration', 'feder', 'bushi', 'radio-byzance', 'aupinard', 'candeur-cyclone', 'perceval', 'starfish', 'atipycs'];
+const POP = ['philippe-katerine', 'matmatah', 'fatal-bazooka', 'la-fouine', 'gael-faye', 'bekar', 'rimk', 'danakil', 'axel-bauer', 'the-avener', 'synapson', 'bakermat', 'les-sheriff', 'biga-ranx', 'mentissa', 'kemmler', 'ramoneurs', 'dali', 'helena', 'franglish', 'genezio', 'sara-lugo', 'jahneration', 'feder', 'bushi', 'radio-byzance', 'aupinard', 'candeur-cyclone', 'perceval', 'starfish', 'atipycs'];
 const rank = r => { const i = POP.indexOf(r.id); return i < 0 ? 99 : i; };
 const SCENE = PHR.filter(r => r.k === 'scene').sort((a, b) => rank(a) - rank(b));
 const PUB = PHR.filter(r => r.k === 'public'), COL = PHR.filter(isCol), ENT = PHR.filter(isEnt);
 let ORD = [];
-const GPREF = ['soute', 'identites', 'marelle', 'campagnes', 'signaletique', 'ellipse', 'recrutement', 'affiches', 'atrium', 'festin', 'editions', 'budget'];
+const GPREF = ['soute', 'identites', 'marelle', 'campagnes', 'signaletique', 'recrutement', 'affiches', 'atrium', 'budget'];
 const GORD = GRR.slice().sort((a, b) => GPREF.indexOf(a.id) - GPREF.indexOf(b.id));
 const FORUM = byId('forum-asso'), INAUG = byId('inauguration'), VOEUX = byId('voeux-ph'), COMM = byId('commemo');
 /* [clé, libellé, reportages photo (stories et grille, dans l'ordre), projets graphiques] */
 const TABS = [
-  ['culture', 'Concerts et festivals', () => [...SCENE.slice(0, 5), PUB[0], ...SCENE.slice(5, 11), PUB[1], ...SCENE.slice(11), PUB[2]], ['soute', 'marelle', 'ellipse', 'atrium']],
-  ['collectivite', 'Collectivités', () => [INAUG, VOEUX, FORUM, COMM], ['campagnes', 'signaletique', 'recrutement', 'festin', 'budget', 'affiches']],
+  ['culture', 'Concerts et festivals', () => [...SCENE.slice(0, 5), PUB[0], ...SCENE.slice(5, 11), PUB[1], ...SCENE.slice(11), PUB[2]], ['soute', 'marelle', 'atrium', 'affiches']],
+  ['collectivite', 'Collectivités', () => [INAUG, VOEUX, FORUM, COMM], ['campagnes', 'signaletique', 'recrutement', 'budget']],
   ['entreprise', 'Entreprises', () => [...ENT], ['case:pierceval-tattoo', 'identites']],
   ['club', 'Clubs et assos', () => [FORUM, ...PUB], ['identites']],
   ['particulier', 'Particuliers', () => [...PUB], []],
@@ -125,7 +125,7 @@ stories.addEventListener('click', e => { const b = e.target.closest('.sto'); if 
 const SZ = {L: [6, 4, 6, 2, 2], M: [3, 2, 3, 1, 1], W: [6, 2, 6, 2, 1], T: [4, 3, 6, 2, 2]};
 const sz = s => { const z = SZ[s]; return `--cw:${z[0]};--ch:${z[1]};--tw:${z[2]};--mw:${z[3]};--mh:${z[4]}`; };
 /* couverture choisie pour chaque projet graphique : l'image la plus lisible, la moins chargée */
-const COVER = {soute: 'soute-7', ellipse: 'saisons-ellipse-9', festin: 'fdm-1', marelle: 'marelle-1', atrium: 'atrium-1', budget: 'budget-1', recrutement: 'recrutement-1', identites: 'molan-move-1', signaletique: 'totem-1', campagnes: 'voeux-1', affiches: 'affiches-8', editions: 'editions-5'};
+const COVER = {soute: 'soute-7', marelle: 'marelle-1', atrium: 'atrium-1', budget: 'budget-1', recrutement: 'recrutement-1', identites: 'molan-move-1', signaletique: 'totem-1', campagnes: 'voeux-1', affiches: 'affiches-8'};
 const CASE_OF = {soute: 'la-soute'};
 const caseFor = r => CASE_OF[r.id] && CASES.find(x => x.id === CASE_OF[r.id]);
 const coverOf = (r, s) => (COVER[r.id] && (s !== 'W' || r.ph.find(p => p[0] === COVER[r.id])[1] > 1.2) && r.ph.find(p => p[0] === COVER[r.id])) || r.ph.find(p => s === 'W' ? p[1] > 1.2 : p[1] < 1.2) || r.ph[0];
@@ -186,6 +186,11 @@ function dragScroll(el) {
 }
 dragScroll(stories); dragScroll(tabs);
 
+/* carte Photographie : les reportages défilent en fondu (concert, festival, institution, entreprise) */
+{ const c = $('.mtc[data-rot]'), ids = c.dataset.rot.split(','), first = $('img', c);
+  const ims = [first, ...ids.slice(1).map(id => { const im = document.createElement('img'); im.alt = ''; im.loading = 'lazy'; im.className = 'off'; im.src = BASE + 'p/' + id + '.jpg'; c.insertBefore(im, first.nextSibling); return im; })];
+  let k = 0;
+  if (!RM) setInterval(() => { const b = c.getBoundingClientRect(); if (b.bottom < 0 || b.top > innerHeight || document.hidden) return; ims[k].classList.add('off'); k = (k + 1) % ims.length; ims[k].classList.remove('off'); }, 2800); }
 /* quatre métiers : chaque carte ouvre la bonne rubrique */
 $('#mt').addEventListener('click', e => {
   const b = e.target.closest('.mtc'); if (!b) return; const g = b.dataset.go;
@@ -195,11 +200,11 @@ $('#mt').addEventListener('click', e => {
 });
 /* ================= PORTFOLIO PLEIN ÉCRAN ================= */
 const CASES = [{id: 'flouz', web: 1, t: 'flouz.', k: 'Application', q: 'flouz application mobile budget finances app web', url: '/projets/flouz/', img: '/projets/flouz/img/cover.webp', ar: 1.43}, {id: 'la-soute', web: 1, t: 'La Soute', k: 'Identité et site', q: 'la soute salle de spectacle concert saison brochure affiche identite site internet web billetterie', url: '/projets/la-soute/', img: '/projets/la-soute/img/cover.webp', ar: 1.43}, {id: 'pierceval-tattoo', web: 1, t: 'Pierceval Tattoo', k: 'Site internet', q: 'pierceval tattoo tatouage piercing site internet web scaer', url: '/projets/pierceval-tattoo/', img: '/projets/pierceval-tattoo/img/cover.webp', ar: 1.43}];
-const SEAS = ['soute', 'ellipse', 'marelle', 'atrium'], CAMP = ['campagnes', 'recrutement', 'budget', 'festin', 'affiches'];
+const SEAS = ['soute', 'marelle', 'atrium'], CAMP = ['campagnes', 'recrutement', 'budget', 'affiches'];
 const CH = [
   ['all', 'Tout', () => true], ['photo', 'Photographie', r => r.k !== 'g'], ['scene', 'Concerts', r => r.k === 'scene'], ['public', 'Festivals', r => r.k === 'public'],
   ['col', 'Collectivités', isCol], ['ent', 'Entreprises', isEnt], ['graph', 'Graphisme', r => r.k === 'g'], ['seas', 'Saisons culturelles', r => SEAS.includes(r.id)],
-  ['id', 'Identités', r => r.id === 'identites'], ['camp', 'Campagnes', r => CAMP.includes(r.id)], ['sig', 'Signalétique', r => r.id === 'signaletique'], ['ed', 'Éditions', r => r.id === 'editions'], ['web', 'Web', () => false]
+  ['id', 'Identités', r => r.id === 'identites'], ['camp', 'Campagnes', r => CAMP.includes(r.id)], ['sig', 'Signalétique', r => r.id === 'signaletique'], ['web', 'Web', () => false]
 ];
 const pf = $('#pf'), pfG = $('#pfG'), pfQ = $('#pfQ'), pfC = $('#pfC');
 const PF = {c: 'all', q: '', list: []};
@@ -230,13 +235,14 @@ const unitS = u => u ? ' / ' + ({mois: 'mois', an: 'an', saison: 'saison', semai
 function plImg() {
   const ph = P[st.p || 'culture'].ph.filter(f => FMAP[f]), set = (im, u) => { if (im.getAttribute('src') !== u) im.src = u; };
   const [v0, v1, v2] = $$('.v', plV);
-  set($('img', v0), bigF(ph[0]));
+  const bg = (el, u) => { const v = `url("${u}")`; if (el.style.backgroundImage !== v) el.style.backgroundImage = v; };
+  bg($('i', v0), bigF(ph[0]));
   const i1 = $$('img', v1); set(i1[0], bigF(ph[1] || ph[0])); set(i1[1], BASE + 's/affiche.webp'); set(i1[2], BASE + 's/site.webp');
   /* photothèque : uniquement des verticales 3:4 ou 4:5, pour ne rien couper */
   const pv = f => { const r = FMAP[f] && FMAP[f][1][1]; return r >= .7 && r <= .85; };
   const k0 = FMAP[ph[0]][0].k, six = [...ph.slice(1).filter(pv)];
   for (const r of REPS) { if (six.length >= 6) break; if (r.k !== k0 && k0 !== 'g') continue; const f = r.ph.map(p => p[0]).find(pv); if (f && !six.includes(f) && f !== ph[0]) six.push(f); }
-  $$('img', v2).forEach((im, j) => set(im, smF(six[j % six.length])));
+  $$('i', v2).forEach((el, j) => bg(el, smF(six[j % six.length])));
 }
 function plSnap(t, user) {
   PL.t = t; PL.t0 = performance.now(); PL.el = 0; if (user) PL.auto = false;
