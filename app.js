@@ -106,25 +106,33 @@ const FORUM = byId('forum-asso'), INAUG = byId('inauguration'), VOEUX = byId('vo
 /* [clé, libellé, reportages photo (stories et grille, dans l'ordre), projets graphiques] */
 const TABS = [
   ['culture', 'Concerts et festivals', () => [...SCENE.slice(0, 5), PUB[0], ...SCENE.slice(5, 11), PUB[1], ...SCENE.slice(11), PUB[2]], ['soute', 'marelle', 'ellipse', 'atrium']],
-  ['collectivite', 'Collectivités', () => [INAUG, FORUM, VOEUX, COMM, ...PUB], ['signaletique', 'campagnes', 'recrutement', 'budget']],
-  ['entreprise', 'Entreprises', () => [...ENT, INAUG, VOEUX], ['identites', 'recrutement', 'signaletique', 'campagnes']],
-  ['club', 'Clubs et assos', () => [FORUM, ...PUB], ['identites', 'affiches', 'festin', 'campagnes']],
-  ['particulier', 'Particuliers', () => [...PUB], ['identites', 'affiches']],
+  ['collectivite', 'Collectivités', () => [INAUG, VOEUX, FORUM, COMM], ['campagnes', 'signaletique', 'recrutement', 'festin', 'budget', 'affiches']],
+  ['entreprise', 'Entreprises', () => [...ENT], ['case:pierceval-tattoo', 'identites']],
+  ['club', 'Clubs et assos', () => [FORUM, ...PUB], ['identites']],
+  ['particulier', 'Particuliers', () => [...PUB], []],
+  ['graph', 'Graphisme', () => [], ['*']],
   ['web', 'Sites et outils', () => [], []]
 ];
-const PFMAP = {culture: 'scene', collectivite: 'col', entreprise: 'ent', club: 'public', particulier: 'photo'};
+const PFMAP = {culture: 'scene', collectivite: 'col', entreprise: 'ent', club: 'public', particulier: 'photo', graph: 'graph'};
 const stories = $('#stories');
 function renderStories() {
   stories.style.display = ORD.length ? '' : 'none';
-  stories.innerHTML = ORD.map((r, i) => `<button class="sto${seen.has(r.id) ? ' seen' : ''}" data-i="${i}" style="transition-delay:${Math.min(i, 12) * 30}ms"><span class="ring"><span><img src="${sm(r, r.ph[0][0])}" alt="" loading="lazy"></span></span><b>${esc(r.t)}</b></button>`).join('');
+  stories.innerHTML = ORD.map((r, i) => `<button class="sto${seen.has(r.id) ? ' seen' : ''}" data-i="${i}" style="transition-delay:${Math.min(i, 12) * 30}ms"><span class="ring"><span><img src="${sm(r, (COVER[r.id] || r.ph[0][0]))}" alt="" loading="lazy"></span></span><b>${esc(r.t)}</b></button>`).join('');
   stories.scrollLeft = 0; markLoaded(stories); edge(stories);
 }
-stories.addEventListener('click', e => { const b = e.target.closest('.sto'); if (b) openSV(ORD, +b.dataset.i, 0); });
+stories.addEventListener('click', e => { const b = e.target.closest('.sto'); if (b && !goCase(ORD[+b.dataset.i])) openSV(ORD, +b.dataset.i, 0); });
 
-const SZ = {L: [6, 4, 6, 2, 2], M: [3, 2, 3, 1, 1], W: [6, 2, 6, 2, 1]};
+const SZ = {L: [6, 4, 6, 2, 2], M: [3, 2, 3, 1, 1], W: [6, 2, 6, 2, 1], T: [4, 3, 6, 2, 2]};
 const sz = s => { const z = SZ[s]; return `--cw:${z[0]};--ch:${z[1]};--tw:${z[2]};--mw:${z[3]};--mh:${z[4]}`; };
+/* couverture choisie pour chaque projet graphique : l'image la plus lisible, la moins chargée */
+const COVER = {soute: 'soute-7', ellipse: 'saisons-ellipse-9', festin: 'fdm-1', marelle: 'marelle-1', atrium: 'atrium-1', budget: 'budget-1', recrutement: 'recrutement-1', identites: 'molan-move-1', signaletique: 'totem-1', campagnes: 'voeux-1', affiches: 'affiches-8', editions: 'editions-5'};
+const CASE_OF = {soute: 'la-soute'};
+const caseFor = r => CASE_OF[r.id] && CASES.find(x => x.id === CASE_OF[r.id]);
+const coverOf = (r, s) => (COVER[r.id] && (s !== 'W' || r.ph.find(p => p[0] === COVER[r.id])[1] > 1.2) && r.ph.find(p => p[0] === COVER[r.id])) || r.ph.find(p => s === 'W' ? p[1] > 1.2 : p[1] < 1.2) || r.ph[0];
+const cardCase = (c, s) => `<a class="c ph k-site" href="${c.url}" style="${sz(s)}"><img class="bgi" src="${c.img}" alt="" loading="lazy"><span class="chip glass"><i></i>${c.k}</span><span class="bot"><h3>${esc(c.t)}</h3><span class="ic">${ico('ne')}</span></span></a>`;
 function cardRep(r, s, list) {
-  const f = r.ph.find(p => s === 'W' ? p[1] > 1.2 : p[1] < 1.2) || r.ph[0];
+  const f = coverOf(r, s);
+  if (caseFor(r)) { const c = caseFor(r); return `<a class="c ph" href="${c.url}" style="${sz(s)}"><img class="bgi" src="${sm(r, f[0])}" alt="" loading="lazy" decoding="async"><span class="chip glass"><i></i>${c.k}</span><span class="chip glass cnt">Étude de cas</span><span class="bot"><h3>${esc(r.t)}</h3><span class="ic">${ico('ne')}</span></span></a>`; }
   return `<button class="c ph" data-r="${r.id}" data-l="${list}" data-sz="${s}" style="${sz(s)}"><img class="bgi" src="${sm(r, f[0])}" alt="" loading="lazy" decoding="async"><span class="bars">${r.ph.slice(0, 5).map(() => '<s><i></i></s>').join('')}</span><span class="chip glass"><i></i>${CAT(r)}</span><span class="chip glass cnt">${r.ph.length}${r.k === 'g' ? ' visuels' : ' photos'}</span><span class="bot"><h3>${esc(r.t)}</h3><span class="ic">${ico('ne')}</span></span></button>`;
 }
 const TX = (ic, t, p, cfg) => `<button class="c k-tx" data-cfg="${cfg || ''}" style="${sz('M')}">${ico(ic).replace('<svg', '<svg class="big"')}<span><h3>${t}</h3><p>${p}</p></span></button>`;
@@ -133,13 +141,15 @@ const LAY = ['L', 'M', 'M', 'M', 'M', 'W', 'M', 'M'];
 function renderFeed() {
   const T = TABS.find(t => t[0] === st.tab); let h = '';
   ORD = T[2]().filter(Boolean); renderStories();
-  if (st.tab === 'web') h = CASES.map(c => `<a class="c ph k-site" href="${c.url}" style="${sz('L')}"><img class="bgi" src="${c.img}" alt="" loading="lazy"><span class="chip glass"><i></i>${c.k}</span><span class="bot"><h3>${c.t}</h3><span class="ic">${ico('ne')}</span></span></a>`).join('');
+  if (st.tab === 'web') h = CASES.filter(c => c.web).map(c => cardCase(c, 'T')).join('');
+  else if (st.tab === 'graph') { ORD = GORD.slice(); renderStories(); h = GORD.map((r, i) => cardRep(r, i % 6 === 0 ? 'L' : 'M', 'g')).join(''); }
   else {
-    const ph = T[2]().filter(Boolean), gr = T[3].map(byId).filter(Boolean), items = [];
-    ph.forEach(r => items.push([r, 'p'])); gr.forEach(r => items.push([r, 'g']));
+    const ph = T[2]().filter(Boolean), items = [];
+    ph.forEach(r => items.push([r, 'p']));
+    T[3].forEach(id => { if (id.startsWith('case:')) { const c = CASES.find(x => x.id === id.slice(5)); if (c) items.push([c, 'c']); } else { const r = byId(id); if (r) items.push([r, 'g']); } });
     /* on alterne : 5 photos, puis le graphisme glissé dans la grille */
-    const mix = [...items.filter(x => x[1] === 'p').slice(0, 5), items.find(x => x[1] === 'g'), ...items.filter(x => x[1] === 'p').slice(5), ...items.filter(x => x[1] === 'g').slice(1)].filter(Boolean).slice(0, 8);
-    h = mix.map((x, i) => cardRep(x[0], LAY[i], x[1])).join('');
+    const ng = items.filter(x => x[1] !== 'p'), mix = [...items.filter(x => x[1] === 'p').slice(0, 5), ng[0], ...items.filter(x => x[1] === 'p').slice(5), ...ng.slice(1)].filter(Boolean).slice(0, 8);
+    h = mix.map((x, i) => x[1] === 'c' ? cardCase(x[0], LAY[i]) : cardRep(x[0], LAY[i], x[1])).join('');
   }
   feed.innerHTML = h; markLoaded(feed);
   $$('.c', feed).forEach((c, i) => { c.style.transitionDelay = (i % 4) * 60 + 'ms'; io.observe(c); });
@@ -147,6 +157,7 @@ function renderFeed() {
   $$('.c[data-cfg]', feed).forEach(c => c.onclick = () => openCfg({p: c.dataset.cfg}));
   $('#feedMore').style.display = st.tab === 'web' ? 'none' : '';
 }
+const goCase = r => { const c = r && caseFor(r); if (c) { location.href = c.url; return true; } return false; };
 function bindCard(c) {
   const r = byId(c.dataset.r), list = c.dataset.l === 'g' ? GORD : ORD, img = $('.bgi', c), bars = $$('.bars s i', c), n = bars.length;
   c.onclick = () => openSV(list, list.indexOf(r), 0);
@@ -175,8 +186,15 @@ function dragScroll(el) {
 }
 dragScroll(stories); dragScroll(tabs);
 
+/* quatre métiers : chaque carte ouvre la bonne rubrique */
+$('#mt').addEventListener('click', e => {
+  const b = e.target.closest('.mtc'); if (!b) return; const g = b.dataset.go;
+  if (g === 'com') { $('#offre').scrollIntoView({behavior: RM ? 'auto' : 'smooth'}); plSnap(2, true); return; }
+  if (st.tab !== g) { st.tab = g; moveInk(); renderFeed(); }
+  $('#travaux').scrollIntoView({behavior: RM ? 'auto' : 'smooth'});
+});
 /* ================= PORTFOLIO PLEIN ÉCRAN ================= */
-const CASES = [{id: 'la-soute', t: 'La Soute', k: 'Identité et site', q: 'la soute salle de spectacle concert saison brochure affiche identite site internet web billetterie', url: '/projets/la-soute/', img: '/projets/la-soute/img/cover.webp', ar: 1.43}, {id: 'pierceval-tattoo', t: 'Pierceval Tattoo', k: 'Site internet', q: 'pierceval tattoo tatouage piercing site internet web scaer', url: '/projets/pierceval-tattoo/', img: '/projets/pierceval-tattoo/img/cover.webp', ar: 1.43}];
+const CASES = [{id: 'flouz', web: 1, t: 'flouz.', k: 'Application', q: 'flouz application mobile budget finances app web', url: '/projets/flouz/', img: '/projets/flouz/img/cover.webp', ar: 1.43}, {id: 'la-soute', web: 1, t: 'La Soute', k: 'Identité et site', q: 'la soute salle de spectacle concert saison brochure affiche identite site internet web billetterie', url: '/projets/la-soute/', img: '/projets/la-soute/img/cover.webp', ar: 1.43}, {id: 'pierceval-tattoo', web: 1, t: 'Pierceval Tattoo', k: 'Site internet', q: 'pierceval tattoo tatouage piercing site internet web scaer', url: '/projets/pierceval-tattoo/', img: '/projets/pierceval-tattoo/img/cover.webp', ar: 1.43}];
 const SEAS = ['soute', 'ellipse', 'marelle', 'atrium'], CAMP = ['campagnes', 'recrutement', 'budget', 'festin', 'affiches'];
 const CH = [
   ['all', 'Tout', () => true], ['photo', 'Photographie', r => r.k !== 'g'], ['scene', 'Concerts', r => r.k === 'scene'], ['public', 'Festivals', r => r.k === 'public'],
@@ -190,16 +208,16 @@ pfC.innerHTML = CH.map(([k, l, f]) => `<button data-c="${k}">${l}<em>${REPS.filt
 const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 function pfRender() {
   const f = CH.find(c => c[0] === PF.c)[2], q = norm(PF.q.trim());
-  PF.list = REPS.filter(r => f(r) && (!q || norm(r.t + ' ' + CAT(r) + ' ' + r.ph.map(p => p[2] || '').join(' ')).includes(q)));
+  PF.list = REPS.filter(r => !(CASE_OF[r.id] && caseIn(PF.c)) && f(r) && (!q || norm(r.t + ' ' + CAT(r) + ' ' + r.ph.map(p => p[2] || '').join(' ')).includes(q)));
   $$('button', pfC).forEach(b => b.classList.toggle('on', b.dataset.c === PF.c));
   const cs = caseIn(PF.c) ? CASES.filter(c => !q || norm(c.t + ' ' + c.q).includes(q)) : [];
   $('#pfN').textContent = PF.list.length + cs.length;
   setTimeout(() => markLoaded(pfG), 0);
-  pfG.innerHTML = PF.list.length + cs.length ? cs.map(c => `<a class="pc" href="${c.url}"><img src="${c.img}" alt="" loading="lazy" style="aspect-ratio:${c.ar}"><span class="chip glass"><i></i>${c.k}</span><span class="ti"><b>${esc(c.t)}</b><span>Étude de cas</span></span></a>`).join('') + PF.list.map((r, i) => { const p = r.ph[0]; return `<button class="pc" data-i="${i}" style="animation-delay:${Math.min(i, 16) * 35}ms"><img src="${sm(r, p[0])}" alt="" loading="lazy" style="aspect-ratio:${p[1]}"><span class="chip glass"><i></i>${CAT(r)}</span><span class="ti"><b>${esc(r.t)}</b><span>${r.ph.length}</span></span></button>`; }).join('') : '<p class="pf-empty">Aucun résultat. Essayez un autre mot.</p>';
+  pfG.innerHTML = PF.list.length + cs.length ? cs.map(c => `<a class="pc" href="${c.url}"><img src="${c.img}" alt="" loading="lazy" style="aspect-ratio:${c.ar}"><span class="chip glass"><i></i>${c.k}</span><span class="ti"><b>${esc(c.t)}</b><span>Étude de cas</span></span></a>`).join('') + PF.list.map((r, i) => { const p = r.ph.find(x => x[0] === COVER[r.id]) || r.ph[0]; return `<button class="pc" data-i="${i}" style="animation-delay:${Math.min(i, 16) * 35}ms"><img src="${sm(r, p[0])}" alt="" loading="lazy" style="aspect-ratio:${p[1]}"><span class="chip glass"><i></i>${CAT(r)}</span><span class="ti"><b>${esc(r.t)}</b><span>${r.ph.length}</span></span></button>`; }).join('') : '<p class="pf-empty">Aucun résultat. Essayez un autre mot.</p>';
 }
 pfC.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; PF.c = b.dataset.c; pfRender(); b.scrollIntoView({inline: 'nearest', block: 'nearest', behavior: 'smooth'}); });
 pfQ.addEventListener('input', () => { PF.q = pfQ.value; pfRender(); });
-pfG.addEventListener('click', e => { const b = e.target.closest('.pc'); if (b) openSV(PF.list, +b.dataset.i, 0); });
+pfG.addEventListener('click', e => { const b = e.target.closest('button.pc'); if (b && !goCase(PF.list[+b.dataset.i])) openSV(PF.list, +b.dataset.i, 0); });
 function openPF(c) { PF.c = c || 'all'; pfRender(); pf.classList.add('on'); pf.scrollTop = 0; root.style.overflow = 'hidden'; dockOff(true); focusIn(pf, '#pfX'); }
 function closePF() { if (!pf.classList.contains('on')) return; pf.classList.remove('on'); root.style.overflow = ''; dockOff(false); focusBack(); }
 $('#pfX').onclick = closePF;
