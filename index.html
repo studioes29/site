@@ -321,9 +321,11 @@ input,textarea{font:inherit;color:inherit;letter-spacing:inherit}
 .fo-f .bt{width:100%;justify-content:space-between}
 .fo-f a{font-size:13px;color:var(--mu);text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(237,233,221,.25)}
 .fo-f a:hover{color:var(--tx)}
-.fo-n{display:flex;justify-content:center;gap:0;margin:8px 0 0}
-.fo-n button{box-sizing:content-box;width:7px;height:7px;padding:8.5px;background-clip:content-box;border-radius:99px;background:rgba(237,233,221,.25);transition:width .45s var(--sp),background .3s}
-.fo-n button.on{width:22px;background:var(--ac)}
+.fo-n{display:flex;justify-content:center;gap:0;margin:10px 0 0}
+.fo-n button{position:relative;width:18px;height:24px;padding:0;background:none;transition:width .45s var(--sp)}
+.fo-n button::before{content:"";position:absolute;left:50%;top:50%;width:6px;height:6px;transform:translate(-50%,-50%);border-radius:99px;background:rgba(237,233,221,.28);transition:width .45s var(--sp),background .3s}
+.fo-n button.on{width:30px}
+.fo-n button.on::before{width:18px;background:var(--ac)}
 @media (max-width:980px){.fo-g{display:flex;align-items:stretch;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 calc(var(--g) * -1);padding:4px var(--g) 8px;scroll-padding:0 var(--g);scrollbar-width:none}.fo-g::-webkit-scrollbar{display:none}.fo{flex:none;width:min(350px,82vw);scroll-snap-align:start}}
 @media (prefers-reduced-motion:reduce){.fo{opacity:1;transform:none;transition:none}.fo::after{display:none}}
 .mtc{text-decoration:none;color:inherit}
