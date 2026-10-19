@@ -29,6 +29,7 @@
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "ProfessionalService", "@id": "https://studioes.fr/#studio", "name": "Studio ES", "description": "Studio de photographie de reportage et d'événement, de graphisme et de création de sites internet, basé en Bretagne.", "url": "https://studioes.fr/", "logo": "https://studioes.fr/icon-512.png", "image": "https://studioes.fr/og.jpg", "email": "contact@studioes.fr", "telephone": "+33651222107", "address": {"@type": "PostalAddress", "addressRegion": "Bretagne", "addressCountry": "FR"}, "areaServed": [{"@type": "AdministrativeArea", "name": "Finistère"}, {"@type": "AdministrativeArea", "name": "Morbihan"}, {"@type": "AdministrativeArea", "name": "Côtes-d'Armor"}, {"@type": "AdministrativeArea", "name": "Bretagne"}], "founder": {"@type": "Person", "name": "Ewen Soupault"}, "knowsAbout": ["Photographie d'événement", "Reportage photo", "Photographie de concert", "Photographie de festival", "Photographie de mariage", "Photographie corporate", "Graphisme", "Identité visuelle", "Brochure de saison culturelle", "Affiche", "Campagne de communication", "Création de site internet", "Gestion des réseaux sociaux", "Communication des collectivités"], "makesOffer": [{"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Prise de vue", "description": "Reportage photo d'un événement, d'un lieu ou d'une équipe."}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Tirage", "description": "Le reportage et ses supports : affiches, brochures, visuels réseaux, site."}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Exposition", "description": "Suivi photo et communication dans la durée, à la saison ou à l'année."}}], "sameAs": ["https://www.instagram.com/ewen.studioes"]}, {"@type": "WebSite", "@id": "https://studioes.fr/#site", "url": "https://studioes.fr/", "name": "Studio ES", "inLanguage": "fr-FR", "publisher": {"@id": "https://studioes.fr/#studio"}}]}</script>
 <link rel="preload" href="/f/br.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/f/it.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="f/ur-i.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 @font-face{font-family:"Bricolage Grotesque";font-weight:200 800;font-display:swap;src:url(/f/br.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2212}
 @font-face{font-family:"Bricolage Grotesque";font-weight:200 800;font-display:swap;src:url(/f/br-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+A720-A7FF}
@@ -140,7 +141,7 @@ p .se,li .se{font-weight:400}
 .h-name span{display:inline-block;vertical-align:bottom;padding-bottom:.05em;clip-path:inset(-30% -30% 0 -30%)}
 .h-name i{display:inline-block;font-style:normal;transform:translateY(105%);transition:transform 1.4s var(--e)}
 .go .h-name i{transform:none}
-.h-sub{position:absolute;left:var(--side);text-shadow:0 2px 24px rgba(0,0,0,.45);bottom:calc(30px + 2svh + min(19vw,350px) * .8 + 26px);max-width:18ch;margin:0;font-size:clamp(22px,2.3vw,34px);line-height:1.02;opacity:0;transform:translateY(16px);transition:opacity 1s var(--e) .7s,transform 1.2s var(--e) .7s}
+.h-sub{position:absolute;left:var(--side);text-shadow:0 2px 24px rgba(0,0,0,.45);bottom:calc(30px + 2svh + min(19vw,350px) * .8 + 26px);max-width:18ch;margin:0;font-size:clamp(22px,2.3vw,34px);line-height:1.02;opacity:0;transform:translateY(16px);transition:opacity 1s var(--e) .25s,transform 1.2s var(--e) .25s}
 .go .h-sub{opacity:1;transform:none}
 .h-card{position:absolute;right:var(--side);bottom:calc(30px + 2svh + min(19vw,350px) * .8 + 26px);display:flex;align-items:center;gap:14px;padding:9px 18px 9px 9px;border-radius:22px;text-align:left;opacity:0;transform:translateY(16px);transition:opacity 1s var(--e) .85s,transform 1.2s var(--e) .85s}
 .go .h-card{opacity:1;transform:none}
@@ -324,9 +325,9 @@ p .se,li .se{font-weight:400}
 .fo-f a{font-size:13px;color:var(--mu);text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(237,233,221,.25)}
 .fo-f a:hover{color:var(--tx)}
 .fo-n{display:flex;justify-content:center;gap:0;margin:10px 0 0}
-.fo-n button{position:relative;width:18px;height:24px;padding:0;background:none;transition:width .45s var(--sp)}
+.fo-n button{position:relative;width:24px;height:24px;padding:0;background:none;transition:width .45s var(--sp)}
 .fo-n button::before{content:"";position:absolute;left:50%;top:50%;width:6px;height:6px;transform:translate(-50%,-50%);border-radius:99px;background:rgba(237,233,221,.28);transition:width .45s var(--sp),background .3s}
-.fo-n button.on{width:30px}
+.fo-n button.on{width:34px}
 .fo-n button.on::before{width:18px;background:var(--ac)}
 @media (max-width:980px){.fo-g{display:flex;align-items:stretch;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 calc(var(--g) * -1);padding:4px var(--g) 8px;scroll-padding:0 var(--g);scrollbar-width:none}.fo-g::-webkit-scrollbar{display:none}.fo{flex:none;width:min(350px,82vw);scroll-snap-align:start}}
 @media (prefers-reduced-motion:reduce){.fo{opacity:1;transform:none;transition:none}.fo::after{display:none}}
@@ -713,6 +714,7 @@ p .se,li .se{font-weight:400}
   </button>
   <h1 class="h-name d" aria-label="Studio ES"><span><i>S</i></span><span><i>t</i></span><span><i>u</i></span><span><i>d</i></span><span><i>i</i></span><span><i>o</i></span><span><i>&nbsp;</i></span><span><i>E</i></span><span><i>S</i></span></h1>
 </section>
+<script>requestAnimationFrame(() => document.body.classList.add('go'));</script>
 
 <section class="sec w" id="metiers" aria-labelledby="t-me" style="padding-top:clamp(50px,6vw,90px);padding-bottom:0">
   <div class="shp" aria-hidden="true"><i></i><i></i><i></i></div>
@@ -854,8 +856,8 @@ p .se,li .se{font-weight:400}
 </div>
 <div class="toast" id="toast" role="status"></div>
 
-<script src="/data.js?v=1792369525"></script>
+<script src="data.js?v=1792369525" defer></script>
 <script>/* GoatCounter : mesure d'audience sans cookie, uniquement sur studioes.fr */if (/(^|\.)studioes\.fr$/.test(location.hostname) && !location.hostname.startsWith('dossiers')) { const g = document.createElement('script'); g.async = true; g.src = 'https://gc.zgo.at/count.js'; g.dataset.goatcounter = 'https://studioes.goatcounter.com/count'; document.head.appendChild(g); }</script>
-<script src="/app.js?v=1792369525"></script>
+<script src="app.js?v=1792369525" defer></script>
 </body>
 </html>

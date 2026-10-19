@@ -92,8 +92,10 @@ new IntersectionObserver(es => { heroVis = es[0].isIntersecting; }).observe($('#
   requestAnimationFrame(loop);
 })(performance.now());
 H.cur.src = bigF(HERO[0]); amb.style.backgroundImage = `url(${smF(HERO[0])})`; heroMeta(); preload(bigF(HERO[1]));
-const startUp = () => { if (document.body.classList.contains('go')) return; document.body.classList.add('go'); if (!RM) anim(H.cur, [{opacity: 0}, {opacity: 1}], {duration: 900, easing: 'ease-out'}); };
-H.cur.complete ? requestAnimationFrame(startUp) : (H.cur.onload = startUp, setTimeout(startUp, 2200));
+/* le texte de l'accueil apparaît tout de suite ; la photo se révèle dès qu'elle est chargée */
+const imgIn = () => { if (!RM) anim(H.cur, [{opacity: 0}, {opacity: 1}], {duration: 900, easing: 'ease-out'}); };
+requestAnimationFrame(() => document.body.classList.add('go'));
+if (H.cur.complete) imgIn(); else H.cur.addEventListener('load', imgIn, {once: true});
 $('#hCard').onclick = () => { const r = FMAP[HERO[H.i]][0]; openGal(r, r.ph.findIndex(p => p[0] === HERO[H.i])); };
 
 /* ================= LE TRAVAIL : onglets par métier, rangée de cartes qui défile ================= */
