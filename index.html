@@ -321,8 +321,8 @@ input,textarea{font:inherit;color:inherit;letter-spacing:inherit}
 .fo-f .bt{width:100%;justify-content:space-between}
 .fo-f a{font-size:13px;color:var(--mu);text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(237,233,221,.25)}
 .fo-f a:hover{color:var(--tx)}
-.fo-n{display:flex;justify-content:center;gap:7px;margin:16px 0 0}
-.fo-n button{width:7px;height:7px;padding:0;border-radius:99px;background:rgba(237,233,221,.25);transition:width .45s var(--sp),background .3s}
+.fo-n{display:flex;justify-content:center;gap:0;margin:8px 0 0}
+.fo-n button{box-sizing:content-box;width:7px;height:7px;padding:8.5px;background-clip:content-box;border-radius:99px;background:rgba(237,233,221,.25);transition:width .45s var(--sp),background .3s}
 .fo-n button.on{width:22px;background:var(--ac)}
 @media (max-width:980px){.fo-g{display:flex;align-items:stretch;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 calc(var(--g) * -1);padding:4px var(--g) 8px;scroll-padding:0 var(--g);scrollbar-width:none}.fo-g::-webkit-scrollbar{display:none}.fo{flex:none;width:min(350px,82vw);scroll-snap-align:start}}
 @media (prefers-reduced-motion:reduce){.fo{opacity:1;transform:none;transition:none}.fo::after{display:none}}
@@ -702,7 +702,7 @@ input,textarea{font:inherit;color:inherit;letter-spacing:inherit}
 <section class="hero" id="accueil" aria-label="Accueil">
   <div class="amb" id="amb"></div>
   <div class="por" id="por"><img id="pImg" alt="" fetchpriority="high"></div>
-  <p class="h-sub se">Photographie de reportage et d'événement, graphisme, web.</p>
+  <p class="h-sub se">Photographie de reportage et d’événement, graphisme, web.</p>
   <button class="h-card glass" id="hCard" aria-label="Voir ce reportage">
     <span class="th"><img id="hTh" alt=""></span>
     <span><b id="hT">&nbsp;</b><small><span id="hK"></span><span class="dots" id="hDots"></span></small></span>
@@ -766,7 +766,7 @@ input,textarea{font:inherit;color:inherit;letter-spacing:inherit}
 <footer class="ft w">
   <div class="ft-g">
     <div class="ft-id"><a class="logo" href="#accueil"><svg viewBox="0 0 98 186" aria-hidden="true"><use href="#logo"/></svg>Studio ES</a><p>Photographie, graphisme, web.<br>Basé en Bretagne.</p></div>
-    <div class="ft-col"><h3>Métiers</h3><ul><li><button data-pf="photo">Photographie</button></li><li><button data-pf="graph">Graphisme</button></li><li><button data-cfgp="autre">Sites et outils</button></li><li><a href="#offre">L'offre Plan large</a></li></ul></div>
+    <div class="ft-col"><h3>Métiers</h3><ul><li><a href="metiers/photographie/">Photographie</a></li><li><a href="metiers/graphisme/">Graphisme</a></li><li><a href="metiers/sites-et-outils/">Sites et outils</a></li><li><a href="metiers/communication/">Communication</a></li><li><a href="#offre">Tarifs</a></li></ul></div>
     <div class="ft-col"><h3>Contact</h3><ul><li><a href="mailto:contact@studioes.fr">contact@studioes.fr</a></li><li><a href="tel:+33651222107">06 51 22 21 07</a></li><li><a href="https://cal.eu/studioes/30min" target="_blank" rel="noopener">Réserver un appel</a></li><li><button data-cfgp="">Demander un devis</button></li></ul></div>
     <div class="ft-col"><h3>Suivre</h3><ul><li><a href="https://www.instagram.com/ewen.studioes/" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://declic.studioes.fr" target="_blank" rel="noopener">Déclic, le jeu</a></li></ul></div>
   </div>
@@ -828,11 +828,11 @@ input,textarea{font:inherit;color:inherit;letter-spacing:inherit}
   <div class="gr"><i></i></div>
   <div class="sh-h"><h2 class="d" id="shLT">Mentions légales</h2><button class="ic" data-close aria-label="Fermer"><svg><use href="#x"/></svg></button></div>
   <div class="sh-b">
-    <h3>Éditeur</h3><p>Studio ES, Ewen Soupault, entrepreneur individuel. Contact : contact@studioes.fr, 06 51 22 21 07. Directeur de la publication : Ewen Soupault.</p>
+    <h3>Éditeur</h3><p>Studio ES, Ewen Soupault, entrepreneur individuel (EI). SIRET 834 922 486 00016. TVA non applicable, article 293 B du Code général des impôts. Contact : contact@studioes.fr, 06 51 22 21 07. Directeur de la publication : Ewen Soupault.</p>
     <h3>Hébergement</h3><p>GitHub, Inc. (GitHub Pages), 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis.</p>
-    <h3>Propriété intellectuelle</h3><p>Les photographies et créations graphiques présentées sur ce site sont la propriété d'Ewen Soupault, sauf mention contraire. Toute reproduction ou réutilisation, totale ou partielle, sans autorisation écrite est interdite. Les marques et logos des clients restent la propriété de leurs titulaires.</p>
+    <h3>Propriété intellectuelle</h3><p>Les photographies et créations graphiques présentées sur ce site sont la propriété d’Ewen Soupault, sauf mention contraire. Toute reproduction ou réutilisation, totale ou partielle, sans autorisation écrite est interdite. Les marques et logos des clients restent la propriété de leurs titulaires.</p>
     <h3>Données personnelles</h3><p>Les informations envoyées par les formulaires sont transmises par courriel au moyen du service FormSubmit et servent uniquement à répondre à votre demande. Elles ne sont ni cédées ni revendues. Vous pouvez demander leur consultation, leur rectification ou leur suppression en écrivant à contact@studioes.fr. La prise de rendez-vous passe par le service Cal.com.</p>
-    <h3>Cookies</h3><p>Ce site n'utilise pas de cookies de mesure d'audience ni de publicité. Il retient seulement, dans votre navigateur, le profil choisi, les reportages déjà vus et votre devis en cours.</p>
+    <h3>Mesure d’audience et cookies</h3><p>Ce site ne dépose aucun cookie de mesure d’audience ni de publicité. La fréquentation est mesurée avec GoatCounter, un outil sans cookie qui ne collecte aucune donnée personnelle et ne suit pas les visiteurs d’un site à l’autre. Le site retient seulement, dans votre navigateur, le profil choisi, les reportages déjà vus et votre devis en cours. Le module de prise de rendez-vous, fourni par Cal.com, se charge à l’ouverture de l’agenda et applique sa propre politique de confidentialité.</p>
   </div>
 </section>
 

@@ -248,10 +248,10 @@ const FO = [
       opt: [['Livraison le soir même', 100], ['Formats réseaux prêts à poster', 90], ['Heure supplémentaire sur place', 80]], go: {pal: 0}},
     {h: 'Tirage', s: 'Le reportage et ses supports', p: 530, a: 'Les mêmes images deviennent votre affiche, vos visuels réseaux, votre brochure.',
       inc: ['Le reportage', 'Une affiche et trois formats réseaux tirés des images', 'Deux allers-retours de corrections', 'Fichiers pour l’impression et le web'],
-      opt: [['Kakémono ou roll-up', 140], ['Brochure de 8 à 16 pages', 550, 1]], go: {pal: 1}},
+      opt: [['Kakémono ou roll-up', 140], ['Brochure de 8 à 16 pages', 550, 1]], go: {pal: 1, pk: ['Campagne d’événement', 'Concert', 'Demi-journée']}},
     {h: 'Exposition', s: 'Le suivi dans la durée', p: 340, u: 'mois', a: 'Un rythme défini ensemble, et une photothèque qui grandit avec votre actualité.',
       inc: ['Une demi-journée de reportage par mois', 'Des dates fixées ensemble, sans mensualité payée d’avance', 'Une photothèque classée, prête à servir', 'Engagement de 6 mois'],
-      opt: [['Trois demi-journées par mois', 990, 2, 'mois'], ['Saison culturelle, 5 dates', 1190, 2]], go: {pal: 2}}]},
+      opt: [['Trois demi-journées par mois', 990, 2, 'mois'], ['Saison culturelle, 5 dates', 1190, 2]], go: {pal: 2, pp: 'entreprise'}}]},
   {k: 'graph', t: 'Graphisme', n: 'Affiches, flyers, brochures, signalétique : chiffrés à l’unité dans le configurateur.', c: [
     {h: 'Logo', s: 'Le signe', p: 550, a: 'Un signe lisible partout, de l’enseigne à la photo de profil.',
       inc: ['Recherches et pistes présentées', 'Le logo et ses variantes : couleur, monochrome, réduit', 'Deux allers-retours de corrections', 'Fichiers pour l’impression et le web'],
@@ -265,7 +265,7 @@ const FO = [
   {k: 'web', t: 'Sites et outils', n: 'Réservations, inscriptions, espace membres : fonctions sur mesure, chiffrées à la journée.', c: [
     {h: 'Une page', s: 'La vitrine', p: 990, a: 'Qui vous êtes, ce que vous proposez, comment vous joindre.',
       inc: ['Maquette sur mesure, à votre identité', 'Textes rédigés', 'Adapté au mobile', 'Référencement local et mise en ligne', 'Nom de domaine à votre nom'],
-      opt: [['Hébergement et maintenance', 35, 0, 'mois'], ['Reportage photo pour le site', 370, 1]], go: {ol: "Site d'une page", nl: 'Un site internet'}},
+      opt: [['Hébergement et maintenance', 35, 0, 'mois'], ['Reportage photo pour le site', 370, 1]], go: {ol: 'Site d’une page', nl: 'Un site internet'}},
     {h: '3 à 5 pages', s: 'Une page par offre', p: 1890, hot: 1, a: 'Chaque offre a sa page, pour être trouvée sur Google et comprise en quelques secondes.',
       inc: ['Tout le site d’une page', 'Des pages dédiées à chaque offre', 'Formulaire de contact'],
       opt: [['Hébergement et maintenance', 35, 0, 'mois'], ['Configurateur ou calculateur de devis', 1100, 1]], go: {ol: "Site de 3 à 5 pages", nl: 'Un site internet'}},
@@ -275,10 +275,10 @@ const FO = [
   {k: 'com', t: 'Communication', n: 'Plan de communication, relations presse, pack événement : détaillés dans le configurateur.', c: [
     {h: 'Remise à plat', s: 'L’audit', p: 300, a: 'L’audit de vos comptes et leur remise en ordre, avant de publier.',
       inc: ['Analyse du compte et de ce qui marche', 'Nettoyage, bio, mises en avant', 'Recommandations de rythme et de ton'],
-      opt: [['Gabarits de publications et de stories', 210]], go: {nl: 'Mes réseaux sociaux suivis'}},
+      opt: [['Gabarits de publications et de stories', 210]], go: {ol: 'Remise à plat des comptes', nl: 'Mes réseaux sociaux suivis'}},
     {h: 'Réseaux suivis', s: 'Chaque mois', p: 240, u: 'mois', hot: 1, a: 'Des contenus produits en série, validés ensemble, prêts à publier.',
       inc: ['6, 12, 20 ou 30 contenus par mois', 'Visuels et textes', 'Un calendrier validé ensemble', 'Engagement de 6 mois'],
-      opt: [['Publication par Studio ES', 70, 1, 'mois'], ['Reportage photo mensuel', 340, 0, 'mois']], go: {ol: '12 contenus par mois', nl: 'Mes réseaux sociaux suivis'}},
+      opt: [['Publication par Studio ES', 70, 1, 'mois'], ['Reportage photo mensuel', 340, 0, 'mois']], go: {ol: '6 contenus par mois', nl: 'Mes réseaux sociaux suivis'}},
     {h: 'Service com', s: 'Externalisé', p: 550, u: 'mois', a: 'Un jour par mois ou un jour par semaine : site, réseaux, supports, presse.',
       inc: ['Un interlocuteur pour toute la communication', 'Coordination des imprimeurs et prestataires', 'Relations presse comprises'],
       opt: [['Deux jours par mois', 1100, 2, 'mois'], ['Plan de communication annuel', 1100]], go: {ol: 'Appui ponctuel', nl: 'Un service com externalisé'}}]}
@@ -315,7 +315,7 @@ foG.addEventListener('click', e => {
   /* un clic ouvre « ce qui est compris » sur toutes les cartes à la fois, pour comparer */
   if (x) { const open = x.getAttribute('aria-expanded') !== 'true'; $$('.fo-x', foG).forEach(y => { y.setAttribute('aria-expanded', open); y.closest('.fo').classList.toggle('open', open); }); return; }
   const b = e.target.closest('button[data-fi]');
-  if (b) { const go = FO.find(f => f.k === foK).c[+b.dataset.fi].go, p = st.p && P[st.p] && (go.pal != null || P[st.p].n.some(x => x.l === go.nl)) ? st.p : go.pal != null ? 'culture' : 'entreprise'; openCfg(Object.assign({p}, go)); }
+  if (b) { const go = FO.find(f => f.k === foK).c[+b.dataset.fi].go, p = st.p && P[st.p] && (go.pal != null || P[st.p].n.some(x => x.l === go.nl)) ? st.p : go.pp || (go.pal != null ? 'culture' : 'entreprise'); openCfg(Object.assign({p}, go)); }
 });
 /* indicateur de défilement : une bulle par carte, comme sous un carrousel */
 function foDots() { const n = foG.children.length; foN.innerHTML = Array.from({length: n}, (_, i) => `<button type="button" aria-label="Carte ${i + 1}" data-d="${i}"></button>`).join(''); foDotsSync(); }
@@ -341,6 +341,7 @@ function openCfg(o = {}) {
   if (o.p) { CF.p = o.p; CF.step = 1; CF.n = null; if (o.nl) { const j = P[CF.p].n.findIndex(x => x.l === o.nl); if (j >= 0) { CF.n = j; initPicks(); CF.step = 2; } } else if (o.pal != null) { const j = P[CF.p].n.findIndex(x => x.pal === o.pal); if (j >= 0) { CF.n = j; initPicks(); CF.step = 2; } } }
   else CF.step = CF.basket.length && o.pal == null ? 3 : 0;
   if (o.ol && CF.n != null) { const g = P[CF.p].n[CF.n].calc[0], k = g.o.findIndex(x => x[0] === o.ol); if (k >= 0) CF.picks[0] = [k]; }
+  if (o.pk && CF.n != null) P[CF.p].n[CF.n].calc.forEach((g, gi) => { if (g.m) return; const k = g.o.findIndex(x => o.pk.includes(x[0])); if (k >= 0) CF.picks[gi] = [k]; });
   cfgRender(); openSheet('shE');
 }
 function initPicks() { CF.picks = P[CF.p].n[CF.n].calc.map(g => g.m ? [] : [0]); }
@@ -407,7 +408,7 @@ async function sendCfg(btn) {
   d._subject = 'Demande de devis depuis studioes.fr'; d._template = 'table';
   btn.textContent = 'Envoi…';
   try { const r = await fetch('https://formsubmit.co/ajax/contact@studioes.fr', {method: 'POST', headers: {'Content-Type': 'application/json', Accept: 'application/json'}, body: JSON.stringify(d)}); if (!r.ok) throw 0; CF.basket = []; saveCart(); closeSheets(); toast('Demande envoyée. Réponse sous 48 h.'); gc('devis-envoye', 'Demande de devis envoyée'); CF.step = 0; }
-  catch (err) { ok.textContent = 'L\'envoi n\'a pas abouti. Écrivez à contact@studioes.fr.'; btn.textContent = 'Envoyer la demande'; }
+  catch (err) { ok.textContent = 'L’envoi n’a pas abouti. Écrivez à contact@studioes.fr.'; btn.textContent = 'Envoyer la demande'; }
 }
 $('#estB').onclick = () => openCfg({});
 saveCart();
@@ -432,7 +433,7 @@ $('#form').addEventListener('submit', async e => {
   if (!f.name.value.trim() || !/\S+@\S+\.\S+/.test(f.email.value) || !f.message.value.trim()) { ok.textContent = 'Merci de renseigner votre nom, votre e-mail et votre projet.'; return; }
   b.textContent = 'Envoi…';
   try { const d = Object.fromEntries(new FormData(f)); d._subject = 'Nouveau message depuis studioes.fr'; d._template = 'table'; const r = await fetch('https://formsubmit.co/ajax/contact@studioes.fr', {method: 'POST', headers: {'Content-Type': 'application/json', Accept: 'application/json'}, body: JSON.stringify(d)}); if (!r.ok) throw 0; f.reset(); closeSheets(); toast('Message envoyé. Réponse sous 48 h.'); gc('message-envoye', 'Message envoyé'); b.textContent = 'Envoyer'; }
-  catch (err) { ok.textContent = 'L\'envoi n\'a pas abouti. Écrivez directement à contact@studioes.fr.'; b.textContent = 'Envoyer'; }
+  catch (err) { ok.textContent = 'L’envoi n’a pas abouti. Écrivez directement à contact@studioes.fr.'; b.textContent = 'Envoyer'; }
 });
 
 /* ================= RENDEZ-VOUS : agenda Cal.com intégré, calendrier maison en secours ================= */
@@ -606,6 +607,7 @@ if (document.fonts) document.fonts.ready.then(moveInk);
 { const h = location.hash;
   const AL = {'#contact': '#rdv', '#portfolio': '#travaux', '#plan-large': '#offre', '#services': '#offre'};
   if (AL[h]) { history.replaceState(null, '', AL[h]); setTimeout(() => $(AL[h]).scrollIntoView(), 200); }
+  if (h === '#mentions') { history.replaceState(null, '', location.pathname); openSheet('shL'); }
   if (h === '#devis') { history.replaceState(null, '', location.pathname); openCfg({}); }
   if (h.startsWith('#r=')) { const r = byId(h.slice(3)); if (r) openGal(r); } }
 })();

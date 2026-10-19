@@ -30,7 +30,7 @@
 @font-face{font-family:"Inter Tight";font-weight:100 900;font-display:swap;src:url(/f/it-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+A720-A7FF}
 @font-face{font-family:"Newsreader";font-style:italic;font-weight:400;font-display:swap;src:url(/f/nr-i.woff2) format("woff2")}
 :root{
-  --bg:#121210;--s1:#1A1A17;--s2:#23221F;--tx:#EDE9DD;--mu:rgba(237,233,221,.62);--fa:rgba(237,233,221,.45);--ln:rgba(237,233,221,.1);
+  --bg:#121210;--s1:#1A1A17;--s2:#23221F;--tx:#EDE9DD;--mu:rgba(237,233,221,.62);--fa:rgba(237,233,221,.6);--ln:rgba(237,233,221,.1);
   --ac:#E1DBC4;--act:#191919;
   --ink:#0b0c28;--plum:#13153e;--plum2:#262a78;--pink:#ffe45c;--skin:#f3eee6;
   --d:"Bricolage Grotesque","Arial Black",sans-serif;--f:"Inter Tight","Helvetica Neue",Arial,sans-serif;--sf:"Newsreader",Georgia,serif;
@@ -344,7 +344,7 @@ ul.liv{margin:0;padding:0}
 
 <footer class="ft w">
   <span>© 2026 Studio ES, Ewen Soupault</span>
-  <span><a href="/">Accueil</a> · <a href="/#travaux">Portfolio</a> · <a href="https://www.instagram.com/ewen.studioes" target="_blank" rel="noopener">Instagram</a></span>
+  <span><a href="/">Accueil</a> · <a href="/#travaux">Portfolio</a> · <a href="https://www.instagram.com/ewen.studioes" target="_blank" rel="noopener">Instagram</a> · <a href="/#mentions">Mentions légales</a></span>
 </footer>
 
 <script>
@@ -390,6 +390,17 @@ ul.liv{margin:0;padding:0}
     if (!RM && !done && max > 8 && vis && !document.hidden && now > hold && !down) { if (Math.abs(w.scrollLeft - pos) > 2) pos = w.scrollLeft; pos = Math.min(max, pos + (FINE ? .03 : .024) * dt); w.scrollLeft = pos; if (pos >= max - 1) done = true; }
     else pos = w.scrollLeft;
     requestAnimationFrame(loop); })(performance.now());
+})();
+</script>
+
+<script>
+/* titres : la taille se réduit si un mot dépasse la largeur de l'écran */
+(() => {
+  const els = [...document.querySelectorAll('.stg h1 > .ln:first-child, .end h2')];
+  const over = el => [el, ...el.querySelectorAll('*')].some(x => getComputedStyle(x).display !== 'inline' && x.scrollWidth > x.clientWidth + 1);
+  const fit = () => els.forEach(el => { el.style.fontSize = ''; let fs = parseFloat(getComputedStyle(el).fontSize), n = 0; while (over(el) && fs > 24 && n++ < 60) { fs -= 2; el.style.fontSize = fs + 'px'; } });
+  fit(); if (document.fonts) document.fonts.ready.then(fit);
+  let t; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(fit, 120); });
 })();
 </script>
 </body>
