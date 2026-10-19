@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://studioes.fr/</loc>
-    <lastmod>2026-10-17</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <image:image><image:loc>https://studioes.fr/og.jpg</image:loc></image:image>
     <image:image><image:loc>https://studioes.fr/s/affiche.webp</image:loc></image:image>
     <image:image><image:loc>https://studioes.fr/s/site.webp</image:loc></image:image>
@@ -23,4 +23,11 @@
     <lastmod>2026-10-17</lastmod>
     <image:image><image:loc>https://studioes.fr/projets/flouz/img/og.jpg</image:loc></image:image>
   </url>
+  <url><loc>https://studioes.fr/projets/fl-auto/</loc><lastmod>2026-10-19</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://studioes.fr/projets/mam-our-et-merveilles/</loc><lastmod>2026-10-19</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://studioes.fr/projets/mjc-la-marelle/</loc><lastmod>2026-10-19</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://studioes.fr/metiers/photographie/</loc><lastmod>2026-10-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://studioes.fr/metiers/graphisme/</loc><lastmod>2026-10-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://studioes.fr/metiers/sites-et-outils/</loc><lastmod>2026-10-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://studioes.fr/metiers/communication/</loc><lastmod>2026-10-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>

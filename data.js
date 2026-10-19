@@ -68,8 +68,8 @@ const fmt = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 const up50 = n => Math.ceil(n / 50) * 50;
 /* prix arrondis : jamais un tarif à l'euro près */
 const stepOf = n => n < 300 ? 10 : n < 1000 ? 50 : n < 5000 ? 100 : 500;
-const rNr = n => Math.round(n / stepOf(n)) * stepOf(n), rDn = n => Math.floor(n / stepOf(n)) * stepOf(n), rUp = n => Math.ceil(n / stepOf(n)) * stepOf(n);
-const rangeF = v => `${fmt(rNr(v))} à ${fmt(rUp(v * 1.2))} €`;
+const rNr = n => Math.round(n / stepOf(n)) * stepOf(n), rDn = n => { const s = n < 1000 ? 10 : 50; return Math.floor(n / s) * s; } /* « à partir de » : fourchette basse la plus proche, jamais au-dessus de la grille */, rUp = n => Math.ceil(n / stepOf(n)) * stepOf(n);
+const rangeF = v => `${fmt(rDn(v))} à ${fmt(rUp(v * 1.2))} €`;
 function estimate(calc, picks) {
   let lo = 0, devis = false, unit = ''; const labels = [];
   calc.forEach((g, gi) => (picks[gi] || []).forEach(oi => { const o = g.o[oi]; if (o[1] == null) devis = true; else lo += o[1]; if (o[2]) unit = o[2]; if (o[1] !== 0) labels.push(g.q + '\u00a0: ' + o[0]); }));

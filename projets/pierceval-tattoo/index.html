@@ -206,6 +206,31 @@ ul.liv{margin:0;padding:0}
   .fact b{font-size:46px}
 }
 @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation:none!important}[data-r]{opacity:1;transform:none}}
+
+/* en-tête : une scène à la couleur du projet, des formes qui dérivent, le nom qui défile */
+.hero{padding-top:clamp(86px,11vh,118px);overflow:visible}
+.hero::before{display:none}
+.stg{position:relative;isolation:isolate;overflow:hidden;border-radius:clamp(24px,3vw,40px);background:var(--pc);padding:clamp(26px,4vw,64px) clamp(22px,4vw,64px) 0;color:#F4F0E6}
+.stg-bg{position:absolute;inset:0;z-index:-2;pointer-events:none;overflow:hidden}
+.stg-bg i{position:absolute;display:block;left:50%;top:50%;width:260%;aspect-ratio:1;margin:-130% 0 0 -130%;border-radius:50%;background:radial-gradient(closest-side,color-mix(in srgb,var(--pc2) 42%,transparent) 0%,color-mix(in srgb,var(--pc2) 16%,transparent) 38%,transparent 72%);animation:sgw 34s ease-in-out infinite}
+.stg-bg i:nth-child(2){width:220%;margin:-110% 0 0 -110%;background:radial-gradient(closest-side,color-mix(in srgb,var(--pc3) 26%,transparent),transparent 70%);animation:sgw2 41s ease-in-out -12s infinite}
+@keyframes sgw{0%{transform:translate(-22%,-28%)}25%{transform:translate(26%,-8%)}50%{transform:translate(10%,30%)}75%{transform:translate(-30%,14%)}100%{transform:translate(-22%,-28%)}}
+@keyframes sgw2{0%{transform:translate(30%,26%)}33%{transform:translate(-26%,20%)}66%{transform:translate(4%,-30%)}100%{transform:translate(30%,26%)}}
+.stg::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.22;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.stg .k span{background:rgba(255,255,255,.12);color:#F4F0E6;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.stg .k span:first-child::before{background:var(--pc2)}
+.stg h1{color:#F4F0E6}
+.stg h1 .se{color:color-mix(in srgb,#F4F0E6 72%,var(--pc2))}
+.stg .meta{border-top-color:rgba(255,255,255,.16)}
+.stg .meta dt{color:rgba(244,240,230,.6)}
+.stg .meta dd,.stg .meta a{color:#F4F0E6}
+.stg .dev{margin-top:clamp(36px,5vw,72px);padding-bottom:0;margin-bottom:-3%;perspective:1400px}
+.stg .dev>*{transform-origin:50% 100%}
+.stg .shot{border-radius:clamp(14px,1.6vw,22px) clamp(14px,1.6vw,22px) 0 0;box-shadow:0 -30px 80px -30px rgba(0,0,0,.6)}
+.stg .bare{background:none;box-shadow:none;border-radius:0;filter:drop-shadow(0 30px 40px rgba(0,0,0,.35))}
+.stg .tilt{transition:transform .9s cubic-bezier(.16,1,.3,1)}
+@media (max-width:700px){.stg{padding:24px 18px 0}}
+@media (prefers-reduced-motion:reduce){.stg-bg i{animation:none}}
 </style>
 </head>
 <body>
@@ -223,6 +248,9 @@ ul.liv{margin:0;padding:0}
 
 <main>
 <section class="hero w" aria-labelledby="t">
+<div class="stg" style="--pc:#2b1330;--pc2:#e68dca;--pc3:#c9a46a">
+  <div class="stg-bg" aria-hidden="true"><i></i><i></i></div>
+  
   <div class="k"><span>Site internet</span><span>Tatouage et piercing</span></div>
   <h1 class="d" id="t"><span class="ln"><span>Pierceval Tattoo</span></span><span class="ln"><span class="se">Trente ans de métier, un premier site.</span></span></h1>
   <dl class="meta">
@@ -234,15 +262,30 @@ ul.liv{margin:0;padding:0}
     <div class="brw"><div class="bar"><i></i><i></i><i></i><span>piercevaltattoo.fr</span></div><img src="img/d-hero.webp" width="1440" height="900" alt="Page d'accueil du site Pierceval Tattoo sur ordinateur : « Tatouage et piercing depuis 1995 » et le logo du studio"></div>
     <div class="phn" id="hp"><img src="img/m-hero.webp" width="600" height="1298" alt="Page d'accueil du site Pierceval Tattoo sur téléphone"></div>
   </div>
+</div>
 </section>
 
 
 <div class="w">
-<section class="ch" aria-labelledby="c1">
+<section class="ch" aria-labelledby="c0">
   <div class="tx" data-r>
     <span class="n">01</span>
-    <h2 class="d" id="c1">Une identité <span class="se">déjà connue</span></h2>
-    <p>Le logo, la carte de visite et la carte cadeau du studio ont été dessinés par Studio ES. Le site en reprend l'aubergine, le rose et le mélange d'une écriture grasse et d'une italique fine&#8239;: les clients reconnaissent le studio dès la première page.</p>
+    <h2 class="d" id="c0">L’identité, <span class="se">avant le site</span></h2>
+    <p>Le badge du studio, ses deux machines et sa date de création, décliné bien avant le site&#8239;: adhésif de vitrine, cartes de rendez-vous et cartes cadeaux.</p>
+  </div>
+  <div class="gal">
+    <img data-r class="wide" src="img/id-logo.webp" width="1200" height="795" alt="Le badge Pierceval Tattoo, rose sur fond prune" loading="lazy">
+    <img data-r src="img/id-vitrine.webp" width="1100" height="1091" alt="Le badge en adhésif sur la vitrine" loading="lazy">
+    <img data-r src="img/id-cdv-verso.webp" width="1200" height="795" alt="Carte de rendez-vous du studio" loading="lazy">
+    <img data-r class="wide" src="img/id-cadeau.webp" width="1400" height="1050" alt="La carte cadeau pliée, « Pour marquer le coup, offrez un cadeau qui reste »" loading="lazy">
+  </div>
+</section>
+
+<section class="ch" aria-labelledby="c1">
+  <div class="tx" data-r>
+    <span class="n">02</span>
+    <h2 class="d" id="c1">Du papier <span class="se">à l’écran</span></h2>
+    <p>Le site reprend l'aubergine, le rose et le mélange d'une écriture grasse et d'une italique fine&#8239;: les clients reconnaissent le studio dès la première page.</p>
     <div class="sw" aria-label="Palette du site"><i style="background:#1c0f1f">Encre</i><i style="background:#351d3a">Aubergine</i><i style="background:#e68dca">Rose</i><i style="background:#ece6df">Peau</i></div>
   </div>
   <div class="vs">
@@ -253,7 +296,7 @@ ul.liv{margin:0;padding:0}
 
 <section class="ch" aria-labelledby="c2">
   <div class="tx" data-r>
-    <span class="n">02</span>
+    <span class="n">03</span>
     <h2 class="d" id="c2">Réserver <span class="se">en quelques gestes</span></h2>
     <p>Le tatouage et le piercing ne se réservent pas de la même façon&#8239;: chacun a son propre parcours, et le calendrier ne propose que les jours ouverts.</p>
   </div>
@@ -267,7 +310,7 @@ ul.liv{margin:0;padding:0}
 
 <section class="ch" aria-labelledby="c3">
   <div class="tx" data-r>
-    <span class="n">03</span>
+    <span class="n">04</span>
     <h2 class="d" id="c3">Une galerie <span class="se">calme</span></h2>
     <p>Neuf pièces choisies parmi les photos du studio, recadrées au même format et nettoyées de leurs filigranes.</p>
   </div>
@@ -282,7 +325,7 @@ ul.liv{margin:0;padding:0}
   <div class="gift">
     <div class="gg">
       <div data-r>
-        <span class="n">04</span>
+        <span class="n">05</span>
         <h2 class="d" id="c4">La carte cadeau, <span class="se">de l'achat au comptoir</span></h2>
         <p>Achetée en ligne à toute heure, reçue aussitôt en PDF aux couleurs du studio, puis vérifiée au comptoir avant la séance.</p>
       </div>
@@ -301,7 +344,7 @@ ul.liv{margin:0;padding:0}
 <div class="w">
 <section class="ch" aria-labelledby="c5">
   <div class="tx" data-r>
-    <span class="n">05</span>
+    <span class="n">06</span>
     <h2 class="d" id="c5">Après <span class="se">la séance</span></h2>
     <p>Trois questions, et le site indique où en est la cicatrisation et les gestes du jour. Une raison de revenir après la séance.</p>
   </div>
@@ -313,7 +356,7 @@ ul.liv{margin:0;padding:0}
 
 <section class="ch" aria-labelledby="c6">
   <div class="tx" data-r>
-    <span class="n">06</span>
+    <span class="n">07</span>
     <h2 class="d" id="c6">Passer <span class="se">au studio</span></h2>
     <p>Un plan dessiné aux couleurs du site, la rue tracée jusqu'à la porte.</p>
   </div>
@@ -343,7 +386,7 @@ ul.liv{margin:0;padding:0}
 <div class="w">
 <section class="ch" aria-labelledby="c8">
   <div class="tx" data-r>
-    <span class="n">07</span>
+    <span class="n">08</span>
     <h2 class="d" id="c8">Le lancement <span class="se">sur Instagram</span></h2>
     <p>Une série de stories pour présenter le site à la communauté du studio.</p>
   </div>
@@ -356,7 +399,7 @@ ul.liv{margin:0;padding:0}
 
 <section class="ch" aria-labelledby="c9">
   <div class="tx" data-r>
-    <span class="n">08</span>
+    <span class="n">09</span>
     <h2 class="d" id="c9">Livré <span class="se">avec</span></h2>
     <p>Le site s'accompagne de ce qu'il faut pour le faire vivre sans dépendre d'un technicien.</p>
   </div>
@@ -404,6 +447,13 @@ ul.liv{margin:0;padding:0}
   const up = () => { down = false; rail.classList.remove('drag'); };
   rail.addEventListener('pointerup', up); rail.addEventListener('pointercancel', up);
 })();
+</script>
+<script>/* GoatCounter : mesure d'audience sans cookie, uniquement sur studioes.fr */if (/(^|\.)studioes\.fr$/.test(location.hostname) && !location.hostname.startsWith('dossiers')) { const g = document.createElement('script'); g.async = true; g.src = 'https://gc.zgo.at/count.js'; g.dataset.goatcounter = 'https://studioes.goatcounter.com/count'; document.head.appendChild(g); }</script>
+<script>
+/* en-tête : le visuel s'incline légèrement vers la souris */
+(() => { const s = document.querySelector('.stg'), v = s && s.querySelector('.dev'); if (!v || matchMedia('(prefers-reduced-motion: reduce)').matches || !matchMedia('(hover: hover)').matches) return;
+  v.classList.add('tilt'); s.addEventListener('pointermove', e => { const b = s.getBoundingClientRect(), x = (e.clientX - b.left) / b.width - .5, y = (e.clientY - b.top) / b.height - .5; v.style.transform = `rotateX(${(-y * 4).toFixed(2)}deg) rotateY(${(x * 6).toFixed(2)}deg)`; });
+  s.addEventListener('pointerleave', () => { v.style.transform = ''; }); })();
 </script>
 </body>
 </html>

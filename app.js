@@ -9,6 +9,9 @@ const esc = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replac
 const store = {get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} }};
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, t) => a + (b - a) * t;
+/* mesure d'audience GoatCounter (sans cookie) : événements utiles */
+const gc = (p, t) => { try { if (window.goatcounter && goatcounter.count) goatcounter.count({path: p, title: t || p, event: true}); } catch (e) {} };
+document.addEventListener('click', e => { const l = e.target.closest('a[href^="mailto:"],a[href^="tel:"],a[href*="cal.eu"],a[href$="#rdv"],a[href*="instagram.com"]'); if (!l) return; const u = l.getAttribute('href'); gc(u.startsWith('mailto:') ? 'clic-mail' : u.startsWith('tel:') ? 'clic-telephone' : u.includes('instagram') ? 'clic-instagram' : 'clic-rendez-vous'); }, true);
 const ico = id => `<svg aria-hidden="true"><use href="#${id}"/></svg>`;
 const preload = u => { const i = new Image(); i.decoding = 'async'; i.src = u; return i; };
 const anim = (el, kf, o) => el.animate ? el.animate(kf, Object.assign({fill: 'forwards', easing: 'cubic-bezier(.16,1,.3,1)'}, o)) : null;
@@ -91,89 +94,94 @@ new IntersectionObserver(es => { heroVis = es[0].isIntersecting; }).observe($('#
 H.cur.src = bigF(HERO[0]); amb.style.backgroundImage = `url(${smF(HERO[0])})`; heroMeta(); preload(bigF(HERO[1]));
 const startUp = () => { if (document.body.classList.contains('go')) return; document.body.classList.add('go'); if (!RM) anim(H.cur, [{opacity: 0}, {opacity: 1}], {duration: 900, easing: 'ease-out'}); };
 H.cur.complete ? requestAnimationFrame(startUp) : (H.cur.onload = startUp, setTimeout(startUp, 2200));
-$('#hCard').onclick = () => { const r = FMAP[HERO[H.i]][0]; openSV(SCENE, SCENE.indexOf(r), r.ph.findIndex(p => p[0] === HERO[H.i])); };
+$('#hCard').onclick = () => { const r = FMAP[HERO[H.i]][0]; openGal(r, r.ph.findIndex(p => p[0] === HERO[H.i])); };
 
-/* ================= LE TRAVAIL : stories + onglets par cible + grille ================= */
+/* ================= LE TRAVAIL : onglets par métier, rangée de cartes qui défile ================= */
 /* notoriété des artistes : les plus connus en premier */
 const POP = ['philippe-katerine', 'matmatah', 'fatal-bazooka', 'la-fouine', 'gael-faye', 'bekar', 'rimk', 'danakil', 'axel-bauer', 'the-avener', 'synapson', 'bakermat', 'les-sheriff', 'biga-ranx', 'mentissa', 'kemmler', 'ramoneurs', 'dali', 'helena', 'franglish', 'genezio', 'sara-lugo', 'jahneration', 'feder', 'bushi', 'radio-byzance', 'aupinard', 'candeur-cyclone', 'perceval', 'starfish', 'atipycs'];
 const rank = r => { const i = POP.indexOf(r.id); return i < 0 ? 99 : i; };
 const SCENE = PHR.filter(r => r.k === 'scene').sort((a, b) => rank(a) - rank(b));
 const PUB = PHR.filter(r => r.k === 'public'), COL = PHR.filter(isCol), ENT = PHR.filter(isEnt);
-let ORD = [];
 const GPREF = ['soute', 'identites', 'marelle', 'campagnes', 'signaletique', 'recrutement', 'affiches', 'atrium', 'budget'];
 const GORD = GRR.slice().sort((a, b) => GPREF.indexOf(a.id) - GPREF.indexOf(b.id));
 const FORUM = byId('forum-asso'), INAUG = byId('inauguration'), VOEUX = byId('voeux-ph'), COMM = byId('commemo');
-/* [clé, libellé, reportages photo (stories et grille, dans l'ordre), projets graphiques] */
+/* [clé, libellé, contenus] : le portfolio est trié par métier, comme les formules */
 const TABS = [
-  ['culture', 'Concerts et festivals', () => [...SCENE.slice(0, 5), PUB[0], ...SCENE.slice(5, 11), PUB[1], ...SCENE.slice(11), PUB[2]], ['soute', 'marelle', 'atrium', 'affiches']],
-  ['collectivite', 'Collectivités', () => [INAUG, VOEUX, FORUM, COMM], ['campagnes', 'signaletique', 'recrutement', 'budget']],
-  ['entreprise', 'Entreprises', () => [...ENT], ['case:pierceval-tattoo', 'identites']],
-  ['club', 'Clubs et assos', () => [FORUM, ...PUB], ['identites']],
-  ['particulier', 'Particuliers', () => [...PUB], []],
-  ['graph', 'Graphisme', () => [], ['*']],
-  ['web', 'Sites et outils', () => [], []]
+  ['photo', 'Photographie', () => { const l = [...SCENE.slice(0, 5), PUB[0], INAUG, ...SCENE.slice(5, 10), 'C', PUB[1], VOEUX, ...SCENE.slice(10, 16), PUB[2], FORUM, COMM].filter(Boolean); const cs = CASES.filter(c => c.p); return l.map(r => r === 'C' ? (cs.length ? {c: cs[0], k: 'c'} : null) : {r, k: 'p'}).filter(Boolean).concat(cs.slice(1).map(c => ({c, k: 'c'}))); }],
+  ['graph', 'Graphisme', () => [...CASES.filter(c => c.g).map(c => ({c, k: 'c'})), ...GORD.filter(r => !CASE_OF[r.id] && !['campagnes', 'recrutement', 'budget'].includes(r.id)).map(r => ({r, k: 'g'}))]],
+  ['web', 'Sites et outils', () => CASES.filter(c => c.web).map(c => ({c, k: 'c'}))],
+  ['com', 'Communication', () => ['campagnes', 'recrutement', 'budget'].map(byId).filter(Boolean).map(r => ({r, k: 'g'})).concat(FORUM ? [{r: FORUM, k: 'p'}] : [])]
 ];
-const PFMAP = {culture: 'scene', collectivite: 'col', entreprise: 'ent', club: 'public', particulier: 'photo', graph: 'graph'};
-const stories = $('#stories');
-function renderStories() {
-  stories.style.display = ORD.length ? '' : 'none';
-  stories.innerHTML = ORD.map((r, i) => `<button class="sto${seen.has(r.id) ? ' seen' : ''}" data-i="${i}" style="transition-delay:${Math.min(i, 12) * 30}ms"><span class="ring"><span><img src="${sm(r, (COVER[r.id] || r.ph[0][0]))}" alt="" loading="lazy"></span></span><b>${esc(r.t)}</b></button>`).join('');
-  stories.scrollLeft = 0; markLoaded(stories); edge(stories);
-}
-stories.addEventListener('click', e => { const b = e.target.closest('.sto'); if (b && !goCase(ORD[+b.dataset.i])) openSV(ORD, +b.dataset.i, 0); });
-
-const SZ = {L: [6, 4, 6, 2, 2], M: [3, 2, 3, 1, 1], W: [6, 2, 6, 2, 1], T: [4, 3, 6, 2, 2]};
-const sz = s => { const z = SZ[s]; return `--cw:${z[0]};--ch:${z[1]};--tw:${z[2]};--mw:${z[3]};--mh:${z[4]}`; };
-/* couverture choisie pour chaque projet graphique : l'image la plus lisible, la moins chargée */
+const PFMAP = {photo: 'photo', graph: 'graph', web: 'web', com: 'camp'};
 const COVER = {soute: 'soute-7', marelle: 'marelle-1', atrium: 'atrium-1', budget: 'budget-1', recrutement: 'recrutement-1', identites: 'molan-move-1', signaletique: 'totem-1', campagnes: 'voeux-1', affiches: 'affiches-8'};
-const CASE_OF = {soute: 'la-soute'};
+const CASE_OF = {soute: 'la-soute', marelle: 'mjc-la-marelle'};
 const caseFor = r => CASE_OF[r.id] && CASES.find(x => x.id === CASE_OF[r.id]);
 const coverOf = (r, s) => (COVER[r.id] && (s !== 'W' || r.ph.find(p => p[0] === COVER[r.id])[1] > 1.2) && r.ph.find(p => p[0] === COVER[r.id])) || r.ph.find(p => s === 'W' ? p[1] > 1.2 : p[1] < 1.2) || r.ph[0];
-const cardCase = (c, s) => `<a class="c ph k-site" href="${c.url}" style="${sz(s)}"><img class="bgi" src="${c.img}" alt="" loading="lazy"><span class="chip glass"><i></i>${c.k}</span><span class="bot"><h3>${esc(c.t)}</h3><span class="ic">${ico('ne')}</span></span></a>`;
-function cardRep(r, s, list) {
-  const f = coverOf(r, s);
-  if (caseFor(r)) { const c = caseFor(r); return `<a class="c ph" href="${c.url}" style="${sz(s)}"><img class="bgi" src="${sm(r, f[0])}" alt="" loading="lazy" decoding="async"><span class="chip glass"><i></i>${c.k}</span><span class="chip glass cnt">Étude de cas</span><span class="bot"><h3>${esc(r.t)}</h3><span class="ic">${ico('ne')}</span></span></a>`; }
-  return `<button class="c ph" data-r="${r.id}" data-l="${list}" data-sz="${s}" style="${sz(s)}"><img class="bgi" src="${sm(r, f[0])}" alt="" loading="lazy" decoding="async"><span class="bars">${r.ph.slice(0, 5).map(() => '<s><i></i></s>').join('')}</span><span class="chip glass"><i></i>${CAT(r)}</span><span class="chip glass cnt">${r.ph.length}${r.k === 'g' ? ' visuels' : ' photos'}</span><span class="bot"><h3>${esc(r.t)}</h3><span class="ic">${ico('ne')}</span></span></button>`;
-}
-const TX = (ic, t, p, cfg) => `<button class="c k-tx" data-cfg="${cfg || ''}" style="${sz('M')}">${ico(ic).replace('<svg', '<svg class="big"')}<span><h3>${t}</h3><p>${p}</p></span></button>`;
-const feed = $('#feed');
-const LAY = ['L', 'M', 'M', 'M', 'M', 'W', 'M', 'M'];
-function renderFeed() {
-  const T = TABS.find(t => t[0] === st.tab); let h = '';
-  ORD = T[2]().filter(Boolean); renderStories();
-  if (st.tab === 'web') h = CASES.filter(c => c.web).map(c => cardCase(c, 'T')).join('');
-  else if (st.tab === 'graph') { ORD = GORD.slice(); renderStories(); h = GORD.map((r, i) => cardRep(r, i % 6 === 0 ? 'L' : 'M', 'g')).join(''); }
-  else {
-    const ph = T[2]().filter(Boolean), items = [];
-    ph.forEach(r => items.push([r, 'p']));
-    T[3].forEach(id => { if (id.startsWith('case:')) { const c = CASES.find(x => x.id === id.slice(5)); if (c) items.push([c, 'c']); } else { const r = byId(id); if (r) items.push([r, 'g']); } });
-    /* on alterne : 5 photos, puis le graphisme glissé dans la grille */
-    const ng = items.filter(x => x[1] !== 'p'), mix = [...items.filter(x => x[1] === 'p').slice(0, 5), ng[0], ...items.filter(x => x[1] === 'p').slice(5), ...ng.slice(1)].filter(Boolean).slice(0, 8);
-    h = mix.map((x, i) => x[1] === 'c' ? cardCase(x[0], LAY[i]) : cardRep(x[0], LAY[i], x[1])).join('');
-  }
-  feed.innerHTML = h; markLoaded(feed);
-  $$('.c', feed).forEach((c, i) => { c.style.transitionDelay = (i % 4) * 60 + 'ms'; io.observe(c); });
-  $$('.c[data-r]', feed).forEach(bindCard);
-  $$('.c[data-cfg]', feed).forEach(c => c.onclick = () => openCfg({p: c.dataset.cfg}));
-  $('#feedMore').style.display = st.tab === 'web' ? 'none' : '';
-}
 const goCase = r => { const c = r && caseFor(r); if (c) { location.href = c.url; return true; } return false; };
+
+/* une carte : photo (portrait ou paysage), projet graphique, ou étude de cas */
+function railCard(x, i, dup) {
+  const t = dup ? ' tabindex="-1" aria-hidden="true"' : '', d = ` style="--d:${(i * 1.7) % 9}s"`;
+  if (x.k === 'c') { const c = x.c; return `<a class="rc rc-c" href="${c.url}"${t}${d}><span class="rc-i"><img src="${c.img}" alt="" decoding="async"></span><span class="rc-b"><b class="d">${esc(c.t)}</b><em>${esc(c.s)}</em><span class="rc-t">${c.tags.slice(0, 3).map(g => `<i>${esc(g)}</i>`).join('')}</span></span><span class="rc-go">${ico('a')}</span></a>`; }
+  const r = x.r, wide = x.k === 'p' && i % 5 === 3 && r.ph.some(p => p[1] > 1.2), f = coverOf(r, wide ? 'W' : 'M');
+  const lab = x.k === 'g' ? 'Graphisme' : CAT(r), n = r.ph.length;
+  return `<button class="rc${wide ? ' rc-w' : ''}" data-r="${r.id}" data-k="${x.k}"${t}${d}><span class="rc-i"><img class="bgi" src="${sm(r, f[0])}" alt="" decoding="async"></span><span class="bars">${r.ph.slice(0, 5).map(() => '<s><i></i></s>').join('')}</span><span class="rc-l">${lab}</span><span class="rc-n">${n} ${x.k === 'g' ? 'visuels' : 'photos'}</span><span class="rc-f"><b class="d">${esc(r.t)}</b><span class="rc-go">${ico('a')}</span></span></button>`;
+}
+const feed = $('#feed');
+let ORD = [], GL = [];
+const RL = {pos: 0, v: 0, half: 0, auto: false, hold: 0, last: 0, vis: false};
+function renderFeed() {
+  const T = TABS.find(t => t[0] === st.tab), items = T[2]();
+  ORD = items.filter(x => x.k === 'p').map(x => x.r); GL = items.filter(x => x.k === 'g').map(x => x.r);
+  feed.classList.remove('in');
+  feed.innerHTML = `<div class="rl-t">${items.map((x, i) => railCard(x, i)).join('')}</div>`;
+  markLoaded(feed);
+  /* défilement lent jusqu'au bout de la série, puis arrêt (pas de boucle) */
+  RL.auto = !RM && feed.scrollWidth > feed.clientWidth + 8; RL.done = false;
+  RL.pos = 0; feed.scrollLeft = 0; RL.hold = performance.now() + 900;
+  $$('.rc[data-r]', feed).forEach(bindCard);
+  $('#feedMore').style.display = st.tab === 'web' ? 'none' : '';
+  requestAnimationFrame(() => requestAnimationFrame(() => feed.classList.add('in')));
+}
+/* lent par défaut, la main reprend la main : glisser, swiper, la molette accélèrent ; on repart doucement ensuite */
+(function railLoop(now) {
+  const dt = Math.min(64, now - (RL.last || now)); RL.last = now;
+  if (RL.auto && !RL.done && RL.vis && !document.hidden && now > RL.hold && !feed.classList.contains('drag')) {
+    if (Math.abs(feed.scrollLeft - RL.pos) > 2) RL.pos = feed.scrollLeft;
+    const max = feed.scrollWidth - feed.clientWidth;
+    RL.pos = Math.min(max, RL.pos + (FINE ? 0.03 : 0.024) * dt); feed.scrollLeft = RL.pos;
+    if (RL.pos >= max - 1) RL.done = true;
+  } else RL.pos = feed.scrollLeft;
+  requestAnimationFrame(railLoop);
+})(performance.now());
+const railHold = ms => { RL.hold = performance.now() + ms; };
+feed.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') railHold(1e9); });
+feed.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') railHold(600); });
+feed.addEventListener('touchstart', () => railHold(1e9), {passive: true});
+feed.addEventListener('touchend', () => railHold(1600), {passive: true});
+feed.addEventListener('wheel', () => railHold(1400), {passive: true});
+feed.addEventListener('focusin', () => railHold(1e9));
+feed.addEventListener('focusout', () => railHold(800));
+new IntersectionObserver(es => { RL.vis = es[0].isIntersecting; }, {threshold: .1}).observe(feed);
+feed.addEventListener('click', e => {
+  const b = e.target.closest('button.rc'); if (!b) return; const r = byId(b.dataset.r);
+  openGal(r);
+});
 function bindCard(c) {
-  const r = byId(c.dataset.r), list = c.dataset.l === 'g' ? GORD : ORD, img = $('.bgi', c), bars = $$('.bars s i', c), n = bars.length;
-  c.onclick = () => openSV(list, list.indexOf(r), 0);
-  if (!FINE) return;
+  const r = byId(c.dataset.r), img = $('.bgi', c), bars = $$('.bars s i', c), n = bars.length;
+  if (!FINE || n < 2) return;
   let raf = 0, t0 = 0, idx = 0; const orig = img.src, frames = r.ph.slice(0, n).map(p => sm(r, p[0]));
   const step = now => { const p = (now - t0) / 1100; if (p >= 1) { idx = (idx + 1) % n; t0 = now; img.src = frames[idx]; bars.forEach((b, j) => b.style.transform = `scaleX(${j < idx ? 1 : 0})`); } bars[idx].style.transform = `scaleX(${clamp(p, 0, 1)})`; raf = requestAnimationFrame(step); };
   c.addEventListener('pointerenter', () => { frames.forEach(preload); c.classList.add('play'); idx = 0; t0 = performance.now(); raf = requestAnimationFrame(step); });
   c.addEventListener('pointerleave', () => { cancelAnimationFrame(raf); c.classList.remove('play'); bars.forEach(b => b.style.transform = ''); img.src = orig; });
 }
 const tabs = $('#tabs'), ink = $('#ink');
-tabs.insertAdjacentHTML('beforeend', TABS.map(([k, l]) => `<button role="tab" data-k="${k}">${l}</button>`).join(''));
-st.tab = st.p && TABS.some(t => t[0] === st.p) ? st.p : 'culture';
-function moveInk() { const b = $(`button[data-k="${st.tab}"]`, tabs); if (!b) return; ink.style.width = b.offsetWidth + 'px'; ink.style.transform = `translateX(${b.offsetLeft - 5}px)`; ink.style.left = '5px'; $$('button', tabs).forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-selected', x === b); }); tabs.scrollTo({left: b.offsetLeft - (tabs.clientWidth - b.offsetWidth) / 2, behavior: 'smooth'}); }
-tabs.addEventListener('click', e => { const b = e.target.closest('button[data-k]'); if (!b || b.dataset.k === st.tab) return; st.tab = b.dataset.k; if (P[st.tab]) { st.p = st.tab; store.set('ses5', st.p); plImg(); } moveInk(); renderFeed(); });
+function initTabs() { tabs.insertAdjacentHTML('beforeend', TABS.map(([k, l, f]) => `<button role="tab" data-k="${k}">${l}<em>${f().length}</em></button>`).join('')); }
+st.tab = 'photo';
+function moveInk() { const b = $(`button[data-k="${st.tab}"]`, tabs); if (!b) return; ink.style.width = b.offsetWidth + 'px'; ink.style.transform = `translateX(${b.offsetLeft}px)`; $$('button', tabs).forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-selected', x === b); }); }
+tabs.addEventListener('click', e => { const b = e.target.closest('button[data-k]'); if (!b || b.dataset.k === st.tab) return; st.tab = b.dataset.k; moveInk(); renderFeed(); });
 
-/* rangées défilantes : glisser à la souris, fondu de bord tant qu'il reste du contenu */
+/* rangées défilantes : glisser à la souris */
 function edge(el) { el.classList.toggle('end', el.scrollLeft + el.clientWidth >= el.scrollWidth - 4); }
 function dragScroll(el) {
   let down = false, x0 = 0, s0 = 0, moved = 0;
@@ -184,22 +192,23 @@ function dragScroll(el) {
   el.addEventListener('click', e => { if (moved > 5) { e.stopPropagation(); e.preventDefault(); moved = 0; } }, true);
   edge(el);
 }
-dragScroll(stories); dragScroll(tabs);
+dragScroll(feed); dragScroll(tabs);
+
 
 /* carte Photographie : les reportages défilent en fondu (concert, festival, institution, entreprise) */
 { const c = $('.mtc[data-rot]'), ids = c.dataset.rot.split(','), first = $('img', c);
-  const ims = [first, ...ids.slice(1).map(id => { const im = document.createElement('img'); im.alt = ''; im.loading = 'lazy'; im.className = 'off'; im.src = BASE + 'p/' + id + '.jpg'; c.insertBefore(im, first.nextSibling); return im; })];
+  const ims = [first, ...ids.slice(1).map(id => { const im = document.createElement('img'); im.alt = ''; im.loading = 'lazy'; im.className = 'off'; im.src = BASE + 'p/t/' + id + '.webp'; c.insertBefore(im, first.nextSibling); return im; })];
   let k = 0;
   if (!RM) setInterval(() => { const b = c.getBoundingClientRect(); if (b.bottom < 0 || b.top > innerHeight || document.hidden) return; ims[k].classList.add('off'); k = (k + 1) % ims.length; ims[k].classList.remove('off'); }, 2800); }
-/* quatre métiers : chaque carte ouvre la bonne rubrique */
-$('#mt').addEventListener('click', e => {
-  const b = e.target.closest('.mtc'); if (!b) return; const g = b.dataset.go;
-  if (g === 'com') { $('#offre').scrollIntoView({behavior: RM ? 'auto' : 'smooth'}); plSnap(2, true); return; }
-  if (st.tab !== g) { st.tab = g; moveInk(); renderFeed(); }
-  $('#travaux').scrollIntoView({behavior: RM ? 'auto' : 'smooth'});
-});
+/* quatre métiers : chaque carte ouvre sa page descriptive (liens simples) */
 /* ================= PORTFOLIO PLEIN ÉCRAN ================= */
-const CASES = [{id: 'flouz', web: 1, t: 'flouz.', k: 'Application', q: 'flouz application mobile budget finances app web', url: '/projets/flouz/', img: '/projets/flouz/img/cover.webp', ar: 1.43}, {id: 'la-soute', web: 1, t: 'La Soute', k: 'Identité et site', q: 'la soute salle de spectacle concert saison brochure affiche identite site internet web billetterie', url: '/projets/la-soute/', img: '/projets/la-soute/img/cover.webp', ar: 1.43}, {id: 'pierceval-tattoo', web: 1, t: 'Pierceval Tattoo', k: 'Site internet', q: 'pierceval tattoo tatouage piercing site internet web scaer', url: '/projets/pierceval-tattoo/', img: '/projets/pierceval-tattoo/img/cover.webp', ar: 1.43}];
+const CASES = [
+  {id: 'la-soute', web: 1, g: 1, t: 'La Soute', k: 'Identité et site', y: 2026, s: 'Une salle, un hublot, une saison.', tags: ['Identité', 'Brochure', 'Affiches', 'Site'], q: 'la soute salle de spectacle concert saison brochure affiche identite site internet web billetterie', url: '/projets/la-soute/', img: '/projets/la-soute/img/cover.webp', ar: 1.43},
+  {id: 'mjc-la-marelle', g: 1, t: 'MJC La Marelle', k: 'Brochure de saison', y: 2026, s: 'Une saison, vingt-quatre pages.', tags: ['Mise en page', 'Illustration', 'Photo'], q: 'mjc la marelle centre social scaer brochure saison mise en page illustration couverture', url: '/projets/mjc-la-marelle/', img: '/projets/mjc-la-marelle/img/cover.webp', ar: 1.43},
+  {id: 'fl-auto', g: 1, p: 1, t: 'FL Auto', k: 'Identité et signalétique', y: 2025, s: 'De la route à l’atelier.', tags: ['Logo', 'Signalétique', 'Photo'], q: 'fl auto garage mecanique scaer logo identite signaletique enseigne panneau photo reportage', url: '/projets/fl-auto/', img: '/projets/fl-auto/img/cover.webp', ar: 1.43},
+  {id: 'mam-our-et-merveilles', g: 1, t: 'Mam’our et merveilles', k: 'Identité visuelle', y: 2026, s: 'Un trèfle, un brin, un cœur caché.', tags: ['Symbole', 'Charte', 'Motif'], q: 'mam our et merveilles brins de bonheur maison assistantes maternelles laz identite logo charte motif', url: '/projets/mam-our-et-merveilles/', img: '/projets/mam-our-et-merveilles/img/cover.webp', ar: 1.43},
+  {id: 'pierceval-tattoo', web: 1, g: 1, t: 'Pierceval Tattoo', k: 'Identité et site', y: 2026, s: 'Tatouage et piercing depuis 1995.', tags: ['Site', 'Réservation', 'Carte cadeau'], q: 'pierceval tattoo tatouage piercing site internet web scaer', url: '/projets/pierceval-tattoo/', img: '/projets/pierceval-tattoo/img/cover.webp', ar: 1.43},
+  {id: 'flouz', web: 1, t: 'flouz.', k: 'Application', y: 2026, s: 'Le budget du mois, d’un coup d’œil.', tags: ['Application', 'Interface', 'Identité'], q: 'flouz application mobile budget finances app web', url: '/projets/flouz/', img: '/projets/flouz/img/cover.webp', ar: 1.43}];
 const SEAS = ['soute', 'marelle', 'atrium'], CAMP = ['campagnes', 'recrutement', 'budget', 'affiches'];
 const CH = [
   ['all', 'Tout', () => true], ['photo', 'Photographie', r => r.k !== 'g'], ['scene', 'Concerts', r => r.k === 'scene'], ['public', 'Festivals', r => r.k === 'public'],
@@ -208,62 +217,118 @@ const CH = [
 ];
 const pf = $('#pf'), pfG = $('#pfG'), pfQ = $('#pfQ'), pfC = $('#pfC');
 const PF = {c: 'all', q: '', list: []};
-const caseIn = c => c === 'all' || c === 'web';
-pfC.innerHTML = CH.map(([k, l, f]) => `<button data-c="${k}">${l}<em>${REPS.filter(f).length + (caseIn(k) ? CASES.length : 0)}</em></button>`).join('');
+const casesIn = c => CASES.filter(x => c === 'all' || (c === 'web' && x.web) || (c === 'graph' && x.g) || (c === 'photo' && x.p));
+const caseIn = c => casesIn(c).length > 0;
+pfC.innerHTML = CH.map(([k, l, f]) => `<button data-c="${k}">${l}<em>${REPS.filter(f).length + casesIn(k).length}</em></button>`).join('');
 const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 function pfRender() {
   const f = CH.find(c => c[0] === PF.c)[2], q = norm(PF.q.trim());
-  PF.list = REPS.filter(r => !(CASE_OF[r.id] && caseIn(PF.c)) && f(r) && (!q || norm(r.t + ' ' + CAT(r) + ' ' + r.ph.map(p => p[2] || '').join(' ')).includes(q)));
+  PF.list = REPS.filter(r => !(CASE_OF[r.id] && casesIn(PF.c).some(x => x.id === CASE_OF[r.id])) && f(r) && (!q || norm(r.t + ' ' + CAT(r) + ' ' + r.ph.map(p => p[2] || '').join(' ')).includes(q)));
   $$('button', pfC).forEach(b => b.classList.toggle('on', b.dataset.c === PF.c));
-  const cs = caseIn(PF.c) ? CASES.filter(c => !q || norm(c.t + ' ' + c.q).includes(q)) : [];
+  const cs = casesIn(PF.c).filter(c => !q || norm(c.t + ' ' + c.q).includes(q));
   $('#pfN').textContent = PF.list.length + cs.length;
   setTimeout(() => markLoaded(pfG), 0);
   pfG.innerHTML = PF.list.length + cs.length ? cs.map(c => `<a class="pc" href="${c.url}"><img src="${c.img}" alt="" loading="lazy" style="aspect-ratio:${c.ar}"><span class="chip glass"><i></i>${c.k}</span><span class="ti"><b>${esc(c.t)}</b><span>Étude de cas</span></span></a>`).join('') + PF.list.map((r, i) => { const p = r.ph.find(x => x[0] === COVER[r.id]) || r.ph[0]; return `<button class="pc" data-i="${i}" style="animation-delay:${Math.min(i, 16) * 35}ms"><img src="${sm(r, p[0])}" alt="" loading="lazy" style="aspect-ratio:${p[1]}"><span class="chip glass"><i></i>${CAT(r)}</span><span class="ti"><b>${esc(r.t)}</b><span>${r.ph.length}</span></span></button>`; }).join('') : '<p class="pf-empty">Aucun résultat. Essayez un autre mot.</p>';
 }
 pfC.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; PF.c = b.dataset.c; pfRender(); b.scrollIntoView({inline: 'nearest', block: 'nearest', behavior: 'smooth'}); });
 pfQ.addEventListener('input', () => { PF.q = pfQ.value; pfRender(); });
-pfG.addEventListener('click', e => { const b = e.target.closest('button.pc'); if (b && !goCase(PF.list[+b.dataset.i])) openSV(PF.list, +b.dataset.i, 0); });
+pfG.addEventListener('click', e => { const b = e.target.closest('button.pc'); if (b) openGal(PF.list[+b.dataset.i]); });
 function openPF(c) { PF.c = c || 'all'; pfRender(); pf.classList.add('on'); pf.scrollTop = 0; root.style.overflow = 'hidden'; dockOff(true); focusIn(pf, '#pfX'); }
 function closePF() { if (!pf.classList.contains('on')) return; pf.classList.remove('on'); root.style.overflow = ''; dockOff(false); focusBack(); }
 $('#pfX').onclick = closePF;
 
-/* ================= PLAN LARGE : trois paliers, une image qui s'élargit ================= */
-const off = $('#offre'), plS = $('#plS'), plV = $('#plV');
-const PL = {t: 0, auto: true, t0: 0, DUR: 5200, vis: false};
+/* ================= PLAN LARGE : formules et tarifs, en cartes ================= */
+/* Prix « à partir de » tirés de la grille du 15 oct. 2026, arrondis vers le bas, à la fourchette la plus proche. */
 function low(n) { let lo = Infinity, u = ''; n.calc[0].o.forEach(o => { if (o[1] != null && o[1] > 0 && o[1] < lo) { lo = o[1]; u = o[2] || ''; } }); return lo === Infinity ? null : [lo, u]; }
 const unitS = u => u ? ' / ' + ({mois: 'mois', an: 'an', saison: 'saison', semaine: 'semaine'}[u]) : '';
-function plImg() {
-  const ph = P[st.p || 'culture'].ph.filter(f => FMAP[f]), set = (im, u) => { if (im.getAttribute('src') !== u) im.src = u; };
-  const [v0, v1, v2] = $$('.v', plV);
-  const bg = (el, u) => { const v = `url("${u}")`; if (el.style.backgroundImage !== v) el.style.backgroundImage = v; };
-  bg($('i', v0), bigF(ph[0]));
-  const i1 = $$('img', v1); set(i1[0], bigF(ph[1] || ph[0])); set(i1[1], BASE + 's/affiche.webp'); set(i1[2], BASE + 's/site.webp');
-  /* photothèque : uniquement des verticales 3:4 ou 4:5, pour ne rien couper */
-  const pv = f => { const r = FMAP[f] && FMAP[f][1][1]; return r >= .7 && r <= .85; };
-  const k0 = FMAP[ph[0]][0].k, six = [...ph.slice(1).filter(pv)];
-  for (const r of REPS) { if (six.length >= 6) break; if (r.k !== k0 && k0 !== 'g') continue; const f = r.ph.map(p => p[0]).find(pv); if (f && !six.includes(f) && f !== ph[0]) six.push(f); }
-  $$('i', v2).forEach((el, j) => bg(el, smF(six[j % six.length])));
+const FO = [
+  {k: 'photo', t: 'Photographie', n: 'Mariage, saison associative, collectivité à l’année : tous les cas sont dans le configurateur.', c: [
+    {h: 'Prise de vue', s: 'Le reportage', p: 250, hot: 1, a: 'Une intervention pour un moment précis, des images retouchées et prêtes à servir.',
+      inc: ['Concert, spectacle, cérémonie, inauguration ou journée en entreprise', 'Une sélection retouchée, livrée sous 72 h', 'Droits d’usage pour votre communication'],
+      opt: [['Livraison le soir même', 100], ['Formats réseaux prêts à poster', 90], ['Heure supplémentaire sur place', 80]], go: {pal: 0}},
+    {h: 'Tirage', s: 'Le reportage et ses supports', p: 530, a: 'Les mêmes images deviennent votre affiche, vos visuels réseaux, votre brochure.',
+      inc: ['Le reportage', 'Une affiche et trois formats réseaux tirés des images', 'Deux allers-retours de corrections', 'Fichiers pour l’impression et le web'],
+      opt: [['Kakémono ou roll-up', 140], ['Brochure de 8 à 16 pages', 550, 1]], go: {pal: 1}},
+    {h: 'Exposition', s: 'Le suivi dans la durée', p: 340, u: 'mois', a: 'Un rythme défini ensemble, et une photothèque qui grandit avec votre actualité.',
+      inc: ['Une demi-journée de reportage par mois', 'Des dates fixées ensemble, sans mensualité payée d’avance', 'Une photothèque classée, prête à servir', 'Engagement de 6 mois'],
+      opt: [['Trois demi-journées par mois', 990, 2, 'mois'], ['Saison culturelle, 5 dates', 1190, 2]], go: {pal: 2}}]},
+  {k: 'graph', t: 'Graphisme', n: 'Affiches, flyers, brochures, signalétique : chiffrés à l’unité dans le configurateur.', c: [
+    {h: 'Logo', s: 'Le signe', p: 550, a: 'Un signe lisible partout, de l’enseigne à la photo de profil.',
+      inc: ['Recherches et pistes présentées', 'Le logo et ses variantes : couleur, monochrome, réduit', 'Deux allers-retours de corrections', 'Fichiers pour l’impression et le web'],
+      opt: [['Couleurs, typographies et motif', 210], ['Cartes de visite', 90]], go: {ol: "Logo", nl: 'Une identité, une campagne'}},
+    {h: 'Identité', s: 'Le logo et ses règles', p: 990, hot: 1, a: 'Le logo et tout ce qui l’entoure, pour que chaque support se ressemble.',
+      inc: ['Logo et variantes', 'Couleurs, typographies, motif', 'Charte graphique complète', 'Trois déclinaisons au choix : carte, affiche, réseaux…'],
+      opt: [['Kakémono ou roll-up', 140], ['Signalétique, à la journée', 550]], go: {ol: "Identité complète", nl: 'Une identité, une campagne'}},
+    {h: 'Identité et supports', s: 'Pour démarrer', p: 1250, a: 'L’identité complète et les supports du quotidien, prêts le jour de l’ouverture.',
+      inc: ['L’identité complète', 'Cartes de visite et papier à en-tête', 'Signature mail', 'Deux gabarits pour les réseaux'],
+      opt: [['Reportage photo de lancement', 370, 1], ['Affiche de lancement', 140]], go: {ol: "Identité et supports", nl: 'Une identité, une campagne'}}]},
+  {k: 'web', t: 'Sites et outils', n: 'Réservations, inscriptions, espace membres : fonctions sur mesure, chiffrées à la journée.', c: [
+    {h: 'Une page', s: 'La vitrine', p: 990, a: 'Qui vous êtes, ce que vous proposez, comment vous joindre.',
+      inc: ['Maquette sur mesure, à votre identité', 'Textes rédigés', 'Adapté au mobile', 'Référencement local et mise en ligne', 'Nom de domaine à votre nom'],
+      opt: [['Hébergement et maintenance', 35, 0, 'mois'], ['Reportage photo pour le site', 370, 1]], go: {ol: "Site d'une page", nl: 'Un site internet'}},
+    {h: '3 à 5 pages', s: 'Une page par offre', p: 1890, hot: 1, a: 'Chaque offre a sa page, pour être trouvée sur Google et comprise en quelques secondes.',
+      inc: ['Tout le site d’une page', 'Des pages dédiées à chaque offre', 'Formulaire de contact'],
+      opt: [['Hébergement et maintenance', 35, 0, 'mois'], ['Configurateur ou calculateur de devis', 1100, 1]], go: {ol: "Site de 3 à 5 pages", nl: 'Un site internet'}},
+    {h: 'Site complet', s: 'De 6 à 12 pages', p: 4400, a: 'Actualités, agenda, contenus : un site que vous faites vivre vous-même.',
+      inc: ['Tout le site de 3 à 5 pages', 'Actualités ou agenda modifiables par vous', 'Reprise des contenus existants', 'Formation à la prise en main'],
+      opt: [['Hébergement et maintenance', 35, 0, 'mois'], ['Fonctions sur mesure, à la journée', 550]], go: {ol: "Site complet", nl: 'Un site internet'}}]},
+  {k: 'com', t: 'Communication', n: 'Plan de communication, relations presse, pack événement : détaillés dans le configurateur.', c: [
+    {h: 'Remise à plat', s: 'L’audit', p: 300, a: 'L’audit de vos comptes et leur remise en ordre, avant de publier.',
+      inc: ['Analyse du compte et de ce qui marche', 'Nettoyage, bio, mises en avant', 'Recommandations de rythme et de ton'],
+      opt: [['Gabarits de publications et de stories', 210]], go: {nl: 'Mes réseaux sociaux suivis'}},
+    {h: 'Réseaux suivis', s: 'Chaque mois', p: 240, u: 'mois', hot: 1, a: 'Des contenus produits en série, validés ensemble, prêts à publier.',
+      inc: ['6, 12, 20 ou 30 contenus par mois', 'Visuels et textes', 'Un calendrier validé ensemble', 'Engagement de 6 mois'],
+      opt: [['Publication par Studio ES', 70, 1, 'mois'], ['Reportage photo mensuel', 340, 0, 'mois']], go: {ol: '12 contenus par mois', nl: 'Mes réseaux sociaux suivis'}},
+    {h: 'Service com', s: 'Externalisé', p: 550, u: 'mois', a: 'Un jour par mois ou un jour par semaine : site, réseaux, supports, presse.',
+      inc: ['Un interlocuteur pour toute la communication', 'Coordination des imprimeurs et prestataires', 'Relations presse comprises'],
+      opt: [['Deux jours par mois', 1100, 2, 'mois'], ['Plan de communication annuel', 1100]], go: {ol: 'Appui ponctuel', nl: 'Un service com externalisé'}}]}
+];
+const foP = v => fmt(rDn(v));
+const nb = t => t.replace(/(\d) (h|min|mois|pages|dates|à)\b/g, '$1 $2').replace(/ (€|:)/g, ' $1');
+const foT = $('#foT'), foG = $('#foG'), foN = $('#foN'), foInk = $('.ink', foT);
+let foK = 'photo', foSeen = false;
+foT.insertAdjacentHTML('beforeend', FO.map((f, i) => `<button role="tab" data-f="${f.k}" aria-selected="false">${f.t}</button>`).join(''));
+function foInkMove() { const b = $(`button[data-f="${foK}"]`, foT); if (!b) return; foInk.style.width = b.offsetWidth + 'px'; foInk.style.transform = `translateX(${b.offsetLeft}px)`; }
+function foRender() {
+  const f = FO.find(x => x.k === foK);
+  $$('button', foT).forEach(b => { const on = b.dataset.f === foK; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
+  foG.classList.remove('in');
+  foG.innerHTML = f.c.map((c, i) => `<article class="fo${c.hot ? ' hot' : ''}" style="--i:${i}">
+    <div class="fo-h"><h3 class="d">${c.h}</h3>${c.hot ? '<span class="fo-b">Le plus demandé</span>' : ''}</div>
+    <p class="fo-s">${c.s}</p>
+    <p class="fo-p"><small>à partir de</small><b class="d">${foP(c.p)} €</b>${c.u ? `<em>par ${c.u}</em>` : ''}</p>
+    <p class="fo-a">${nb(c.a)}</p>
+    <div class="fo-acc"><button type="button" class="fo-x" aria-expanded="false" aria-controls="foc${i}"><span>Ce qui est compris</span><em>${c.inc.length}</em><i aria-hidden="true"></i></button>
+      <div class="fo-cw" id="foc${i}"><div><ul class="fo-c">${c.inc.map(x => `<li><svg><use href="#ok"/></svg><span>${nb(x)}</span></li>`).join('')}</ul></div></div></div>
+    ${c.opt.length ? `<div class="fo-op"><h4>En option</h4><ul>${c.opt.map(o => `<li><span>${nb(o[0])}</span><b>${['+', 'dès ', 'dès '][o[2] || 0]}${foP(o[1])}&nbsp;€${o[3] ? '<small> / ' + o[3] + '</small>' : ''}</b></li>`).join('')}</ul></div>` : ''}
+    <div class="fo-f"><button class="bt ${c.hot ? 'bt-a' : 'bt-g'} pi bt-s" data-fi="${i}">Composer mon devis<span class="o"><svg><use href="#a"/></svg></span></button><a href="#rdv">ou réserver un appel de 30&nbsp;min</a></div>
+  </article>`).join('');
+  foDots();
+  foG.scrollLeft = 0; foInkMove();
+  if (foSeen) requestAnimationFrame(() => requestAnimationFrame(() => foG.classList.add('in')));
 }
-function plSnap(t, user) {
-  PL.t = t; PL.t0 = performance.now(); PL.el = 0; if (user) PL.auto = false;
-  plS.classList.toggle('man', !PL.auto || RM);
-  $$('li', plS).forEach((li, j) => { li.classList.toggle('on', j === t); li.classList.toggle('dn', j < t); const b = $('button', li); b.setAttribute('aria-selected', j === t); if (j !== t || !PL.auto) $('s i', li).style.transform = ''; });
-  $$('.v', plV).forEach((v, j) => v.classList.toggle('on', j === t));
-}
-plS.addEventListener('click', e => { const b = e.target.closest('button'); if (b) plSnap(+b.dataset.i, true); });
-plS.addEventListener('keydown', e => { const d = {ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1}[e.key]; if (d == null) return; e.preventDefault(); const t = clamp(PL.t + d, 0, 2); plSnap(t, true); $$('button', plS)[t].focus(); });
-new IntersectionObserver(es => { PL.vis = es[0].isIntersecting; if (PL.vis) PL.t0 = performance.now() - 0; }, {threshold: .45}).observe(plV);
-(function plLoop(now) {
-  if (PL.auto && !RM) {
-    if (!PL.vis || document.hidden) PL.t0 = now - (PL.el || 0);
-    PL.el = now - PL.t0; const p = clamp(PL.el / PL.DUR, 0, 1), li = $$('li', plS)[PL.t];
-    if (PL.t < 2) $('s i', li).style.transform = `scaleY(${p})`;
-    if (p >= 1) { PL.el = 0; if (PL.t < 2) plSnap(PL.t + 1); else { PL.auto = false; plS.classList.add('man'); } }
-  }
-  requestAnimationFrame(plLoop);
-})(performance.now());
-$('#plGo').onclick = () => openCfg({p: st.p || 'culture', pal: PL.t});
-plImg(); plSnap(0);
+function foShow(k) { if (FO.some(f => f.k === k) && k !== foK) { foK = k; foRender(); } }
+foT.addEventListener('click', e => { const b = e.target.closest('button[data-f]'); if (b) foShow(b.dataset.f); });
+foT.addEventListener('keydown', e => { const d = {ArrowRight: 1, ArrowLeft: -1}[e.key]; if (!d) return; e.preventDefault(); const i = clamp(FO.findIndex(f => f.k === foK) + d, 0, FO.length - 1); foShow(FO[i].k); $$('button', foT)[i].focus(); });
+foG.addEventListener('click', e => {
+  const x = e.target.closest('.fo-x');
+  /* un clic ouvre « ce qui est compris » sur toutes les cartes à la fois, pour comparer */
+  if (x) { const open = x.getAttribute('aria-expanded') !== 'true'; $$('.fo-x', foG).forEach(y => { y.setAttribute('aria-expanded', open); y.closest('.fo').classList.toggle('open', open); }); return; }
+  const b = e.target.closest('button[data-fi]');
+  if (b) { const go = FO.find(f => f.k === foK).c[+b.dataset.fi].go, p = st.p && P[st.p] && (go.pal != null || P[st.p].n.some(x => x.l === go.nl)) ? st.p : go.pal != null ? 'culture' : 'entreprise'; openCfg(Object.assign({p}, go)); }
+});
+/* indicateur de défilement : une bulle par carte, comme sous un carrousel */
+function foDots() { const n = foG.children.length; foN.innerHTML = Array.from({length: n}, (_, i) => `<button type="button" aria-label="Carte ${i + 1}" data-d="${i}"></button>`).join(''); foDotsSync(); }
+function foDotsSync() { const cs = [...foG.children], over = foG.scrollWidth > foG.clientWidth + 4; foN.hidden = !over; if (!over) return;
+  const c = foG.scrollLeft + foG.clientWidth / 2; let k = 0, best = 1e9; cs.forEach((x, i) => { const m = x.offsetLeft + x.offsetWidth / 2, d = Math.abs(m - c); if (d < best) { best = d; k = i; } });
+  $$('button', foN).forEach((b, i) => b.classList.toggle('on', i === k)); }
+foG.addEventListener('scroll', foDotsSync, {passive: true}); addEventListener('resize', foDotsSync);
+foN.addEventListener('click', e => { const b = e.target.closest('[data-d]'); if (!b) return; const c = foG.children[+b.dataset.d]; foG.scrollTo({left: c.offsetLeft - (foG.clientWidth - c.offsetWidth) / 2, behavior: RM ? 'auto' : 'smooth'}); });
+dragScroll(foT);
+foRender();
+new IntersectionObserver(es => { if (es[0].isIntersecting) { foSeen = true; foG.classList.add('in'); } }, {threshold: .15}).observe(foG);
+addEventListener('resize', foInkMove);
+if (document.fonts) document.fonts.ready.then(foInkMove);
 
 /* ================= CONFIGURATEUR (panier) ================= */
 const CF = {step: 0, p: null, n: null, picks: [], basket: []};
@@ -272,8 +337,10 @@ const cfg = $('#cfg');
 const STEPS = ['Profil', 'Besoin', 'Formule', 'Récapitulatif'];
 const saveCart = () => { store.set('ses5-cart', JSON.stringify(CF.basket)); const n = CF.basket.length; $('#estN').textContent = n; $('#estB').classList.toggle('has', n > 0); };
 function openCfg(o = {}) {
-  if (o.p) { CF.p = o.p; CF.step = 1; CF.n = null; if (o.pal != null) { const j = P[CF.p].n.findIndex(x => x.pal === o.pal); if (j >= 0) { CF.n = j; initPicks(); CF.step = 2; } } }
+  gc('devis-ouvert', 'Configurateur ouvert');
+  if (o.p) { CF.p = o.p; CF.step = 1; CF.n = null; if (o.nl) { const j = P[CF.p].n.findIndex(x => x.l === o.nl); if (j >= 0) { CF.n = j; initPicks(); CF.step = 2; } } else if (o.pal != null) { const j = P[CF.p].n.findIndex(x => x.pal === o.pal); if (j >= 0) { CF.n = j; initPicks(); CF.step = 2; } } }
   else CF.step = CF.basket.length && o.pal == null ? 3 : 0;
+  if (o.ol && CF.n != null) { const g = P[CF.p].n[CF.n].calc[0], k = g.o.findIndex(x => x[0] === o.ol); if (k >= 0) CF.picks[0] = [k]; }
   cfgRender(); openSheet('shE');
 }
 function initPicks() { CF.picks = P[CF.p].n[CF.n].calc.map(g => g.m ? [] : [0]); }
@@ -283,8 +350,8 @@ function cfgRender() {
   $('#prog').innerHTML = STEPS.map((t, i) => `<button data-s="${i}" class="${i < s ? 'dn' : i === s ? 'on' : ''}" ${i > s || (i === 3 && !CF.basket.length) ? 'disabled' : ''}><i></i>${t}</button>`).join('');
   let h = '';
   if (s === 0) h = `<div class="stp"><h3 class="d">Vous êtes</h3><div class="opts">${PROFS.map(([k, t, d]) => `<button class="op${CF.p === k ? ' on' : ''}" data-p="${k}">${t}<small>${d}</small></button>`).join('')}</div></div>`;
-  if (s === 1) h = `<div class="stp"><h3 class="d">Vous cherchez</h3><div class="opts">${P[CF.p].n.map((x, i) => { const l = low(x); return `<button class="op${CF.n === i ? ' on' : ''}" data-n="${i}">${x.l}<small>${l ? 'dès ' + fmt(rNr(l[0])) + ' €' + unitS(l[1]) : 'sur devis'}</small></button>`; }).join('')}</div></div>`;
-  if (s === 2) { const n = P[CF.p].n[CF.n]; h = `<div class="stp"><h3 class="d">${n.l}</h3>${n.calc.map((g, gi) => `<div class="grp"><h4>${g.q}${g.m ? ', au choix' : ''}</h4><div class="chs" data-g="${gi}">${g.o.map((o, oi) => `<button data-o="${oi}" class="${(CF.picks[gi] || []).includes(oi) ? 'on' : ''}">${o[0]}<em>${o[1] == null ? 'sur devis' : o[1] === 0 ? '' : (g.m ? '+' : '') + fmt(rNr(o[1])) + ' €' + unitS(o[2] || '')}</em></button>`).join('')}</div></div>`).join('')}</div>`; }
+  if (s === 1) h = `<div class="stp"><h3 class="d">Vous cherchez</h3><div class="opts">${P[CF.p].n.map((x, i) => { const l = low(x); return `<button class="op${CF.n === i ? ' on' : ''}" data-n="${i}">${x.l}<small>${l ? 'dès ' + fmt(rDn(l[0])) + ' €' + unitS(l[1]) : 'sur devis'}</small></button>`; }).join('')}</div></div>`;
+  if (s === 2) { const n = P[CF.p].n[CF.n]; h = `<div class="stp"><h3 class="d">${n.l}</h3>${n.calc.map((g, gi) => `<div class="grp"><h4>${g.q}${g.m ? ', au choix' : ''}</h4><div class="chs" data-g="${gi}">${g.o.map((o, oi) => `<button data-o="${oi}" class="${(CF.picks[gi] || []).includes(oi) ? 'on' : ''}">${o[0]}<em>${o[1] == null ? 'sur devis' : o[1] === 0 ? '' : (g.m ? '+ dès ' : 'dès ') + fmt(rDn(o[1])) + ' €' + unitS(o[2] || '')}</em></button>`).join('')}</div></div>`).join('')}</div>`; }
   if (s === 3) {
     const pub = CF.basket.some(b => b.p === 'collectivite');
     h = `<div class="stp"><h3 class="d">Votre sélection</h3><ul class="bask">${CF.basket.map((b, i) => `<li><span><b>${esc(b.l)}</b><small>${esc(b.labels.join(' · ') || 'Sur devis')}</small></span><span class="pr">${b.lo ? rangeF(b.lo) + unitS(b.unit) : 'Sur devis'}<button class="rm" data-rm="${i}">Retirer</button></span></li>`).join('')}</ul>
@@ -339,7 +406,7 @@ async function sendCfg(btn) {
   d.total = t.lo ? rangeF(t.lo) : 'sur devis'; d.profil = (PROFS.find(p => p[0] === CF.basket[0].p) || [])[1] || '';
   d._subject = 'Demande de devis depuis studioes.fr'; d._template = 'table';
   btn.textContent = 'Envoi…';
-  try { const r = await fetch('https://formsubmit.co/ajax/contact@studioes.fr', {method: 'POST', headers: {'Content-Type': 'application/json', Accept: 'application/json'}, body: JSON.stringify(d)}); if (!r.ok) throw 0; CF.basket = []; saveCart(); closeSheets(); toast('Demande envoyée. Réponse sous 48 h.'); CF.step = 0; }
+  try { const r = await fetch('https://formsubmit.co/ajax/contact@studioes.fr', {method: 'POST', headers: {'Content-Type': 'application/json', Accept: 'application/json'}, body: JSON.stringify(d)}); if (!r.ok) throw 0; CF.basket = []; saveCart(); closeSheets(); toast('Demande envoyée. Réponse sous 48 h.'); gc('devis-envoye', 'Demande de devis envoyée'); CF.step = 0; }
   catch (err) { ok.textContent = 'L\'envoi n\'a pas abouti. Écrivez à contact@studioes.fr.'; btn.textContent = 'Envoyer la demande'; }
 }
 $('#estB').onclick = () => openCfg({});
@@ -364,7 +431,7 @@ $('#form').addEventListener('submit', async e => {
   e.preventDefault(); const f = e.target, ok = $('#fOk'), b = $('#sendB');
   if (!f.name.value.trim() || !/\S+@\S+\.\S+/.test(f.email.value) || !f.message.value.trim()) { ok.textContent = 'Merci de renseigner votre nom, votre e-mail et votre projet.'; return; }
   b.textContent = 'Envoi…';
-  try { const d = Object.fromEntries(new FormData(f)); d._subject = 'Nouveau message depuis studioes.fr'; d._template = 'table'; const r = await fetch('https://formsubmit.co/ajax/contact@studioes.fr', {method: 'POST', headers: {'Content-Type': 'application/json', Accept: 'application/json'}, body: JSON.stringify(d)}); if (!r.ok) throw 0; f.reset(); closeSheets(); toast('Message envoyé. Réponse sous 48 h.'); b.textContent = 'Envoyer'; }
+  try { const d = Object.fromEntries(new FormData(f)); d._subject = 'Nouveau message depuis studioes.fr'; d._template = 'table'; const r = await fetch('https://formsubmit.co/ajax/contact@studioes.fr', {method: 'POST', headers: {'Content-Type': 'application/json', Accept: 'application/json'}, body: JSON.stringify(d)}); if (!r.ok) throw 0; f.reset(); closeSheets(); toast('Message envoyé. Réponse sous 48 h.'); gc('message-envoye', 'Message envoyé'); b.textContent = 'Envoyer'; }
   catch (err) { ok.textContent = 'L\'envoi n\'a pas abouti. Écrivez directement à contact@studioes.fr.'; b.textContent = 'Envoyer'; }
 });
 
@@ -397,9 +464,46 @@ function calLoad() {
   Cal('init', 'rdv', {origin: 'https://app.cal.eu'});
   Cal.ns.rdv('inline', {elementOrSelector: '#calEmbed', calLink: 'studioes/30min', config: {layout: 'month_view', theme: 'dark'}});
   Cal.ns.rdv('ui', {theme: 'dark', hideEventTypeDetails: true, layout: 'month_view', cssVarsPerTheme: {dark: {'cal-brand': '#E1DBC4', 'cal-brand-emphasis': '#ece7d6', 'cal-brand-text': '#191919', 'cal-bg': '#1A1A17', 'cal-bg-muted': '#23221F', 'cal-border': 'rgba(237,233,221,.12)', 'cal-text': '#EDE9DD'}}});
+  Cal.ns.rdv('on', {action: 'bookingSuccessful', callback: () => gc('rendez-vous-pris', 'Rendez-vous pris (Cal.com)')});
   setTimeout(() => { if (!$('iframe', calBox)) calFallback(); }, 7000);
 }
 new IntersectionObserver(es => { if (es[0].isIntersecting) calLoad(); }, {rootMargin: FINE ? '600px' : '150px'}).observe(calBox);
+
+
+/* ================= GALERIE D'UN REPORTAGE : toutes les photos sur une page ================= */
+const gp = $('#gp'), gpG = $('#gpG'), lb = $('#lb');
+const GP = {r: null, i: 0, open: false};
+function similar(r) {
+  const pool = r.k === 'g' ? GRR : PHR, same = pool.filter(x => x !== r && CAT(x) === CAT(r)), rest = pool.filter(x => x !== r && CAT(x) !== CAT(r));
+  return [...same.sort((x, y) => rank(x) - rank(y)), ...rest].filter(x => !CASE_OF[x.id]).slice(0, 4);
+}
+function openGal(r, start) {
+  if (!r || goCase(r)) return;
+  GP.r = r; const g = r.k === 'g';
+  $('#gpK').textContent = g ? 'Graphisme' : CAT(r); $('#gpT').textContent = r.t;
+  $('#gpS').textContent = g ? r.ph.length + ' visuels' : r.ph.length + ' photos';
+  $('#gpC').textContent = ''; $('.gp-end p', gp).innerHTML = g ? 'Un projet à mettre en forme&#8239;? <span class="se">Parlons-en.</span>' : 'Un événement à couvrir&#8239;? <span class="se">Parlons-en.</span>';
+  gpG.innerHTML = r.ph.map((p, i) => `<button data-i="${i}" aria-label="Agrandir la photo ${i + 1}"><img src="${sm(r, p[0])}" alt="${esc(p[2] || r.t)}" width="640" height="${Math.round(640 / p[1])}" loading="${i < 6 ? 'eager' : 'lazy'}" decoding="async"></button>`).join('');
+  $('#gpSim').innerHTML = similar(r).map(x => `<button data-r="${x.id}"><img src="${sm(x, coverOf(x, 'M')[0])}" alt="" loading="lazy"><b>${esc(x.t)}</b></button>`).join('');
+  markLoaded(gp);
+  if (!GP.open) { focusIn(gp, '#gpX'); GP.open = true; gp.classList.add('on'); root.style.overflow = 'hidden'; dockOff(true); }
+  gp.scrollTop = 0; try { history.replaceState(null, '', '#r=' + r.id); } catch (e) {}
+  const bs = $$('button', gpG); bs.forEach((b, i) => setTimeout(() => b.classList.add('in'), 60 + Math.min(i, 9) * 50));
+  gc('galerie/' + r.id, 'Galerie : ' + r.t);
+  if (start != null && start >= 0) openLb(start);
+}
+function closeGal() { if (!GP.open) return; GP.open = false; gp.classList.remove('on'); closeLb(); if (!pf.classList.contains('on') && !sheetOpen) { root.style.overflow = ''; dockOff(false); } try { history.replaceState(null, '', location.pathname); } catch (e) {} focusBack(); }
+$('#gpX').onclick = closeGal;
+gpG.addEventListener('click', e => { const b = e.target.closest('button[data-i]'); if (b) openLb(+b.dataset.i); });
+$('#gpSim').addEventListener('click', e => { const b = e.target.closest('button[data-r]'); if (b) openGal(byId(b.dataset.r)); });
+$('#gpDv').onclick = () => { const g = GP.r && GP.r.k === 'g'; closeGal(); openCfg(g ? {} : {p: st.p || 'culture', pal: 0}); };
+$('#gpRdv').addEventListener('click', () => closeGal());
+function openLb(i) { GP.i = (i + GP.r.ph.length) % GP.r.ph.length; const f = GP.r.ph[GP.i][0], im = $('#lbI'); im.style.opacity = .3; im.onload = () => { im.style.opacity = 1; }; im.src = big(GP.r, f); im.alt = GP.r.ph[GP.i][2] || GP.r.t; $('#lbC').textContent = (GP.i + 1) + ' / ' + GP.r.ph.length; lb.classList.add('on'); preload(big(GP.r, GP.r.ph[(GP.i + 1) % GP.r.ph.length][0])); }
+function closeLb() { lb.classList.remove('on'); }
+$('#lbP').onclick = () => openLb(GP.i - 1); $('#lbN').onclick = () => openLb(GP.i + 1); $('#lbX').onclick = closeLb;
+lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
+{ let x0 = null; lb.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, {passive: true}); lb.addEventListener('touchend', e => { if (x0 == null) return; const d = e.changedTouches[0].clientX - x0; if (Math.abs(d) > 50) openLb(GP.i + (d < 0 ? 1 : -1)); x0 = null; }, {passive: true}); }
+addEventListener('keydown', e => { if (lb.classList.contains('on')) { if (e.key === 'ArrowRight') openLb(GP.i + 1); else if (e.key === 'ArrowLeft') openLb(GP.i - 1); else if (e.key === 'Escape') { e.stopPropagation(); closeLb(); } } else if (GP.open && e.key === 'Escape') closeGal(); }, true);
 
 /* ================= STORIES PLEIN ÉCRAN ================= */
 const sv = $('#sv');
@@ -408,7 +512,6 @@ function openSV(list, ri, pi = 0) { if (!S.open) focusIn(sv, '#svX'); S.list = l
 function closeSV() {
   if (!S.open) return; S.open = false; sv.classList.remove('on'); focusBack();
   if (!pf.classList.contains('on') && !sheetOpen) { root.style.overflow = ''; dockOff(false); }
-  $$('.sto', stories).forEach(b => b.classList.toggle('seen', seen.has(ORD[+b.dataset.i].id)));
   if (location.hash.startsWith('#r=')) history.replaceState(null, '', location.pathname);
 }
 function layer(r, p) { const d = document.createElement('div'); d.className = 'sv-s'; d.innerHTML = `<div class="fl" style="background-image:url(${sm(r, p[0])})"></div><img class="${p[1] < .9 && r.k !== 'g' ? 'cv' : ''}" src="${big(r, p[0])}" alt="${esc(r.t)}">`; return d; }
@@ -498,11 +601,11 @@ addEventListener('scroll', () => {
 addEventListener('resize', moveInk);
 
 /* ================= DÉPART ================= */
-renderFeed(); moveInk(); dockSync();
+initTabs(); renderFeed(); moveInk(); dockSync();
 if (document.fonts) document.fonts.ready.then(moveInk);
 { const h = location.hash;
   const AL = {'#contact': '#rdv', '#portfolio': '#travaux', '#plan-large': '#offre', '#services': '#offre'};
   if (AL[h]) { history.replaceState(null, '', AL[h]); setTimeout(() => $(AL[h]).scrollIntoView(), 200); }
   if (h === '#devis') { history.replaceState(null, '', location.pathname); openCfg({}); }
-  if (h.startsWith('#r=')) { const r = byId(h.slice(3)); if (r) { const list = r.k === 'g' ? GORD : ORD; openSV(list, list.indexOf(r), 0); } } }
+  if (h.startsWith('#r=')) { const r = byId(h.slice(3)); if (r) openGal(r); } }
 })();

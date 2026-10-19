@@ -215,6 +215,49 @@ ul.liv{margin:0;padding:0}
 .shot img{width:100%}
 .liv{grid-template-columns:repeat(2,minmax(0,1fr))}
 @media (max-width:700px){.gal,.gal3,.liv{grid-template-columns:1fr}}
+
+
+/* en-tête : une scène à la couleur du projet, des formes qui dérivent, le nom qui défile */
+.hero{padding-top:clamp(86px,11vh,118px);overflow:visible}
+.hero::before{display:none}
+.stg{position:relative;isolation:isolate;overflow:hidden;border-radius:clamp(24px,3vw,40px);background:var(--pc);padding:clamp(26px,4vw,64px) clamp(22px,4vw,64px) 0;color:#F4F0E6}
+.stg-bg{position:absolute;inset:0;z-index:-2;pointer-events:none;overflow:hidden}
+.stg-bg i{position:absolute;display:block;left:50%;top:50%;width:260%;aspect-ratio:1;margin:-130% 0 0 -130%;border-radius:50%;background:radial-gradient(closest-side,color-mix(in srgb,var(--pc2) 42%,transparent) 0%,color-mix(in srgb,var(--pc2) 16%,transparent) 38%,transparent 72%);animation:sgw 34s ease-in-out infinite}
+.stg-bg i:nth-child(2){width:220%;margin:-110% 0 0 -110%;background:radial-gradient(closest-side,color-mix(in srgb,var(--pc3) 26%,transparent),transparent 70%);animation:sgw2 41s ease-in-out -12s infinite}
+@keyframes sgw{0%{transform:translate(-22%,-28%)}25%{transform:translate(26%,-8%)}50%{transform:translate(10%,30%)}75%{transform:translate(-30%,14%)}100%{transform:translate(-22%,-28%)}}
+@keyframes sgw2{0%{transform:translate(30%,26%)}33%{transform:translate(-26%,20%)}66%{transform:translate(4%,-30%)}100%{transform:translate(30%,26%)}}
+.stg::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.22;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.stg .k span{background:rgba(255,255,255,.12);color:#F4F0E6;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.stg .k span:first-child::before{background:var(--pc2)}
+.stg h1{color:#F4F0E6}
+.stg h1 .se{color:color-mix(in srgb,#F4F0E6 72%,var(--pc2))}
+.stg .meta{border-top-color:rgba(255,255,255,.16)}
+.stg .meta dt{color:rgba(244,240,230,.6)}
+.stg .meta dd,.stg .meta a{color:#F4F0E6}
+.stg .dev{margin-top:clamp(36px,5vw,72px);padding-bottom:0;margin-bottom:-3%;perspective:1400px}
+.stg .dev>*{transform-origin:50% 100%}
+.stg .shot{border-radius:clamp(14px,1.6vw,22px) clamp(14px,1.6vw,22px) 0 0;box-shadow:0 -30px 80px -30px rgba(0,0,0,.6)}
+.stg .bare{background:none;box-shadow:none;border-radius:0;filter:drop-shadow(0 30px 40px rgba(0,0,0,.35))}
+.stg .tilt{transition:transform .9s cubic-bezier(.16,1,.3,1)}
+@media (max-width:700px){.stg{padding:24px 18px 0}}
+@media (prefers-reduced-motion:reduce){.stg-bg i{animation:none}}
+
+/* livrables en images : rangée qui défile seule, la main reprend la main */
+.cqd{padding-block:clamp(70px,9vw,130px)}
+.cqd>.w{border-top:1px solid var(--ln);padding-top:clamp(70px,9vw,130px)}
+.cqd h2{margin:0 0 clamp(26px,3vw,40px);font-size:clamp(36px,4.4vw,68px);line-height:.92}
+.cqd h2 .se{display:block;font-size:.72em;color:var(--mu)}
+.cqd-w{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:14px var(--side) 18px;cursor:grab;touch-action:pan-x pan-y}
+.cqd-w::-webkit-scrollbar{display:none}
+.cqd-w.drag{cursor:grabbing}.cqd-w.drag *{pointer-events:none}
+.mq{display:flex;width:max-content;animation:none!important}
+.mq figure{flex:none;width:clamp(230px,22vw,310px);margin:0 14px 0 0;padding:12px 12px 16px;border-radius:22px;background:var(--s1);box-shadow:inset 0 0 0 1px var(--ln);transition:transform .5s cubic-bezier(.34,1.35,.64,1)}
+@media (hover:hover){.mq figure:hover{transform:translateY(-8px)}}
+.mq img{display:block;width:100%;aspect-ratio:var(--ar,3/4);object-fit:cover;object-position:50% 0;border-radius:12px;background:var(--s2)}
+.mq.ct img{object-fit:contain;padding:10px;background:#1c1c19}
+.mq figcaption{margin-top:12px;padding:0 4px}
+.mq b{display:block;font:800 17px/1.15 var(--d);letter-spacing:-.02em}
+.mq span{display:block;margin-top:4px;font-size:13.5px;color:var(--mu);line-height:1.38}
 </style>
 </head>
 <body>
@@ -232,6 +275,9 @@ ul.liv{margin:0;padding:0}
 
 <main>
 <section class="hero w" aria-labelledby="t">
+<div class="stg" style="--pc:#171a52;--pc2:#ff6b4f;--pc3:#ffe45c">
+  <div class="stg-bg" aria-hidden="true"><i></i><i></i></div>
+  
   <div class="k"><span>Identité et site internet</span><span>Salle de spectacle</span></div>
   <h1 class="d" id="t"><span class="ln"><span>La Soute</span></span><span class="ln"><span class="se">Une salle, un hublot, une saison.</span></span></h1>
   <dl class="meta">
@@ -240,6 +286,7 @@ ul.liv{margin:0;padding:0}
     <div><dt>Discipline</dt><dd>Direction artistique, design, développement</dd></div>
   </dl>
   <div class="dev"><div class="shot" data-r><img src="img/site.webp" width="1400" height="788" alt="Le site de La Soute sur ordinateur et sur téléphone : réservation d'un concert"></div></div>
+</div>
 </section>
 
 <div class="w">
@@ -293,19 +340,9 @@ ul.liv{margin:0;padding:0}
   </div>
 </section>
 
-<section class="ch" aria-labelledby="c9">
-  <div class="tx" data-r>
-    <span class="n">05</span>
-    <h2 class="d" id="c9">Livré <span class="se">avec</span></h2>
-  </div>
-  <ul class="liv">
-    <li data-r><b>Charte graphique</b><span>Logo, pictogramme, palette, typographies et règles d'usage.</span></li>
-    <li data-r><b>Brochure de saison</b><span>Mise en page complète, prête pour l'imprimeur.</span></li>
-    <li data-r><b>Affiches et réseaux</b><span>Un gabarit par soirée, décliné pour les réseaux sociaux.</span></li>
-    <li data-r><b>Site internet</b><span>Agenda, fiches concerts et réservation des places.</span></li>
-  </ul>
-</section>
 </div>
+<section class="cqd" aria-labelledby="cqd" style="padding-top:0"><div class="w"><h2 class="d" id="cqd" data-r>Les livrables <span class="se">en images</span></h2></div>
+  <div class="cqd-w"><div class="mq ct" style="--ar:4/5"><figure><img src="img/soute-4.webp" alt="Construction du logo La Soute"><figcaption><b>Logo</b><span>Construit autour du hublot de la salle.</span></figcaption></figure><figure><img src="img/soute-1.webp" alt="Le logo sur les couleurs de la salle"><figcaption><b>Charte graphique</b><span>Palette, typographies et règles d’usage.</span></figcaption></figure><figure><img src="img/soute-7.webp" alt="Le pictogramme hublot"><figcaption><b>Pictogramme</b><span>Le hublot seul, pour les petits formats.</span></figcaption></figure><figure><img src="img/brochure.webp" alt="La brochure de saison"><figcaption><b>Brochure de saison</b><span>Mise en page complète, prête pour l’imprimeur.</span></figcaption></figure><figure><img src="img/soute-5.webp" alt="Couverture de la brochure"><figcaption><b>Couverture</b><span>La saison dans le hublot.</span></figcaption></figure><figure><img src="img/affiche.webp" alt="Affiche de concert"><figcaption><b>Affiches</b><span>Un gabarit par soirée, décliné pour les réseaux.</span></figcaption></figure><figure><img src="img/soute-6.webp" alt="Affiche Lame de fond"><figcaption><b>Temps forts</b><span>Une couleur par temps fort.</span></figcaption></figure><figure><img src="img/soute-9.webp" alt="Accueil du site"><figcaption><b>Site internet</b><span>Agenda de la saison et fiches concerts.</span></figcaption></figure><figure><img src="img/soute-8.webp" alt="Le site sur téléphone"><figcaption><b>Billetterie</b><span>Réservation des places sur téléphone.</span></figcaption></figure></div></div></section>
 
 <section class="end w" aria-labelledby="fin">
   <h2 class="d" id="fin" data-r>Une saison à habiller&#8239;? <span class="se">Parlons-en.</span></h2>
@@ -339,6 +376,31 @@ ul.liv{margin:0;padding:0}
   rail.addEventListener('pointermove', e => { if (down) rail.scrollLeft = s0 - (e.clientX - x0); });
   const up = () => { down = false; rail.classList.remove('drag'); };
   rail.addEventListener('pointerup', up); rail.addEventListener('pointercancel', up); }
+})();
+</script>
+<script>/* GoatCounter : mesure d'audience sans cookie, uniquement sur studioes.fr */if (/(^|\.)studioes\.fr$/.test(location.hostname) && !location.hostname.startsWith('dossiers')) { const g = document.createElement('script'); g.async = true; g.src = 'https://gc.zgo.at/count.js'; g.dataset.goatcounter = 'https://studioes.goatcounter.com/count'; document.head.appendChild(g); }</script>
+<script>
+/* en-tête : le visuel s'incline légèrement vers la souris */
+(() => { const s = document.querySelector('.stg'), v = s && s.querySelector('.dev'); if (!v || matchMedia('(prefers-reduced-motion: reduce)').matches || !matchMedia('(hover: hover)').matches) return;
+  v.classList.add('tilt'); s.addEventListener('pointermove', e => { const b = s.getBoundingClientRect(), x = (e.clientX - b.left) / b.width - .5, y = (e.clientY - b.top) / b.height - .5; v.style.transform = `rotateX(${(-y * 4).toFixed(2)}deg) rotateY(${(x * 6).toFixed(2)}deg)`; });
+  s.addEventListener('pointerleave', () => { v.style.transform = ''; }); })();
+</script>
+<script>
+/* rangée de livrables : défilement lent jusqu'au dernier livrable, puis arrêt ; glisser ou swiper pour aller plus vite */
+(() => { const w = document.querySelector('.cqd-w'); if (!w) return; const RM = matchMedia('(prefers-reduced-motion: reduce)').matches, FINE = matchMedia('(hover: hover)').matches;
+  let pos = 0, hold = 0, last = 0, vis = false, done = false;
+  new IntersectionObserver(e => { vis = e[0].isIntersecting; }).observe(w);
+  const h = ms => { hold = performance.now() + ms; };
+  w.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') h(1e9); }); w.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') h(500); });
+  w.addEventListener('touchstart', () => h(1e9), {passive: true}); w.addEventListener('touchend', () => h(1500), {passive: true}); w.addEventListener('wheel', () => h(1200), {passive: true});
+  let down = false, x0 = 0, s0 = 0, mv = 0;
+  w.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') return; down = true; mv = 0; x0 = e.clientX; s0 = w.scrollLeft; });
+  addEventListener('pointermove', e => { if (!down) return; const d = e.clientX - x0; mv = Math.max(mv, Math.abs(d)); if (mv > 5) { w.classList.add('drag'); w.scrollLeft = s0 - d; } });
+  addEventListener('pointerup', () => { if (down) { down = false; setTimeout(() => w.classList.remove('drag'), 0); } });
+  (function loop(now) { const dt = Math.min(64, now - (last || now)); last = now; const max = w.scrollWidth - w.clientWidth;
+    if (!RM && !done && max > 8 && vis && !document.hidden && now > hold && !down) { if (Math.abs(w.scrollLeft - pos) > 2) pos = w.scrollLeft; pos = Math.min(max, pos + (FINE ? .03 : .024) * dt); w.scrollLeft = pos; if (pos >= max - 1) done = true; }
+    else pos = w.scrollLeft;
+    requestAnimationFrame(loop); })(performance.now());
 })();
 </script>
 </body>
