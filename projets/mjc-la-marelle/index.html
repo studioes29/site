@@ -284,6 +284,42 @@ ul.liv{margin:0;padding:0}
 .sw i{box-shadow:inset 0 0 0 1px rgba(20,20,18,.08)}
 .end{position:relative}
 .ft a:hover{color:var(--tx)}
+
+/* en-tête 2027 : barre du site, puis la fiche du projet façon nuancier */
+.top{height:64px;padding:0 var(--side);background:rgba(240,238,233,.62);-webkit-backdrop-filter:blur(22px) saturate(1.8);backdrop-filter:blur(22px) saturate(1.8);box-shadow:inset 0 -1px 0 rgba(20,20,20,.08)}
+.top.up{transform:none}
+.top .logo svg{width:14px;height:26px}
+.top .nav{position:absolute;left:50%;transform:translateX(-50%);display:flex;gap:2px}
+.top .nav a{padding:8px 14px;border-radius:999px;font-size:14.5px;font-weight:450;transition:background .25s}
+.top .nav a:hover{background:rgba(20,20,20,.06)}
+.top .cta{display:inline-flex;align-items:center;gap:10px;height:40px;padding:0 6px 0 16px;border-radius:999px;background:#141414;color:#fff;font-size:14.5px;font-weight:500}
+.top .cta i{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.16);font-style:normal}
+.top .cta svg{width:14px;height:14px}
+@media (max-width:860px){.top{height:56px;justify-content:center}.top .logo span,.top .nav,.top .cta{display:none}.top .logo svg{width:16px;height:30px}}
+.fh{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.12fr);gap:clamp(24px,4vw,64px);align-items:end;padding-top:clamp(96px,12vh,128px);padding-bottom:clamp(40px,5vw,72px)}
+.fh .fil{display:flex;gap:8px;font-size:14px;color:var(--mu);margin:0 0 20px}
+.fh .fil a:hover{color:var(--tx)}
+.fh h1{margin:0;font-size:clamp(52px,7.4vw,118px);line-height:.86;letter-spacing:-.06em}
+.fh h1 .se{display:block;margin-top:.16em;font-size:.36em;line-height:1.05;letter-spacing:-.02em;color:var(--mu)}
+.fh .k{margin:26px 0 0}
+.fh .k span{background:#fff;box-shadow:none}
+.fh .k span:first-child::before{background:var(--pc2)}
+.fh .meta{margin-top:26px;grid-template-columns:1fr;gap:12px;padding-top:18px}
+.fh .meta div{display:grid;grid-template-columns:8.5em 1fr;gap:12px}
+.fh .meta dt{margin:0}
+.cd{position:relative;isolation:isolate;aspect-ratio:1/.92;border-radius:clamp(24px,2.6vw,34px);background:radial-gradient(80% 70% at 85% 10%,color-mix(in srgb,var(--pc2) 32%,transparent),transparent 70%),var(--pc);display:grid;place-items:center;overflow:visible}
+.cd::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;opacity:.25;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.cd .chip{position:relative;width:68%;padding:10px;border-radius:22px;background:#fff;color:#141414;box-shadow:0 30px 60px -30px rgba(0,0,0,.45);transform:translateY(var(--cy,0)) rotate(-1.5deg);transition:transform .9s cubic-bezier(.16,1,.3,1)}
+.cd .win{aspect-ratio:1400/980;border-radius:14px;overflow:hidden;background:var(--pc)}
+.cd .win img{width:100%;height:100%;object-fit:cover}
+.cd .lab{display:flex;flex-direction:column;padding:16px 8px 6px}
+.cd .lab b{font:800 clamp(22px,2vw,28px)/1 var(--d);letter-spacing:-.05em}
+.cd .lab span{font-size:14px;color:rgba(20,20,20,.62);margin-top:6px}
+.cd .lab small{font-size:12.5px;font-weight:600;margin-top:2px;color:var(--pa)}
+.cd .out{position:absolute;z-index:2;right:9%;bottom:12%;width:19%;border-radius:clamp(14px,1.6vw,22px);padding:5px;background:#0e0e10;box-shadow:0 30px 50px -20px rgba(0,0,0,.6);transform:translateY(var(--py,0px)) rotate(4deg)}
+.cd .out img{border-radius:clamp(10px,1.2vw,17px);width:100%}
+@media (hover:hover){.cd:hover .chip{transform:translateY(-6px) rotate(0deg)}}
+@media (max-width:860px){.fh{grid-template-columns:1fr;align-items:start;padding-top:84px}.fh .meta div{grid-template-columns:1fr;gap:2px}.cd{aspect-ratio:1/.95}.cd .chip{width:76%}.cd .out{width:24%;right:5%}}
 </style>
 </head>
 <body>
@@ -295,24 +331,27 @@ ul.liv{margin:0;padding:0}
 <div class="grain" aria-hidden="true"></div>
 
 <header class="top" id="top">
-  <a class="logo" href="/" aria-label="Studio ES, accueil"><svg viewBox="0 0 98 186" aria-hidden="true"><use href="#logo"/></svg>Studio ES</a>
-  <a class="bk" href="/#travaux"><svg aria-hidden="true"><use href="#a"/></svg>Travaux</a>
+  <a class="logo" href="/" aria-label="Studio ES, accueil"><svg viewBox="0 0 98 186" aria-hidden="true"><use href="#logo"/></svg><span>Studio ES</span></a>
+  <nav class="nav" aria-label="Menu principal"><a href="/#photographie">Photographie</a><a href="/#web">Web</a><a href="/#contact">Contact</a></nav>
+  <a class="cta" href="/#devis">Estimer un projet<i><svg aria-hidden="true"><use href="#a"/></svg></i></a>
 </header>
 
 <main>
-<section class="hero w" aria-labelledby="t">
-<div class="stg" style="--pc:#1f4a33;--pc2:#e98fb5;--pc3:#f3d36b">
-  <div class="stg-bg" aria-hidden="true"><i></i><i></i></div>
-  
-  <div class="k"><span>Brochure de saison</span><span>MJC et centre social</span></div>
-  <h1 class="d" id="t"><span class="ln"><span>MJC La Marelle</span></span><span class="ln"><span class="se">Une saison, vingt-quatre pages.</span></span></h1>
-  <dl class="meta">
+<section class="fh w" aria-labelledby="t" style="--pc:#1f4a33;--pc2:#e98fb5">
+  <div class="tx">
+    <p class="fil"><a href="/">Studio ES</a><span>/</span><a href="/#realisations">Réalisations</a></p>
+    <h1 class="d" id="t">MJC La Marelle<span class="se">Une saison, vingt-quatre pages.</span></h1>
+    <div class="k"><span>Brochure de saison</span><span>MJC et centre social</span></div>
+    <dl class="meta">
     <div><dt>Client</dt><dd>MJC La Marelle</dd></div>
     <div><dt>Intervention</dt><dd>Brochure de saison 2026-2027, couverture, photographie</dd></div>
     <div><dt>Discipline</dt><dd>Direction artistique, mise en page, illustration</dd></div>
   </dl>
-  <div class="dev"><div class="shot bare" data-r><img src="img/hero-t.webp" width="2000" height="1150" alt="La brochure de saison de la MJC La Marelle : couverture illustrée et pages intérieures"></div></div>
-</div>
+  </div>
+  <div class="cd" data-r>
+    <div class="chip"><div class="win"><img src="img/cover.webp" width="1400" height="980" alt="La brochure de saison de la MJC La Marelle"></div><div class="lab"><b>MJC La Marelle</b><span>Brochure de saison</span><small>MJC et centre social</small></div></div>
+    
+  </div>
 </section>
 
 <div class="w">
@@ -370,7 +409,7 @@ ul.liv{margin:0;padding:0}
 
 <footer class="ft w">
   <span>© 2026 Studio ES, Ewen Soupault</span>
-  <span><a href="/">Accueil</a> · <a href="/#travaux">Travaux</a> · <a href="https://www.instagram.com/ewen.studioes" target="_blank" rel="noopener">Instagram</a> · <a href="/#mentions">Mentions légales</a></span>
+  <span><a href="/">Accueil</a> · <a href="/#realisations">Réalisations</a> · <a href="https://www.instagram.com/ewen.studioes" target="_blank" rel="noopener">Instagram</a> · <a href="/#mentions">Mentions légales</a></span>
 </footer>
 
 <script>
