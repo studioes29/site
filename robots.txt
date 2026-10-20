@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /_src/
 
 Sitemap: https://studioes.fr/sitemap.xml
