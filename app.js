@@ -68,20 +68,22 @@
   });
 
   /* bannière : le viseur fait la mise au point, déclenche, puis la photo se range dans la page d'accueil d'un site ; les étiquettes suivent */
-  const charge = i => { if (i.dataset.src) { i.src = i.dataset.src; i.removeAttribute('data-src'); } };
+  const charge = i => { if (!i) return; if (i.dataset.srcset) { i.srcset = i.dataset.srcset; i.removeAttribute('data-srcset'); } if (i.dataset.src) { i.src = i.dataset.src; i.removeAttribute('data-src'); } };
   const puces = $$('[data-chips]').map(el => ({ ims: $$('.win > img', el), k: 0 }));
   const avancePuces = () => puces.forEach(D => { if (!D.ims.length) return; D.ims[D.k].classList.remove('on'); D.k = (D.k + 1) % D.ims.length; charge(D.ims[D.k]); D.ims[D.k].classList.add('on'); });
   const ban = $('#ban');
   if (ban) {
     const ims = $$('.shot .ph img', ban), hT = $('#banH');
     let k = 0, n = 1, vis = true, tm = [];
-    setTimeout(() => { ims.forEach(charge); puces.forEach(D => D.ims.forEach(charge)); }, 900);
+    /* chaque photo est chargée juste avant son tour, pas toutes au démarrage */
+    setTimeout(() => charge(ims[1]), 2500);
     const plus = (f, ms) => tm.push(setTimeout(f, ms));
     const tour = premier => {
       tm.forEach(clearTimeout); tm = [];
       if (!vis || document.hidden) { plus(() => tour(premier), 800); return; }
       const im = ims[k];
       if (!premier) { ims.forEach(x => x.classList.toggle('on', x === im)); charge(im); avancePuces(); }
+      plus(() => charge(ims[(k + 1) % ims.length]), 2500);
       ban.classList.remove('site', 'net', 'clic'); ban.classList.add('flou');
       hT.textContent = im.dataset.h;
       plus(() => { ban.classList.remove('flou'); ban.classList.add('net'); }, premier ? 900 : 700);

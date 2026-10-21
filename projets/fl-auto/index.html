@@ -8,7 +8,7 @@
 <link rel="canonical" href="https://studioes.fr/projets/fl-auto/">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#F4F2ED">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><meta name="apple-mobile-web-app-title" content="Studio ES"><link rel="manifest" href="/site.webmanifest">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta property="og:type" content="article">
 <meta property="og:locale" content="fr_FR">
@@ -25,11 +25,11 @@
 <link rel="preload" href="/f/it.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 @font-face{font-family:"Bricolage Grotesque";font-weight:200 800;font-display:swap;src:url(/f/br.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2212}
-@font-face{font-family:"Bricolage Grotesque";font-weight:200 800;font-display:swap;src:url(/f/br-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+A720-A7FF}
+@font-face{font-family:"Bricolage Grotesque";font-weight:200 800;font-display:swap;src:url(/f/br-ext.woff2) format("woff2");unicode-range:U+0100-0130,U+0132-0151,U+0154-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+A720-A7FF}
 @font-face{font-family:"Inter Tight";font-weight:100 900;font-display:swap;src:url(/f/it.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2190-2199,U+2212}
-@font-face{font-family:"Inter Tight";font-weight:100 900;font-display:swap;src:url(/f/it-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+A720-A7FF}
+@font-face{font-family:"Inter Tight";font-weight:100 900;font-display:swap;src:url(/f/it-ext.woff2) format("woff2");unicode-range:U+0100-0130,U+0132-0151,U+0154-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+A720-A7FF}
 @font-face{font-family:"Urbanist";font-style:italic;font-weight:100 900;font-display:swap;src:url(/f/ur-i.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
-@font-face{font-family:"Urbanist";font-style:italic;font-weight:100 900;font-display:swap;src:url(/f/ur-i-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Urbanist";font-style:italic;font-weight:100 900;font-display:swap;src:url(/f/ur-i-ext.woff2) format("woff2");unicode-range:U+0100-0130,U+0132-0151,U+0154-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
 :root{
   --bg:#121210;--s1:#1A1A17;--s2:#23221F;--tx:#EDE9DD;--mu:rgba(237,233,221,.62);--fa:rgba(237,233,221,.6);--ln:rgba(237,233,221,.1);
   --ac:#E1DBC4;--act:#191919;
@@ -377,7 +377,7 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
   </dl>
   </div>
   <div class="cd" data-r>
-    <div class="chip"><div class="win"><img src="img/cover.webp" width="1400" height="980" alt="La façade du garage FL Auto"></div><div class="lab"><b>FL Auto</b><span>Identité et signalétique</span><small>Garage automobile</small></div></div>
+    <div class="chip"><div class="win"><img src="img/cover.webp" srcset="img/cover-800.webp 800w, img/cover.webp 1400w" sizes="(max-width: 860px) 100vw, 60vw" width="1400" height="980" fetchpriority="high" alt="La façade du garage FL Auto"></div><div class="lab"><b>FL Auto</b><span>Identité et signalétique</span><small>Garage automobile</small></div></div>
     
   </div>
 </section>
@@ -388,7 +388,7 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
     <span class="n">01</span>
     <h2 class="d" id="c1">Un monogramme <span class="se">lisible de loin</span></h2>
     <p>Les initiales F et L s’emboîtent autour d’un carré doré. Le signe tient aussi bien sur un panneau de quatre mètres que sur une carte de visite.</p>
-    <div class="sw" aria-label="Palette"><i style="background:#18233f">Marine</i><i style="background:#d9a35b;color:#18233f">Or</i><i style="background:#f4f1ea;color:#18233f">Blanc</i></div>
+    <div class="sw" role="group" aria-label="Palette"><i style="background:#18233f">Marine</i><i style="background:#d9a35b;color:#18233f">Or</i><i style="background:#f4f1ea;color:#18233f">Blanc</i></div>
   </div>
   <div class="gal">
     <img data-r class="wide" src="img/logo.webp" width="1000" height="1000" alt="Le logo FL Auto sur fond bleu marine" loading="lazy">
@@ -425,7 +425,7 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
 </div>
 
 <section class="cqd" aria-labelledby="cqd" style="padding-top:0"><div class="w"><h2 class="d" id="cqd" data-r>Les livrables <span class="se">en images</span></h2></div>
-  <div class="cqd-w" tabindex="0" role="region" aria-label="Livrables"><div class="mq" style="--ar:3/4"><figure><img src="img/logo.webp" alt="Logo"><figcaption><b>Logo et variantes</b><span>Monogramme et carré doré, sur fond clair et foncé.</span></figcaption></figure><figure><img src="img/cdv.webp" alt="Cartes de visite"><figcaption><b>Cartes de visite</b><span>Recto verso, prêtes pour l’imprimeur.</span></figcaption></figure><figure><img src="img/sig-enseigne.webp" alt="Enseigne posée"><figcaption><b>Enseigne de façade</b><span>Visible depuis la route.</span></figcaption></figure><figure><img src="img/sig-fleche.webp" alt="Panneau directionnel posé"><figcaption><b>Signalétique d’accès</b><span>La flèche vers l’accueil, dans le bâtiment.</span></figcaption></figure><figure><img src="img/sig-horaires.webp" alt="Horaires en vitrophanie"><figcaption><b>Horaires</b><span>En vitrophanie sur la porte d’entrée.</span></figcaption></figure><figure><img src="img/photo-3.webp" alt="Photo"><figcaption><b>Reportage photo</b><span>L’atelier et le gérant au travail.</span></figcaption></figure></div></div></section>
+  <div class="cqd-w" tabindex="0" role="region" aria-label="Livrables"><div class="mq" style="--ar:3/4"><figure><img src="img/logo.webp" alt="Logo" loading="lazy" decoding="async"><figcaption><b>Logo et variantes</b><span>Monogramme et carré doré, sur fond clair et foncé.</span></figcaption></figure><figure><img src="img/cdv.webp" alt="Cartes de visite" loading="lazy" decoding="async"><figcaption><b>Cartes de visite</b><span>Recto verso, prêtes pour l’imprimeur.</span></figcaption></figure><figure><img src="img/sig-enseigne.webp" alt="Enseigne posée" loading="lazy" decoding="async"><figcaption><b>Enseigne de façade</b><span>Visible depuis la route.</span></figcaption></figure><figure><img src="img/sig-fleche.webp" alt="Panneau directionnel posé" loading="lazy" decoding="async"><figcaption><b>Signalétique d’accès</b><span>La flèche vers l’accueil, dans le bâtiment.</span></figcaption></figure><figure><img src="img/sig-horaires.webp" alt="Horaires en vitrophanie" loading="lazy" decoding="async"><figcaption><b>Horaires</b><span>En vitrophanie sur la porte d’entrée.</span></figcaption></figure><figure><img src="img/photo-3.webp" alt="Photo" loading="lazy" decoding="async"><figcaption><b>Reportage photo</b><span>L’atelier et le gérant au travail.</span></figcaption></figure></div></div></section>
 
 <section class="end w" aria-labelledby="fin">
   <h2 class="d" id="fin" data-r>Une activité à lancer&#8239;? <span class="se">Parlons-en.</span></h2>
@@ -497,7 +497,7 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
   let t; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(fit, 120); });
 })();
 </script>
-<button class="haut-bt" id="hautBt" aria-label="Revenir en haut de la page"><svg aria-hidden="true"><use href="#a"/></svg></button>
+<button type="button" class="haut-bt" id="hautBt" aria-label="Revenir en haut de la page"><svg aria-hidden="true"><use href="#a"/></svg></button>
 <script>
 /* retour en haut, et retour à la page précédente sur mobile */
 (() => { const b = document.getElementById('hautBt'); addEventListener('scroll', () => b.classList.toggle('on', scrollY > innerHeight * 1.2), {passive: true}); b.addEventListener('click', () => scrollTo({top: 0, behavior: 'smooth'}));
