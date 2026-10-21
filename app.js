@@ -19,7 +19,7 @@
     const loin = y > H * 1.2;
     if (dock) { dock.classList.toggle('dk', sur(H - 40)); dock.classList.toggle('haut', loin); }
     if (hautBt) { hautBt.classList.toggle('on', loin); hautBt.classList.toggle('dk', sur(H - 50)); }
-    if (!reduit) feuilles.forEach(f => { const t = f.getBoundingClientRect().top; const p = clamp((H - t) / (H * .6), 0, 1); f.style.setProperty('--sc', (.94 + .06 * p).toFixed(4)); });
+    if (!reduit) { const fr = innerWidth > 860 ? 44 : 28; feuilles.forEach(f => { const t = f.getBoundingClientRect().top; const p = clamp((H - t) / (H * .65), 0, 1); f.style.setProperty('--rr', Math.round(fr + (fr * 1.8) * (1 - p)) + 'px'); }); }
   };
   addEventListener('scroll', () => { if (!tic) { tic = true; requestAnimationFrame(etat); } }, { passive: true });
   addEventListener('resize', etat); etat();
@@ -29,24 +29,32 @@
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -6% 0px', threshold: .06 });
   $$('.rv').forEach(e => io.observe(e));
 
-  /* prix : l'ancien s'efface vers le haut, le nouveau arrive lettre par lettre */
-  const ecrit = (el, txt) => {
-    const n = document.createElement('span'); n.className = 'v'; n.setAttribute('aria-hidden', 'true');
-    n.innerHTML = [...txt].map((c, k) => c === ' ' || c === NB ? `<i class="e" style="--k:${k}"></i>` : `<i style="--k:${k}">${c}</i>`).join('');
+  /* prix : chaque chiffre est une bande qui tourne, les chiffres s'arrêtent l'un après l'autre avec un léger rebond */
+  const HC = 1.08, BANDE = '0123456789'.repeat(3).split('').map(d => `<span class="c">${d}</span>`).join('');
+  const odo = (el, txt, depuisZero) => {
     el.setAttribute('aria-label', txt);
-    $$('.v:not(.sort)', el).forEach(anc => { if (reduit) anc.remove(); else { anc.classList.add('sort'); setTimeout(() => anc.remove(), 460); } });
-    if (reduit) $$('i', n).forEach(i => i.style.animation = 'none');
-    el.appendChild(n);
+    if (!/\d/.test(txt)) { el.innerHTML = `<span class="v" aria-hidden="true">${txt}</span>`; el._ch = null; if (!reduit) el.animate([{ opacity: 0, transform: 'translateY(.2em)' }, { opacity: 1, transform: 'none' }], { duration: 450, easing: 'ease-out' }); return; }
+    const ch = [...txt].filter(c => /\d/.test(c)).map(Number), anc = depuisZero ? [] : (el._ch || []);
+    el.innerHTML = '<span class="od" aria-hidden="true">' + [...txt].map(c => /\d/.test(c) ? `<span class="dg"><span>${BANDE}</span></span>` : '<span class="sp"></span>').join('') + '</span>';
+    const cols = $$('.dg>span', el), n = cols.length; let fin = 0;
+    cols.forEach((c, i) => {
+      const d = ch[i], p = anc[anc.length - n + i];
+      if (reduit || (p === d && anc.length === n)) { c.style.transform = `translateY(${-d * HC}em)`; return; }
+      const dep = p == null ? 0 : p, arr = 20 + d, dur = 650 + i * 150; fin = Math.max(fin, dur);
+      c.animate([{ transform: `translateY(${-dep * HC}em)`, filter: 'blur(0)' }, { filter: 'blur(1.4px)', offset: .5 }, { transform: `translateY(${-arr * HC}em)`, filter: 'blur(0)' }], { duration: dur, easing: 'cubic-bezier(.22,.8,.26,1.14)', fill: 'forwards' });
+    });
+    if (fin && !reduit) el.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.07)' }, { transform: 'scale(1)' }], { duration: 360, delay: fin - 140, easing: 'ease-out' });
+    el._ch = ch;
   };
   const prix = (el, v) => {
     if (!el) return; const txt = v == null ? 'Sur devis' : fmt(v);
     el.classList.toggle('txt', v == null); const px = el.closest('.px'); if (px) px.classList.toggle('sd', v == null);
-    if (el.dataset.t === txt) return; el.dataset.t = txt; el.setAttribute('aria-label', txt); el.dataset.v = v == null ? '' : v;
-    if (el.dataset.vu) ecrit(el, txt);
+    if (el.dataset.t === txt) return; el.dataset.t = txt; el.dataset.v = v == null ? '' : v; el.setAttribute('aria-label', txt);
+    if (el.dataset.vu) odo(el, txt, false);
   };
-  /* première apparition : le prix s'écrit quand la carte entre à l'écran */
-  const prixVus = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { const el = e.target; prixVus.unobserve(el); el.dataset.vu = 1; ecrit(el, el.dataset.t); } }), { threshold: .6 });
-  $$('.prix').forEach(el => { el.dataset.t = el.textContent.trim().replace(/\s/g, NB); el.setAttribute('aria-label', el.dataset.t); el.innerHTML = `<span class="v" aria-hidden="true">${el.dataset.t}</span>`; if (reduit) el.dataset.vu = 1; else { $('.v', el).style.opacity = 0; prixVus.observe(el); } });
+  /* première apparition : les chiffres tournent depuis zéro quand la carte entre à l'écran */
+  const prixVus = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { const el = e.target; prixVus.unobserve(el); el.dataset.vu = 1; odo(el, el.dataset.t, true); } }), { threshold: .6 });
+  $$('.prix').forEach(el => { el.dataset.t = el.textContent.trim().replace(/\s/g, NB); el.setAttribute('aria-label', el.dataset.t); el.innerHTML = `<span class="v" aria-hidden="true" style="visibility:hidden">${el.dataset.t}</span>`; if (reduit) { el.dataset.vu = 1; odo(el, el.dataset.t, true); } else prixVus.observe(el); });
 
   /* cartes d'accueil : inclinaison légère au pointeur */
   if (!tactile && !reduit) $$('[data-tilt]').forEach(c => {
@@ -69,19 +77,19 @@
   const etatCarte = c => {
     const k = c.dataset.k, rows = $$('.sel [role="radio"]', c), b = rows.find(x => x.getAttribute('aria-checked') === 'true');
     const f = b ? rows.indexOf(b) : Number(c.dataset.f || 0);
-    const o = $$('.opt input', c).filter(i => i.checked).map(i => +i.dataset.o);
+    const o = $$('.opt .op', c).filter(i => i.getAttribute('aria-pressed') === 'true').map(i => +i.dataset.o);
     const mois = c.dataset.mois === '1', achat = c.dataset.achat === '1';
     let v;
     if (k === 'site') v = +$('.prix', c).dataset.b + (swPh && swPh.checked ? 350 : 0);
     else if (k === 'app') v = +$('.prix', c).dataset[achat ? 'ac' : 'ab'];
-    else if (b && b.dataset.p) v = +(mois && b.dataset.m ? b.dataset.m : b.dataset.p) + $$('.opt input', c).filter(i => i.checked).reduce((s, i) => s + Number(i.dataset.p), 0);
+    else if (b && b.dataset.p) v = +(mois && b.dataset.m ? b.dataset.m : b.dataset.p) + $$('.opt .op', c).filter(i => i.getAttribute('aria-pressed') === 'true').reduce((s, i) => s + Number(i.dataset.p), 0);
     else v = null;
     return { k, f, o, mois, achat, ph: k === 'site' && swPh && swPh.checked, v };
   };
   const repere = c => { const s = $('.sel', c); if (!s) return; const b = $('[aria-checked="true"]', s); if (!b) return; s.style.setProperty('--y', b.offsetTop + 'px'); s.style.setProperty('--h', b.offsetHeight + 'px'); };
   const majCarte = (c, bouge) => {
     const E = etatCarte(c); prix($('.prix', c), E.v);
-    const u = $('[data-u]', c); if (u) u.textContent = E.mois ? '€ par mois, sur 12 mois' : '€ par an';
+    const u = $('[data-u]', c); if (u) u.textContent = E.mois ? '€/mois' : '€/an';
     const bm = $('.bascule[data-mo]', c); if (bm) bm.hidden = E.v == null;
     if (E.k === 'app') { const d = $('.dt', c); d.innerHTML = E.achat ? d.dataset.ac : d.dataset.ab; }
     repere(c);
@@ -90,7 +98,7 @@
   const cartes = $$('[data-of]');
   cartes.forEach(c => {
     $$('.sel [role="radio"]', c).forEach(b => b.addEventListener('click', () => { $$('.sel [role="radio"]', c).forEach(x => x.setAttribute('aria-checked', String(x === b))); majCarte(c, true); }));
-    $$('.opt input', c).forEach(i => i.addEventListener('change', () => majCarte(c)));
+    $$('.opt .op', c).forEach(i => i.addEventListener('click', () => { i.setAttribute('aria-pressed', String(i.getAttribute('aria-pressed') !== 'true')); majCarte(c); }));
     const bm = $('.bascule[data-mo]', c);
     if (bm) $$('button', bm).forEach(b => b.addEventListener('click', () => { bm.dataset.v = b.dataset.v; $$('button', bm).forEach(x => x.setAttribute('aria-pressed', String(x === b))); c.dataset.mois = b.dataset.v; majCarte(c); }));
     const ba = $('.bascule[data-ap]', c);
@@ -152,13 +160,11 @@
   const FI = [['tout', 'Tout'], ['scene', 'Concerts'], ['public', 'Festivals et public'], ['corp', 'Entreprises et collectivités']];
   const REPS = window.REPS || []; let filtre = 'tout';
   const railR = $('#rail'), chips = $('#chips');
-  const carteCas = () => `<a class="rc" href="/projets/fl-auto/"><span class="k">Étude de cas</span><span class="im"><img src="/projets/fl-auto/img/photo-1.webp" alt="" loading="lazy"></span><span class="lab"><b>FL Auto</b><span>Reportage d’entreprise</span><small>Voir le projet ${ico('ne')}</small></span></a>`;
   const dessine = () => {
     if (!railR) return;
     const L = filtre === 'tout' ? REPS : REPS.filter(r => r.k === filtre);
     let h = '';
     L.forEach((r, i) => {
-      if ((filtre === 'tout' && i === 3) || (filtre === 'corp' && i === 1)) h += carteCas();
       h += `<button class="rc" data-r="${r.id}" aria-label="Voir le reportage ${r.t}"><span class="im"><img src="/p/t/${r.ph[0]}.webp" alt="" loading="${i < 5 ? 'eager' : 'lazy'}"></span><span class="lab"><b>${r.t}</b><span>${K[r.k] || ''}</span><small>${r.ph.length} photos</small></span></button>`;
     });
     railR.innerHTML = h; railR.scrollLeft = 0; const R = rails.find(x => x.el === railR); if (R) { R.pos = 0; R.fin = 0; R.attente = performance.now() + 1500; }
@@ -245,14 +251,14 @@
   const pied = () => {
     const r = calc(), cible = r ? (r.a || r.m || null) : null;
     const v = !r ? `<small>Estimation</small><span class="v"><i>Choisissez votre projet</i></span>`
-      : cible ? `<small>Estimation</small><span class="v"><small style="display:inline;font-size:14px;color:var(--mu)">dès</small><b class="prix" id="estN"></b><i>€${r.a && r.m ? `, puis ${fmt(r.m)} € par mois` : r.per ? ' ' + r.per : ''}${r.dv ? ', plus une partie sur devis' : ''}</i></span>`
+      : cible ? `<small>Estimation</small><span class="v"><small>dès</small><b class="prix" id="estN"></b><i>€${r.a && r.m ? `, puis ${fmt(r.m)} € par mois` : r.per ? ' ' + r.per : ''}${r.dv ? ', plus une partie sur devis' : ''}</i></span>`
       : `<small>Estimation</small><span class="v"><b class="sd">Sur devis</b></span>`;
     const act = ES.e === 0 ? `<button class="bt cl sm" data-cal>Préférer un appel</button>`
       : ES.e === 1 ? `<button class="bt cl sm" data-nav="-1">Retour</button><button class="bt sm" data-nav="1">Continuer <span class="ar">${ico('ar')}</span></button>`
       : `<button class="bt cl sm" data-nav="-1">Retour</button><button class="bt sm" data-envoi>Envoyer la demande <span class="ar">${ico('ar')}</span></button>`;
     estF.innerHTML = ES.e === 3 ? '' : `<div class="tot">${v}</div><div class="act">${act}</div>`;
     const n = $('#estN');
-    if (n) { const t = fmt(cible); if (dernier && dernier !== t) { n.innerHTML = `<span class="v">${dernier}</span>`; n.dataset.vu = 1; n.dataset.t = dernier; prix(n, cible); } else { n.dataset.vu = 1; n.dataset.t = ''; prix(n, cible); } dernier = t; } else dernier = null;
+    if (n) { n._ch = dernier; odo(n, fmt(cible), !dernier); dernier = n._ch; } else dernier = null;
   };
   const rendE = () => {
     $$('#estP i').forEach((x, i) => x.classList.toggle('on', i <= Math.min(ES.e, 2)));
@@ -261,10 +267,10 @@
       ['Photographie', 'Web'].forEach(g => { h += `<div class="q"><p>${g}</p><div class="opts ch">${Object.entries(PJ).filter(([, P]) => P.g === g).map(([k, P]) => `<button data-k="${k}" aria-pressed="${ES.k === k}">${ico(P.ic)}<span>${P.l}</span></button>`).join('')}</div></div>`; });
     } else if (ES.e === 1) {
       const P = PJ[ES.k];
-      h += `<div class="q"><p>${P.l}</p></div><div class="q"><p>${P.f.l}</p><div class="opts">${P.f.o.map((o, i) => { const pr = o[1] == null ? 'sur devis' : Array.isArray(o[1]) ? (ES.k === 'app' ? (ES.p ? `dès ${fmt(o[1][2])} €` : `dès ${fmt(o[1][0])} €, puis ${o[1][1]} €/mois`) : (ES.p ? `dès ${o[1][1]} € par mois` : `dès ${fmt(o[1][0])} € par an`)) : `dès ${fmt(o[1])} €`; return `<button data-f="${i}" aria-pressed="${ES.f === i}">${o[0]}<small>${[o[1] == null ? o[2] : (Array.isArray(o[1]) ? o[2] : o[2]), o[1] == null ? '' : pr].filter(Boolean).join(' · ')}</small></button>`; }).join('')}</div></div>`;
+      h += `<div class="q"><p>${P.l}</p></div><div class="q"><p>${P.f.l}</p><div class="opts">${P.f.o.map((o, i) => { const pr = o[1] == null ? 'sur devis' : Array.isArray(o[1]) ? (ES.k === 'app' ? (ES.p ? `dès ${fmt(o[1][2])} €` : `dès ${fmt(o[1][0])} €, puis ${o[1][1]} €/mois`) : (ES.p ? `dès ${o[1][1]} € par mois` : `dès ${fmt(o[1][0])} € par an`)) : `dès ${fmt(o[1])} €`; return `<button data-f="${i}" aria-pressed="${ES.f === i}">${o[0]}${o[2] ? `<small>${o[2]}</small>` : ''}<em>${pr}</em></button>`; }).join('')}</div></div>`;
       const f = P.f.o[ES.f]; if (f[3] === 'j') h += `<div class="q"><p>Nombre de jours</p><div class="opts" style="grid-template-columns:repeat(5,1fr)">${[1, 2, 3, 4, 5].map(j => `<button data-j="${j}" aria-pressed="${ES.j === j}" style="align-items:center">${j}</button>`).join('')}</div></div>`;
       if (P.p && f[1] != null) h += `<div class="q"><p>${P.p.l}</p><div class="opts">${P.p.o.map((o, i) => `<button data-p="${i}" aria-pressed="${ES.p === i}">${o[0]}<small>${o[1]}</small></button>`).join('')}</div></div>`;
-      if (P.o) h += `<div class="q"><p>${P.o.l} (facultatif)</p><div class="opts">${P.o.o.map((o, i) => `<button data-o="${i}" aria-pressed="${ES.o.includes(i)}">${o[0]}<small>${o[1] == null ? 'sur devis' : '+' + fmt(o[1]) + ' €'}</small></button>`).join('')}</div></div>`;
+      if (P.o) h += `<div class="q"><p>${P.o.l} (facultatif)</p><div class="opts">${P.o.o.map((o, i) => `<button data-o="${i}" aria-pressed="${ES.o.includes(i)}">${o[0]}<em>${o[1] == null ? 'sur devis' : '+' + fmt(o[1]) + ' €'}</em></button>`).join('')}</div></div>`;
     } else if (ES.e === 2) {
       const P = PJ[ES.k], r = calc(), c = ES.c, q = s => (s || '').replace(/"/g, '&quot;');
       h += `<div class="recap"><b>${P.l}</b>${r.L.join(' · ')}<br>Estimation : ${txtEst(r)}</div><div class="form" style="margin-top:16px">

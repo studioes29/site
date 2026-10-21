@@ -23,7 +23,7 @@
 <link rel="preload" href="/f/br.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/f/it.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/f/ur-i.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/s.css?v=4">
+<link rel="stylesheet" href="/s.css?v=5">
 <script>/* GoatCounter : mesure d'audience sans cookie, uniquement sur studioes.fr */if (/(^|\.)studioes\.fr$/.test(location.hostname) && !location.hostname.startsWith('dossiers')) { const g = document.createElement('script'); g.async = true; g.src = 'https://gc.zgo.at/count.js'; g.dataset.goatcounter = 'https://studioes.goatcounter.com/count'; document.head.appendChild(g); }</script>
 </head>
 <body>
@@ -67,7 +67,6 @@
 </header>
 
 <nav class="dock" id="dock" aria-label="Navigation rapide">
-  <button class="up" data-haut aria-label="Revenir en haut de la page"><svg class="i"><use href="#up"/></svg></button>
   <a href="/metiers/photographie/"><svg class="i"><use href="#ap"/></svg><span>Photo</span></a>
   <a href="/metiers/sites-et-outils/"><svg class="i"><use href="#ec"/></svg><span>Web</span></a>
   <a href="#contact"><svg class="i"><use href="#ms"/></svg><span>Contact</span></a>
@@ -84,60 +83,51 @@
 <section class="sec feuille ph-f" id="photographie" aria-labelledby="t-ph">
   <div class="w">
     <div class="grp" data-grp>
-      <article class="of rv" data-of data-k="mariage">
+      <article class="of ph rv" data-of data-k="mariage">
         <div class="im"><img src="/h/mariage-800.webp" alt="Couple photographié sur le vif" loading="lazy"></div>
         <div class="lab">
-          <h3 class="d">Mariage</h3>
+          <div class="tt"><h3 class="d">Mariage</h3><p class="px"><small>dès</small><b class="prix" data-v="1290">1&#8239;290</b><span class="u">€</span></p></div>
           <p class="ds">Des préparatifs à l’ouverture de bal, sans mise en scène.</p>
           <div class="sel" role="radiogroup" aria-label="Formule"><i class="ind" aria-hidden="true"></i>
-            <button role="radio" aria-checked="true" data-p="1290"><b>Cérémonie</b><span>Moments clés, 4 à 6 h</span></button>
-            <button role="radio" aria-checked="false" data-p="1890"><b>Journée</b><span>8 à 10 h sur place</span></button>
-            <button role="radio" aria-checked="false" data-p="2590"><b>Journée et album</b><span>Album imprimé, séance à deux</span></button>
+            <button role="radio" aria-checked="true" data-p="1290"><b>Cérémonie</b><span>4 à 6 h</span></button>
+            <button role="radio" aria-checked="false" data-p="1890"><b>Journée</b><span>8 à 10 h</span></button>
+            <button role="radio" aria-checked="false" data-p="2590"><b>Journée et album</b><span>album, séance à deux</span></button>
           </div>
-          <p class="px"><small>dès</small><b class="prix" data-v="1290">1&#8239;290</b><span class="u">€</span></p>
-          <ul class="inc"><li><svg class="i"><use href="#ok"/></svg>Galerie privée en ligne</li><li><svg class="i"><use href="#ok"/></svg>Sélection retouchée</li><li><svg class="i"><use href="#ok"/></svg>Livraison sous 10 jours</li></ul>
-          <div class="opt"><p>En option</p>
-            <label><input type="checkbox" data-o="0" data-p="150"><span class="ck" aria-hidden="true"></span><span>Aperçu de 20 photos le soir même</span><b>+150&nbsp;€</b></label>
-            <label><input type="checkbox" data-o="1" data-p="80"><span class="ck" aria-hidden="true"></span><span>Une heure de plus</span><b>+80&nbsp;€</b></label>
-          </div>
-          <div class="pied"><button class="bt sm" data-go>Vérifier ma date <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
+          <div class="opt" role="group" aria-label="Options"><button class="op" aria-pressed="false" data-o="0" data-p="150">Aperçu le soir même <b>+150&nbsp;€</b></button><button class="op" aria-pressed="false" data-o="1" data-p="80">Une heure de plus <b>+80&nbsp;€</b></button></div>
+          <p class="inc"><svg class="i"><use href="#ok"/></svg>Galerie privée, sélection retouchée, livrée sous 10 jours</p>
+          <div class="pied"><button class="bt sm" data-go>Demander mon devis <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
         </div>
       </article>
-      <article class="of rv" data-of data-k="evenement" style="--i:1">
+      <article class="of ph rv" data-of data-k="evenement" style="--i:1">
         <div class="im"><img src="/p/t/philippe-katerine-2.webp" alt="Philippe Katerine sur scène" loading="lazy" style="object-position:50% 30%"></div>
         <div class="lab">
-          <h3 class="d">Événement</h3>
-          <p class="ds">Concert, festival, inauguration, séminaire, cérémonie des vœux.</p>
+          <div class="tt"><h3 class="d">Événement</h3><p class="px"><small>dès</small><b class="prix" data-v="250">250</b><span class="u">€</span></p></div>
+          <p class="ds">Concert, festival, inauguration, séminaire, vœux.</p>
           <div class="sel" role="radiogroup" aria-label="Durée"><i class="ind" aria-hidden="true"></i>
-            <button role="radio" aria-checked="true" data-p="250"><b>Concert</b><span>Spectacle, 1 h 30 à 2 h</span></button>
-            <button role="radio" aria-checked="false" data-p="350"><b>Demi-journée</b><span>4 h sur place</span></button>
-            <button role="radio" aria-checked="false" data-p="550"><b>Journée ou festival</b><span>8 h sur place, par jour</span></button>
+            <button role="radio" aria-checked="true" data-p="250"><b>Concert</b><span>1 h 30 à 2 h</span></button>
+            <button role="radio" aria-checked="false" data-p="350"><b>Demi-journée</b><span>4 h</span></button>
+            <button role="radio" aria-checked="false" data-p="550"><b>Journée ou festival</b><span>8 h, par jour</span></button>
           </div>
-          <p class="px"><small>dès</small><b class="prix" data-v="250">250</b><span class="u">€</span></p>
-          <ul class="inc"><li><svg class="i"><use href="#ok"/></svg>Sélection retouchée</li><li><svg class="i"><use href="#ok"/></svg>Droits d’utilisation et formats réseaux</li><li><svg class="i"><use href="#ok"/></svg>Livraison sous 10 jours</li></ul>
-          <div class="opt"><p>En option</p>
-            <label><input type="checkbox" data-o="0" data-p="150"><span class="ck" aria-hidden="true"></span><span>Sélection livrée le soir même</span><b>+150&nbsp;€</b></label>
-            <label><input type="checkbox" data-o="1" data-p="80"><span class="ck" aria-hidden="true"></span><span>Une heure de plus</span><b>+80&nbsp;€</b></label>
-          </div>
-          <div class="pied"><button class="bt sm" data-go>Vérifier ma date <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
+          <div class="opt" role="group" aria-label="Options"><button class="op" aria-pressed="false" data-o="0" data-p="150">Livrée le soir même <b>+150&nbsp;€</b></button><button class="op" aria-pressed="false" data-o="1" data-p="80">Une heure de plus <b>+80&nbsp;€</b></button></div>
+          <p class="inc"><svg class="i"><use href="#ok"/></svg>Sélection retouchée, droits d’utilisation, livrée sous 10 jours</p>
+          <div class="pied"><button class="bt sm" data-go>Demander mon devis <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
         </div>
       </article>
-      <article class="of rec grain rv" data-of data-k="annee" style="--i:2" id="forfait">
+      <article class="of ph rec grain rv" data-of data-k="annee" style="--i:2" id="forfait">
         <span class="sheen" aria-hidden="true"></span>
         <div class="im"><img src="/p/t/inaug-digue-7.webp" alt="Inauguration photographiée pour une commune" loading="lazy"><span class="badge">Recommandé</span></div>
         <div class="lab">
-          <h3 class="d">À l’année</h3>
-          <p class="ds">Votre photographe attitré : vos dates passent en priorité et la demi-journée revient moins cher qu’à l’unité. Un concert compte pour une demi-journée.</p>
+          <div class="tt"><h3 class="d">À l’année</h3><p class="px"><small>dès</small><b class="prix" data-v="1290">1&#8239;290</b><span class="u" data-u>€/an</span></p></div>
+          <p class="ds">Vos dates en priorité, et chaque demi-journée moins chère qu’à l’unité (350&nbsp;€).</p>
           <div class="sel" role="radiogroup" aria-label="Forfait"><i class="ind" aria-hidden="true"></i>
-            <button role="radio" aria-checked="true" data-p="1290" data-m="109"><b>4 demi-journées</b><span>soit 323&nbsp;€ l’une</span></button>
-            <button role="radio" aria-checked="false" data-p="2490" data-m="209"><b>8 demi-journées</b><span>soit 311&nbsp;€ l’une</span></button>
-            <button role="radio" aria-checked="false" data-p="3590" data-m="299"><b>12 demi-journées</b><span>soit 299&nbsp;€ l’une</span></button>
+            <button role="radio" aria-checked="true" data-p="1290" data-m="109"><b>4 demi-journées</b><span>323&nbsp;€ l’une</span></button>
+            <button role="radio" aria-checked="false" data-p="2490" data-m="209"><b>8 demi-journées</b><span>311&nbsp;€ l’une</span></button>
+            <button role="radio" aria-checked="false" data-p="3590" data-m="299"><b>12 demi-journées</b><span>299&nbsp;€ l’une</span></button>
             <button role="radio" aria-checked="false"><b>Plus de 12</b><span>sur devis</span></button>
           </div>
-          <p class="px"><small>dès</small><b class="prix" data-v="1290">1&#8239;290</b><span class="u" data-u>€ par an</span></p>
           <div class="bascule" data-mo role="group" aria-label="Paiement"><button aria-pressed="true" data-v="0">Par an</button><button aria-pressed="false" data-v="1">Par mois</button></div>
-          <ul class="inc"><li><svg class="i"><use href="#ok"/></svg>Dates réservées en priorité</li><li><svg class="i"><use href="#ok"/></svg>Photothèque partagée</li><li><svg class="i"><use href="#ok"/></svg>Livraison sous 5 jours</li></ul>
-          <div class="pied"><button class="bt sm" data-go>Planifier mon année <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
+          <p class="inc"><svg class="i"><use href="#ok"/></svg>Photothèque partagée, livrée sous 5 jours</p>
+          <div class="pied"><button class="bt sm" data-go>Demander mon devis <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
         </div>
       </article>
     </div>
@@ -158,7 +148,7 @@
       </div>
       <div class="chip">
         <div class="win" aria-hidden="true"></div>
-        <div class="lab"><b class="d">Web</b><span>Sites et applications</span><small>dès 990&nbsp;€</small></div>
+        <div class="lab"><b class="d">Web</b><span>Sites et applications</span></div>
         <span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span>
       </div>
     </a><div class="cr-tx rv"><h2 class="d">Le studio fait aussi<span class="it">des sites et des applications.</span></h2><p>Un site clair et bien référencé, ou une application qui fait gagner du temps. Et quand il faut de belles photos pour l’habiller, elles sont déjà là.</p><a class="bt" href="/metiers/sites-et-outils/">Voir le web <span class="ar"><svg class="i"><use href="#ar"/></svg></span></a></div></div></div></section>
@@ -217,7 +207,7 @@
   <div class="gp-h"><div class="w"><button class="x" id="gpB" aria-label="Fermer la galerie"><svg class="i"><use href="#al"/></svg></button><div class="t"><small id="gpK"></small><h2 class="d" id="gpT"></h2></div><span class="n" id="gpS"></span></div></div>
   <div class="w">
     <div class="gp-g" id="gpG"></div>
-    <div class="gp-f"><p class="d">Un événement à photographier&nbsp;?</p><button class="bt" id="gpGo">Vérifier ma date <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
+    <div class="gp-f"><p class="d">Un événement à photographier&nbsp;?</p><button class="bt" id="gpGo">Demander mon devis <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
     <div class="gp-s"><h3 class="d">Autres reportages</h3><div id="gpSim"></div></div>
   </div>
 </div>
@@ -230,7 +220,7 @@
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="/reps.js?v=4"></script>
-<script src="/app.js?v=4"></script>
+<script src="/reps.js?v=5"></script>
+<script src="/app.js?v=5"></script>
 </body>
 </html>
