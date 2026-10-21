@@ -23,7 +23,7 @@
 <link rel="preload" href="/f/br.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/f/it.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/f/ur-i.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/s.css?v=5">
+<link rel="stylesheet" href="/s.css?v=6">
 <script>/* GoatCounter : mesure d'audience sans cookie, uniquement sur studioes.fr */if (/(^|\.)studioes\.fr$/.test(location.hostname) && !location.hostname.startsWith('dossiers')) { const g = document.createElement('script'); g.async = true; g.src = 'https://gc.zgo.at/count.js'; g.dataset.goatcounter = 'https://studioes.goatcounter.com/count'; document.head.appendChild(g); }</script>
 </head>
 <body>
@@ -75,40 +75,45 @@
 <button class="haut-bt" data-haut aria-label="Revenir en haut de la page"><svg class="i"><use href="#up"/></svg></button>
 
 <main id="haut">
-<section class="hero w" aria-labelledby="h1">
-  <div class="top">
-    <h1 class="d" id="h1" aria-label="Studio ES, photographie et web en Bretagne"><span>Studio</span> <span>ES</span></h1>
-    <p class="acc">Le studio photo et web des entreprises, des collectivités et des futurs mariés de Bretagne.</p>
-  </div>
-  <div class="portes">
-    <a class="porte ph" href="#photographie" data-tilt data-slides>
-      <div class="fd">
-        <img src="/h/festival-1600.webp" alt="" class="on" fetchpriority="high">
-        <img data-src="/p/la-fouine-9.jpg" alt="">
-        <img data-src="/h/mariage-1600.webp" alt="">
-        <img data-src="/p/philippe-katerine-2.jpg" alt="">
-        <img data-src="/h/entreprise-1600.webp" alt="">
+<section class="hero" data-dark aria-labelledby="h1">
+  <div class="ban" data-slides>
+    <div class="fd">
+      <img src="/h/festival-1600.webp" alt="" class="on" fetchpriority="high">
+      <img data-src="/p/la-fouine-9.jpg" alt="">
+      <img data-src="/h/mariage-1600.webp" alt="">
+      <img data-src="/p/philippe-katerine-2.jpg" alt="">
+      <img data-src="/h/entreprise-1600.webp" alt="">
+    </div>
+    <div class="ban-c w">
+      <div class="tx">
+        <h1 class="d" id="h1" aria-label="Studio ES, photographie et web en Bretagne"><span>Studio</span> <span>ES</span></h1>
+        <p class="acc">Le studio photo et web des entreprises, des collectivités et des futurs mariés de Bretagne.</p>
       </div>
-      <div class="chip">
-        <div class="win" aria-hidden="true"></div>
-        <div class="lab"><b class="d">Photographie</b><span>Mariages et événements</span></div>
-        <span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span>
+      <div class="portes">
+        <a class="porte ph" href="#photographie" data-slides>
+          <span class="win" aria-hidden="true">
+            <img src="/h/mariage-800.webp" alt="" class="on">
+            <img data-src="/p/t/philippe-katerine-2.webp" alt="">
+            <img data-src="/p/t/inaug-digue-7.webp" alt="">
+            <img data-src="/p/t/la-fouine-1.webp" alt="">
+            <img data-src="/projets/fl-auto/img/photo-1.webp" alt="">
+          </span>
+          <span class="lab"><b class="d">Photographie</b><span>Mariages et événements</span></span>
+          <span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span>
+        </a>
+        <a class="porte wb" href="#web" data-slides>
+          <span class="win" aria-hidden="true">
+            <img src="/projets/flouz/img/cover.webp" alt="" class="on">
+            <img data-src="/projets/pierceval-tattoo/img/cover.webp" alt="">
+            <img data-src="/projets/la-soute/img/cover.webp" alt="">
+            <img data-src="/projets/flouz/img/main-s.webp" alt="">
+            <img data-src="/projets/la-soute/img/site.webp" alt="">
+          </span>
+          <span class="lab"><b class="d">Web</b><span>Sites et applications</span></span>
+          <span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span>
+        </a>
       </div>
-    </a>
-    <a class="porte wb" href="#web" data-tilt data-slides>
-      <div class="fd">
-        <img src="/projets/flouz/img/cover.webp" alt="" class="on">
-        <img data-src="/projets/pierceval-tattoo/img/cover.webp" alt="" style="--op:78% 50%">
-        <img data-src="/projets/la-soute/img/cover.webp" alt="" style="--op:84% 50%">
-        <img data-src="/projets/flouz/img/main-s.webp" alt="">
-        <img data-src="/projets/la-soute/img/site.webp" alt="">
-      </div>
-      <div class="chip">
-        <div class="win" aria-hidden="true"></div>
-        <div class="lab"><b class="d">Web</b><span>Sites et applications</span></div>
-        <span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span>
-      </div>
-    </a>
+    </div>
   </div>
 </section>
 
@@ -117,22 +122,7 @@
     <div class="sec-t rv"><h2 class="d" id="t-ph">Photographie<span class="it">Vos moments forts, sur le vif.</span></h2><p class="lead">Mariages, concerts, festivals, cérémonies, vie d’une entreprise : un reportage discret, puis une sélection resserrée et retouchée, prête à servir.</p></div>
 
     <div class="grp" data-grp>
-      <article class="of ph rv" data-of data-k="mariage">
-        <div class="im"><img src="/h/mariage-800.webp" alt="Couple photographié sur le vif" loading="lazy"></div>
-        <div class="lab">
-          <div class="tt"><h3 class="d">Mariage</h3><p class="px"><small>dès</small><b class="prix" data-v="1290">1&#8239;290</b><span class="u">€</span></p></div>
-          <p class="ds">Des préparatifs à l’ouverture de bal, sans mise en scène.</p>
-          <div class="sel" role="radiogroup" aria-label="Formule"><i class="ind" aria-hidden="true"></i>
-            <button role="radio" aria-checked="true" data-p="1290"><b>Cérémonie</b><span>4 à 6 h</span></button>
-            <button role="radio" aria-checked="false" data-p="1890"><b>Journée</b><span>8 à 10 h</span></button>
-            <button role="radio" aria-checked="false" data-p="2590"><b>Journée et album</b><span>album, séance à deux</span></button>
-          </div>
-          <div class="opt" role="group" aria-label="Options"><button class="op" aria-pressed="false" data-o="0" data-p="150">Aperçu le soir même <b>+150&nbsp;€</b></button><button class="op" aria-pressed="false" data-o="1" data-p="80">Une heure de plus <b>+80&nbsp;€</b></button></div>
-          <p class="inc"><svg class="i"><use href="#ok"/></svg>Galerie privée, sélection retouchée, livrée sous 10 jours</p>
-          <div class="pied"><button class="bt sm" data-go>Demander mon devis <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
-        </div>
-      </article>
-      <article class="of ph rv" data-of data-k="evenement" style="--i:1">
+      <article class="of ph rv" data-of data-k="evenement">
         <div class="im"><img src="/p/t/philippe-katerine-2.webp" alt="Philippe Katerine sur scène" loading="lazy" style="object-position:50% 30%"></div>
         <div class="lab">
           <div class="tt"><h3 class="d">Événement</h3><p class="px"><small>dès</small><b class="prix" data-v="250">250</b><span class="u">€</span></p></div>
@@ -144,6 +134,21 @@
           </div>
           <div class="opt" role="group" aria-label="Options"><button class="op" aria-pressed="false" data-o="0" data-p="150">Livrée le soir même <b>+150&nbsp;€</b></button><button class="op" aria-pressed="false" data-o="1" data-p="80">Une heure de plus <b>+80&nbsp;€</b></button></div>
           <p class="inc"><svg class="i"><use href="#ok"/></svg>Sélection retouchée, droits d’utilisation, livrée sous 10 jours</p>
+          <div class="pied"><button class="bt sm" data-go>Demander mon devis <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
+        </div>
+      </article>
+      <article class="of ph rv" data-of data-k="mariage" style="--i:1">
+        <div class="im"><img src="/h/mariage-800.webp" alt="Couple photographié sur le vif" loading="lazy"></div>
+        <div class="lab">
+          <div class="tt"><h3 class="d">Mariage</h3><p class="px"><small>dès</small><b class="prix" data-v="1290">1&#8239;290</b><span class="u">€</span></p></div>
+          <p class="ds">Des préparatifs à l’ouverture de bal, sans mise en scène.</p>
+          <div class="sel" role="radiogroup" aria-label="Formule"><i class="ind" aria-hidden="true"></i>
+            <button role="radio" aria-checked="true" data-p="1290"><b>Cérémonie</b><span>4 à 6 h</span></button>
+            <button role="radio" aria-checked="false" data-p="1890"><b>Journée</b><span>8 à 10 h</span></button>
+            <button role="radio" aria-checked="false" data-p="2590"><b>Journée et album</b><span>album, séance à deux</span></button>
+          </div>
+          <div class="opt" role="group" aria-label="Options"><button class="op" aria-pressed="false" data-o="0" data-p="150">Aperçu le soir même <b>+150&nbsp;€</b></button><button class="op" aria-pressed="false" data-o="1" data-p="80">Une heure de plus <b>+80&nbsp;€</b></button></div>
+          <p class="inc"><svg class="i"><use href="#ok"/></svg>Galerie privée, sélection retouchée, livrée sous 10 jours</p>
           <div class="pied"><button class="bt sm" data-go>Demander mon devis <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
         </div>
       </article>
@@ -217,8 +222,8 @@
     <div class="dots" aria-hidden="true"></div>
     <div class="vraies rv">
       <div class="im"><img src="/projets/fl-auto/img/photo-3.webp" alt="Mécanicien photographié dans son atelier pour son site" loading="lazy"></div>
-      <div class="tx"><h4 class="d">Avec de vraies photos <b>+350&nbsp;€</b></h4><p>Une demi-journée sur place : le lieu, l’équipe, les gestes du métier.</p></div>
-      <label class="sw"><input type="checkbox" id="swPh"><span class="tr" aria-hidden="true"></span><span>Inclure au prix</span></label>
+      <div class="tx"><h4 class="d">Avec de vraies photos <b>+350&nbsp;€</b></h4><p>Une demi-journée sur place : le lieu, l’équipe, les gestes du métier.</p>
+      <label class="sw"><input type="checkbox" id="swPh"><span class="tr" aria-hidden="true"></span><span>Inclure au prix</span></label></div>
     </div>
     <p class="note rv">Suivi du site, 35&nbsp;€ par mois : hébergement, nom de domaine, sauvegardes, mises à jour et 30 minutes de modifications par mois. Douze mois minimum.</p>
   </div>
@@ -360,7 +365,7 @@
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="/reps.js?v=5"></script>
-<script src="/app.js?v=5"></script>
+<script src="/reps.js?v=6"></script>
+<script src="/app.js?v=6"></script>
 </body>
 </html>

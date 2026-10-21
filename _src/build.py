@@ -29,27 +29,27 @@ contact = sect('contact')
 def nettoie(s):  # la section reprend sans son titre ni son chapeau, déjà portés par l'en-tête de page
     s = re.sub(r'<div class="sec-t rv">.*?</div>\s*', '', s, count=1, flags=re.S)
     return s.replace('class="sec"', 'class="sec" style="padding-top:clamp(36px,4vw,56px)"', 1).replace('class="sec dk"', 'class="sec dk" style="padding-top:clamp(44px,5vw,72px)"', 1)
-porteW = re.search(r'<a class="porte wb".*?\n    </a>', T, re.S).group(0)
-porteP = re.search(r'<a class="porte ph".*?\n    </a>', T, re.S).group(0)
+porteW = re.search(r'<a class="porte wb".*?</a>', T, re.S).group(0)
+porteP = re.search(r'<a class="porte ph".*?</a>', T, re.S).group(0)
 def croise(porte, titre, texte, lien, lib):
     return ('<section class="sec feuille cr-f" style="padding-top:clamp(64px,7vw,100px)" aria-label="Et aussi"><div class="w croise"><div class="portes">%s'
             '<div class="cr-tx rv"><h2 class="d">%s</h2><p>%s</p><a class="bt" href="%s">%s <span class="ar"><svg class="i"><use href="#ar"/></svg></span></a></div></div></div></section>') % (porte, titre, texte, lien, lib)
 
-ph = '''<section class="mh w" aria-labelledby="h1">
+ph = '''<section class="mh" aria-labelledby="h1"><div class="w">
   <p class="fil"><a href="/">Studio ES</a><span>/</span><span>Photographie</span></p>
   <h1 class="d" id="h1">Photographie<span class="it">Vos moments forts, sur le vif.</span></h1>
   <p class="lead">Mariages, concerts, festivals, inaugurations, cérémonies, vie d’une entreprise : un reportage discret en Bretagne, sans poses ni mise en scène, puis une sélection resserrée et retouchée, prête à servir.</p>
-</section>
+</div></section>
 %s
 %s
 %s''' % (nettoie(sect('photographie')), croise(porteW.replace('href="#web"', 'href="/metiers/sites-et-outils/"'), 'Le studio fait aussi<span class="it">des sites et des applications.</span>', 'Un site clair et bien référencé, ou une application qui fait gagner du temps. Et quand il faut de belles photos pour l’habiller, elles sont déjà là.', '/metiers/sites-et-outils/', 'Voir le web'), contact)
 page('metiers/photographie', 'Photographe de mariage et d’événement en Bretagne · Studio ES', 'Reportage photo sur le vif en Bretagne : mariage dès 1 290 €, événement dès 250 €, forfait à l’année pour les collectivités, entreprises et lieux culturels.', 'https://studioes.fr/metiers/photographie/', ph)
 
-wb = '''<section class="mh w" aria-labelledby="h1">
+wb = '''<section class="mh" aria-labelledby="h1"><div class="w">
   <p class="fil"><a href="/">Studio ES</a><span>/</span><span>Web</span></p>
   <h1 class="d" id="h1">Web<span class="it">Sites et applications sur mesure.</span></h1>
   <p class="lead">Pour les TPE, commerces, artisans et collectivités de Bretagne : un site clair, rédigé et bien référencé localement, et des applications qui font gagner du temps au quotidien, en abonnement ou à l’achat.</p>
-</section>
+</div></section>
 %s
 %s
 %s
