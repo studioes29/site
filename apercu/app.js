@@ -11,6 +11,10 @@
 
   /* en-tête, dock et retour en haut : verre dépoli, version nuit au-dessus des rubriques sombres */
   const hd = $('#hd'), dock = $('#dock'), hautBt = $('.haut-bt'), sombres = $$('[data-dark]'), feuilles = $$('.feuille');
+  /* empilement : chaque rubrique se fige à sa fin, la suivante glisse par-dessus */
+  const pile = [...document.querySelectorAll('main > .hero, main > .mh, main > .feuille')];
+  const fige = () => pile.forEach(el => { el.classList.add('empile'); el.style.setProperty('--st', Math.min(0, innerHeight - el.offsetHeight) + 'px'); });
+  fige(); addEventListener('resize', fige); if (window.ResizeObserver) { const ro = new ResizeObserver(() => fige()); pile.forEach(el => ro.observe(el)); }
   const sur = y => sombres.some(s => { const r = s.getBoundingClientRect(); return r.top < y && r.bottom > y; });
   let tic = false;
   const etat = () => {
@@ -19,7 +23,7 @@
     const loin = y > H * 1.2;
     if (dock) { dock.classList.toggle('dk', sur(H - 40)); dock.classList.toggle('haut', loin); }
     if (hautBt) { hautBt.classList.toggle('on', loin); hautBt.classList.toggle('dk', sur(H - 50)); }
-    if (!reduit) { const fr = innerWidth > 860 ? 44 : 28; feuilles.forEach(f => { const t = f.getBoundingClientRect().top; const p = clamp((H - t) / (H * .65), 0, 1); f.style.setProperty('--rr', Math.round(fr + (fr * 1.8) * (1 - p)) + 'px'); }); }
+    pile.forEach((el, i) => { const n = pile[i + 1]; if (!n) return; const d = clamp((H * .5 - n.getBoundingClientRect().top) / (H * .5), 0, 1); el.style.setProperty('--dim', reduit ? 0 : (d * .38).toFixed(3)); });
   };
   addEventListener('scroll', () => { if (!tic) { tic = true; requestAnimationFrame(etat); } }, { passive: true });
   addEventListener('resize', etat); etat();
@@ -62,15 +66,11 @@
     c.addEventListener('pointerleave', () => ['--rx', '--ry'].forEach(p => c.style.removeProperty(p)));
   });
 
-  /* portes : les deux diaporamas changent ensemble, la fenêtre de l'étiquette recadre la même image */
-  const portes = $$('[data-slides]').map(p => {
-    const ims = $$('.fd img', p), win = $('.win', p);
-    const cl = ims.map(i => { const c = document.createElement('img'); c.alt = ''; if (i.style.getPropertyValue('--op')) c.style.setProperty('--op', i.style.getPropertyValue('--op')); if (i.classList.contains('on')) { c.src = i.getAttribute('src'); c.className = 'on'; } else c.dataset.src = i.dataset.src; if (win) win.appendChild(c); return c; });
-    return { ims, cl, k: 0 };
-  });
+  /* bannière et étiquettes : tous les diaporamas changent ensemble */
+  const diapos = $$('[data-slides]').map(el => ({ ims: $$(':scope > .fd > img, :scope > .win > img', el), k: 0 }));
   const charge = i => { if (i.dataset.src) { i.src = i.dataset.src; i.removeAttribute('data-src'); } };
-  setTimeout(() => portes.forEach(P => { P.ims.forEach(charge); P.cl.forEach(charge); }), 1400);
-  if (!reduit && portes.length) setInterval(() => { if (document.hidden) return; portes.forEach(P => { [P.ims, P.cl].forEach(L => L[P.k] && L[P.k].classList.remove('on')); P.k = (P.k + 1) % P.ims.length; [P.ims, P.cl].forEach(L => { if (L[P.k]) { charge(L[P.k]); L[P.k].classList.add('on'); } }); }); }, 4800);
+  setTimeout(() => diapos.forEach(D => D.ims.forEach(charge)), 1200);
+  if (!reduit && diapos.length) setInterval(() => { if (document.hidden) return; diapos.forEach(D => { if (!D.ims.length) return; D.ims[D.k].classList.remove('on'); D.k = (D.k + 1) % D.ims.length; charge(D.ims[D.k]); D.ims[D.k].classList.add('on'); }); }, 5200);
 
   /* cartes d'offre */
   const swPh = $('#swPh');
@@ -112,6 +112,23 @@
   const vraies = $('.vraies');
   if (swPh) swPh.addEventListener('change', () => { if (vraies) vraies.classList.toggle('on', swPh.checked); $$('[data-k="site"]').forEach(c => majCarte(c)); });
 
+  /* carrousels tactiles : le sens du geste est décidé au départ ; vertical, les cartes restent immobiles */
+  const verrou = el => {
+    if (!el || !tactile) return; el.style.touchAction = 'pan-y'; el.style.overflowY = 'hidden'; let x0 = 0, y0 = 0, s0 = 0, t0 = 0, axe = null, dx = 0;
+    el.addEventListener('touchstart', e => { const t = e.touches[0]; x0 = t.clientX; y0 = t.clientY; s0 = el.scrollLeft; t0 = performance.now(); axe = null; dx = 0; }, { passive: true });
+    el.addEventListener('touchmove', e => {
+      const t = e.touches[0]; dx = t.clientX - x0; const dy = t.clientY - y0;
+      if (!axe && (Math.abs(dx) > 7 || Math.abs(dy) > 7)) axe = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+      if (axe === 'x') { e.preventDefault(); el.style.scrollSnapType = 'none'; el.scrollLeft = s0 - dx; }
+    }, { passive: false });
+    el.addEventListener('touchend', () => {
+      if (axe !== 'x') return; const v = dx / Math.max(1, performance.now() - t0), cible = s0 - dx - v * 220;
+      const pad = parseFloat(getComputedStyle(el).scrollPaddingLeft) || 0, kids = [...el.children];
+      let best = 0, bd = 1e9; kids.forEach(k => { const x = k.offsetLeft - el.firstElementChild.offsetLeft; const d = Math.abs(x - cible); if (d < bd) { bd = d; best = x; } });
+      el.scrollTo({ left: Math.max(0, best + (pad ? 0 : 0)), behavior: 'smooth' }); setTimeout(() => { el.style.scrollSnapType = ''; }, 500);
+    }, { passive: true });
+  };
+  $$('[data-grp], .rail, #gpSim').forEach(verrou);
   /* points sous les carrousels mobiles */
   $$('[data-grp]').forEach(g => {
     const d = g.nextElementSibling; if (!d || !d.classList.contains('dots')) return;
@@ -153,6 +170,7 @@
     requestAnimationFrame(derive);
   };
   requestAnimationFrame(derive);
+  addEventListener('touchstart', () => rails.forEach(R => { R.attente = Math.max(R.attente, performance.now() + 6000); }), { passive: true });
   $$('[data-rail]').forEach(b => b.addEventListener('click', () => { const R = rails.find(x => x.el.id === b.dataset.rail); if (!R) return; R.tiens(8000); R.el.scrollBy({ left: Number(b.dataset.d) * R.el.clientWidth * .7, behavior: 'smooth' }); setTimeout(() => R.pos = R.el.scrollLeft, 700); }));
 
   /* reportages */
@@ -188,12 +206,12 @@
   const ouvreGal = r => {
     if (!gp || !r) return; G.r = r;
     $('#gpK').textContent = K[r.k] || 'Reportage'; $('#gpT').textContent = r.t; $('#gpS').textContent = r.ph.length + ' photos';
-    gpG.innerHTML = r.ph.map((p, i) => `<button data-i="${i}" aria-label="Agrandir la photo ${i + 1}"><img src="/p/t/${p}.webp" alt="${r.t}, photo ${i + 1}" loading="${i < 6 ? 'eager' : 'lazy'}" decoding="async"></button>`).join('');
+    const RAT = window.RAT || {}; gpG.innerHTML = r.ph.map((p, i) => `<button data-i="${i}" aria-label="Agrandir la photo ${i + 1}" style="aspect-ratio:${RAT[p] || .75}"><img src="/p/t/${p}.webp" width="640" height="${Math.round(640 / (RAT[p] || .75))}" alt="${r.t}, photo ${i + 1}" loading="${i < 6 ? 'eager' : 'lazy'}" decoding="async"></button>`).join('');
     const autres = REPS.filter(x => x !== r && x.k === r.k).concat(REPS.filter(x => x !== r && x.k !== r.k)).slice(0, 4);
     $('#gpSim').innerHTML = autres.map(x => `<button data-r="${x.id}"><img src="/p/t/${x.ph[0]}.webp" alt="" loading="lazy"><b>${x.t}</b></button>`).join('');
     if (gp.hidden) { avantG = document.activeElement; gp.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => gp.classList.add('on'))); document.documentElement.style.overflow = 'hidden'; if (dock) dock.classList.add('cache'); setTimeout(() => $('#gpB').focus({ preventScroll: true }), 80); }
     gp.scrollTop = 0; try { history.replaceState(null, '', '#r=' + r.id); } catch (e) {}
-    $$('button', gpG).forEach((b, i) => setTimeout(() => b.classList.add('in'), 60 + Math.min(i, 10) * 55));
+    $$('button', gpG).forEach(b => b.classList.add('in'));
     compte('/galerie/' + r.id, 'Galerie : ' + r.t);
   };
   const fermeGal = () => { if (!gp || gp.hidden) return; fermeLb(); gp.classList.remove('on'); document.documentElement.style.overflow = ''; if (dock) dock.classList.remove('cache'); setTimeout(() => gp.hidden = true, 400); try { history.replaceState(null, '', location.pathname); } catch (e) {} if (avantG) avantG.focus({ preventScroll: true }); };

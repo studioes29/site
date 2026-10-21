@@ -23,7 +23,7 @@
 <link rel="preload" href="/f/br.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/f/it.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/f/ur-i.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/apercu/s.css?v=5">
+<link rel="stylesheet" href="/apercu/s.css?v=6">
 
 </head>
 <body>
@@ -75,30 +75,15 @@
 <button class="haut-bt" data-haut aria-label="Revenir en haut de la page"><svg class="i"><use href="#up"/></svg></button>
 
 <main id="haut">
-<section class="mh w" aria-labelledby="h1">
+<section class="mh" aria-labelledby="h1"><div class="w">
   <p class="fil"><a href="/apercu/">Studio ES</a><span>/</span><span>Photographie</span></p>
   <h1 class="d" id="h1">Photographie<span class="it">Vos moments forts, sur le vif.</span></h1>
   <p class="lead">Mariages, concerts, festivals, inaugurations, cérémonies, vie d’une entreprise : un reportage discret en Bretagne, sans poses ni mise en scène, puis une sélection resserrée et retouchée, prête à servir.</p>
-</section>
+</div></section>
 <section class="sec feuille ph-f" id="photographie" aria-labelledby="t-ph">
   <div class="w">
     <div class="grp" data-grp>
-      <article class="of ph rv" data-of data-k="mariage">
-        <div class="im"><img src="/h/mariage-800.webp" alt="Couple photographié sur le vif" loading="lazy"></div>
-        <div class="lab">
-          <div class="tt"><h3 class="d">Mariage</h3><p class="px"><small>dès</small><b class="prix" data-v="1290">1&#8239;290</b><span class="u">€</span></p></div>
-          <p class="ds">Des préparatifs à l’ouverture de bal, sans mise en scène.</p>
-          <div class="sel" role="radiogroup" aria-label="Formule"><i class="ind" aria-hidden="true"></i>
-            <button role="radio" aria-checked="true" data-p="1290"><b>Cérémonie</b><span>4 à 6 h</span></button>
-            <button role="radio" aria-checked="false" data-p="1890"><b>Journée</b><span>8 à 10 h</span></button>
-            <button role="radio" aria-checked="false" data-p="2590"><b>Journée et album</b><span>album, séance à deux</span></button>
-          </div>
-          <div class="opt" role="group" aria-label="Options"><button class="op" aria-pressed="false" data-o="0" data-p="150">Aperçu le soir même <b>+150&nbsp;€</b></button><button class="op" aria-pressed="false" data-o="1" data-p="80">Une heure de plus <b>+80&nbsp;€</b></button></div>
-          <p class="inc"><svg class="i"><use href="#ok"/></svg>Galerie privée, sélection retouchée, livrée sous 10 jours</p>
-          <div class="pied"><button class="bt sm" data-go>Demander mon devis <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
-        </div>
-      </article>
-      <article class="of ph rv" data-of data-k="evenement" style="--i:1">
+      <article class="of ph rv" data-of data-k="evenement">
         <div class="im"><img src="/p/t/philippe-katerine-2.webp" alt="Philippe Katerine sur scène" loading="lazy" style="object-position:50% 30%"></div>
         <div class="lab">
           <div class="tt"><h3 class="d">Événement</h3><p class="px"><small>dès</small><b class="prix" data-v="250">250</b><span class="u">€</span></p></div>
@@ -110,6 +95,21 @@
           </div>
           <div class="opt" role="group" aria-label="Options"><button class="op" aria-pressed="false" data-o="0" data-p="150">Livrée le soir même <b>+150&nbsp;€</b></button><button class="op" aria-pressed="false" data-o="1" data-p="80">Une heure de plus <b>+80&nbsp;€</b></button></div>
           <p class="inc"><svg class="i"><use href="#ok"/></svg>Sélection retouchée, droits d’utilisation, livrée sous 10 jours</p>
+          <div class="pied"><button class="bt sm" data-go>Demander mon devis <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
+        </div>
+      </article>
+      <article class="of ph rv" data-of data-k="mariage" style="--i:1">
+        <div class="im"><img src="/h/mariage-800.webp" alt="Couple photographié sur le vif" loading="lazy"></div>
+        <div class="lab">
+          <div class="tt"><h3 class="d">Mariage</h3><p class="px"><small>dès</small><b class="prix" data-v="1290">1&#8239;290</b><span class="u">€</span></p></div>
+          <p class="ds">Des préparatifs à l’ouverture de bal, sans mise en scène.</p>
+          <div class="sel" role="radiogroup" aria-label="Formule"><i class="ind" aria-hidden="true"></i>
+            <button role="radio" aria-checked="true" data-p="1290"><b>Cérémonie</b><span>4 à 6 h</span></button>
+            <button role="radio" aria-checked="false" data-p="1890"><b>Journée</b><span>8 à 10 h</span></button>
+            <button role="radio" aria-checked="false" data-p="2590"><b>Journée et album</b><span>album, séance à deux</span></button>
+          </div>
+          <div class="opt" role="group" aria-label="Options"><button class="op" aria-pressed="false" data-o="0" data-p="150">Aperçu le soir même <b>+150&nbsp;€</b></button><button class="op" aria-pressed="false" data-o="1" data-p="80">Une heure de plus <b>+80&nbsp;€</b></button></div>
+          <p class="inc"><svg class="i"><use href="#ok"/></svg>Galerie privée, sélection retouchée, livrée sous 10 jours</p>
           <div class="pied"><button class="bt sm" data-go>Demander mon devis <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
         </div>
       </article>
@@ -138,20 +138,17 @@
   </div>
   <div class="rail rv" id="rail" aria-label="Reportages"></div>
 </section>
-<section class="sec feuille cr-f" style="padding-top:clamp(64px,7vw,100px)" aria-label="Et aussi"><div class="w croise"><div class="portes"><a class="porte wb" href="/apercu/metiers/sites-et-outils/" data-tilt data-slides>
-      <div class="fd">
-        <img src="/projets/flouz/img/cover.webp" alt="" class="on">
-        <img data-src="/projets/pierceval-tattoo/img/cover.webp" alt="" style="--op:78% 50%">
-        <img data-src="/projets/la-soute/img/cover.webp" alt="" style="--op:84% 50%">
-        <img data-src="/projets/flouz/img/main-s.webp" alt="">
-        <img data-src="/projets/la-soute/img/site.webp" alt="">
-      </div>
-      <div class="chip">
-        <div class="win" aria-hidden="true"></div>
-        <div class="lab"><b class="d">Web</b><span>Sites et applications</span></div>
-        <span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span>
-      </div>
-    </a><div class="cr-tx rv"><h2 class="d">Le studio fait aussi<span class="it">des sites et des applications.</span></h2><p>Un site clair et bien référencé, ou une application qui fait gagner du temps. Et quand il faut de belles photos pour l’habiller, elles sont déjà là.</p><a class="bt" href="/apercu/metiers/sites-et-outils/">Voir le web <span class="ar"><svg class="i"><use href="#ar"/></svg></span></a></div></div></div></section>
+<section class="sec feuille cr-f" style="padding-top:clamp(64px,7vw,100px)" aria-label="Et aussi"><div class="w croise"><div class="portes"><a class="porte wb" href="/apercu/metiers/sites-et-outils/" data-slides>
+          <span class="win" aria-hidden="true">
+            <img src="/projets/flouz/img/cover.webp" alt="" class="on">
+            <img data-src="/projets/pierceval-tattoo/img/cover.webp" alt="">
+            <img data-src="/projets/la-soute/img/cover.webp" alt="">
+            <img data-src="/projets/flouz/img/main-s.webp" alt="">
+            <img data-src="/projets/la-soute/img/site.webp" alt="">
+          </span>
+          <span class="lab"><b class="d">Web</b><span>Sites et applications</span></span>
+          <span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span>
+        </a><div class="cr-tx rv"><h2 class="d">Le studio fait aussi<span class="it">des sites et des applications.</span></h2><p>Un site clair et bien référencé, ou une application qui fait gagner du temps. Et quand il faut de belles photos pour l’habiller, elles sont déjà là.</p><a class="bt" href="/apercu/metiers/sites-et-outils/">Voir le web <span class="ar"><svg class="i"><use href="#ar"/></svg></span></a></div></div></div></section>
 <section class="sec feuille ct-f" id="contact" aria-labelledby="t-ct">
   <div class="w">
     <div class="sec-t rv"><h2 class="d" id="t-ct">Parlons de<span class="it">votre projet.</span></h2><p class="lead">Trois façons de commencer, selon ce qui vous arrange. Réponse sous 48 h, devis gratuit et sans engagement.</p></div>
@@ -220,7 +217,7 @@
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="/apercu/reps.js?v=5"></script>
-<script src="/apercu/app.js?v=5"></script>
+<script src="/apercu/reps.js?v=6"></script>
+<script src="/apercu/app.js?v=6"></script>
 </body>
 </html>
