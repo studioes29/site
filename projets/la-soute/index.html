@@ -320,6 +320,29 @@ ul.liv{margin:0;padding:0}
 .cd .out img{border-radius:clamp(10px,1.2vw,17px);width:100%}
 @media (hover:hover){.cd:hover .chip{transform:translateY(-6px) rotate(0deg)}}
 @media (max-width:860px){.fh{grid-template-columns:1fr;align-items:start;padding-top:84px}.fh .meta div{grid-template-columns:1fr;gap:2px}.cd{aspect-ratio:1/.95}.cd .chip{width:76%}.cd .out{width:24%;right:5%}}
+
+/* allègement 2027 : rangées qui défilent, retour en haut, retour sur mobile */
+.lr{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:4px 0 10px;cursor:grab}
+.lr::-webkit-scrollbar{display:none}
+.lr>*{flex:0 0 auto;scroll-snap-align:start}
+.lr.id img{height:clamp(150px,15vw,210px);width:auto;max-width:none;border-radius:14px;box-shadow:none}
+ul.liv.lr{display:flex;margin:0;padding:4px 0 10px}
+ul.liv.lr li{width:clamp(230px,24vw,290px)}
+.top .ret{display:none}
+.haut-bt{position:fixed;z-index:59;right:20px;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.6);-webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);box-shadow:inset 0 0 0 1px rgba(255,255,255,.6),0 12px 30px -12px rgba(20,20,20,.35);color:#141414;opacity:0;transform:translateY(14px);pointer-events:none;transition:opacity .35s,transform .5s cubic-bezier(.34,1.4,.64,1)}
+.haut-bt.on{opacity:1;transform:none;pointer-events:auto}
+.haut-bt svg{width:18px;height:18px;transform:rotate(-90deg)}
+@media (max-width:860px){.top .ret{display:grid;place-items:center;position:absolute;left:var(--side);top:50%;margin-top:-19px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.7)}.top .ret svg{width:16px;height:16px;transform:rotate(180deg)}}
+@media (max-width:700px){
+  .ch{padding-block:48px}
+  .cascade,.pair,.gal,.gal3,.vfy,.sto{display:flex!important;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin-inline:calc(var(--g) * -1);padding:4px var(--g) 12px;align-items:flex-start}
+  .cascade::-webkit-scrollbar,.pair::-webkit-scrollbar,.gal::-webkit-scrollbar,.gal3::-webkit-scrollbar,.vfy::-webkit-scrollbar,.sto::-webkit-scrollbar{display:none}
+  .cascade>*,.pair>*,.gal>*,.gal3>*{flex:0 0 80%;scroll-snap-align:start;transform:none!important;margin:0!important;grid-column:auto!important;max-width:none!important}
+  .pair>.phn,.gal3>img[style*="max-width"]{flex:0 0 42%}
+  .vfy>*{flex:0 0 40%;scroll-snap-align:start}
+  .sto>img{flex:0 0 46%;transform:none!important;scroll-snap-align:start}
+  .dev .phn{display:none}
+}
 </style>
 </head>
 <body>
@@ -331,9 +354,10 @@ ul.liv{margin:0;padding:0}
 <div class="grain" aria-hidden="true"></div>
 
 <header class="top" id="top">
+  <a class="ret" href="/#realisations" aria-label="Retour"><svg aria-hidden="true"><use href="#a"/></svg></a>
   <a class="logo" href="/" aria-label="Studio ES, accueil"><svg viewBox="0 0 98 186" aria-hidden="true"><use href="#logo"/></svg><span>Studio ES</span></a>
   <nav class="nav" aria-label="Menu principal"><a href="/#photographie">Photographie</a><a href="/#web">Web</a><a href="/#contact">Contact</a></nav>
-  <a class="cta" href="/#devis">Estimer un projet<i><svg aria-hidden="true"><use href="#a"/></svg></i></a>
+  <a class="cta" href="/#devis">Demander un devis<i><svg aria-hidden="true"><use href="#a"/></svg></i></a>
 </header>
 
 <main>
@@ -412,7 +436,7 @@ ul.liv{margin:0;padding:0}
 <section class="end w" aria-labelledby="fin">
   <h2 class="d" id="fin" data-r>Une saison à habiller&#8239;? <span class="se">Parlons-en.</span></h2>
   <div class="bts" data-r>
-    <a class="bt bt-a" href="/#devis">Estimer mon projet<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
+    <a class="bt bt-a" href="/#devis">Demander un devis<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
     <a class="bt bt-g" href="/#contact">Réserver un appel<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
   </div>
 </section>
@@ -478,6 +502,13 @@ ul.liv{margin:0;padding:0}
   fit(); if (document.fonts) document.fonts.ready.then(fit);
   let t; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(fit, 120); });
 })();
+</script>
+<button class="haut-bt" id="hautBt" aria-label="Revenir en haut de la page"><svg aria-hidden="true"><use href="#a"/></svg></button>
+<script>
+/* retour en haut, et retour à la page précédente sur mobile */
+(() => { const b = document.getElementById('hautBt'); addEventListener('scroll', () => b.classList.toggle('on', scrollY > innerHeight * 1.2), {passive: true}); b.addEventListener('click', () => scrollTo({top: 0, behavior: 'smooth'}));
+  const r = document.querySelector('.top .ret'); if (r) r.addEventListener('click', e => { if (document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1) { e.preventDefault(); history.back(); } });
+  document.querySelectorAll('.lr').forEach(l => { let x0 = 0, s0 = 0, bas = false, mv = false; l.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') return; bas = true; mv = false; x0 = e.clientX; s0 = l.scrollLeft; }); addEventListener('pointermove', e => { if (!bas) return; const d = e.clientX - x0; if (Math.abs(d) > 5) { mv = true; l.style.scrollSnapType = 'none'; l.scrollLeft = s0 - d; } }); addEventListener('pointerup', () => { if (bas) { bas = false; l.style.scrollSnapType = ''; } }); l.addEventListener('dragstart', e => e.preventDefault()); }); })();
 </script>
 </body>
 </html>

@@ -23,7 +23,7 @@
 <link rel="preload" href="/f/br.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/f/it.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/f/ur-i.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/s.css?v=3">
+<link rel="stylesheet" href="/s.css?v=4">
 <script>/* GoatCounter : mesure d'audience sans cookie, uniquement sur studioes.fr */if (/(^|\.)studioes\.fr$/.test(location.hostname) && !location.hostname.startsWith('dossiers')) { const g = document.createElement('script'); g.async = true; g.src = 'https://gc.zgo.at/count.js'; g.dataset.goatcounter = 'https://studioes.goatcounter.com/count'; document.head.appendChild(g); }</script>
 </head>
 <body>
@@ -48,6 +48,10 @@
   <symbol id="ph" viewBox="0 0 24 24"><path d="M6.5 3.5l3 3.5-2 2.5a12 12 0 0 0 7 7l2.5-2 3.5 3-1.5 3.5C11 20 4 13 3 5z"/></symbol>
   <symbol id="ma" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M4 7.5l8 5.5 8-5.5"/></symbol>
   <symbol id="ig" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6"/></symbol>
+  <symbol id="up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+  <symbol id="s1" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 8h7M8.5 11.5h7M8.5 15h4"/></symbol>
+  <symbol id="s3" viewBox="0 0 24 24"><rect x="7" y="2.5" width="12" height="15" rx="2"/><path d="M5 6.5v12A2.5 2.5 0 0 0 7.5 21H15"/><path d="M10 7h6M10 10.5h6"/></symbol>
+  <symbol id="sx" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="5" rx="1.2"/><rect x="3" y="16" width="6" height="5" rx="1.2"/><rect x="15" y="16" width="6" height="5" rx="1.2"/><path d="M12 8v4M6 16v-4h12v4"/></symbol>
 </svg>
 
 <header class="hd" id="hd">
@@ -58,16 +62,18 @@
       <a href="/metiers/sites-et-outils/">Web</a>
       <a href="#contact">Contact</a>
     </nav>
-    <button class="bt sm" data-est>Estimer un projet <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button>
+    <button class="bt sm" data-est>Demander un devis <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button>
   </div>
 </header>
 
 <nav class="dock" id="dock" aria-label="Navigation rapide">
+  <button class="up" data-haut aria-label="Revenir en haut de la page"><svg class="i"><use href="#up"/></svg></button>
   <a href="/metiers/photographie/"><svg class="i"><use href="#ap"/></svg><span>Photo</span></a>
   <a href="/metiers/sites-et-outils/"><svg class="i"><use href="#ec"/></svg><span>Web</span></a>
   <a href="#contact"><svg class="i"><use href="#ms"/></svg><span>Contact</span></a>
-  <button class="go" data-est>Estimer<svg class="i"><use href="#ar"/></svg></button>
+  <button class="go" data-est><svg class="i"><use href="#cl"/></svg>Devis</button>
 </nav>
+<button class="haut-bt" data-haut aria-label="Revenir en haut de la page"><svg class="i"><use href="#up"/></svg></button>
 
 <main id="haut">
 <section class="mh w" aria-labelledby="h1">
@@ -75,109 +81,121 @@
   <h1 class="d" id="h1">Web<span class="it">Sites et applications sur mesure.</span></h1>
   <p class="lead">Pour les TPE, commerces, artisans et collectivités de Bretagne : un site clair, rédigé et bien référencé localement, et des applications qui font gagner du temps au quotidien, en abonnement ou à l’achat.</p>
 </section>
-<section class="sec dk" style="padding-top:clamp(44px,5vw,72px)" id="web" data-dark aria-labelledby="t-web">
+<section class="sec feuille dk" id="web" data-dark aria-labelledby="t-web">
   <div class="w">
-    <div class="sous rv"><h3 class="d">Site internet</h3><label class="sw"><input type="checkbox" id="swPh"><span class="tr" aria-hidden="true"></span><span>Avec un reportage photo du lieu <b>+350&nbsp;€</b></span></label></div>
+    <div class="sous rv"><h3 class="d">Site internet</h3><p>Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris.</p></div>
     <div class="grp" data-grp>
-      <article class="of st rv" data-of>
-        <div class="im fan" data-n="1"><img src="/projets/pierceval-tattoo/img/m-hero.webp" alt="" loading="lazy"></div>
+      <article class="of st rv" data-of data-k="site" data-f="0">
         <div class="lab">
-          <h3 class="d">Une page</h3>
-          <p class="ds">Une page complète et soignée, pour exister en ligne avec clarté.</p>
-          <p class="px"><small>dès</small><b class="roll" data-v="990" data-b="990">990</b><span class="u">€</span></p>
+          <span class="ico" style="--t:#B9B4FF"><svg class="i"><use href="#s1"/></svg></span>
+          <h3 class="d">Essentiel</h3>
+          <p class="ds">Une page claire pour exister en ligne : qui vous êtes, ce que vous faites, comment vous joindre.</p>
+          <p class="px"><small>dès</small><b class="prix" data-v="990" data-b="990">990</b><span class="u">€</span></p>
           <p class="dt">puis 35&nbsp;€ par mois de suivi</p>
-          <ul class="inc"><li><svg class="i"><use href="#ok"/></svg>Pensée pour le mobile</li><li><svg class="i"><use href="#ok"/></svg>Textes rédigés</li><li><svg class="i"><use href="#ok"/></svg>Livrée en 10 jours</li></ul>
-          <div class="pied"><button class="bt sm" data-est="site:0">Estimer <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
+          <ul class="inc"><li><svg class="i"><use href="#ok"/></svg>Une page, pensée pour le mobile</li><li><svg class="i"><use href="#ok"/></svg>Formulaire de contact</li><li><svg class="i"><use href="#ok"/></svg>Livré en 10 jours</li></ul>
+          <div class="pied"><button class="bt sm" data-go>Démarrer mon site <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
         </div>
       </article>
-      <article class="of st rec grain rv" data-of style="--i:1">
+      <article class="of st rec grain rv" data-of data-k="site" data-f="1" style="--i:1">
         <span class="sheen" aria-hidden="true"></span>
-        <div class="im fan" data-n="3"><img src="/projets/pierceval-tattoo/img/m-metiers.webp" alt="" loading="lazy"><img src="/projets/pierceval-tattoo/img/m-contact.webp" alt="" loading="lazy"><img src="/projets/pierceval-tattoo/img/m-hero.webp" alt="" loading="lazy"><span class="badge">Recommandé</span></div>
         <div class="lab">
-          <h3 class="d">3 à 5 pages</h3>
-          <p class="ds">Une page par activité ou par service, et un formulaire de contact.</p>
-          <p class="px"><small>dès</small><b class="roll" data-v="1990" data-b="1990">1&#8239;990</b><span class="u">€</span></p>
+          <div class="hh"><span class="ico" style="--t:#9FDCC3"><svg class="i"><use href="#s3"/></svg></span><span class="badge">Recommandé</span></div>
+          <h3 class="d">Vitrine</h3>
+          <p class="ds">Une page par service ou par activité, pour être trouvé sur chacun de vos métiers.</p>
+          <p class="px"><small>dès</small><b class="prix" data-v="1990" data-b="1990">1&#8239;990</b><span class="u">€</span></p>
           <p class="dt">puis 35&nbsp;€ par mois de suivi</p>
-          <ul class="inc"><li><svg class="i"><use href="#ok"/></svg>Une page par service</li><li><svg class="i"><use href="#ok"/></svg>Référencement local</li><li><svg class="i"><use href="#ok"/></svg>Formulaire de contact</li></ul>
-          <div class="pied"><button class="bt sm" data-est="site:1">Estimer <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
+          <ul class="inc"><li><svg class="i"><use href="#ok"/></svg>3 à 5 pages</li><li><svg class="i"><use href="#ok"/></svg>Référencement local soigné</li><li><svg class="i"><use href="#ok"/></svg>Formulaire de contact</li></ul>
+          <div class="pied"><button class="bt sm" data-go>Démarrer mon site <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
         </div>
       </article>
-      <article class="of st rv" data-of style="--i:2">
-        <div class="im fan" data-n="5"><img src="/projets/pierceval-tattoo/img/m-faq.webp" alt="" loading="lazy"><img src="/projets/pierceval-tattoo/img/m-soins.webp" alt="" loading="lazy"><img src="/projets/pierceval-tattoo/img/m-real.webp" alt="" loading="lazy"><img src="/projets/pierceval-tattoo/img/m-rdv-type.webp" alt="" loading="lazy"><img src="/projets/pierceval-tattoo/img/m-menu.webp" alt="" loading="lazy"></div>
+      <article class="of st rv" data-of data-k="site" data-f="2" style="--i:2">
         <div class="lab">
-          <h3 class="d">Site complet</h3>
-          <p class="ds">Arborescence sur mesure, actualités ou agenda modifiables par vos soins.</p>
-          <p class="px"><small>dès</small><b class="roll" data-v="4490" data-b="4490">4&#8239;490</b><span class="u">€</span></p>
+          <span class="ico" style="--t:#F6B8C4"><svg class="i"><use href="#sx"/></svg></span>
+          <h3 class="d">Sur mesure</h3>
+          <p class="ds">Une arborescence pensée pour vous, avec actualités, agenda ou réservation que vous modifiez seul.</p>
+          <p class="px"><small>dès</small><b class="prix" data-v="4490" data-b="4490">4&#8239;490</b><span class="u">€</span></p>
           <p class="dt">puis 35&nbsp;€ par mois de suivi</p>
-          <ul class="inc"><li><svg class="i"><use href="#ok"/></svg>Arborescence sur mesure</li><li><svg class="i"><use href="#ok"/></svg>Contenus modifiables</li><li><svg class="i"><use href="#ok"/></svg>Référencement local</li></ul>
-          <div class="pied"><button class="bt sm" data-est="site:2">Estimer <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
+          <ul class="inc"><li><svg class="i"><use href="#ok"/></svg>Pages sans limite</li><li><svg class="i"><use href="#ok"/></svg>Contenus modifiables</li><li><svg class="i"><use href="#ok"/></svg>Référencement local soigné</li></ul>
+          <div class="pied"><button class="bt sm" data-go>Démarrer mon site <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
         </div>
       </article>
     </div>
     <div class="dots" aria-hidden="true"></div>
+    <div class="vraies rv">
+      <div class="im"><img src="/projets/fl-auto/img/photo-3.webp" alt="Mécanicien photographié dans son atelier pour son site" loading="lazy"></div>
+      <div class="tx"><h4 class="d">Avec de vraies photos</h4><p>Une demi-journée sur place pour photographier le lieu, l’équipe et les gestes du métier. Votre site ne ressemble à aucun autre.</p></div>
+      <div class="ch"><b>+350&nbsp;€</b><label class="sw"><input type="checkbox" id="swPh"><span class="tr" aria-hidden="true"></span><span>Inclure au prix</span></label></div>
+    </div>
     <p class="note rv">Suivi du site, 35&nbsp;€ par mois : hébergement, nom de domaine, sauvegardes, mises à jour et 30 minutes de modifications par mois. Douze mois minimum.</p>
-
-    <div class="sous rv"><h3 class="d">Applications <em>sur mesure</em></h3><p>Les tableaux Excel ont bien travaillé. Ils peuvent prendre leur retraite.</p></div>
+  </div>
+</section>
+<section class="sec feuille dk ap-f" id="applications" data-dark aria-labelledby="t-ap">
+  <div class="w">
+    <div class="sec-t rv"><h2 class="d" id="t-ap">Applications<span class="it">Un outil pour chaque problème.</span></h2><p class="lead">Une tâche vous fait perdre du temps chaque semaine ? Une application peut s’en charger. Les exemples ci-dessous sont des points de départ : décrivez votre problème, l’outil se construit à partir de lui.</p></div>
   </div>
   <div class="rail cas-us rv" id="usages" aria-label="Exemples d’applications">
-    <div class="us" style="--t:#B9B4FF"><span class="ic"><svg class="i"><use href="#cl"/></svg></span><b>Devis en ligne</b><p class="pb">Les demandes arrivent incomplètes.</p><p>Le client décrit son besoin pas à pas et reçoit une estimation. Vous validez en un clic.</p></div>
-    <div class="us" style="--t:#9FDCC3"><span class="ic"><svg class="i"><use href="#ca"/></svg></span><b>Prise de rendez-vous</b><p class="pb">Le téléphone sonne en plein travail.</p><p>Créneaux en ligne, rappels automatiques, annulations gérées sans vous.</p></div>
-    <div class="us" style="--t:#F6B8C4"><span class="ic"><svg class="i"><use href="#ins"/></svg></span><b>Inscriptions et adhésions</b><p class="pb">Les inscriptions se font encore sur papier.</p><p>Formulaire en ligne, paiement, listes à jour pour chaque activité.</p></div>
-    <div class="us" style="--t:#F5D199"><span class="ic"><svg class="i"><use href="#pl"/></svg></span><b>Planning d’équipe</b><p class="pb">Le planning vit sur un tableau blanc.</p><p>Interventions, congés et disponibilités, partagés sur téléphone.</p></div>
-    <div class="us" style="--t:#A9CCFF"><span class="ic"><svg class="i"><use href="#fo"/></svg></span><b>Suivi de dossier</b><p class="pb">Les clients appellent pour savoir où en est leur dossier.</p><p>Un espace client avec les étapes, les documents et les messages.</p></div>
-    <div class="us" style="--t:#D7E8A4"><span class="ic"><svg class="i"><use href="#cu"/></svg></span><b>Relances et factures</b><p class="pb">Les relances partent quand on y pense.</p><p>Factures, relances et rappels envoyés à la bonne date, sans y penser.</p></div>
+    <div class="us" style="--t:#B9B4FF"><span class="ico"><svg class="i"><use href="#cl"/></svg></span><b>Devis en ligne</b><p class="pb">Les demandes arrivent incomplètes.</p><p>Le client décrit son besoin pas à pas et reçoit une estimation. Vous validez en un clic.</p></div>
+    <div class="us" style="--t:#9FDCC3"><span class="ico"><svg class="i"><use href="#ca"/></svg></span><b>Prise de rendez-vous</b><p class="pb">Le téléphone sonne en plein travail.</p><p>Créneaux en ligne, rappels automatiques, annulations gérées sans vous.</p></div>
+    <div class="us" style="--t:#F6B8C4"><span class="ico"><svg class="i"><use href="#ins"/></svg></span><b>Inscriptions et adhésions</b><p class="pb">Les inscriptions se font encore sur papier.</p><p>Formulaire en ligne, paiement, listes à jour pour chaque activité.</p></div>
+    <div class="us" style="--t:#F5D199"><span class="ico"><svg class="i"><use href="#pl"/></svg></span><b>Planning d’équipe</b><p class="pb">Le planning vit sur un tableau blanc.</p><p>Interventions, congés et disponibilités, partagés sur téléphone.</p></div>
+    <div class="us" style="--t:#A9CCFF"><span class="ico"><svg class="i"><use href="#fo"/></svg></span><b>Suivi de dossier</b><p class="pb">Les clients appellent pour savoir où en est leur dossier.</p><p>Un espace client avec les étapes, les documents et les messages.</p></div>
+    <div class="us" style="--t:#D7E8A4"><span class="ico"><svg class="i"><use href="#cu"/></svg></span><b>Relances et factures</b><p class="pb">Les relances partent quand on y pense.</p><p>Factures, relances et rappels envoyés à la bonne date, sans y penser.</p></div>
+    <div class="us autre"><span class="ico"><svg class="i"><use href="#ms"/></svg></span><b>Votre problème</b><p class="pb">Il n’est pas dans la liste ?</p><p>Décrivez-le en quelques lignes. La réponse arrive avec une piste concrète et un prix.</p><button class="bt sm" data-msg>Le décrire <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
   </div>
   <div class="w">
-    <div class="sous rv" style="margin-top:clamp(28px,3vw,40px)"><h3 class="d sm">Combien&nbsp;?</h3><div class="bascule big" id="bAp" role="group" aria-label="Formule"><button aria-pressed="true" data-v="0">Abonnement</button><button aria-pressed="false" data-v="1">Achat</button></div></div>
-    <div class="grp" data-grp id="gAp">
-      <article class="of ap rv" data-of>
+    <div class="sous rv"><h3 class="d">Les formules</h3><p>Chacune existe en abonnement ou à l’achat.</p></div>
+    <div class="grp" data-grp>
+      <article class="of ap rv" data-of data-k="app" data-f="0">
         <div class="lab">
           <span class="ico" style="--t:#B9B4FF"><svg class="i"><use href="#cl"/></svg></span>
           <h3 class="d">Devis en ligne</h3>
           <p class="ds">Un outil simple, prêt vite, qui fait gagner des heures chaque semaine.</p>
-          <p class="px"><small>dès</small><b class="roll" data-ab="190" data-ac="1090" data-v="190">190</b><span class="u">€</span></p>
-          <p class="dt" data-ab="puis 85&nbsp;€ par mois" data-ac="à l’achat, une fois">puis 85&nbsp;€ par mois</p>
+          <div class="bascule" data-ap role="group" aria-label="Formule"><button aria-pressed="true" data-v="0">Abonnement</button><button aria-pressed="false" data-v="1">Achat</button></div>
+          <p class="px"><small>dès</small><b class="prix" data-ab="190" data-ac="1090" data-v="190">190</b><span class="u">€</span></p>
+          <p class="dt" data-ab="puis 85&nbsp;€ par mois, engagement de 18 mois" data-ac="en une fois, suivi en option à 50&nbsp;€ par mois">puis 85&nbsp;€ par mois, engagement de 18 mois</p>
           <ul class="inc"><li><svg class="i"><use href="#ok"/></svg>Estimation immédiate</li><li><svg class="i"><use href="#ok"/></svg>Demandes complètes</li><li><svg class="i"><use href="#ok"/></svg>Acompte en ligne</li></ul>
-          <div class="pied"><button class="bt sm" data-est="app:0">Estimer <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
+          <div class="pied"><button class="bt sm" data-go>Parler de mon projet <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
         </div>
       </article>
-      <article class="of ap rec grain rv" data-of style="--i:1">
+      <article class="of ap rec grain rv" data-of data-k="app" data-f="1" style="--i:1">
         <span class="sheen" aria-hidden="true"></span>
         <div class="lab">
           <div class="hh"><span class="ico" style="--t:#9FDCC3"><svg class="i"><use href="#pl"/></svg></span><span class="badge">Recommandé</span></div>
           <h3 class="d">Application web</h3>
           <p class="ds">Pensée pour votre façon de travailler, sur téléphone comme sur ordinateur.</p>
-          <p class="px"><small>dès</small><b class="roll" data-ab="390" data-ac="2790" data-v="390">390</b><span class="u">€</span></p>
-          <p class="dt" data-ab="puis 150&nbsp;€ par mois" data-ac="à l’achat, une fois">puis 150&nbsp;€ par mois</p>
+          <div class="bascule" data-ap role="group" aria-label="Formule"><button aria-pressed="true" data-v="0">Abonnement</button><button aria-pressed="false" data-v="1">Achat</button></div>
+          <p class="px"><small>dès</small><b class="prix" data-ab="390" data-ac="2790" data-v="390">390</b><span class="u">€</span></p>
+          <p class="dt" data-ab="puis 150&nbsp;€ par mois, engagement de 18 mois" data-ac="en une fois, suivi en option à 50&nbsp;€ par mois">puis 150&nbsp;€ par mois, engagement de 18 mois</p>
           <ul class="inc"><li><svg class="i"><use href="#ok"/></svg>Comptes utilisateurs</li><li><svg class="i"><use href="#ok"/></svg>Données centralisées</li><li><svg class="i"><use href="#ok"/></svg>Évolutions au fil de l’eau</li></ul>
-          <div class="pied"><button class="bt sm" data-est="app:1">Estimer <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
+          <div class="pied"><button class="bt sm" data-go>Parler de mon projet <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
         </div>
       </article>
-      <article class="of ap rv" data-of style="--i:2">
+      <article class="of ap rv" data-of data-k="app" data-f="2" style="--i:2">
         <div class="lab">
           <span class="ico" style="--t:#D7E8A4"><svg class="i"><use href="#cu"/></svg></span>
           <h3 class="d">Avec automatisations</h3>
-          <p class="ds">L’application et les tâches qui tournent seules en arrière-plan.</p>
-          <p class="px"><small>dès</small><b class="roll" data-ab="790" data-ac="5490" data-v="790">790</b><span class="u">€</span></p>
-          <p class="dt" data-ab="puis 250&nbsp;€ par mois" data-ac="à l’achat, une fois">puis 250&nbsp;€ par mois</p>
+          <p class="ds">L’application, et les tâches qui tournent seules en arrière-plan.</p>
+          <div class="bascule" data-ap role="group" aria-label="Formule"><button aria-pressed="true" data-v="0">Abonnement</button><button aria-pressed="false" data-v="1">Achat</button></div>
+          <p class="px"><small>dès</small><b class="prix" data-ab="790" data-ac="5490" data-v="790">790</b><span class="u">€</span></p>
+          <p class="dt" data-ab="puis 250&nbsp;€ par mois, engagement de 18 mois" data-ac="en une fois, suivi en option à 50&nbsp;€ par mois">puis 250&nbsp;€ par mois, engagement de 18 mois</p>
           <ul class="inc"><li><svg class="i"><use href="#ok"/></svg>Relances automatiques</li><li><svg class="i"><use href="#ok"/></svg>Documents générés</li><li><svg class="i"><use href="#ok"/></svg>Liens avec vos outils</li></ul>
-          <div class="pied"><button class="bt sm" data-est="app:2">Estimer <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
+          <div class="pied"><button class="bt sm" data-go>Parler de mon projet <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
         </div>
       </article>
     </div>
     <div class="dots" aria-hidden="true"></div>
-    <p class="note rv" id="nAp" data-ab="En abonnement : hébergement, maintenance et une heure d’évolution par mois compris. Engagement de 18 mois, puis au mois. Vos données restent les vôtres." data-ac="À l’achat : l’application vous appartient. Suivi et évolutions en option, 50&nbsp;€ par mois.">En abonnement : hébergement, maintenance et une heure d’évolution par mois compris. Engagement de 18 mois, puis au mois. Vos données restent les vôtres.</p>
+    <p class="note rv">En abonnement, l’hébergement, la maintenance et une heure d’évolution par mois sont compris, et vos données restent les vôtres. Une heure de prise en main est comprise à chaque livraison.</p>
 
-    <div class="sous rv" id="realisations"><h3 class="d">Réalisations</h3><p>Site, identité ou application, de la première esquisse à la mise en ligne.</p></div>
-    <div class="grp re" data-grp>
-      <a class="cs rv" href="/projets/pierceval-tattoo/" style="--b:#3A1D3F"><div class="im"><img src="/projets/pierceval-tattoo/img/cover.webp" alt="Site de Pierceval Tattoo sur ordinateur et téléphone" loading="lazy"></div><div class="lab"><b class="d">Pierceval Tattoo</b><span>Trente ans de métier, un premier site.</span><small>Site internet · Scaër</small></div><span class="fl" aria-hidden="true"><svg class="i"><use href="#ne"/></svg></span></a>
-      <a class="cs rv" href="/projets/la-soute/" style="--b:#191C55;--i:1"><div class="im"><img src="/projets/la-soute/img/cover.webp" alt="Identité et site de La Soute" loading="lazy"></div><div class="lab"><b class="d">La Soute</b><span>Une salle, un hublot, une saison.</span><small>Site et identité · Salle de spectacle</small></div><span class="fl" aria-hidden="true"><svg class="i"><use href="#ne"/></svg></span></a>
-      <a class="cs rv" href="/projets/flouz/" style="--b:#22185C;--i:2"><div class="im"><img src="/projets/flouz/img/cover.webp" alt="Application flouz. sur téléphone" loading="lazy"></div><div class="lab"><b class="d">flouz.</b><span>Un budget qui se lit d’un coup d’œil.</span><small>Application · Budget personnel</small></div><span class="fl" aria-hidden="true"><svg class="i"><use href="#ne"/></svg></span></a>
-    </div>
-    <div class="dots" aria-hidden="true"></div>
+    <div class="sous rv" id="realisations"><h3 class="d">Réalisations web</h3><div class="nv"><button class="ic" data-rail="reals" data-d="-1" aria-label="Réalisations précédentes"><svg class="i"><use href="#al"/></svg></button><button class="ic" data-rail="reals" data-d="1" aria-label="Réalisations suivantes"><svg class="i"><use href="#arr"/></svg></button></div></div>
+  </div>
+  <div class="rail rv" id="reals" aria-label="Réalisations web">
+    <a class="cs" href="/projets/pierceval-tattoo/" style="--b:#3A1D3F"><span class="im"><img src="/projets/pierceval-tattoo/img/cover.webp" alt="Site de Pierceval Tattoo sur ordinateur et téléphone" loading="lazy"></span><span class="lab"><b class="d">Pierceval Tattoo</b><span>Trente ans de métier, un premier site.</span><small>Site internet · Tatouage et piercing</small></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ne"/></svg></span></a>
+    <a class="cs" href="/projets/flouz/" style="--b:#22185C"><span class="im"><img src="/projets/flouz/img/cover.webp" alt="Application flouz. sur téléphone" loading="lazy"></span><span class="lab"><b class="d">flouz.</b><span>Un budget qui se lit d’un coup d’œil.</span><small>Application · Budget personnel</small></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ne"/></svg></span></a>
+    <a class="cs" href="/projets/la-soute/" style="--b:#191C55"><span class="im"><img src="/projets/la-soute/img/cover.webp" alt="Identité et site de La Soute" loading="lazy"></span><span class="lab"><b class="d">La Soute</b><span>Une salle, un hublot, une saison.</span><small>Site et identité · Salle de spectacle</small></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ne"/></svg></span></a>
+    <a class="cs" href="/projets/pierceval-tattoo/#c2" style="--b:#2B1330"><span class="im"><img src="/projets/pierceval-tattoo/img/d-rdv-type.webp" alt="Réservation en ligne de Pierceval Tattoo" loading="lazy" style="object-position:50% 0"></span><span class="lab"><b class="d">Réserver en ligne</b><span>Tatouage et piercing, deux parcours.</span><small>Outil de réservation · Pierceval Tattoo</small></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ne"/></svg></span></a>
   </div>
 </section>
-<section class="sec" style="padding:clamp(56px,6vw,90px) 0 0" aria-label="Et aussi"><div class="w croise"><div class="portes"><a class="porte ph" href="/metiers/photographie/" data-tilt data-slides>
+<section class="sec feuille cr-f" style="padding-top:clamp(64px,7vw,100px)" aria-label="Et aussi"><div class="w croise"><div class="portes"><a class="porte ph" href="/metiers/photographie/" data-tilt data-slides>
       <div class="fd">
         <img src="/h/festival-1600.webp" alt="" class="on" fetchpriority="high">
         <img data-src="/p/la-fouine-9.jpg" alt="">
@@ -191,29 +209,24 @@
         <span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span>
       </div>
     </a><div class="cr-tx rv"><h2 class="d">Le studio fait aussi<span class="it">de la photographie.</span></h2><p>Mariages, concerts, festivals, vie d’une entreprise : un reportage discret, puis une sélection resserrée et retouchée.</p><a class="bt" href="/metiers/photographie/">Voir la photographie <span class="ar"><svg class="i"><use href="#ar"/></svg></span></a></div></div></div></section>
-<section class="sec" id="contact" aria-labelledby="t-ct">
+<section class="sec feuille ct-f" id="contact" aria-labelledby="t-ct">
   <div class="w">
     <div class="sec-t rv"><h2 class="d" id="t-ct">Parlons de<span class="it">votre projet.</span></h2><p class="lead">Trois façons de commencer, selon ce qui vous arrange. Réponse sous 48 h, devis gratuit et sans engagement.</p></div>
     <div class="ct">
-      <div class="ct-g">
-        <button class="ca rec grain rv" data-est><span class="sheen" aria-hidden="true"></span><span class="ico"><svg class="i"><use href="#cl"/></svg></span><span class="tx"><b class="d">Estimer mon projet</b><span>Quelques choix, une estimation immédiate, puis votre demande part en un clic.</span></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span></button>
-        <button class="ca rv" data-msg style="--i:1"><span class="ico"><svg class="i"><use href="#ms"/></svg></span><span class="tx"><b class="d">Écrire un message</b><span>Votre projet en quelques lignes, à votre rythme.</span></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span></button>
-        <div class="dir rv" style="--i:2"><a href="mailto:contact@studioes.fr"><svg class="i"><use href="#ma"/></svg>contact@studioes.fr</a><a href="tel:+33651222107"><svg class="i"><use href="#ph"/></svg>06&nbsp;51&nbsp;22&nbsp;21&nbsp;07</a><a href="https://www.instagram.com/ewen.studioes/" target="_blank" rel="noopener"><svg class="i"><use href="#ig"/></svg>@ewen.studioes</a></div>
-      </div>
-      <div class="cal rv" style="--i:1">
-        <div class="cal-h"><span class="av"><svg aria-hidden="true"><use href="#logo"/></svg></span><span><b>Un appel de 30 min</b><small>Visio ou téléphone, sans engagement</small></span></div>
-        <div id="calEmbed"><a class="bt" href="https://cal.eu/studioes/30min" target="_blank" rel="noopener">Choisir un créneau <span class="ar"><svg class="i"><use href="#ne"/></svg></span></a></div>
-      </div>
+      <button class="ca rec grain rv" data-est><span class="sheen" aria-hidden="true"></span><span class="ico"><svg class="i"><use href="#cl"/></svg></span><span class="tx"><b class="d">Demander un devis</b><span>Quelques choix, une estimation immédiate, votre demande part en un clic.</span></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span></button>
+      <button class="ca rv" data-cal style="--i:1"><span class="ico"><svg class="i"><use href="#ca"/></svg></span><span class="tx"><b class="d">Réserver un appel</b><span>30 minutes en visio ou au téléphone, sans engagement.</span></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span></button>
+      <button class="ca rv" data-msg style="--i:2"><span class="ico"><svg class="i"><use href="#ms"/></svg></span><span class="tx"><b class="d">Écrire un message</b><span>Votre projet en quelques lignes, à votre rythme.</span></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span></button>
     </div>
+    <div class="dir rv"><a href="mailto:contact@studioes.fr"><svg class="i"><use href="#ma"/></svg>contact@studioes.fr</a><a href="tel:+33651222107"><svg class="i"><use href="#ph"/></svg>06&nbsp;51&nbsp;22&nbsp;21&nbsp;07</a><a href="https://www.instagram.com/ewen.studioes/" target="_blank" rel="noopener"><svg class="i"><use href="#ig"/></svg>@ewen.studioes</a></div>
   </div>
 </section>
 </main>
 
 <footer class="ft">
   <div class="w">
-    <div><a class="lg" href="/"><svg aria-hidden="true"><use href="#logo"/></svg><span>Studio ES</span></a><p>Photographie et web.<br>Basé en Bretagne. Il pleut parfois, la lumière reste belle.</p></div>
-    <div><h5>Studio</h5><ul><li><a href="/metiers/photographie/">Photographie</a></li><li><a href="/metiers/sites-et-outils/">Web</a></li><li><a href="/metiers/photographie/#travaux">Reportages</a></li><li><a href="/metiers/sites-et-outils/#realisations">Réalisations</a></li></ul></div>
-    <div><h5>Contact</h5><ul><li><a href="mailto:contact@studioes.fr">contact@studioes.fr</a></li><li><a href="tel:+33651222107">06&nbsp;51&nbsp;22&nbsp;21&nbsp;07</a></li><li><a href="https://cal.eu/studioes/30min" target="_blank" rel="noopener">Réserver un appel</a></li></ul></div>
+    <div><a class="lg" href="/"><svg aria-hidden="true"><use href="#logo"/></svg><span>Studio ES</span></a><p>Photographie et web, en Bretagne.<br>Il pleut parfois, la lumière reste belle.</p></div>
+    <div><h5>Studio</h5><ul><li><a href="/metiers/photographie/">Photographie</a></li><li><a href="/metiers/sites-et-outils/">Sites internet</a></li><li><a href="/metiers/sites-et-outils/#applications">Applications</a></li><li><a href="/metiers/photographie/#travaux">Reportages</a></li></ul></div>
+    <div><h5>Contact</h5><ul><li><a href="mailto:contact@studioes.fr">contact@studioes.fr</a></li><li><a href="tel:+33651222107">06&nbsp;51&nbsp;22&nbsp;21&nbsp;07</a></li><li><button data-cal>Réserver un appel</button></li></ul></div>
     <div><h5>Suivre</h5><ul><li><a href="https://www.instagram.com/ewen.studioes/" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://declic.studioes.fr" target="_blank" rel="noopener">Déclic, le jeu</a></li></ul></div>
     <div class="bas"><span>© 2026 Studio ES</span><button data-legal>Mentions légales</button></div>
   </div>
@@ -221,7 +234,7 @@
 
 <div class="voile" id="voile"></div>
 <section class="sheet" id="shE" role="dialog" aria-modal="true" aria-labelledby="shET" hidden>
-  <div class="sh-h"><div><h2 id="shET">Estimer un projet</h2><div class="prog" id="estP" aria-hidden="true"><i></i><i></i><i></i></div></div><button class="x" data-close aria-label="Fermer"><svg class="i"><use href="#x"/></svg></button></div>
+  <div class="sh-h"><div><h2 id="shET">Demander un devis</h2><div class="prog" id="estP" aria-hidden="true"><i></i><i></i><i></i></div></div><button class="x" data-close aria-label="Fermer"><svg class="i"><use href="#x"/></svg></button></div>
   <div class="sh-b" id="estB"></div>
   <div class="sh-f" id="estF"></div>
 </section>
@@ -243,25 +256,28 @@
     <h3>Hébergement</h3><p>GitHub, Inc. (GitHub Pages), 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis.</p>
     <h3>Propriété intellectuelle</h3><p>Les photographies et créations présentées sur ce site sont la propriété d’Ewen Soupault, sauf mention contraire. Toute reproduction ou réutilisation, totale ou partielle, sans autorisation écrite est interdite. Les marques et logos des clients restent la propriété de leurs titulaires.</p>
     <h3>Données personnelles</h3><p>Les informations envoyées par les formulaires sont transmises par courriel au moyen du service FormSubmit et servent uniquement à répondre à votre demande. Elles ne sont ni cédées ni revendues. Vous pouvez demander leur consultation, leur rectification ou leur suppression en écrivant à contact@studioes.fr. La prise de rendez-vous passe par le service Cal.com.</p>
-    <h3>Mesure d’audience et cookies</h3><p>Ce site ne dépose aucun cookie de mesure d’audience ni de publicité. La fréquentation est mesurée avec GoatCounter, un outil sans cookie qui ne collecte aucune donnée personnelle. Le site retient seulement, dans votre navigateur, les reportages déjà vus.</p>
+    <h3>Mesure d’audience et cookies</h3><p>Ce site ne dépose aucun cookie de mesure d’audience ni de publicité. La fréquentation est mesurée avec GoatCounter, un outil sans cookie qui ne collecte aucune donnée personnelle.</p>
   </div>
 </section>
 
-<div class="sv" id="sv" role="dialog" aria-modal="true" aria-label="Reportage" hidden>
-  <div class="amb" id="svAmb"></div>
-  <button class="nav2 p" id="svPR" aria-label="Reportage précédent"><svg class="i"><use href="#al"/></svg></button>
-  <div class="box">
-    <img id="svImg" alt="">
-    <div class="bars" id="svBars"></div>
-    <div class="tete"><span><b id="svT"></b><small id="svK"></small></span><button id="svX" aria-label="Fermer"><svg class="i"><use href="#x"/></svg></button></div>
-    <button class="tap p" id="svP" aria-label="Photo précédente"></button>
-    <button class="tap n" id="svN" aria-label="Photo suivante"></button>
+<div class="gp" id="gp" role="dialog" aria-modal="true" aria-labelledby="gpT" hidden>
+  <div class="gp-h"><div class="w"><button class="x" id="gpB" aria-label="Fermer la galerie"><svg class="i"><use href="#al"/></svg></button><div class="t"><small id="gpK"></small><h2 class="d" id="gpT"></h2></div><span class="n" id="gpS"></span></div></div>
+  <div class="w">
+    <div class="gp-g" id="gpG"></div>
+    <div class="gp-f"><p class="d">Un événement à photographier&nbsp;?</p><button class="bt" id="gpGo">Vérifier ma date <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
+    <div class="gp-s"><h3 class="d">Autres reportages</h3><div id="gpSim"></div></div>
   </div>
-  <button class="nav2 n" id="svNR" aria-label="Reportage suivant"><svg class="i"><use href="#arr"/></svg></button>
+</div>
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo agrandie" hidden>
+  <img id="lbI" alt="">
+  <button class="lb-x" id="lbX" aria-label="Fermer la photo"><svg class="i"><use href="#x"/></svg></button>
+  <button class="lb-n p" id="lbP" aria-label="Photo précédente"><svg class="i"><use href="#al"/></svg></button>
+  <button class="lb-n n" id="lbN" aria-label="Photo suivante"><svg class="i"><use href="#arr"/></svg></button>
+  <span class="lb-c" id="lbC"></span>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="/reps.js?v=3"></script>
-<script src="/app.js?v=3"></script>
+<script src="/reps.js?v=4"></script>
+<script src="/app.js?v=4"></script>
 </body>
 </html>

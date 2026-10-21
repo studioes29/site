@@ -293,6 +293,29 @@ ul.liv{margin:0;padding:0}
 .cd .out img{border-radius:clamp(10px,1.2vw,17px);width:100%}
 @media (hover:hover){.cd:hover .chip{transform:translateY(-6px) rotate(0deg)}}
 @media (max-width:860px){.fh{grid-template-columns:1fr;align-items:start;padding-top:84px}.fh .meta div{grid-template-columns:1fr;gap:2px}.cd{aspect-ratio:1/.95}.cd .chip{width:76%}.cd .out{width:24%;right:5%}}
+
+/* allègement 2027 : rangées qui défilent, retour en haut, retour sur mobile */
+.lr{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:4px 0 10px;cursor:grab}
+.lr::-webkit-scrollbar{display:none}
+.lr>*{flex:0 0 auto;scroll-snap-align:start}
+.lr.id img{height:clamp(150px,15vw,210px);width:auto;max-width:none;border-radius:14px;box-shadow:none}
+ul.liv.lr{display:flex;margin:0;padding:4px 0 10px}
+ul.liv.lr li{width:clamp(230px,24vw,290px)}
+.top .ret{display:none}
+.haut-bt{position:fixed;z-index:59;right:20px;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.6);-webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);box-shadow:inset 0 0 0 1px rgba(255,255,255,.6),0 12px 30px -12px rgba(20,20,20,.35);color:#141414;opacity:0;transform:translateY(14px);pointer-events:none;transition:opacity .35s,transform .5s cubic-bezier(.34,1.4,.64,1)}
+.haut-bt.on{opacity:1;transform:none;pointer-events:auto}
+.haut-bt svg{width:18px;height:18px;transform:rotate(-90deg)}
+@media (max-width:860px){.top .ret{display:grid;place-items:center;position:absolute;left:var(--side);top:50%;margin-top:-19px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.7)}.top .ret svg{width:16px;height:16px;transform:rotate(180deg)}}
+@media (max-width:700px){
+  .ch{padding-block:48px}
+  .cascade,.pair,.gal,.gal3,.vfy,.sto{display:flex!important;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin-inline:calc(var(--g) * -1);padding:4px var(--g) 12px;align-items:flex-start}
+  .cascade::-webkit-scrollbar,.pair::-webkit-scrollbar,.gal::-webkit-scrollbar,.gal3::-webkit-scrollbar,.vfy::-webkit-scrollbar,.sto::-webkit-scrollbar{display:none}
+  .cascade>*,.pair>*,.gal>*,.gal3>*{flex:0 0 80%;scroll-snap-align:start;transform:none!important;margin:0!important;grid-column:auto!important;max-width:none!important}
+  .pair>.phn,.gal3>img[style*="max-width"]{flex:0 0 42%}
+  .vfy>*{flex:0 0 40%;scroll-snap-align:start}
+  .sto>img{flex:0 0 46%;transform:none!important;scroll-snap-align:start}
+  .dev .phn{display:none}
+}
 </style>
 </head>
 <body>
@@ -304,9 +327,10 @@ ul.liv{margin:0;padding:0}
 <div class="grain" aria-hidden="true"></div>
 
 <header class="top" id="top">
+  <a class="ret" href="/#realisations" aria-label="Retour"><svg aria-hidden="true"><use href="#a"/></svg></a>
   <a class="logo" href="/" aria-label="Studio ES, accueil"><svg viewBox="0 0 98 186" aria-hidden="true"><use href="#logo"/></svg><span>Studio ES</span></a>
   <nav class="nav" aria-label="Menu principal"><a href="/#photographie">Photographie</a><a href="/#web">Web</a><a href="/#contact">Contact</a></nav>
-  <a class="cta" href="/#devis">Estimer un projet<i><svg aria-hidden="true"><use href="#a"/></svg></i></a>
+  <a class="cta" href="/#devis">Demander un devis<i><svg aria-hidden="true"><use href="#a"/></svg></i></a>
 </header>
 
 <main>
@@ -318,7 +342,6 @@ ul.liv{margin:0;padding:0}
     <dl class="meta">
     <div><dt>Client</dt><dd>Pierceval Tattoo</dd></div>
     <div><dt>Intervention</dt><dd>Direction artistique, rédaction, design, développement</dd></div>
-    <div><dt>En ligne</dt><dd><a href="https://piercevaltattoo.fr" target="_blank" rel="noopener">piercevaltattoo.fr</a></dd></div>
   </dl>
   </div>
   <div class="cd" data-r>
@@ -335,12 +358,7 @@ ul.liv{margin:0;padding:0}
     <h2 class="d" id="c0">L’identité, <span class="se">avant le site</span></h2>
     <p>Le badge du studio, ses deux machines et sa date de création, décliné bien avant le site&#8239;: adhésif de vitrine, cartes de rendez-vous et cartes cadeaux.</p>
   </div>
-  <div class="gal">
-    <img data-r class="wide" src="img/id-logo.webp" width="1200" height="795" alt="Le badge Pierceval Tattoo, rose sur fond prune" loading="lazy">
-    <img data-r src="img/id-vitrine.webp" width="1100" height="1091" alt="Le badge en adhésif sur la vitrine" loading="lazy">
-    <img data-r src="img/id-cdv-verso.webp" width="1200" height="795" alt="Carte de rendez-vous du studio" loading="lazy">
-    <img data-r class="wide" src="img/id-cadeau.webp" width="1400" height="1050" alt="La carte cadeau pliée, « Pour marquer le coup, offrez un cadeau qui reste »" loading="lazy">
-  </div>
+  <div class="lr id" data-r><img src="img/id-logo.webp" width="1200" height="795" alt="Le badge Pierceval Tattoo, rose sur fond prune" loading="lazy"><img src="img/id-vitrine.webp" width="1100" height="1091" alt="Le badge en adhésif sur la vitrine" loading="lazy"><img src="img/id-cdv-verso.webp" width="1200" height="795" alt="Carte de rendez-vous du studio" loading="lazy"><img src="img/id-cadeau.webp" width="1400" height="1050" alt="La carte cadeau pliée" loading="lazy"><img src="img/identite.webp" width="880" height="1100" alt="Identité visuelle de Pierceval Tattoo" loading="lazy"></div>
 </section>
 
 <section class="ch" aria-labelledby="c1">
@@ -351,8 +369,7 @@ ul.liv{margin:0;padding:0}
     <div class="sw" aria-label="Palette du site"><i style="background:#1c0f1f">Encre</i><i style="background:#351d3a">Aubergine</i><i style="background:#e68dca">Rose</i><i style="background:#ece6df">Peau</i></div>
   </div>
   <div class="vs">
-    <img class="idt" data-r src="img/identite.webp" alt="Identité visuelle de Pierceval Tattoo dessinée par Studio ES" loading="lazy">
-    <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span>piercevaltattoo.fr</span></div><img src="img/d-metiers.webp" width="1440" height="900" alt="Rubrique « Deux métiers, un seul studio » : une carte pour le tatouage, une pour le piercing" loading="lazy"></div>
+    <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span></span></div><img src="img/d-metiers.webp" width="1440" height="900" alt="Rubrique « Deux métiers, un seul studio » : une carte pour le tatouage, une pour le piercing" loading="lazy"></div>
   </div>
 </section>
 
@@ -363,10 +380,10 @@ ul.liv{margin:0;padding:0}
     <p>Le tatouage et le piercing ne se réservent pas de la même façon&#8239;: chacun a son propre parcours, et le calendrier ne propose que les jours ouverts.</p>
   </div>
   <div class="cascade">
-    <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span>piercevaltattoo.fr</span></div><img src="img/d-rdv-type.webp" width="1440" height="880" alt="Étape 1 de la réservation : choix de la prestation" loading="lazy"></div>
-    <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span>piercevaltattoo.fr</span></div><img src="img/d-rdv-pierce.webp" width="1440" height="583" alt="Étape 2 : choix du piercing" loading="lazy"></div>
-    <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span>piercevaltattoo.fr</span></div><img src="img/d-rdv-date.webp" width="1440" height="712" alt="Étape 3 : calendrier limité aux jours ouverts" loading="lazy"></div>
-    <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span>piercevaltattoo.fr</span></div><img src="img/d-rdv-recap.webp" width="1440" height="846" alt="Étape 5 : récapitulatif de la demande avant envoi" loading="lazy"></div>
+    <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span></span></div><img src="img/d-rdv-type.webp" width="1440" height="880" alt="Étape 1 de la réservation : choix de la prestation" loading="lazy"></div>
+    <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span></span></div><img src="img/d-rdv-pierce.webp" width="1440" height="583" alt="Étape 2 : choix du piercing" loading="lazy"></div>
+    <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span></span></div><img src="img/d-rdv-date.webp" width="1440" height="712" alt="Étape 3 : calendrier limité aux jours ouverts" loading="lazy"></div>
+    <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span></span></div><img src="img/d-rdv-recap.webp" width="1440" height="846" alt="Étape 5 : récapitulatif de la demande avant envoi" loading="lazy"></div>
   </div>
 </section>
 
@@ -377,7 +394,7 @@ ul.liv{margin:0;padding:0}
     <p>Neuf pièces choisies parmi les photos du studio, recadrées au même format et nettoyées de leurs filigranes.</p>
   </div>
   <div class="pair">
-    <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span>piercevaltattoo.fr</span></div><img src="img/d-real.webp" width="1440" height="899" alt="Galerie des réalisations avec filtres : noir et gris, couleur, lettrage" loading="lazy"></div>
+    <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span></span></div><img src="img/d-real.webp" width="1440" height="899" alt="Galerie des réalisations avec filtres : noir et gris, couleur, lettrage" loading="lazy"></div>
     <div class="phn" data-r><img src="img/m-real.webp" width="600" height="1297" alt="Galerie des réalisations sur téléphone" loading="lazy"></div>
   </div>
 </section>
@@ -392,7 +409,7 @@ ul.liv{margin:0;padding:0}
         <p>Achetée en ligne à toute heure, reçue aussitôt en PDF aux couleurs du studio, puis vérifiée au comptoir avant la séance.</p>
       </div>
       <div>
-        <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span>piercevaltattoo.fr</span></div><img src="img/d-cadeau-ok.webp" width="1440" height="899" alt="Carte cadeau de 50 € prête à télécharger après l’achat" loading="lazy"></div>
+        <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span></span></div><img src="img/d-cadeau-ok.webp" width="1440" height="899" alt="Carte cadeau de 50 € prête à télécharger après l’achat" loading="lazy"></div>
         <div class="vfy">
           <figure data-r><div class="phn"><img src="img/v-valide.webp" width="600" height="1298" alt="Vérification : carte valable" loading="lazy"></div><figcaption>Carte valable</figcaption></figure>
           <figure data-r><div class="phn"><img src="img/v-marque.webp" width="600" height="1298" alt="Vérification : carte marquée comme utilisée" loading="lazy"></div><figcaption>Marquée après la séance</figcaption></figure>
@@ -411,7 +428,7 @@ ul.liv{margin:0;padding:0}
     <p>Trois questions, et le site indique où en est la cicatrisation et les gestes du jour. Une raison de revenir après la séance.</p>
   </div>
   <div class="pair">
-    <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span>piercevaltattoo.fr</span></div><img src="img/d-soins.webp" width="1440" height="787" alt="Suivi de cicatrisation : un piercing forward hélix à J+7" loading="lazy"></div>
+    <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span></span></div><img src="img/d-soins.webp" width="1440" height="787" alt="Suivi de cicatrisation : un piercing forward hélix à J+7" loading="lazy"></div>
     <div class="phn" data-r><img src="img/m-soins.webp" width="600" height="1298" alt="Suivi de cicatrisation sur téléphone" loading="lazy"></div>
   </div>
 </section>
@@ -423,7 +440,7 @@ ul.liv{margin:0;padding:0}
     <p>Un plan dessiné aux couleurs du site, la rue tracée jusqu’à la porte.</p>
   </div>
   <div class="vs">
-    <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span>piercevaltattoo.fr</span></div><img src="img/d-contact.webp" width="1440" height="900" alt="Plan dessiné jusqu’au studio, horaires, téléphones et réseaux" loading="lazy"></div>
+    <div class="brw" data-r><div class="bar"><i></i><i></i><i></i><span></span></div><img src="img/d-contact.webp" width="1440" height="900" alt="Plan dessiné jusqu’au studio, horaires, téléphones et réseaux" loading="lazy"></div>
   </div>
 </section>
 </div>
@@ -452,11 +469,9 @@ ul.liv{margin:0;padding:0}
     <h2 class="d" id="c8">Le lancement <span class="se">sur Instagram</span></h2>
     <p>Une série de stories pour présenter le site à la communauté du studio.</p>
   </div>
-  <div class="sto">
-    <img data-r src="img/st-couverture-rdv.webp" width="540" height="960" alt="Story de lancement : la réservation en ligne" loading="lazy">
-    <img data-r src="img/st-couverture-cadeau.webp" width="540" height="960" alt="Story de lancement : la carte cadeau" loading="lazy">
-    <img data-r src="img/st-couverture-soins.webp" width="540" height="960" alt="Story de lancement : le suivi de soins" loading="lazy">
-  </div>
+  <div class="lr id" data-r><img src="img/st-couverture-rdv.webp" width="540" height="960" alt="Story de lancement : la réservation en ligne" loading="lazy">
+    <img src="img/st-couverture-cadeau.webp" width="540" height="960" alt="Story de lancement : la carte cadeau" loading="lazy">
+    <img src="img/st-couverture-soins.webp" width="540" height="960" alt="Story de lancement : le suivi de soins" loading="lazy"></div>
 </section>
 
 <section class="ch" aria-labelledby="c9">
@@ -465,13 +480,13 @@ ul.liv{margin:0;padding:0}
     <h2 class="d" id="c9">Livré <span class="se">avec</span></h2>
     <p>Le site s’accompagne de ce qu’il faut pour le faire vivre sans dépendre d’un technicien.</p>
   </div>
-  <ul class="liv">
-    <li data-r><b>Réglages en un message</b><span>Promotions, fermetures, horaires, acomptes, montants des cartes&#8239;: tout se change sans toucher au reste du site.</span></li>
-    <li data-r><b>Référencement local</b><span>Données structurées, fiche du studio, temps de chargement court, textes écrits pour les recherches de la région.</span></li>
-    <li data-r><b>Page de vérification</b><span>Pour contrôler et marquer les cartes cadeaux au comptoir, à ajouter à l’écran d’accueil du téléphone du studio.</span></li>
-    <li data-r><b>Dossier de présentation</b><span>Chaque choix expliqué, capture à l’appui, pour décider en connaissance de cause.</span></li>
-    <li data-r><b>Kit de stories</b><span>Treize visuels prêts à publier pour annoncer le site.</span></li>
-    <li data-r><b>Sans abonnement imposé</b><span>Un hébergement léger, sans frais de plateforme ni outil à mettre à jour.</span></li>
+  <ul class="liv lr">
+    <li><b>Réglages en un message</b><span>Promotions, fermetures, horaires, acomptes, montants des cartes&#8239;: tout se change sans toucher au reste du site.</span></li>
+    <li><b>Référencement local</b><span>Données structurées, fiche du studio, temps de chargement court, textes écrits pour les recherches de la région.</span></li>
+    <li><b>Page de vérification</b><span>Pour contrôler et marquer les cartes cadeaux au comptoir, à ajouter à l’écran d’accueil du téléphone du studio.</span></li>
+    <li><b>Dossier de présentation</b><span>Chaque choix expliqué, capture à l’appui, pour décider en connaissance de cause.</span></li>
+    <li><b>Kit de stories</b><span>Treize visuels prêts à publier pour annoncer le site.</span></li>
+    <li><b>Sans abonnement imposé</b><span>Un hébergement léger, sans frais de plateforme ni outil à mettre à jour.</span></li>
   </ul>
 </section>
 </div>
@@ -479,7 +494,7 @@ ul.liv{margin:0;padding:0}
 <section class="end w" aria-labelledby="fin">
   <h2 class="d" id="fin" data-r>Un site à construire&#8239;? <span class="se">Parlons-en.</span></h2>
   <div class="bts" data-r>
-    <a class="bt bt-a" href="/#devis">Estimer mon projet<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
+    <a class="bt bt-a" href="/#devis">Demander un devis<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
     <a class="bt bt-g" href="/#contact">Réserver un appel<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
   </div>
 </section>
@@ -527,6 +542,13 @@ ul.liv{margin:0;padding:0}
   fit(); if (document.fonts) document.fonts.ready.then(fit);
   let t; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(fit, 120); });
 })();
+</script>
+<button class="haut-bt" id="hautBt" aria-label="Revenir en haut de la page"><svg aria-hidden="true"><use href="#a"/></svg></button>
+<script>
+/* retour en haut, et retour à la page précédente sur mobile */
+(() => { const b = document.getElementById('hautBt'); addEventListener('scroll', () => b.classList.toggle('on', scrollY > innerHeight * 1.2), {passive: true}); b.addEventListener('click', () => scrollTo({top: 0, behavior: 'smooth'}));
+  const r = document.querySelector('.top .ret'); if (r) r.addEventListener('click', e => { if (document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1) { e.preventDefault(); history.back(); } });
+  document.querySelectorAll('.lr').forEach(l => { let x0 = 0, s0 = 0, bas = false, mv = false; l.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') return; bas = true; mv = false; x0 = e.clientX; s0 = l.scrollLeft; }); addEventListener('pointermove', e => { if (!bas) return; const d = e.clientX - x0; if (Math.abs(d) > 5) { mv = true; l.style.scrollSnapType = 'none'; l.scrollLeft = s0 - d; } }); addEventListener('pointerup', () => { if (bas) { bas = false; l.style.scrollSnapType = ''; } }); l.addEventListener('dragstart', e => e.preventDefault()); }); })();
 </script>
 </body>
 </html>

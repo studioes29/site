@@ -23,7 +23,7 @@
 <link rel="preload" href="/f/br.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/f/it.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/f/ur-i.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/s.css?v=3">
+<link rel="stylesheet" href="/s.css?v=4">
 <script>/* GoatCounter : mesure d'audience sans cookie, uniquement sur studioes.fr */if (/(^|\.)studioes\.fr$/.test(location.hostname) && !location.hostname.startsWith('dossiers')) { const g = document.createElement('script'); g.async = true; g.src = 'https://gc.zgo.at/count.js'; g.dataset.goatcounter = 'https://studioes.goatcounter.com/count'; document.head.appendChild(g); }</script>
 </head>
 <body>
@@ -48,6 +48,10 @@
   <symbol id="ph" viewBox="0 0 24 24"><path d="M6.5 3.5l3 3.5-2 2.5a12 12 0 0 0 7 7l2.5-2 3.5 3-1.5 3.5C11 20 4 13 3 5z"/></symbol>
   <symbol id="ma" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M4 7.5l8 5.5 8-5.5"/></symbol>
   <symbol id="ig" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6"/></symbol>
+  <symbol id="up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+  <symbol id="s1" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 8h7M8.5 11.5h7M8.5 15h4"/></symbol>
+  <symbol id="s3" viewBox="0 0 24 24"><rect x="7" y="2.5" width="12" height="15" rx="2"/><path d="M5 6.5v12A2.5 2.5 0 0 0 7.5 21H15"/><path d="M10 7h6M10 10.5h6"/></symbol>
+  <symbol id="sx" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="5" rx="1.2"/><rect x="3" y="16" width="6" height="5" rx="1.2"/><rect x="15" y="16" width="6" height="5" rx="1.2"/><path d="M12 8v4M6 16v-4h12v4"/></symbol>
 </svg>
 
 <header class="hd" id="hd">
@@ -58,79 +62,99 @@
       <a href="/metiers/sites-et-outils/">Web</a>
       <a href="#contact">Contact</a>
     </nav>
-    <button class="bt sm" data-est>Estimer un projet <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button>
+    <button class="bt sm" data-est>Demander un devis <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button>
   </div>
 </header>
 
 <nav class="dock" id="dock" aria-label="Navigation rapide">
+  <button class="up" data-haut aria-label="Revenir en haut de la page"><svg class="i"><use href="#up"/></svg></button>
   <a href="/metiers/photographie/"><svg class="i"><use href="#ap"/></svg><span>Photo</span></a>
   <a href="/metiers/sites-et-outils/"><svg class="i"><use href="#ec"/></svg><span>Web</span></a>
   <a href="#contact"><svg class="i"><use href="#ms"/></svg><span>Contact</span></a>
-  <button class="go" data-est>Estimer<svg class="i"><use href="#ar"/></svg></button>
+  <button class="go" data-est><svg class="i"><use href="#cl"/></svg>Devis</button>
 </nav>
+<button class="haut-bt" data-haut aria-label="Revenir en haut de la page"><svg class="i"><use href="#up"/></svg></button>
 
 <main id="haut">
 <section class="mh w" aria-labelledby="h1">
   <p class="fil"><a href="/">Studio ES</a><span>/</span><span>Photographie</span></p>
-  <h1 class="d" id="h1">Photographie<span class="it">Mariages et événements, sur le vif.</span></h1>
+  <h1 class="d" id="h1">Photographie<span class="it">Vos moments forts, sur le vif.</span></h1>
   <p class="lead">Mariages, concerts, festivals, inaugurations, cérémonies, vie d’une entreprise : un reportage discret en Bretagne, sans poses ni mise en scène, puis une sélection resserrée et retouchée, prête à servir.</p>
 </section>
-<section class="sec" style="padding-top:clamp(36px,4vw,56px)" id="photographie" aria-labelledby="t-ph">
+<section class="sec feuille ph-f" id="photographie" aria-labelledby="t-ph">
   <div class="w">
     <div class="grp" data-grp>
-      <article class="of rv" data-of>
-        <div class="im"><img src="/h/mariage-800.webp" alt="Couple photographié sur le vif" loading="lazy"><span class="tag">Particuliers</span></div>
+      <article class="of rv" data-of data-k="mariage">
+        <div class="im"><img src="/h/mariage-800.webp" alt="Couple photographié sur le vif" loading="lazy"></div>
         <div class="lab">
           <h3 class="d">Mariage</h3>
           <p class="ds">Des préparatifs à l’ouverture de bal, sans mise en scène.</p>
-          <div class="seg" role="group" aria-label="Formule"><button aria-pressed="true" data-p="1290" data-t="Moments clés, 4 à 6 h">Cérémonie</button><button aria-pressed="false" data-p="1890" data-t="8 à 10 h sur place">Journée</button><button aria-pressed="false" data-p="2590" data-t="Journée, album imprimé et séance à deux">Album</button></div>
-          <p class="px"><small>dès</small><b class="roll" data-v="1290">1&#8239;290</b><span class="u">€</span></p>
-          <p class="dt" data-dt>Moments clés, 4 à 6 h</p>
-          <ul class="inc"><li><svg class="i"><use href="#ok"/></svg>Galerie privée en ligne</li><li><svg class="i"><use href="#ok"/></svg>Sélection retouchée</li><li><svg class="i"><use href="#ok"/></svg>Aperçu le soir même, +150&nbsp;€</li></ul>
-          <div class="pied"><button class="bt sm" data-est="mariage">Estimer <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
+          <div class="sel" role="radiogroup" aria-label="Formule"><i class="ind" aria-hidden="true"></i>
+            <button role="radio" aria-checked="true" data-p="1290"><b>Cérémonie</b><span>Moments clés, 4 à 6 h</span></button>
+            <button role="radio" aria-checked="false" data-p="1890"><b>Journée</b><span>8 à 10 h sur place</span></button>
+            <button role="radio" aria-checked="false" data-p="2590"><b>Journée et album</b><span>Album imprimé, séance à deux</span></button>
+          </div>
+          <p class="px"><small>dès</small><b class="prix" data-v="1290">1&#8239;290</b><span class="u">€</span></p>
+          <ul class="inc"><li><svg class="i"><use href="#ok"/></svg>Galerie privée en ligne</li><li><svg class="i"><use href="#ok"/></svg>Sélection retouchée</li><li><svg class="i"><use href="#ok"/></svg>Livraison sous 10 jours</li></ul>
+          <div class="opt"><p>En option</p>
+            <label><input type="checkbox" data-o="0" data-p="150"><span class="ck" aria-hidden="true"></span><span>Aperçu de 20 photos le soir même</span><b>+150&nbsp;€</b></label>
+            <label><input type="checkbox" data-o="1" data-p="80"><span class="ck" aria-hidden="true"></span><span>Une heure de plus</span><b>+80&nbsp;€</b></label>
+          </div>
+          <div class="pied"><button class="bt sm" data-go>Vérifier ma date <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
         </div>
       </article>
-      <article class="of rv" data-of style="--i:1">
-        <div class="im"><img src="/p/t/philippe-katerine-2.webp" alt="Philippe Katerine sur scène" loading="lazy" style="object-position:50% 30%"><span class="tag">Pros et collectivités</span></div>
+      <article class="of rv" data-of data-k="evenement" style="--i:1">
+        <div class="im"><img src="/p/t/philippe-katerine-2.webp" alt="Philippe Katerine sur scène" loading="lazy" style="object-position:50% 30%"></div>
         <div class="lab">
           <h3 class="d">Événement</h3>
           <p class="ds">Concert, festival, inauguration, séminaire, cérémonie des vœux.</p>
-          <div class="seg" role="group" aria-label="Durée"><button aria-pressed="true" data-p="250" data-t="Concert ou spectacle, 1 h 30 à 2 h">Concert</button><button aria-pressed="false" data-p="350" data-t="4 h sur place">Demi-journée</button><button aria-pressed="false" data-p="550" data-t="8 h sur place">Journée</button><button aria-pressed="false" data-p="550" data-t="Festival, par jour">Festival</button></div>
-          <p class="px"><small>dès</small><b class="roll" data-v="250">250</b><span class="u">€</span></p>
-          <p class="dt" data-dt>Concert ou spectacle, 1 h 30 à 2 h</p>
-          <ul class="inc"><li><svg class="i"><use href="#ok"/></svg>Droits d’utilisation compris</li><li><svg class="i"><use href="#ok"/></svg>Formats réseaux</li><li><svg class="i"><use href="#ok"/></svg>Sélection le soir même, +150&nbsp;€</li></ul>
-          <div class="pied"><button class="bt sm" data-est="evenement">Estimer <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
+          <div class="sel" role="radiogroup" aria-label="Durée"><i class="ind" aria-hidden="true"></i>
+            <button role="radio" aria-checked="true" data-p="250"><b>Concert</b><span>Spectacle, 1 h 30 à 2 h</span></button>
+            <button role="radio" aria-checked="false" data-p="350"><b>Demi-journée</b><span>4 h sur place</span></button>
+            <button role="radio" aria-checked="false" data-p="550"><b>Journée ou festival</b><span>8 h sur place, par jour</span></button>
+          </div>
+          <p class="px"><small>dès</small><b class="prix" data-v="250">250</b><span class="u">€</span></p>
+          <ul class="inc"><li><svg class="i"><use href="#ok"/></svg>Sélection retouchée</li><li><svg class="i"><use href="#ok"/></svg>Droits d’utilisation et formats réseaux</li><li><svg class="i"><use href="#ok"/></svg>Livraison sous 10 jours</li></ul>
+          <div class="opt"><p>En option</p>
+            <label><input type="checkbox" data-o="0" data-p="150"><span class="ck" aria-hidden="true"></span><span>Sélection livrée le soir même</span><b>+150&nbsp;€</b></label>
+            <label><input type="checkbox" data-o="1" data-p="80"><span class="ck" aria-hidden="true"></span><span>Une heure de plus</span><b>+80&nbsp;€</b></label>
+          </div>
+          <div class="pied"><button class="bt sm" data-go>Vérifier ma date <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
         </div>
       </article>
-      <article class="of rec grain rv" data-of style="--i:2" id="forfait">
+      <article class="of rec grain rv" data-of data-k="annee" style="--i:2" id="forfait">
         <span class="sheen" aria-hidden="true"></span>
         <div class="im"><img src="/p/t/inaug-digue-7.webp" alt="Inauguration photographiée pour une commune" loading="lazy"><span class="badge">Recommandé</span></div>
         <div class="lab">
           <h3 class="d">À l’année</h3>
-          <p class="ds">Des demi-journées à utiliser dans l’année. Un concert compte pour une demi-journée.</p>
-          <div class="seg" role="group" aria-label="Forfait"><button aria-pressed="true" data-p="1290" data-m="109" data-t="4 demi-journées dans l’année">4</button><button aria-pressed="false" data-p="2490" data-m="209" data-t="8 demi-journées dans l’année">8</button><button aria-pressed="false" data-p="3590" data-m="299" data-t="12 demi-journées dans l’année">12</button></div>
-          <p class="px"><small>dès</small><b class="roll" data-v="1290">1&#8239;290</b><span class="u" data-u>€ par an</span></p>
-          <p class="dt" data-dt>4 demi-journées dans l’année</p>
+          <p class="ds">Votre photographe attitré : vos dates passent en priorité et la demi-journée revient moins cher qu’à l’unité. Un concert compte pour une demi-journée.</p>
+          <div class="sel" role="radiogroup" aria-label="Forfait"><i class="ind" aria-hidden="true"></i>
+            <button role="radio" aria-checked="true" data-p="1290" data-m="109"><b>4 demi-journées</b><span>soit 323&nbsp;€ l’une</span></button>
+            <button role="radio" aria-checked="false" data-p="2490" data-m="209"><b>8 demi-journées</b><span>soit 311&nbsp;€ l’une</span></button>
+            <button role="radio" aria-checked="false" data-p="3590" data-m="299"><b>12 demi-journées</b><span>soit 299&nbsp;€ l’une</span></button>
+            <button role="radio" aria-checked="false"><b>Plus de 12</b><span>sur devis</span></button>
+          </div>
+          <p class="px"><small>dès</small><b class="prix" data-v="1290">1&#8239;290</b><span class="u" data-u>€ par an</span></p>
           <div class="bascule" data-mo role="group" aria-label="Paiement"><button aria-pressed="true" data-v="0">Par an</button><button aria-pressed="false" data-v="1">Par mois</button></div>
-          <ul class="inc"><li><svg class="i"><use href="#ok"/></svg>Réservation prioritaire</li><li><svg class="i"><use href="#ok"/></svg>Photothèque partagée</li><li><svg class="i"><use href="#ok"/></svg>Livraison sous 5 jours</li></ul>
-          <div class="pied"><button class="bt sm" data-est="annee">Estimer <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
+          <ul class="inc"><li><svg class="i"><use href="#ok"/></svg>Dates réservées en priorité</li><li><svg class="i"><use href="#ok"/></svg>Photothèque partagée</li><li><svg class="i"><use href="#ok"/></svg>Livraison sous 5 jours</li></ul>
+          <div class="pied"><button class="bt sm" data-go>Planifier mon année <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
         </div>
       </article>
     </div>
     <div class="dots" aria-hidden="true"></div>
-    <p class="note rv">Toujours compris : galerie en ligne retouchée, droits d’utilisation, formats réseaux, livraison sous 10 jours. Une sélection resserrée, jamais un volume.</p>
 
-    <div class="sous rv" id="travaux"><h3 class="d">Reportages récents</h3><div class="nv"><button class="ic" data-rail="-1" aria-label="Reportages précédents"><svg class="i"><use href="#al"/></svg></button><button class="ic" data-rail="1" aria-label="Reportages suivants"><svg class="i"><use href="#arr"/></svg></button></div></div>
+    <div class="sous rv" id="travaux"><h3 class="d">Reportages récents</h3><div class="nv"><button class="ic" data-rail="rail" data-d="-1" aria-label="Reportages précédents"><svg class="i"><use href="#al"/></svg></button><button class="ic" data-rail="rail" data-d="1" aria-label="Reportages suivants"><svg class="i"><use href="#arr"/></svg></button></div></div>
     <div class="chips rv" id="chips" role="group" aria-label="Filtrer les reportages"></div>
   </div>
   <div class="rail rv" id="rail" aria-label="Reportages"></div>
-  <p class="w aide rv">Touchez une carte pour voir le reportage en entier.</p>
 </section>
-<section class="sec" style="padding:clamp(56px,6vw,90px) 0 0" aria-label="Et aussi"><div class="w croise"><div class="portes"><a class="porte wb" href="/metiers/sites-et-outils/" data-tilt data-slides>
+<section class="sec feuille cr-f" style="padding-top:clamp(64px,7vw,100px)" aria-label="Et aussi"><div class="w croise"><div class="portes"><a class="porte wb" href="/metiers/sites-et-outils/" data-tilt data-slides>
       <div class="fd">
         <img src="/projets/flouz/img/cover.webp" alt="" class="on">
-        <img data-src="/projets/pierceval-tattoo/img/cover.webp" alt="" style="object-position:78% 50%">
-        <img data-src="/projets/la-soute/img/cover.webp" alt="" style="object-position:84% 50%">
+        <img data-src="/projets/pierceval-tattoo/img/cover.webp" alt="" style="--op:78% 50%">
+        <img data-src="/projets/la-soute/img/cover.webp" alt="" style="--op:84% 50%">
+        <img data-src="/projets/flouz/img/main-s.webp" alt="">
+        <img data-src="/projets/la-soute/img/site.webp" alt="">
       </div>
       <div class="chip">
         <div class="win" aria-hidden="true"></div>
@@ -138,29 +162,24 @@
         <span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span>
       </div>
     </a><div class="cr-tx rv"><h2 class="d">Le studio fait aussi<span class="it">des sites et des applications.</span></h2><p>Un site clair et bien référencé, ou une application qui fait gagner du temps. Et quand il faut de belles photos pour l’habiller, elles sont déjà là.</p><a class="bt" href="/metiers/sites-et-outils/">Voir le web <span class="ar"><svg class="i"><use href="#ar"/></svg></span></a></div></div></div></section>
-<section class="sec" id="contact" aria-labelledby="t-ct">
+<section class="sec feuille ct-f" id="contact" aria-labelledby="t-ct">
   <div class="w">
     <div class="sec-t rv"><h2 class="d" id="t-ct">Parlons de<span class="it">votre projet.</span></h2><p class="lead">Trois façons de commencer, selon ce qui vous arrange. Réponse sous 48 h, devis gratuit et sans engagement.</p></div>
     <div class="ct">
-      <div class="ct-g">
-        <button class="ca rec grain rv" data-est><span class="sheen" aria-hidden="true"></span><span class="ico"><svg class="i"><use href="#cl"/></svg></span><span class="tx"><b class="d">Estimer mon projet</b><span>Quelques choix, une estimation immédiate, puis votre demande part en un clic.</span></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span></button>
-        <button class="ca rv" data-msg style="--i:1"><span class="ico"><svg class="i"><use href="#ms"/></svg></span><span class="tx"><b class="d">Écrire un message</b><span>Votre projet en quelques lignes, à votre rythme.</span></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span></button>
-        <div class="dir rv" style="--i:2"><a href="mailto:contact@studioes.fr"><svg class="i"><use href="#ma"/></svg>contact@studioes.fr</a><a href="tel:+33651222107"><svg class="i"><use href="#ph"/></svg>06&nbsp;51&nbsp;22&nbsp;21&nbsp;07</a><a href="https://www.instagram.com/ewen.studioes/" target="_blank" rel="noopener"><svg class="i"><use href="#ig"/></svg>@ewen.studioes</a></div>
-      </div>
-      <div class="cal rv" style="--i:1">
-        <div class="cal-h"><span class="av"><svg aria-hidden="true"><use href="#logo"/></svg></span><span><b>Un appel de 30 min</b><small>Visio ou téléphone, sans engagement</small></span></div>
-        <div id="calEmbed"><a class="bt" href="https://cal.eu/studioes/30min" target="_blank" rel="noopener">Choisir un créneau <span class="ar"><svg class="i"><use href="#ne"/></svg></span></a></div>
-      </div>
+      <button class="ca rec grain rv" data-est><span class="sheen" aria-hidden="true"></span><span class="ico"><svg class="i"><use href="#cl"/></svg></span><span class="tx"><b class="d">Demander un devis</b><span>Quelques choix, une estimation immédiate, votre demande part en un clic.</span></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span></button>
+      <button class="ca rv" data-cal style="--i:1"><span class="ico"><svg class="i"><use href="#ca"/></svg></span><span class="tx"><b class="d">Réserver un appel</b><span>30 minutes en visio ou au téléphone, sans engagement.</span></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span></button>
+      <button class="ca rv" data-msg style="--i:2"><span class="ico"><svg class="i"><use href="#ms"/></svg></span><span class="tx"><b class="d">Écrire un message</b><span>Votre projet en quelques lignes, à votre rythme.</span></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span></button>
     </div>
+    <div class="dir rv"><a href="mailto:contact@studioes.fr"><svg class="i"><use href="#ma"/></svg>contact@studioes.fr</a><a href="tel:+33651222107"><svg class="i"><use href="#ph"/></svg>06&nbsp;51&nbsp;22&nbsp;21&nbsp;07</a><a href="https://www.instagram.com/ewen.studioes/" target="_blank" rel="noopener"><svg class="i"><use href="#ig"/></svg>@ewen.studioes</a></div>
   </div>
 </section>
 </main>
 
 <footer class="ft">
   <div class="w">
-    <div><a class="lg" href="/"><svg aria-hidden="true"><use href="#logo"/></svg><span>Studio ES</span></a><p>Photographie et web.<br>Basé en Bretagne. Il pleut parfois, la lumière reste belle.</p></div>
-    <div><h5>Studio</h5><ul><li><a href="/metiers/photographie/">Photographie</a></li><li><a href="/metiers/sites-et-outils/">Web</a></li><li><a href="/metiers/photographie/#travaux">Reportages</a></li><li><a href="/metiers/sites-et-outils/#realisations">Réalisations</a></li></ul></div>
-    <div><h5>Contact</h5><ul><li><a href="mailto:contact@studioes.fr">contact@studioes.fr</a></li><li><a href="tel:+33651222107">06&nbsp;51&nbsp;22&nbsp;21&nbsp;07</a></li><li><a href="https://cal.eu/studioes/30min" target="_blank" rel="noopener">Réserver un appel</a></li></ul></div>
+    <div><a class="lg" href="/"><svg aria-hidden="true"><use href="#logo"/></svg><span>Studio ES</span></a><p>Photographie et web, en Bretagne.<br>Il pleut parfois, la lumière reste belle.</p></div>
+    <div><h5>Studio</h5><ul><li><a href="/metiers/photographie/">Photographie</a></li><li><a href="/metiers/sites-et-outils/">Sites internet</a></li><li><a href="/metiers/sites-et-outils/#applications">Applications</a></li><li><a href="/metiers/photographie/#travaux">Reportages</a></li></ul></div>
+    <div><h5>Contact</h5><ul><li><a href="mailto:contact@studioes.fr">contact@studioes.fr</a></li><li><a href="tel:+33651222107">06&nbsp;51&nbsp;22&nbsp;21&nbsp;07</a></li><li><button data-cal>Réserver un appel</button></li></ul></div>
     <div><h5>Suivre</h5><ul><li><a href="https://www.instagram.com/ewen.studioes/" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://declic.studioes.fr" target="_blank" rel="noopener">Déclic, le jeu</a></li></ul></div>
     <div class="bas"><span>© 2026 Studio ES</span><button data-legal>Mentions légales</button></div>
   </div>
@@ -168,7 +187,7 @@
 
 <div class="voile" id="voile"></div>
 <section class="sheet" id="shE" role="dialog" aria-modal="true" aria-labelledby="shET" hidden>
-  <div class="sh-h"><div><h2 id="shET">Estimer un projet</h2><div class="prog" id="estP" aria-hidden="true"><i></i><i></i><i></i></div></div><button class="x" data-close aria-label="Fermer"><svg class="i"><use href="#x"/></svg></button></div>
+  <div class="sh-h"><div><h2 id="shET">Demander un devis</h2><div class="prog" id="estP" aria-hidden="true"><i></i><i></i><i></i></div></div><button class="x" data-close aria-label="Fermer"><svg class="i"><use href="#x"/></svg></button></div>
   <div class="sh-b" id="estB"></div>
   <div class="sh-f" id="estF"></div>
 </section>
@@ -190,25 +209,28 @@
     <h3>Hébergement</h3><p>GitHub, Inc. (GitHub Pages), 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis.</p>
     <h3>Propriété intellectuelle</h3><p>Les photographies et créations présentées sur ce site sont la propriété d’Ewen Soupault, sauf mention contraire. Toute reproduction ou réutilisation, totale ou partielle, sans autorisation écrite est interdite. Les marques et logos des clients restent la propriété de leurs titulaires.</p>
     <h3>Données personnelles</h3><p>Les informations envoyées par les formulaires sont transmises par courriel au moyen du service FormSubmit et servent uniquement à répondre à votre demande. Elles ne sont ni cédées ni revendues. Vous pouvez demander leur consultation, leur rectification ou leur suppression en écrivant à contact@studioes.fr. La prise de rendez-vous passe par le service Cal.com.</p>
-    <h3>Mesure d’audience et cookies</h3><p>Ce site ne dépose aucun cookie de mesure d’audience ni de publicité. La fréquentation est mesurée avec GoatCounter, un outil sans cookie qui ne collecte aucune donnée personnelle. Le site retient seulement, dans votre navigateur, les reportages déjà vus.</p>
+    <h3>Mesure d’audience et cookies</h3><p>Ce site ne dépose aucun cookie de mesure d’audience ni de publicité. La fréquentation est mesurée avec GoatCounter, un outil sans cookie qui ne collecte aucune donnée personnelle.</p>
   </div>
 </section>
 
-<div class="sv" id="sv" role="dialog" aria-modal="true" aria-label="Reportage" hidden>
-  <div class="amb" id="svAmb"></div>
-  <button class="nav2 p" id="svPR" aria-label="Reportage précédent"><svg class="i"><use href="#al"/></svg></button>
-  <div class="box">
-    <img id="svImg" alt="">
-    <div class="bars" id="svBars"></div>
-    <div class="tete"><span><b id="svT"></b><small id="svK"></small></span><button id="svX" aria-label="Fermer"><svg class="i"><use href="#x"/></svg></button></div>
-    <button class="tap p" id="svP" aria-label="Photo précédente"></button>
-    <button class="tap n" id="svN" aria-label="Photo suivante"></button>
+<div class="gp" id="gp" role="dialog" aria-modal="true" aria-labelledby="gpT" hidden>
+  <div class="gp-h"><div class="w"><button class="x" id="gpB" aria-label="Fermer la galerie"><svg class="i"><use href="#al"/></svg></button><div class="t"><small id="gpK"></small><h2 class="d" id="gpT"></h2></div><span class="n" id="gpS"></span></div></div>
+  <div class="w">
+    <div class="gp-g" id="gpG"></div>
+    <div class="gp-f"><p class="d">Un événement à photographier&nbsp;?</p><button class="bt" id="gpGo">Vérifier ma date <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
+    <div class="gp-s"><h3 class="d">Autres reportages</h3><div id="gpSim"></div></div>
   </div>
-  <button class="nav2 n" id="svNR" aria-label="Reportage suivant"><svg class="i"><use href="#arr"/></svg></button>
+</div>
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo agrandie" hidden>
+  <img id="lbI" alt="">
+  <button class="lb-x" id="lbX" aria-label="Fermer la photo"><svg class="i"><use href="#x"/></svg></button>
+  <button class="lb-n p" id="lbP" aria-label="Photo précédente"><svg class="i"><use href="#al"/></svg></button>
+  <button class="lb-n n" id="lbN" aria-label="Photo suivante"><svg class="i"><use href="#arr"/></svg></button>
+  <span class="lb-c" id="lbC"></span>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="/reps.js?v=3"></script>
-<script src="/app.js?v=3"></script>
+<script src="/reps.js?v=4"></script>
+<script src="/app.js?v=4"></script>
 </body>
 </html>

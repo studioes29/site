@@ -14,7 +14,7 @@ def page(path, title, desc, canon, main, home=False):
     h = re.sub(r'(<meta property="og:url" content=")[^"]*', r'\g<1>' + canon, h)
     h = h.replace('<meta name="robots" content="noindex">', '<meta name="robots" content="%s">' % ROBOTS)
     if not home:
-        for a, b in [('href="#photographie"', 'href="/metiers/photographie/"'), ('href="#web"', 'href="/metiers/sites-et-outils/"'),
+        for a, b in [('href="#photographie"', 'href="/metiers/photographie/"'), ('href="#web"', 'href="/metiers/sites-et-outils/"'), ('href="#applications"', 'href="/metiers/sites-et-outils/#applications"'),
                      ('href="#travaux"', 'href="/metiers/photographie/#travaux"'), ('href="#realisations"', 'href="/metiers/sites-et-outils/#realisations"'),
                      ('href="#haut"', 'href="/"')]:
             h = h.replace(a, b)
@@ -32,12 +32,12 @@ def nettoie(s):  # la section reprend sans son titre ni son chapeau, déjà port
 porteW = re.search(r'<a class="porte wb".*?\n    </a>', T, re.S).group(0)
 porteP = re.search(r'<a class="porte ph".*?\n    </a>', T, re.S).group(0)
 def croise(porte, titre, texte, lien, lib):
-    return ('<section class="sec" style="padding:clamp(56px,6vw,90px) 0 0" aria-label="Et aussi"><div class="w croise"><div class="portes">%s'
+    return ('<section class="sec feuille cr-f" style="padding-top:clamp(64px,7vw,100px)" aria-label="Et aussi"><div class="w croise"><div class="portes">%s'
             '<div class="cr-tx rv"><h2 class="d">%s</h2><p>%s</p><a class="bt" href="%s">%s <span class="ar"><svg class="i"><use href="#ar"/></svg></span></a></div></div></div></section>') % (porte, titre, texte, lien, lib)
 
 ph = '''<section class="mh w" aria-labelledby="h1">
   <p class="fil"><a href="/">Studio ES</a><span>/</span><span>Photographie</span></p>
-  <h1 class="d" id="h1">Photographie<span class="it">Mariages et événements, sur le vif.</span></h1>
+  <h1 class="d" id="h1">Photographie<span class="it">Vos moments forts, sur le vif.</span></h1>
   <p class="lead">Mariages, concerts, festivals, inaugurations, cérémonies, vie d’une entreprise : un reportage discret en Bretagne, sans poses ni mise en scène, puis une sélection resserrée et retouchée, prête à servir.</p>
 </section>
 %s
@@ -52,6 +52,7 @@ wb = '''<section class="mh w" aria-labelledby="h1">
 </section>
 %s
 %s
-%s''' % (nettoie(sect('web')), croise(porteP.replace('href="#photographie"', 'href="/metiers/photographie/"'), 'Le studio fait aussi<span class="it">de la photographie.</span>', 'Mariages, concerts, festivals, vie d’une entreprise : un reportage discret, puis une sélection resserrée et retouchée.', '/metiers/photographie/', 'Voir la photographie'), contact)
+%s
+%s''' % (nettoie(sect('web')), sect('applications'), croise(porteP.replace('href="#photographie"', 'href="/metiers/photographie/"'), 'Le studio fait aussi<span class="it">de la photographie.</span>', 'Mariages, concerts, festivals, vie d’une entreprise : un reportage discret, puis une sélection resserrée et retouchée.', '/metiers/photographie/', 'Voir la photographie'), contact)
 page('metiers/sites-et-outils', 'Création de sites internet et d’applications sur mesure en Bretagne · Studio ES', 'Sites internet pour TPE, commerces et collectivités dès 990 €, applications sur mesure (devis en ligne, prise de rendez-vous, inscriptions) en abonnement ou à l’achat. Basé en Bretagne.', 'https://studioes.fr/metiers/sites-et-outils/', wb)
 print('ok')
