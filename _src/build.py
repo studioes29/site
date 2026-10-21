@@ -29,8 +29,9 @@ contact = sect('contact')
 def nettoie(s):  # la section reprend sans son titre ni son chapeau, déjà portés par l'en-tête de page
     s = re.sub(r'<div class="sec-t rv">.*?</div>\s*', '', s, count=1, flags=re.S)
     return s.replace('class="sec"', 'class="sec" style="padding-top:clamp(36px,4vw,56px)"', 1).replace('class="sec dk"', 'class="sec dk" style="padding-top:clamp(44px,5vw,72px)"', 1)
-porteW = re.search(r'<a class="porte wb".*?</a>', T, re.S).group(0)
-porteP = re.search(r'<a class="porte ph".*?</a>', T, re.S).group(0)
+PT = open(os.path.join(os.path.dirname(__file__), 'portes.html'), encoding='utf8').read().replace('{P}', P)
+porteW = re.search(r'<a class="porte wb".*?</a>', PT, re.S).group(0)
+porteP = re.search(r'<a class="porte ph".*?</a>', PT, re.S).group(0)
 def croise(porte, titre, texte, lien, lib):
     return ('<section class="sec feuille cr-f" style="padding-top:clamp(64px,7vw,100px)" aria-label="Et aussi"><div class="w croise"><div class="portes">%s'
             '<div class="cr-tx rv"><h2 class="d">%s</h2><p>%s</p><a class="bt" href="%s">%s <span class="ar"><svg class="i"><use href="#ar"/></svg></span></a></div></div></div></section>') % (porte, titre, texte, lien, lib)

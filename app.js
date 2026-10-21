@@ -377,34 +377,18 @@
     $$('[data-est]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); ouvreDevis(null); }));
   }
 
-  /* votre date est-elle libre : ouvre le devis avec la date déjà notée */
-  const dispo = $('#dispo');
-  if (dispo) {
-    const dD = $('#dDate'), dT = $('#dType'); const auj = new Date(); dD.min = auj.toISOString().slice(0, 10);
-    dispo.addEventListener('submit', e => {
-      e.preventDefault(); if (!dD.value) { toast('Choisissez une date.'); dD.focus(); return; }
-      const [a, m, j] = dD.value.split('-'), mois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'][+m - 1];
-      ES.c = Object.assign({}, ES.c, { date: `${+j} ${mois} ${a}` }); ES.e = 0; ES.k = null;
-      ouvreDevis({ k: dT.value, f: dT.value === 'evenement' ? 1 : dT.value === 'mariage' ? 1 : 0, o: [] }); compte('/disponibilite', 'Vérification de date');
-    });
-  }
-
   /* combien de temps une application ferait gagner */
   const cal = $('#calc');
   if (cal) {
-    const rH = $('#rH'), rT = $('#rT'), SEM = 47;
+    const rH = $('#rH'), SEM = 47;
     const remp = r => r.style.setProperty('--p', ((r.value - r.min) / (r.max - r.min) * 100) + '%');
     const maj = () => {
-      const h = +rH.value, t = +rT.value, an = h * SEM, eu = an * t, mois = eu / 12;
-      $('#cH').textContent = h + ' h'; $('#cT').textContent = t + ' €'; remp(rH); remp(rT);
-      prix($('#cAn'), an); prix($('#cEu'), eu);
-      let txt;
-      if (mois > 150 + 40) { const m = Math.max(1, Math.ceil(390 / (mois - 150))); txt = `Une application web en abonnement (390&nbsp;€, puis 150&nbsp;€ par mois) serait rentabilisée en <b>${m}&nbsp;mois</b>.`; }
-      else if (mois > 85 + 20) { const m = Math.max(1, Math.ceil(190 / (mois - 85))); txt = `Un devis en ligne (190&nbsp;€, puis 85&nbsp;€ par mois) serait rentabilisé en <b>${m}&nbsp;mois</b>.`; }
-      else txt = `Pour un besoin de cette taille, une application n’est pas forcément utile : <b>parlons-en</b>, une solution plus simple existe souvent.`;
-      $('#cRet').innerHTML = txt + `<small>Calcul indicatif sur ${SEM} semaines travaillées par an.</small>`;
+      const h = +rH.value, an = h * SEM, j = Math.round(an / 7);
+      $('#cH').textContent = h + ' h'; remp(rH);
+      prix($('#cAn'), an); prix($('#cJ'), j);
+      $('#cRet').innerHTML = `Décrivez la tâche : vous recevez une piste concrète et un prix.<small>Calcul indicatif sur ${SEM} semaines travaillées, journées de 7 h.</small>`;
     };
-    rH.addEventListener('input', maj); rT.addEventListener('input', maj); maj();
+    rH.addEventListener('input', maj); maj();
   }
 
   /* message libre */
