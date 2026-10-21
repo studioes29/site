@@ -43,7 +43,7 @@ ph = '''<section class="mh" aria-labelledby="h1"><div class="w">
 %s
 %s
 %s''' % (nettoie(sect('photographie')), croise(porteW.replace('href="#web"', 'href="/metiers/sites-et-outils/"'), 'Le studio fait aussi<span class="it">des sites et des applications.</span>', 'Un site clair et bien référencé, ou une application qui fait gagner du temps. Et quand il faut de belles photos pour l’habiller, elles sont déjà là.', '/metiers/sites-et-outils/', 'Voir le web'), contact)
-page('metiers/photographie', 'Photographe de mariage et d’événement en Bretagne · Studio ES', 'Reportage photo sur le vif en Bretagne : mariage dès 1 290 €, événement dès 250 €, forfait à l’année pour les collectivités, entreprises et lieux culturels.', 'https://studioes.fr/metiers/photographie/', ph)
+page('metiers/photographie', 'Photographe de mariage et d’événement en Bretagne · Studio ES', 'Reportage photo sur le vif en Bretagne : mariage dès 1 290 €, événement dès 250 €, suivi photo annuel pour les collectivités, entreprises et lieux culturels.', 'https://studioes.fr/metiers/photographie/', ph)
 
 wb = '''<section class="mh" aria-labelledby="h1"><div class="w">
   <p class="fil"><a href="/">Studio ES</a><span>/</span><span>Web</span></p>

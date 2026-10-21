@@ -8,13 +8,15 @@
   const toast = t => { const e = $('#toast'); if (!e) return; e.textContent = t; e.classList.add('on'); clearTimeout(toast.h); toast.h = setTimeout(() => e.classList.remove('on'), 3400); };
   const ico = id => `<svg class="i"><use href="#${id}"/></svg>`;
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const rangs = el => [...el.children].forEach((c, i) => c.style.setProperty('--i', i));
 
   /* en-tête, dock et retour en haut : verre dépoli, version nuit au-dessus des rubriques sombres */
   const hd = $('#hd'), dock = $('#dock'), hautBt = $('.haut-bt'), sombres = $$('[data-dark]'), feuilles = $$('.feuille');
   /* empilement : chaque rubrique se fige à sa fin, la suivante glisse par-dessus */
   const pile = [...document.querySelectorAll('main > .hero, main > .mh, main > .feuille')];
-  const fige = () => pile.forEach(el => { el.classList.add('empile'); el.style.setProperty('--st', Math.min(0, innerHeight - el.offsetHeight) + 'px'); });
-  fige(); addEventListener('resize', fige); if (window.ResizeObserver) { const ro = new ResizeObserver(() => fige()); pile.forEach(el => ro.observe(el)); }
+  /* la hauteur de chaque rubrique est mesurée seulement quand elle change vraiment, le haut de figeage est calculé en CSS sur la petite hauteur d'écran : rien ne saute quand la barre du navigateur mobile apparaît */
+  const fige = () => pile.forEach(el => { el.classList.add('empile'); const h = el.offsetHeight; if (Math.abs((el._h || 0) - h) > 2) { el._h = h; el.style.setProperty('--h', h + 'px'); } });
+  fige(); if (window.ResizeObserver) { const ro = new ResizeObserver(() => fige()); pile.forEach(el => ro.observe(el)); }
   const sur = y => sombres.some(s => { const r = s.getBoundingClientRect(); return r.top < y && r.bottom > y; });
   let tic = false;
   const etat = () => {
@@ -23,7 +25,7 @@
     const loin = y > H * 1.2;
     if (dock) { dock.classList.toggle('dk', sur(H - 40)); dock.classList.toggle('haut', loin); }
     if (hautBt) { hautBt.classList.toggle('on', loin); hautBt.classList.toggle('dk', sur(H - 50)); }
-    pile.forEach((el, i) => { const n = pile[i + 1]; if (!n) return; const d = clamp((H * .5 - n.getBoundingClientRect().top) / (H * .5), 0, 1); el.style.setProperty('--dim', reduit ? 0 : (d * .38).toFixed(3)); });
+    pile.forEach((el, i) => { const n = pile[i + 1]; if (!n) return; const d = clamp((H * .3 - n.getBoundingClientRect().top) / (H * .3), 0, 1); el.style.setProperty('--dim', reduit ? 0 : (d * d * .34).toFixed(3)); });
   };
   addEventListener('scroll', () => { if (!tic) { tic = true; requestAnimationFrame(etat); } }, { passive: true });
   addEventListener('resize', etat); etat();
@@ -36,10 +38,9 @@
   /* prix : chaque chiffre est une bande qui tourne, les chiffres s'arrêtent l'un après l'autre avec un léger rebond */
   const HC = 1.08, BANDE = '0123456789'.repeat(3).split('').map(d => `<span class="c">${d}</span>`).join('');
   const odo = (el, txt, depuisZero) => {
-    el.setAttribute('aria-label', txt);
-    if (!/\d/.test(txt)) { el.innerHTML = `<span class="v" aria-hidden="true">${txt}</span>`; el._ch = null; if (!reduit) el.animate([{ opacity: 0, transform: 'translateY(.2em)' }, { opacity: 1, transform: 'none' }], { duration: 450, easing: 'ease-out' }); return; }
+    if (!/\d/.test(txt)) { el.innerHTML = `<span class="sr">${txt}</span><span class="v" aria-hidden="true">${txt}</span>`; el._ch = null; if (!reduit) el.animate([{ opacity: 0, transform: 'translateY(.2em)' }, { opacity: 1, transform: 'none' }], { duration: 450, easing: 'ease-out' }); return; }
     const ch = [...txt].filter(c => /\d/.test(c)).map(Number), anc = depuisZero ? [] : (el._ch || []);
-    el.innerHTML = '<span class="od" aria-hidden="true">' + [...txt].map(c => /\d/.test(c) ? `<span class="dg"><span>${BANDE}</span></span>` : '<span class="sp"></span>').join('') + '</span>';
+    el.innerHTML = `<span class="sr">${txt}</span>` + '<span class="od" aria-hidden="true">' + [...txt].map(c => /\d/.test(c) ? `<span class="dg"><span>${BANDE}</span></span>` : '<span class="sp"></span>').join('') + '</span>';
     const cols = $$('.dg>span', el), n = cols.length; let fin = 0;
     cols.forEach((c, i) => {
       const d = ch[i], p = anc[anc.length - n + i];
@@ -53,12 +54,12 @@
   const prix = (el, v) => {
     if (!el) return; const txt = v == null ? 'Sur devis' : fmt(v);
     el.classList.toggle('txt', v == null); const px = el.closest('.px'); if (px) px.classList.toggle('sd', v == null);
-    if (el.dataset.t === txt) return; el.dataset.t = txt; el.dataset.v = v == null ? '' : v; el.setAttribute('aria-label', txt);
+    if (el.dataset.t === txt) return; el.dataset.t = txt; el.dataset.v = v == null ? '' : v;
     if (el.dataset.vu) odo(el, txt, false);
   };
   /* première apparition : les chiffres tournent depuis zéro quand la carte entre à l'écran */
   const prixVus = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { const el = e.target; prixVus.unobserve(el); el.dataset.vu = 1; odo(el, el.dataset.t, true); } }), { threshold: .6 });
-  $$('.prix').forEach(el => { el.dataset.t = el.textContent.trim().replace(/\s/g, NB); el.setAttribute('aria-label', el.dataset.t); el.innerHTML = `<span class="v" aria-hidden="true" style="visibility:hidden">${el.dataset.t}</span>`; if (reduit) { el.dataset.vu = 1; odo(el, el.dataset.t, true); } else prixVus.observe(el); });
+  $$('.prix').forEach(el => { el.dataset.t = el.textContent.trim().replace(/\s/g, NB); el.innerHTML = `<span class="sr">${el.dataset.t}</span><span class="v" aria-hidden="true" style="visibility:hidden">${el.dataset.t}</span>`; if (reduit) { el.dataset.vu = 1; odo(el, el.dataset.t, true); } else prixVus.observe(el); });
 
   /* cartes d'accueil : inclinaison légère au pointeur */
   if (!tactile && !reduit) $$('[data-tilt]').forEach(c => {
@@ -66,11 +67,37 @@
     c.addEventListener('pointerleave', () => ['--rx', '--ry'].forEach(p => c.style.removeProperty(p)));
   });
 
-  /* bannière et étiquettes : tous les diaporamas changent ensemble */
-  const diapos = $$('[data-slides]').map(el => ({ ims: $$(':scope > .fd > img, :scope > .win > img', el), k: 0 }));
+  /* bannière : le viseur fait la mise au point, déclenche, puis la photo se range dans la page d'accueil d'un site ; les étiquettes suivent */
   const charge = i => { if (i.dataset.src) { i.src = i.dataset.src; i.removeAttribute('data-src'); } };
-  setTimeout(() => diapos.forEach(D => D.ims.forEach(charge)), 1200);
-  if (!reduit && diapos.length) setInterval(() => { if (document.hidden) return; diapos.forEach(D => { if (!D.ims.length) return; D.ims[D.k].classList.remove('on'); D.k = (D.k + 1) % D.ims.length; charge(D.ims[D.k]); D.ims[D.k].classList.add('on'); }); }, 5200);
+  const puces = $$('[data-chips]').map(el => ({ ims: $$('.win > img', el), k: 0 }));
+  const avancePuces = () => puces.forEach(D => { if (!D.ims.length) return; D.ims[D.k].classList.remove('on'); D.k = (D.k + 1) % D.ims.length; charge(D.ims[D.k]); D.ims[D.k].classList.add('on'); });
+  const ban = $('#ban');
+  if (ban) {
+    const ims = $$('.shot .ph img', ban), hT = $('#banH'), ro = $('#ro'), cpt = $('#cpt'), hud = $('.hud', ban), af = $('#af');
+    let k = 0, n = 1, vis = true, tm = [];
+    setTimeout(() => { ims.forEach(charge); puces.forEach(D => D.ims.forEach(charge)); }, 900);
+    const plus = (f, ms) => tm.push(setTimeout(f, ms));
+    const tour = premier => {
+      tm.forEach(clearTimeout); tm = [];
+      if (!vis || document.hidden) { plus(() => tour(premier), 800); return; }
+      const im = ims[k];
+      if (!premier) { ims.forEach(x => x.classList.toggle('on', x === im)); charge(im); avancePuces(); }
+      ban.classList.remove('site', 'net', 'clic'); ban.classList.add('flou');
+      ro.textContent = im.dataset.r; hT.textContent = im.dataset.h;
+      plus(() => { ban.classList.remove('flou'); ban.classList.add('net'); }, premier ? 900 : 700);
+      plus(() => { ban.classList.add('clic'); n++; cpt.textContent = String(n).padStart(4, '0'); }, premier ? 1700 : 1450);
+      plus(() => { ban.classList.remove('net', 'clic'); ban.classList.add('site'); }, premier ? 2150 : 1900);
+      plus(() => { ban.classList.remove('site'); }, premier ? 6300 : 6050);
+      plus(() => { k = (k + 1) % ims.length; tour(false); }, premier ? 7250 : 7000);
+    };
+    if (!reduit) {
+      new IntersectionObserver(e => { vis = e[0].isIntersecting; }, { threshold: .15 }).observe(ban);
+      tour(true);
+      /* sur ordinateur, le collimateur suit la souris dans le cadre */
+      if (!tactile) ban.addEventListener('pointermove', e => { const r = hud.getBoundingClientRect(); af.style.setProperty('--ax', clamp(e.clientX - r.left, 50, r.width - 50) + 'px'); af.style.setProperty('--ay', clamp(e.clientY - r.top, 36, r.height - 36) + 'px'); });
+      if (!tactile) ban.addEventListener('pointerleave', () => { af.style.removeProperty('--ax'); af.style.removeProperty('--ay'); });
+    }
+  }
 
   /* cartes d'offre */
   const swPh = $('#swPh');
@@ -87,17 +114,16 @@
     return { k, f, o, mois, achat, ph: k === 'site' && swPh && swPh.checked, v };
   };
   const repere = c => { const s = $('.sel', c); if (!s) return; const b = $('[aria-checked="true"]', s); if (!b) return; s.style.setProperty('--y', b.offsetTop + 'px'); s.style.setProperty('--h', b.offsetHeight + 'px'); };
-  const majCarte = (c, bouge) => {
+  const majCarte = c => {
     const E = etatCarte(c); prix($('.prix', c), E.v);
     const u = $('[data-u]', c); if (u) u.textContent = E.mois ? '€/mois' : '€/an';
     const bm = $('.bascule[data-mo]', c); if (bm) bm.hidden = E.v == null;
     if (E.k === 'app') { const d = $('.dt', c); d.innerHTML = E.achat ? d.dataset.ac : d.dataset.ab; }
     repere(c);
-    if (bouge && !reduit) { c.classList.remove('bouge'); void c.offsetWidth; c.classList.add('bouge'); }
   };
   const cartes = $$('[data-of]');
   cartes.forEach(c => {
-    $$('.sel [role="radio"]', c).forEach(b => b.addEventListener('click', () => { $$('.sel [role="radio"]', c).forEach(x => x.setAttribute('aria-checked', String(x === b))); majCarte(c, true); }));
+    $$('.sel [role="radio"]', c).forEach(b => b.addEventListener('click', () => { $$('.sel [role="radio"]', c).forEach(x => x.setAttribute('aria-checked', String(x === b))); majCarte(c); }));
     $$('.opt .op', c).forEach(i => i.addEventListener('click', () => { i.setAttribute('aria-pressed', String(i.getAttribute('aria-pressed') !== 'true')); majCarte(c); }));
     const bm = $('.bascule[data-mo]', c);
     if (bm) $$('button', bm).forEach(b => b.addEventListener('click', () => { bm.dataset.v = b.dataset.v; $$('button', bm).forEach(x => x.setAttribute('aria-pressed', String(x === b))); c.dataset.mois = b.dataset.v; majCarte(c); }));
@@ -183,9 +209,9 @@
     const L = filtre === 'tout' ? REPS : REPS.filter(r => r.k === filtre);
     let h = '';
     L.forEach((r, i) => {
-      h += `<button class="rc" data-r="${r.id}" aria-label="Voir le reportage ${r.t}"><span class="im"><img src="/p/t/${r.ph[0]}.webp" alt="" loading="${i < 5 ? 'eager' : 'lazy'}"></span><span class="lab"><b>${r.t}</b><span>${K[r.k] || ''}</span><small>${r.ph.length} photos</small></span></button>`;
+      h += `<button class="rc" data-r="${r.id}" aria-label="Voir le reportage ${r.t}"><span class="im"><img src="/p/t/${r.ph[0]}.webp" alt="" loading="${i < 8 ? 'eager' : 'lazy'}" decoding="async"><span class="rafale" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></span></span><span class="lab"><b>${r.t}</b><span>${K[r.k] || ''}</span><small>${r.ph.length} photos</small></span></button>`;
     });
-    railR.innerHTML = h; railR.scrollLeft = 0; const R = rails.find(x => x.el === railR); if (R) { R.pos = 0; R.fin = 0; R.attente = performance.now() + 1500; }
+    railR.innerHTML = h; rangs(railR); if (railR.classList.contains('vu') && !reduit) { railR.classList.remove('vu'); void railR.offsetWidth; requestAnimationFrame(() => railR.classList.add('vu')); } railR.scrollLeft = 0; const R = rails.find(x => x.el === railR); if (R) { R.pos = 0; R.fin = 0; R.attente = performance.now() + 1500; }
   };
   if (railR) {
     rail(railR);
@@ -196,9 +222,28 @@
       chips.appendChild(b);
     });
     dessine();
+    /* survol : la carte passe en rafale et montre quatre images du reportage */
+    if (!tactile && !reduit) {
+      let raf = null;
+      const stop = () => { if (!raf) return; clearInterval(raf.t); raf.c.classList.remove('raf'); raf.img.src = `/p/t/${raf.r.ph[0]}.webp`; $$('.rafale i', raf.c).forEach((x, j) => x.classList.toggle('on', !j)); raf = null; };
+      railR.addEventListener('pointerover', e => {
+        const c = e.target.closest('.rc'); if (!c || (raf && raf.c === c)) return; stop();
+        const r = REPS.find(x => x.id === c.dataset.r); if (!r || r.ph.length < 2) return;
+        const img = $('.im img', c), L = r.ph.slice(0, 4); L.forEach(p => { const x = new Image(); x.src = `/p/t/${p}.webp`; });
+        let j = 0; raf = { c, img, r, t: setInterval(() => { j = (j + 1) % L.length; img.src = `/p/t/${L[j]}.webp`; $$('.rafale i', c).forEach((x, q) => x.classList.toggle('on', q === j)); }, 420) }; c.classList.add('raf');
+      });
+      railR.addEventListener('pointerleave', stop);
+      railR.addEventListener('pointerout', e => { if (raf && !raf.c.contains(e.relatedTarget)) stop(); });
+    }
     railR.addEventListener('click', e => { const c = e.target.closest('[data-r]'); if (c) ouvreGal(REPS.find(r => r.id === c.dataset.r)); });
   }
   rail($('#usages')); rail($('#reals'));
+  /* toutes les cartes de rail arrivent de la même façon, l'une après l'autre, dès que le rail entre à l'écran */
+  const vuR = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vu'); vuR.unobserve(e.target); } }), { threshold: .12 });
+  $$('.rail').forEach(el => { rangs(el); if (reduit) el.classList.add('vu'); else vuR.observe(el); });
+
+  /* cartes d'usage : un toucher retourne la carte */
+  $$('.us[aria-pressed]').forEach(b => b.addEventListener('click', () => { const R = rails.find(x => x.el.id === 'usages'); if (R && R.el.moved) return; b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true')); }));
 
   /* galerie d'un reportage, puis la photo en grand */
   const gp = $('#gp'), gpG = $('#gpG'), lb = $('#lb'), lbI = $('#lbI'); const G = { r: null, i: 0 };
@@ -250,7 +295,7 @@
   const PJ = {
     mariage: { l: 'Un mariage', g: 'Photographie', ic: 'ap', date: 1, f: { l: 'Formule', o: [['Cérémonie', 1290, 'Moments clés, 4 à 6 h'], ['Journée', 1890, '8 à 10 h sur place'], ['Journée et album', 2590, 'Album imprimé, séance à deux']] }, o: { l: 'Options', o: [['Aperçu de 20 photos le soir même', 150], ['Une heure de plus', 80]] } },
     evenement: { l: 'Un événement', g: 'Photographie', ic: 'ap', date: 1, f: { l: 'Durée', o: [['Concert', 250, 'Spectacle, 1 h 30 à 2 h'], ['Demi-journée', 350, '4 h sur place'], ['Journée ou festival', 550, '8 h sur place, par jour', 'j']] }, o: { l: 'Options', o: [['Sélection livrée le soir même', 150], ['Une heure de plus', 80]] } },
-    annee: { l: 'Un photographe à l’année', g: 'Photographie', ic: 'ca', f: { l: 'Forfait', o: [['4 demi-journées', [1290, 109], 'soit 323 € l’une'], ['8 demi-journées', [2490, 209], 'soit 311 € l’une'], ['12 demi-journées', [3590, 299], 'soit 299 € l’une'], ['Plus de 12', null, 'sur devis']] }, p: { l: 'Paiement', o: [['Par an', 'en une fois'], ['Par mois', 'sur 12 mois']] } },
+    annee: { l: 'Un suivi photo annuel', g: 'Photographie', ic: 'ca', f: { l: 'Forfait', o: [['4 demi-journées', [1290, 109], 'soit 323 € l’une'], ['8 demi-journées', [2490, 209], 'soit 311 € l’une'], ['12 demi-journées', [3590, 299], 'soit 299 € l’une'], ['Plus de 12', null, 'sur devis']] }, p: { l: 'Paiement', o: [['Par an', 'en une fois'], ['Par mois', 'sur 12 mois']] } },
     site: { l: 'Un site internet', g: 'Web', ic: 'ec', f: { l: 'Formule', o: [['Essentiel', 990, 'Une page'], ['Vitrine', 1990, '3 à 5 pages'], ['Sur mesure', 4490, 'Arborescence libre'], ['À définir ensemble', null, 'On en parle']] }, o: { l: 'En plus', o: [['Reportage photo du lieu et de l’équipe', 350], ['Réservation ou espace membres', null]] } },
     app: { l: 'Une application', g: 'Web', ic: 'pl', f: { l: 'Projet', o: [['Devis en ligne', [190, 85, 1090]], ['Application web', [390, 150, 2790]], ['Avec automatisations', [790, 250, 5490]], ['Une idée à préciser', null, 'On en parle']] }, p: { l: 'Formule', o: [['Abonnement', 'engagement de 18 mois'], ['Achat', 'l’application vous appartient']] } }
   };
@@ -330,6 +375,36 @@
       }
     });
     $$('[data-est]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); ouvreDevis(null); }));
+  }
+
+  /* votre date est-elle libre : ouvre le devis avec la date déjà notée */
+  const dispo = $('#dispo');
+  if (dispo) {
+    const dD = $('#dDate'), dT = $('#dType'); const auj = new Date(); dD.min = auj.toISOString().slice(0, 10);
+    dispo.addEventListener('submit', e => {
+      e.preventDefault(); if (!dD.value) { toast('Choisissez une date.'); dD.focus(); return; }
+      const [a, m, j] = dD.value.split('-'), mois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'][+m - 1];
+      ES.c = Object.assign({}, ES.c, { date: `${+j} ${mois} ${a}` }); ES.e = 0; ES.k = null;
+      ouvreDevis({ k: dT.value, f: dT.value === 'evenement' ? 1 : dT.value === 'mariage' ? 1 : 0, o: [] }); compte('/disponibilite', 'Vérification de date');
+    });
+  }
+
+  /* combien de temps une application ferait gagner */
+  const cal = $('#calc');
+  if (cal) {
+    const rH = $('#rH'), rT = $('#rT'), SEM = 47;
+    const remp = r => r.style.setProperty('--p', ((r.value - r.min) / (r.max - r.min) * 100) + '%');
+    const maj = () => {
+      const h = +rH.value, t = +rT.value, an = h * SEM, eu = an * t, mois = eu / 12;
+      $('#cH').textContent = h + ' h'; $('#cT').textContent = t + ' €'; remp(rH); remp(rT);
+      prix($('#cAn'), an); prix($('#cEu'), eu);
+      let txt;
+      if (mois > 150 + 40) { const m = Math.max(1, Math.ceil(390 / (mois - 150))); txt = `Une application web en abonnement (390&nbsp;€, puis 150&nbsp;€ par mois) serait rentabilisée en <b>${m}&nbsp;mois</b>.`; }
+      else if (mois > 85 + 20) { const m = Math.max(1, Math.ceil(190 / (mois - 85))); txt = `Un devis en ligne (190&nbsp;€, puis 85&nbsp;€ par mois) serait rentabilisé en <b>${m}&nbsp;mois</b>.`; }
+      else txt = `Pour un besoin de cette taille, une application n’est pas forcément utile : <b>parlons-en</b>, une solution plus simple existe souvent.`;
+      $('#cRet').innerHTML = txt + `<small>Calcul indicatif sur ${SEM} semaines travaillées par an.</small>`;
+    };
+    rH.addEventListener('input', maj); rT.addEventListener('input', maj); maj();
   }
 
   /* message libre */
