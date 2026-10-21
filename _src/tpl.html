@@ -23,8 +23,8 @@
 <link rel="preload" href="/f/br.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/f/it.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/f/ur-i.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/apercu/s.css?v=7">
-
+<link rel="stylesheet" href="{P}s.css?v=7">
+<script>/* GoatCounter : mesure d'audience sans cookie, uniquement sur studioes.fr */if (/(^|\.)studioes\.fr$/.test(location.hostname) && !location.hostname.startsWith('dossiers')) { const g = document.createElement('script'); g.async = true; g.src = 'https://gc.zgo.at/count.js'; g.dataset.goatcounter = 'https://studioes.goatcounter.com/count'; document.head.appendChild(g); }</script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -103,30 +103,10 @@
         <h1 class="d" id="h1" aria-label="Studio ES, photographie et web en Bretagne"><span>Studio</span> <span>ES</span></h1>
         <p class="acc">Le studio photo et web des entreprises, des collectivités et des futurs mariés de Bretagne.</p>
       </div>
-      <div class="portes">
-        <a class="porte ph" href="#photographie" data-chips>
-          <span class="win" aria-hidden="true">
-            <img src="/h/mariage-800.webp" alt="" class="on">
-            <img data-src="/p/t/philippe-katerine-2.webp" alt="">
-            <img data-src="/p/t/inaug-digue-7.webp" alt="">
-            <img data-src="/p/t/la-fouine-1.webp" alt="">
-            <img data-src="/projets/fl-auto/img/photo-1.webp" alt="">
-          </span>
-          <span class="lab"><b class="d">Photographie</b><span>Mariages et événements</span></span>
-          <span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span>
-        </a>
-        <a class="porte wb" href="#web" data-chips>
-          <span class="win" aria-hidden="true">
-            <img src="/projets/flouz/img/cover.webp" alt="" class="on">
-            <img data-src="/projets/pierceval-tattoo/img/cover.webp" alt="">
-            <img data-src="/projets/la-soute/img/cover.webp" alt="">
-            <img data-src="/projets/flouz/img/main-s.webp" alt="">
-            <img data-src="/projets/la-soute/img/site.webp" alt="">
-          </span>
-          <span class="lab"><b class="d">Web</b><span>Sites et applications</span></span>
-          <span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span>
-        </a>
-      </div>
+      <nav class="acces" aria-label="Accès rapide">
+        <a class="bt cl" href="#photographie">Photographie <span class="ar"><svg class="i"><use href="#ar"/></svg></span></a>
+        <a class="bt" href="#web">Web <span class="ar"><svg class="i"><use href="#ar"/></svg></span></a>
+      </nav>
     </div>
   </div>
 </section>
@@ -137,9 +117,8 @@
 
     <div class="grp" data-grp>
       <article class="of ph rv" data-of data-k="evenement">
-        <div class="im"><img src="/p/t/philippe-katerine-2.webp" alt="Philippe Katerine sur scène" loading="lazy" style="object-position:50% 30%"></div>
+        <div class="im"><img src="/p/t/philippe-katerine-2.webp" alt="Philippe Katerine sur scène" loading="lazy" style="object-position:50% 30%"><span class="kic">Entreprises, collectivités, associations</span></div>
         <div class="lab">
-          <p class="kic">Entreprises, collectivités, associations</p>
           <div class="tt"><h3 class="d">Événement</h3><p class="px"><small>dès</small><b class="prix" data-v="250">250</b><span class="u">€</span></p></div>
           <p class="ds">Concert, festival, inauguration, séminaire, vœux : un reportage discret, livré vite.</p>
           <div class="sel" role="radiogroup" aria-label="Durée"><i class="ind" aria-hidden="true"></i>
@@ -154,9 +133,8 @@
       </article>
       <article class="of ph rec grain rv" data-of data-k="annee" style="--i:1" id="forfait">
         <span class="sheen" aria-hidden="true"></span>
-        <div class="im"><img src="/p/t/inaug-digue-7.webp" alt="Inauguration photographiée pour une commune" loading="lazy"><span class="badge">Recommandé</span></div>
+        <div class="im"><img src="/p/t/inaug-digue-7.webp" alt="Inauguration photographiée pour une commune" loading="lazy"><span class="badge">Recommandé</span><span class="kic">Entreprises, collectivités, lieux culturels</span></div>
         <div class="lab">
-          <p class="kic">Entreprises, collectivités, lieux culturels</p>
           <div class="tt"><h3 class="d">Suivi annuel</h3><p class="px"><small>dès</small><b class="prix" data-v="1290">1&#8239;290</b><span class="u" data-u>€/an</span></p></div>
           <p class="ds">Votre photographe attitré toute l’année : vos dates réservées en priorité, et la demi-journée moins chère qu’à l’unité.</p>
           <div class="sel" role="radiogroup" aria-label="Forfait"><i class="ind" aria-hidden="true"></i>
@@ -171,9 +149,8 @@
         </div>
       </article>
       <article class="of ph rv" data-of data-k="mariage" style="--i:2">
-        <div class="im"><img src="/h/mariage-800.webp" alt="Couple photographié sur le vif" loading="lazy"></div>
+        <div class="im"><img src="/h/mariage-800.webp" alt="Couple photographié sur le vif" loading="lazy"><span class="kic">Particuliers</span></div>
         <div class="lab">
-          <p class="kic">Particuliers</p>
           <div class="tt"><h3 class="d">Mariage</h3><p class="px"><small>dès</small><b class="prix" data-v="1290">1&#8239;290</b><span class="u">€</span></p></div>
           <p class="ds">Des préparatifs à l’ouverture du bal, sur le vif : ni poses imposées, ni mise en scène.</p>
           <div class="sel" role="radiogroup" aria-label="Formule"><i class="ind" aria-hidden="true"></i>
@@ -188,12 +165,6 @@
       </article>
     </div>
     <div class="dots" aria-hidden="true"></div>
-    <form class="dispo rv" id="dispo" novalidate>
-      <div class="tx"><h4 class="d">Votre date est-elle libre&nbsp;?</h4><p>Indiquez-la : la disponibilité vous est confirmée avec le devis, sous 48&nbsp;h.</p></div>
-      <label class="ch"><span>Date</span><input type="date" id="dDate" required></label>
-      <label class="ch"><span>Pour</span><select id="dType"><option value="evenement">Un événement</option><option value="mariage">Un mariage</option><option value="annee">Plusieurs dates dans l’année</option></select></label>
-      <button class="bt" type="submit">Vérifier <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button>
-    </form>
 
     <div class="sous rv" id="travaux"><h3 class="d">Reportages récents</h3><div class="nv"><button class="ic" data-rail="rail" data-d="-1" aria-label="Reportages précédents"><svg class="i"><use href="#al"/></svg></button><button class="ic" data-rail="rail" data-d="1" aria-label="Reportages suivants"><svg class="i"><use href="#arr"/></svg></button></div></div>
     <div class="chips rv" id="chips" role="group" aria-label="Filtrer les reportages"></div>
@@ -252,10 +223,10 @@
     <div class="sous rv" id="realisations"><h3 class="d">Réalisations web</h3><div class="nv"><button class="ic" data-rail="reals" data-d="-1" aria-label="Réalisations précédentes"><svg class="i"><use href="#al"/></svg></button><button class="ic" data-rail="reals" data-d="1" aria-label="Réalisations suivantes"><svg class="i"><use href="#arr"/></svg></button></div></div>
   </div>
   <div class="rail rv" id="reals" aria-label="Réalisations web">
-    <a class="cs" href="/apercu/projets/pierceval-tattoo/" style="--b:#3A1D3F"><span class="im"><img src="/projets/pierceval-tattoo/img/cover.webp" alt="Site de Pierceval Tattoo sur ordinateur et téléphone" loading="lazy"></span><span class="lab"><b class="d">Pierceval Tattoo</b><span>Trente ans de métier, un premier site.</span><small>Site internet · Tatouage et piercing</small></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ne"/></svg></span></a>
-    <a class="cs" href="/apercu/projets/flouz/" style="--b:#22185C"><span class="im"><img src="/projets/flouz/img/cover.webp" alt="Application flouz. sur téléphone" loading="lazy"></span><span class="lab"><b class="d">flouz.</b><span>Un budget qui se lit d’un coup d’œil.</span><small>Application · Budget personnel</small></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ne"/></svg></span></a>
-    <a class="cs" href="/apercu/projets/la-soute/" style="--b:#191C55"><span class="im"><img src="/projets/la-soute/img/cover.webp" alt="Identité et site de La Soute" loading="lazy"></span><span class="lab"><b class="d">La Soute</b><span>Une salle, un hublot, une saison.</span><small>Site et identité · Salle de spectacle</small></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ne"/></svg></span></a>
-    <a class="cs" href="/apercu/projets/pierceval-tattoo/#c2" style="--b:#2B1330"><span class="im"><img src="/projets/pierceval-tattoo/img/d-rdv-type.webp" alt="Réservation en ligne de Pierceval Tattoo" loading="lazy" style="object-position:50% 0"></span><span class="lab"><b class="d">Réserver en ligne</b><span>Tatouage et piercing, deux parcours.</span><small>Outil de réservation · Pierceval Tattoo</small></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ne"/></svg></span></a>
+    <a class="cs" href="/projets/pierceval-tattoo/" style="--b:#3A1D3F"><span class="im"><img src="/projets/pierceval-tattoo/img/cover.webp" alt="Site de Pierceval Tattoo sur ordinateur et téléphone" loading="lazy"></span><span class="lab"><b class="d">Pierceval Tattoo</b><span>Trente ans de métier, un premier site.</span><small>Site internet · Tatouage et piercing</small></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ne"/></svg></span></a>
+    <a class="cs" href="/projets/flouz/" style="--b:#22185C"><span class="im"><img src="/projets/flouz/img/cover.webp" alt="Application flouz. sur téléphone" loading="lazy"></span><span class="lab"><b class="d">flouz.</b><span>Un budget qui se lit d’un coup d’œil.</span><small>Application · Budget personnel</small></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ne"/></svg></span></a>
+    <a class="cs" href="/projets/la-soute/" style="--b:#191C55"><span class="im"><img src="/projets/la-soute/img/cover.webp" alt="Identité et site de La Soute" loading="lazy"></span><span class="lab"><b class="d">La Soute</b><span>Une salle, un hublot, une saison.</span><small>Site et identité · Salle de spectacle</small></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ne"/></svg></span></a>
+    <a class="cs" href="/projets/pierceval-tattoo/#c2" style="--b:#2B1330"><span class="im"><img src="/projets/pierceval-tattoo/img/d-rdv-type.webp" alt="Réservation en ligne de Pierceval Tattoo" loading="lazy" style="object-position:50% 0"></span><span class="lab"><b class="d">Réserver en ligne</b><span>Tatouage et piercing, deux parcours.</span><small>Outil de réservation · Pierceval Tattoo</small></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ne"/></svg></span></a>
   </div>
 </section>
 
@@ -270,15 +241,15 @@
     <button class="us" style="--t:#F5D199" aria-pressed="false"><span class="fa"><span class="ico"><svg class="i"><use href="#pl"/></svg></span><b>Planning d’équipe</b><span class="pb">Le planning vit sur un tableau blanc.</span><span class="tap">Voir la solution</span></span><span class="fb"><b>Planning d’équipe</b><span class="so">Interventions, congés et disponibilités, partagés sur téléphone.</span><span class="tap">Retour</span></span></button>
     <button class="us" style="--t:#A9CCFF" aria-pressed="false"><span class="fa"><span class="ico"><svg class="i"><use href="#fo"/></svg></span><b>Suivi de dossier</b><span class="pb">Les clients appellent pour savoir où en est leur dossier.</span><span class="tap">Voir la solution</span></span><span class="fb"><b>Suivi de dossier</b><span class="so">Un espace client avec les étapes, les documents et les messages.</span><span class="tap">Retour</span></span></button>
     <button class="us" style="--t:#D7E8A4" aria-pressed="false"><span class="fa"><span class="ico"><svg class="i"><use href="#cu"/></svg></span><b>Relances et factures</b><span class="pb">Les relances partent quand on y pense.</span><span class="tap">Voir la solution</span></span><span class="fb"><b>Relances et factures</b><span class="so">Factures, relances et rappels envoyés à la bonne date, sans y penser.</span><span class="tap">Retour</span></span></button>
-    <div class="us autre"><span class="ico"><svg class="i"><use href="#ms"/></svg></span><b>Autre chose&nbsp;?</b><p class="pb">Votre problème n’est pas dans la liste&nbsp;?</p><p>Décrivez-le en quelques lignes. La réponse arrive avec une piste concrète et un prix.</p><button class="bt sm" data-msg>Le décrire <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
+    <div class="us autre"><span class="ico"><svg class="i"><use href="#ms"/></svg></span><b>Autre chose&nbsp;?</b><p class="pb">Décrivez-le : une piste concrète et un prix suivent.</p><button class="bt sm" data-msg>Le décrire <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
   </div>
   <div class="w">
     <div class="calc rv" id="calc">
       <div class="q1"><h3 class="d">Combien de temps une application vous ferait-elle gagner&nbsp;?</h3>
-        <label><span>Heures perdues chaque semaine sur cette tâche <b id="cH">3 h</b></span><input type="range" id="rH" min="1" max="15" value="3"></label>
-        <label><span>Valeur d’une heure de votre temps <b id="cT">40 €</b></span><input type="range" id="rT" min="20" max="90" step="5" value="40"></label>
+        <label><span>Heures consacrées chaque semaine à cette tâche <b id="cH">3 h</b></span><input type="range" id="rH" min="1" max="15" value="3"></label>
+        <p class="cn">Relances, saisies, appels, tableaux à recopier : une application peut en reprendre l’essentiel.</p>
       </div>
-      <div class="q2" aria-live="polite"><p class="gros"><b class="prix" id="cAn" data-v="141">141</b><span>heures récupérées par an</span></p><p class="gros"><b class="prix" id="cEu" data-v="5640">5&#8239;640</b><span>€ de temps libéré par an</span></p><p class="ret" id="cRet">Une application web en abonnement serait rentabilisée en 3 mois.</p></div>
+      <div class="q2" aria-live="polite"><p class="gros"><b class="prix" id="cAn" data-v="141">141</b><span>heures par an sur cette tâche</span></p><p class="gros"><b class="prix" id="cJ" data-v="20">20</b><span>journées de travail par an</span></p><p class="ret" id="cRet"></p><button class="bt sm" data-msg>Décrire ma tâche <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
     </div>
     <div class="sous rv"><h3 class="d">Les formules</h3><p>Chacune existe en abonnement ou à l’achat.</p></div>
     <div class="grp" data-grp>
@@ -337,7 +308,6 @@
     <div class="dir rv"><a href="mailto:contact@studioes.fr"><svg class="i"><use href="#ma"/></svg>contact@studioes.fr</a><a href="tel:+33651222107"><svg class="i"><use href="#ph"/></svg>06&nbsp;51&nbsp;22&nbsp;21&nbsp;07</a><a href="https://www.instagram.com/ewen.studioes/" target="_blank" rel="noopener"><svg class="i"><use href="#ig"/></svg>@ewen.studioes</a></div>
   </div>
 </section>
-
 </main>
 
 <footer class="ft">
@@ -396,7 +366,7 @@
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="/apercu/reps.js?v=7"></script>
-<script src="/apercu/app.js?v=7"></script>
+<script src="{P}reps.js?v=7"></script>
+<script src="{P}app.js?v=7"></script>
 </body>
 </html>

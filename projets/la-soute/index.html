@@ -7,7 +7,7 @@
 <meta name="description" content="La Soute, salle de spectacle : identité visuelle, brochure de saison, affiches et site internet avec billetterie. Un projet Studio ES, basé en Bretagne.">
 <link rel="canonical" href="https://studioes.fr/projets/la-soute/">
 <meta name="robots" content="index, follow, max-image-preview:large">
-<meta name="theme-color" content="#121210">
+<meta name="theme-color" content="#F4F2ED">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta property="og:type" content="article">
@@ -260,6 +260,92 @@ ul.liv{margin:0;padding:0}
 .mq figcaption{margin-top:12px;padding:0 4px}
 .mq b{display:block;font:800 17px/1.15 var(--d);letter-spacing:-.02em}
 .mq span{display:block;margin-top:4px;font-size:13.5px;color:var(--mu);line-height:1.38}
+
+/* clair 2026 */
+:root{--bg:#F4F2ED;--s1:#FFFFFF;--s2:#ECE8DF;--tx:#141412;--mu:rgba(20,20,18,.64);--fa:rgba(20,20,18,.64);--ln:rgba(20,20,18,.1);--ac:#141412;--act:#FFFFFF;--pa:#171a52}
+.grain{opacity:.045}
+.top{background:rgba(244,242,237,.82);-webkit-backdrop-filter:saturate(1.6) blur(14px);backdrop-filter:saturate(1.6) blur(14px);box-shadow:0 1px 0 var(--ln)}
+.bk{background:#fff;box-shadow:inset 0 0 0 1px var(--ln);-webkit-backdrop-filter:none;backdrop-filter:none}
+.bk:hover{background:var(--s2)}
+.bt-g{background:#fff;box-shadow:inset 0 0 0 1px var(--ln)}.bt-g:hover{background:var(--s2)}.bt-g .o{background:var(--s2);color:var(--tx)}
+.bt-a .o{background:rgba(255,255,255,.14);color:#fff}
+.k span{background:#fff}
+.meta a{text-decoration-color:rgba(20,20,18,.3)}
+.n,.intro p .se{color:var(--pa)}
+.mail svg{color:var(--pa)}
+.steps li::before{background:color-mix(in srgb,var(--pa) 12%,transparent);color:var(--pa)}
+.fact,.liv li,.mq figure{box-shadow:0 1px 0 var(--ln),0 18px 40px -28px rgba(20,20,18,.25)}
+.brw{box-shadow:0 40px 90px -40px rgba(20,20,18,.45),0 0 0 1px rgba(20,20,18,.06)}
+.phn{box-shadow:0 40px 80px -30px rgba(20,20,18,.5),inset 0 0 0 1px rgba(255,255,255,.1)}
+.gal img,.gal3 img,.sto img{box-shadow:0 30px 70px -40px rgba(20,20,18,.45)}
+.shot{box-shadow:0 40px 90px -40px rgba(20,20,18,.5)}
+.stg .shot{box-shadow:0 -30px 80px -30px rgba(0,0,0,.5)}
+.mq.ct img{background:var(--s2)}
+.sw i{box-shadow:inset 0 0 0 1px rgba(20,20,18,.08)}
+.end{position:relative}
+.ft a:hover{color:var(--tx)}
+
+/* en-tête 2027 : barre du site, puis la fiche du projet façon nuancier */
+.top{height:64px;padding:0 var(--side);background:rgba(240,238,233,.62);-webkit-backdrop-filter:blur(22px) saturate(1.8);backdrop-filter:blur(22px) saturate(1.8);box-shadow:inset 0 -1px 0 rgba(20,20,20,.08)}
+.top.up{transform:none}
+.top .logo svg{width:14px;height:26px}
+.top .nav{position:absolute;left:50%;transform:translateX(-50%);display:flex;gap:2px}
+.top .nav a{padding:8px 14px;border-radius:999px;font-size:14.5px;font-weight:450;transition:background .25s}
+.top .nav a:hover{background:rgba(20,20,20,.06)}
+.top .cta{display:inline-flex;align-items:center;gap:10px;height:40px;padding:0 6px 0 16px;border-radius:999px;background:#141414;color:#fff;font-size:14.5px;font-weight:500}
+.top .cta i{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.16);font-style:normal}
+.top .cta svg{width:14px;height:14px}
+@media (max-width:860px){.top{height:56px;justify-content:center}.top .logo span,.top .nav,.top .cta{display:none}.top .logo svg{width:16px;height:30px}}
+.fh{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.12fr);gap:clamp(24px,4vw,64px);align-items:end;padding-top:clamp(96px,12vh,128px);padding-bottom:clamp(40px,5vw,72px)}
+.fh .fil{display:flex;gap:8px;font-size:14px;color:var(--mu);margin:0 0 20px}
+.fh .fil a:hover{color:var(--tx)}
+.fh h1{margin:0;font-size:clamp(52px,7.4vw,118px);line-height:.86;letter-spacing:-.06em}
+.fh h1 .se{display:block;margin-top:.16em;font-size:.36em;line-height:1.05;letter-spacing:-.02em;color:var(--mu)}
+.fh .k{margin:26px 0 0}
+.fh .k span{background:#fff;box-shadow:none}
+.fh .k span:first-child::before{background:var(--pc2)}
+.fh .meta{margin-top:26px;grid-template-columns:1fr;gap:12px;padding-top:18px}
+.fh .meta div{display:grid;grid-template-columns:8.5em 1fr;gap:12px}
+.fh .meta dt{margin:0}
+.cd{position:relative;isolation:isolate;aspect-ratio:1/.92;border-radius:clamp(24px,2.6vw,34px);background:radial-gradient(80% 70% at 85% 10%,color-mix(in srgb,var(--pc2) 32%,transparent),transparent 70%),var(--pc);display:grid;place-items:center;overflow:visible}
+.cd::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;opacity:.25;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.cd .chip{position:relative;width:68%;padding:10px;border-radius:22px;background:#fff;color:#141414;box-shadow:0 30px 60px -30px rgba(0,0,0,.45);transform:translateY(var(--cy,0)) rotate(-1.5deg);transition:transform .9s cubic-bezier(.16,1,.3,1)}
+.cd .win{aspect-ratio:1400/980;border-radius:14px;overflow:hidden;background:var(--pc)}
+.cd .win img{width:100%;height:100%;object-fit:cover}
+.cd .lab{display:flex;flex-direction:column;padding:16px 8px 6px}
+.cd .lab b{font:800 clamp(22px,2vw,28px)/1 var(--d);letter-spacing:-.05em}
+.cd .lab span{font-size:14px;color:rgba(20,20,20,.62);margin-top:6px}
+.cd .lab small{font-size:12.5px;font-weight:600;margin-top:2px;color:var(--pa)}
+.cd .out{position:absolute;z-index:2;right:9%;bottom:12%;width:19%;border-radius:clamp(14px,1.6vw,22px);padding:5px;background:#0e0e10;box-shadow:0 30px 50px -20px rgba(0,0,0,.6);transform:translateY(var(--py,0px)) rotate(4deg)}
+.cd .out img{border-radius:clamp(10px,1.2vw,17px);width:100%}
+@media (hover:hover){.cd:hover .chip{transform:translateY(-6px) rotate(0deg)}}
+@media (max-width:860px){.fh{grid-template-columns:1fr;align-items:start;padding-top:84px}.fh .meta div{grid-template-columns:1fr;gap:2px}.cd{aspect-ratio:1/.95}.cd .chip{width:76%}.cd .out{width:24%;right:5%}}
+
+/* allègement 2027 : rangées qui défilent, retour en haut, retour sur mobile */
+.lr{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:4px 0 10px;cursor:grab}
+.lr::-webkit-scrollbar{display:none}
+.lr>*{flex:0 0 auto;scroll-snap-align:start}
+.lr.id img{height:clamp(150px,15vw,210px);width:auto;max-width:none;border-radius:14px;box-shadow:none}
+ul.liv.lr{display:flex;margin:0;padding:4px 0 10px}
+ul.liv.lr li{width:clamp(230px,24vw,290px)}
+.top .ret{display:none}
+.haut-bt{position:fixed;z-index:59;right:20px;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.6);-webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);box-shadow:inset 0 0 0 1px rgba(255,255,255,.6),0 12px 30px -12px rgba(20,20,20,.35);color:#141414;opacity:0;transform:translateY(14px);pointer-events:none;transition:opacity .35s,transform .5s cubic-bezier(.34,1.4,.64,1)}
+.haut-bt.on{opacity:1;transform:none;pointer-events:auto}
+.haut-bt svg{width:18px;height:18px;transform:rotate(-90deg)}
+@media (max-width:860px){.top .ret{display:grid;place-items:center;position:absolute;left:var(--side);top:50%;margin-top:-19px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.7)}.top .ret svg{width:16px;height:16px;transform:rotate(180deg)}}
+@media (max-width:700px){
+  .ch{padding-block:48px}
+  .cascade,.gal,.gal3,.vfy,.sto{display:flex!important;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin-inline:calc(var(--g) * -1);padding:4px var(--g) 12px;align-items:flex-start}
+  .cascade::-webkit-scrollbar,.gal::-webkit-scrollbar,.gal3::-webkit-scrollbar,.vfy::-webkit-scrollbar,.sto::-webkit-scrollbar{display:none}
+  .cascade>*,.gal>*,.gal3>*{flex:0 0 80%;scroll-snap-align:start;transform:none!important;margin:0!important;grid-column:auto!important;max-width:none!important}
+  .gal3>img[style*="max-width"]{flex:0 0 42%}
+  .pair{display:block!important;position:relative;padding-bottom:16%}
+  .pair>.brw{width:86%;margin:0!important}
+  .pair>.phn{position:absolute!important;right:0;bottom:0;width:31%;margin:0!important;transform:rotate(3deg)!important;grid-column:auto!important}
+  .vfy>*{flex:0 0 40%;scroll-snap-align:start}
+  .sto>img{flex:0 0 46%;transform:none!important;scroll-snap-align:start}
+  .dev .phn{display:none}
+}
 </style>
 </head>
 <body>
@@ -271,24 +357,28 @@ ul.liv{margin:0;padding:0}
 <div class="grain" aria-hidden="true"></div>
 
 <header class="top" id="top">
-  <a class="logo" href="/" aria-label="Studio ES, accueil"><svg viewBox="0 0 98 186" aria-hidden="true"><use href="#logo"/></svg>Studio ES</a>
-  <a class="bk" href="/#travaux"><svg aria-hidden="true"><use href="#a"/></svg>Portfolio</a>
+  <a class="ret" href="/#realisations" aria-label="Retour"><svg aria-hidden="true"><use href="#a"/></svg></a>
+  <a class="logo" href="/" aria-label="Studio ES, accueil"><svg viewBox="0 0 98 186" aria-hidden="true"><use href="#logo"/></svg><span>Studio ES</span></a>
+  <nav class="nav" aria-label="Menu principal"><a href="/#photographie">Photographie</a><a href="/#web">Web</a><a href="/#contact">Contact</a></nav>
+  <a class="cta" href="/#devis">Demander un devis<i><svg aria-hidden="true"><use href="#a"/></svg></i></a>
 </header>
 
 <main>
-<section class="hero w" aria-labelledby="t">
-<div class="stg" style="--pc:#171a52;--pc2:#ff6b4f;--pc3:#ffe45c">
-  <div class="stg-bg" aria-hidden="true"><i></i><i></i></div>
-  
-  <div class="k"><span>Identité et site internet</span><span>Salle de spectacle</span></div>
-  <h1 class="d" id="t"><span class="ln"><span>La Soute</span></span><span class="ln"><span class="se">Une salle, un hublot, une saison.</span></span></h1>
-  <dl class="meta">
+<section class="fh w" aria-labelledby="t" style="--pc:#171a52;--pc2:#ff6b4f">
+  <div class="tx">
+    <p class="fil"><a href="/">Studio ES</a><span>/</span><a href="/#realisations">Réalisations</a></p>
+    <h1 class="d" id="t">La Soute<span class="se">Une salle, un hublot, une saison.</span></h1>
+    <div class="k"><span>Identité et site internet</span><span>Salle de spectacle</span></div>
+    <dl class="meta">
     <div><dt>Client</dt><dd>La Soute</dd></div>
     <div><dt>Intervention</dt><dd>Identité visuelle, brochure, affiches, site internet</dd></div>
     <div><dt>Discipline</dt><dd>Direction artistique, design, développement</dd></div>
   </dl>
-  <div class="dev"><div class="shot" data-r><img src="img/site.webp" width="1400" height="788" alt="Le site de La Soute sur ordinateur et sur téléphone : réservation d’un concert"></div></div>
-</div>
+  </div>
+  <div class="cd" data-r>
+    <div class="chip"><div class="win"><img src="img/cover.webp" width="1400" height="980" alt="Le site de La Soute sur ordinateur et téléphone"></div><div class="lab"><b>La Soute</b><span>Identité et site internet</span><small>Salle de spectacle</small></div></div>
+    
+  </div>
 </section>
 
 <div class="w">
@@ -344,20 +434,20 @@ ul.liv{margin:0;padding:0}
 
 </div>
 <section class="cqd" aria-labelledby="cqd" style="padding-top:0"><div class="w"><h2 class="d" id="cqd" data-r>Les livrables <span class="se">en images</span></h2></div>
-  <div class="cqd-w"><div class="mq ct" style="--ar:4/5"><figure><img src="img/soute-4.webp" alt="Construction du logo La Soute"><figcaption><b>Logo</b><span>Construit autour du hublot de la salle.</span></figcaption></figure><figure><img src="img/soute-1.webp" alt="Le logo sur les couleurs de la salle"><figcaption><b>Charte graphique</b><span>Palette, typographies et règles d’usage.</span></figcaption></figure><figure><img src="img/soute-7.webp" alt="Le pictogramme hublot"><figcaption><b>Pictogramme</b><span>Le hublot seul, pour les petits formats.</span></figcaption></figure><figure><img src="img/brochure.webp" alt="La brochure de saison"><figcaption><b>Brochure de saison</b><span>Mise en page complète, prête pour l’imprimeur.</span></figcaption></figure><figure><img src="img/soute-5.webp" alt="Couverture de la brochure"><figcaption><b>Couverture</b><span>La saison dans le hublot.</span></figcaption></figure><figure><img src="img/affiche.webp" alt="Affiche de concert"><figcaption><b>Affiches</b><span>Un gabarit par soirée, décliné pour les réseaux.</span></figcaption></figure><figure><img src="img/soute-6.webp" alt="Affiche Lame de fond"><figcaption><b>Temps forts</b><span>Une couleur par temps fort.</span></figcaption></figure><figure><img src="img/soute-9.webp" alt="Accueil du site"><figcaption><b>Site internet</b><span>Agenda de la saison et fiches concerts.</span></figcaption></figure><figure><img src="img/soute-8.webp" alt="Le site sur téléphone"><figcaption><b>Billetterie</b><span>Réservation des places sur téléphone.</span></figcaption></figure></div></div></section>
+  <div class="cqd-w" tabindex="0" role="region" aria-label="Livrables"><div class="mq ct" style="--ar:4/5"><figure><img src="img/soute-4.webp" alt="Construction du logo La Soute"><figcaption><b>Logo</b><span>Construit autour du hublot de la salle.</span></figcaption></figure><figure><img src="img/soute-1.webp" alt="Le logo sur les couleurs de la salle"><figcaption><b>Charte graphique</b><span>Palette, typographies et règles d’usage.</span></figcaption></figure><figure><img src="img/soute-7.webp" alt="Le pictogramme hublot"><figcaption><b>Pictogramme</b><span>Le hublot seul, pour les petits formats.</span></figcaption></figure><figure><img src="img/brochure.webp" alt="La brochure de saison"><figcaption><b>Brochure de saison</b><span>Mise en page complète, prête pour l’imprimeur.</span></figcaption></figure><figure><img src="img/soute-5.webp" alt="Couverture de la brochure"><figcaption><b>Couverture</b><span>La saison dans le hublot.</span></figcaption></figure><figure><img src="img/affiche.webp" alt="Affiche de concert"><figcaption><b>Affiches</b><span>Un gabarit par soirée, décliné pour les réseaux.</span></figcaption></figure><figure><img src="img/soute-6.webp" alt="Affiche Lame de fond"><figcaption><b>Temps forts</b><span>Une couleur par temps fort.</span></figcaption></figure><figure><img src="img/soute-9.webp" alt="Accueil du site"><figcaption><b>Site internet</b><span>Agenda de la saison et fiches concerts.</span></figcaption></figure><figure><img src="img/soute-8.webp" alt="Le site sur téléphone"><figcaption><b>Billetterie</b><span>Réservation des places sur téléphone.</span></figcaption></figure></div></div></section>
 
 <section class="end w" aria-labelledby="fin">
   <h2 class="d" id="fin" data-r>Une saison à habiller&#8239;? <span class="se">Parlons-en.</span></h2>
   <div class="bts" data-r>
-    <a class="bt bt-a" href="/#devis">Composer mon devis<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
-    <a class="bt bt-g" href="/#rdv">Réserver un appel<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
+    <a class="bt bt-a" href="/#devis">Demander un devis<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
+    <a class="bt bt-g" href="/#contact">Réserver un appel<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
   </div>
 </section>
 </main>
 
 <footer class="ft w">
   <span>© 2026 Studio ES, Ewen Soupault</span>
-  <span><a href="/">Accueil</a> · <a href="/#travaux">Portfolio</a> · <a href="https://www.instagram.com/ewen.studioes" target="_blank" rel="noopener">Instagram</a> · <a href="/#mentions">Mentions légales</a></span>
+  <span><a href="/">Accueil</a> · <a href="/#realisations">Réalisations</a> · <a href="https://www.instagram.com/ewen.studioes" target="_blank" rel="noopener">Instagram</a> · <a href="/#mentions">Mentions légales</a></span>
 </footer>
 
 <script>
@@ -415,6 +505,13 @@ ul.liv{margin:0;padding:0}
   fit(); if (document.fonts) document.fonts.ready.then(fit);
   let t; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(fit, 120); });
 })();
+</script>
+<button class="haut-bt" id="hautBt" aria-label="Revenir en haut de la page"><svg aria-hidden="true"><use href="#a"/></svg></button>
+<script>
+/* retour en haut, et retour à la page précédente sur mobile */
+(() => { const b = document.getElementById('hautBt'); addEventListener('scroll', () => b.classList.toggle('on', scrollY > innerHeight * 1.2), {passive: true}); b.addEventListener('click', () => scrollTo({top: 0, behavior: 'smooth'}));
+  const r = document.querySelector('.top .ret'); if (r) r.addEventListener('click', e => { if (document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1) { e.preventDefault(); history.back(); } });
+  document.querySelectorAll('.lr').forEach(l => { let x0 = 0, s0 = 0, bas = false, mv = false; l.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') return; bas = true; mv = false; x0 = e.clientX; s0 = l.scrollLeft; }); addEventListener('pointermove', e => { if (!bas) return; const d = e.clientX - x0; if (Math.abs(d) > 5) { mv = true; l.style.scrollSnapType = 'none'; l.scrollLeft = s0 - d; } }); addEventListener('pointerup', () => { if (bas) { bas = false; l.style.scrollSnapType = ''; } }); l.addEventListener('dragstart', e => e.preventDefault()); }); })();
 </script>
 </body>
 </html>
