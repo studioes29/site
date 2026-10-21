@@ -73,7 +73,7 @@
   const avancePuces = () => puces.forEach(D => { if (!D.ims.length) return; D.ims[D.k].classList.remove('on'); D.k = (D.k + 1) % D.ims.length; charge(D.ims[D.k]); D.ims[D.k].classList.add('on'); });
   const ban = $('#ban');
   if (ban) {
-    const ims = $$('.shot .ph img', ban), hT = $('#banH'), ro = $('#ro'), cpt = $('#cpt'), hud = $('.hud', ban), af = $('#af');
+    const ims = $$('.shot .ph img', ban), hT = $('#banH'), hud = $('.hud', ban), af = $('#af');
     let k = 0, n = 1, vis = true, tm = [];
     setTimeout(() => { ims.forEach(charge); puces.forEach(D => D.ims.forEach(charge)); }, 900);
     const plus = (f, ms) => tm.push(setTimeout(f, ms));
@@ -83,9 +83,9 @@
       const im = ims[k];
       if (!premier) { ims.forEach(x => x.classList.toggle('on', x === im)); charge(im); avancePuces(); }
       ban.classList.remove('site', 'net', 'clic'); ban.classList.add('flou');
-      ro.textContent = im.dataset.r; hT.textContent = im.dataset.h;
+      hT.textContent = im.dataset.h;
       plus(() => { ban.classList.remove('flou'); ban.classList.add('net'); }, premier ? 900 : 700);
-      plus(() => { ban.classList.add('clic'); n++; cpt.textContent = String(n).padStart(4, '0'); }, premier ? 1700 : 1450);
+      plus(() => { ban.classList.add('clic'); }, premier ? 1700 : 1450);
       plus(() => { ban.classList.remove('net', 'clic'); ban.classList.add('site'); }, premier ? 2150 : 1900);
       plus(() => { ban.classList.remove('site'); }, premier ? 6300 : 6050);
       plus(() => { k = (k + 1) % ims.length; tour(false); }, premier ? 7250 : 7000);
@@ -386,7 +386,6 @@
       const h = +rH.value, an = h * SEM, j = Math.round(an / 7);
       $('#cH').textContent = h + ' h'; remp(rH);
       prix($('#cAn'), an); prix($('#cJ'), j);
-      $('#cRet').innerHTML = `Décrivez la tâche : vous recevez une piste concrète et un prix.<small>Calcul indicatif sur ${SEM} semaines travaillées, journées de 7 h.</small>`;
     };
     rH.addEventListener('input', maj); maj();
   }
