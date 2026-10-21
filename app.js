@@ -73,7 +73,7 @@
   const avancePuces = () => puces.forEach(D => { if (!D.ims.length) return; D.ims[D.k].classList.remove('on'); D.k = (D.k + 1) % D.ims.length; charge(D.ims[D.k]); D.ims[D.k].classList.add('on'); });
   const ban = $('#ban');
   if (ban) {
-    const ims = $$('.shot .ph img', ban), hT = $('#banH'), hud = $('.hud', ban), af = $('#af');
+    const ims = $$('.shot .ph img', ban), hT = $('#banH');
     let k = 0, n = 1, vis = true, tm = [];
     setTimeout(() => { ims.forEach(charge); puces.forEach(D => D.ims.forEach(charge)); }, 900);
     const plus = (f, ms) => tm.push(setTimeout(f, ms));
@@ -85,7 +85,6 @@
       ban.classList.remove('site', 'net', 'clic'); ban.classList.add('flou');
       hT.textContent = im.dataset.h;
       plus(() => { ban.classList.remove('flou'); ban.classList.add('net'); }, premier ? 900 : 700);
-      plus(() => { ban.classList.add('clic'); }, premier ? 1700 : 1450);
       plus(() => { ban.classList.remove('net', 'clic'); ban.classList.add('site'); }, premier ? 2150 : 1900);
       plus(() => { ban.classList.remove('site'); }, premier ? 6300 : 6050);
       plus(() => { k = (k + 1) % ims.length; tour(false); }, premier ? 7250 : 7000);
@@ -93,9 +92,6 @@
     if (!reduit) {
       new IntersectionObserver(e => { vis = e[0].isIntersecting; }, { threshold: .15 }).observe(ban);
       tour(true);
-      /* sur ordinateur, le collimateur suit la souris dans le cadre */
-      if (!tactile) ban.addEventListener('pointermove', e => { const r = hud.getBoundingClientRect(); af.style.setProperty('--ax', clamp(e.clientX - r.left, 50, r.width - 50) + 'px'); af.style.setProperty('--ay', clamp(e.clientY - r.top, 36, r.height - 36) + 'px'); });
-      if (!tactile) ban.addEventListener('pointerleave', () => { af.style.removeProperty('--ax'); af.style.removeProperty('--ay'); });
     }
   }
 
@@ -113,7 +109,7 @@
     else v = null;
     return { k, f, o, mois, achat, ph: k === 'site' && swPh && swPh.checked, v };
   };
-  const repere = c => { const s = $('.sel', c); if (!s) return; const b = $('[aria-checked="true"]', s); if (!b) return; s.style.setProperty('--y', b.offsetTop + 'px'); s.style.setProperty('--h', b.offsetHeight + 'px'); };
+  const repere = c => { const s = $('.sel', c); if (!s) return; const b = $('[aria-checked="true"]', s); if (!b) return; s.style.setProperty('--y', b.offsetTop + 'px'); s.style.setProperty('--h', b.offsetHeight + 'px'); s.style.setProperty('--x', b.offsetLeft + 'px'); s.style.setProperty('--w', b.offsetWidth + 'px'); const dd = $('[data-dd]', c); if (dd && b.dataset.d) dd.textContent = b.dataset.d; };
   const majCarte = c => {
     const E = etatCarte(c); prix($('.prix', c), E.v);
     const u = $('[data-u]', c); if (u) u.textContent = E.mois ? '€/mois' : '€/an';
@@ -375,19 +371,6 @@
       }
     });
     $$('[data-est]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); ouvreDevis(null); }));
-  }
-
-  /* combien de temps une application ferait gagner */
-  const cal = $('#calc');
-  if (cal) {
-    const rH = $('#rH'), SEM = 47;
-    const remp = r => r.style.setProperty('--p', ((r.value - r.min) / (r.max - r.min) * 100) + '%');
-    const maj = () => {
-      const h = +rH.value, an = h * SEM, j = Math.round(an / 7);
-      $('#cH').textContent = h + ' h'; remp(rH);
-      prix($('#cAn'), an); prix($('#cJ'), j);
-    };
-    rH.addEventListener('input', maj); maj();
   }
 
   /* message libre */

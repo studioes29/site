@@ -723,3 +723,34 @@ p.inc svg{margin-top:2px}
   .of.ph .pied{padding-top:12px}
   .of.ph .kic{font-size:11.5px;padding:4px 9px}
 }
+
+/* ===== 2027.6 ===== */
+/* cartes photo construites comme les cartes web : titre, description, un choix, prix, contenu, bouton */
+.of.ph .im{aspect-ratio:5/2}
+.of.ph .lab{padding:18px 12px 10px}
+.of.ph .ds{display:block;margin-top:8px}
+.of.ph .sel.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:0;margin-top:16px;padding:3px;border-radius:999px;background:var(--paper)}
+.of.ph .sel.seg .ind{display:block;left:0;right:auto;top:3px;bottom:3px;height:auto;width:var(--w,33%);transform:translateX(var(--x,3px));border-radius:999px;transition:transform .5s var(--sp),width .4s var(--e)}
+.of.ph .sel.seg button{justify-content:center;padding:9px 6px;border-radius:999px;box-shadow:none;background:none;font-size:13.5px;font-weight:500;white-space:nowrap;color:var(--mu)}
+.of.ph .sel.seg button[aria-checked="true"]{color:#fff;background:none}
+.of.ph.rec .sel.seg{background:rgba(255,255,255,.09)}
+.of.ph.rec .sel.seg button{color:rgba(255,255,255,.7);box-shadow:none}
+.of.ph.rec .sel.seg button[aria-checked="true"]{color:var(--ink);background:none}
+.of.ph .px{margin-top:16px}
+.of.ph .dt{min-height:2.9em}
+.of.ph .inc{margin-top:12px}
+.of.ph .pied{padding-top:18px}
+@media (max-width:860px){
+  .of.ph .im{aspect-ratio:5/2}
+  .of.ph .lab{padding:14px 8px 6px}
+  .of.ph .ds{display:block;font-size:14px}
+  .of.ph p.inc{display:none}
+  .of.ph .sel.seg button{font-size:13px;padding:8px 4px}
+  .of.ph .px{margin-top:12px}
+  .of.ph .inc li{font-size:13.5px}
+}
+/* exemples d'applications : verso sans intitulé */
+.fb .so::before{content:none}
+/* bannière sobre : un fond uni, la mise au point puis la page */
+.ban::before{display:none}
+.ban.site .shot{box-shadow:0 40px 90px -30px rgba(0,0,0,.7)}
