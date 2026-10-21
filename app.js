@@ -75,6 +75,29 @@
   if (ban) {
     const ims = $$('.shot .ph img', ban), hT = $('#banH');
     let k = 0, n = 1, vis = true, tm = [];
+    /* cadrage dans la fenêtre du site : chaque photo est réduite et recentrée sur son sujet (data-f), sans laisser de vide */
+    const ui = $('.shot .ui', ban), bar = $('.shot .bar', ban);
+    const cadre = () => {
+      const W = ban.clientWidth, H = ban.clientHeight; if (!W || !ui) return;
+      const bh = bar ? bar.offsetHeight : 0;
+      const L = ui.offsetLeft, T = ui.offsetTop + bh, R = L + ui.offsetWidth, B = ui.offsetTop + ui.offsetHeight;
+      const cx = (L + R) / 2, cy = (T + B) / 2;
+      ims.forEach(im => {
+        const nw = im.naturalWidth, nh = im.naturalHeight; if (!nw || nw < 4) return;
+        const f = (im.dataset.f || '.5 .45').split(' ').map(Number), q = Math.max(W / nw, H / nh);
+        const fx = (W - nw * q) / 2 + f[0] * nw * q, fy = (H - nh * q) / 2 + f[1] * nh * q;
+        let s = Math.max((cx - L) / fx, (R - cx) / (W - fx), (cy - T) / fy, (B - cy) / (H - fy), .2);
+        s = Math.min(s, 1);
+        /* le sujet arrive au centre de la fenêtre ; bords recalés pour qu'aucun vide n'apparaisse */
+        let gx = cx - s * fx, gy = cy - s * fy;
+        gx = Math.min(L, Math.max(R - s * W, gx)); gy = Math.min(T, Math.max(B - s * H, gy));
+        const tx = gx - W / 2 + s * W / 2, ty = gy - H / 2 + s * H / 2;
+        im.style.setProperty('--tx', tx.toFixed(1) + 'px'); im.style.setProperty('--ty', ty.toFixed(1) + 'px'); im.style.setProperty('--s', s.toFixed(4));
+      });
+    };
+    ims.forEach(im => im.addEventListener('load', cadre));
+    addEventListener('resize', () => { clearTimeout(cadre.t); cadre.t = setTimeout(cadre, 150); });
+    cadre();
     /* chaque photo est chargée juste avant son tour, pas toutes au démarrage */
     setTimeout(() => charge(ims[1]), 2500);
     const plus = (f, ms) => tm.push(setTimeout(f, ms));

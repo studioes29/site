@@ -780,3 +780,7 @@ p.inc svg{margin-top:2px}
 .chips button small{opacity:1;color:currentColor}
 .chips button:not([aria-pressed="true"]) small{color:var(--mu)}
 .chips button[aria-pressed="true"] small{color:rgba(255,255,255,.75)}
+
+/* 2027.7 : cadrage des photos dans la fenêtre du site, calculé sur le sujet de chaque photo */
+.shot .ph img{transform-origin:50% 50%}
+.ban.site .shot .ph img{transform:translate(var(--tx,0px),var(--ty,0px)) scale(var(--s,var(--sc)))}
