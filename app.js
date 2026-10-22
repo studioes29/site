@@ -437,3 +437,7 @@
   if (H === '#mentions') { const b = document.querySelector('[data-legal]'); if (b) setTimeout(() => b.click(), 300); return; }
   if (H === '#devis' || H === '#estimer') { const b = document.querySelector('[data-est]'); if (b) setTimeout(() => b.click(), 300); return; }
   const m = { '#rdv': 'contact', '#offre': 'photographie', '#offres': 'photographie' }[H]; const t = m && document.getElementById(m); if (t) setTimeout(() => t.scrollIntoView(), 200); })();
+
+/* bannière : fondu entre les photos, une toutes les 5 secondes */
+(function(){var f=document.querySelector('.h2p');if(!f||matchMedia('(prefers-reduced-motion: reduce)').matches)return;var im=[].slice.call(f.querySelectorAll('img')),c=document.getElementById('h2c'),k=0;
+setInterval(function(){if(document.hidden)return;im[k].classList.remove('on');k=(k+1)%im.length;im[k].classList.add('on');c.textContent=im[k].dataset.c;},5000);})();
