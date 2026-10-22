@@ -321,7 +321,7 @@
     app: { l: 'Une application', g: 'Web', ic: 'pl', f: { l: 'Projet', o: [['Devis en ligne', [190, 85, 1090]], ['Application web', [390, 150, 2790]], ['Avec automatisations', [790, 250, 5490]], ['Une idée à préciser', null, 'On en parle']] }, p: { l: 'Formule', o: [['Abonnement', 'engagement de 18 mois'], ['Achat', 'l’application vous appartient']] } }
   };
   const estB = $('#estB'), estF = $('#estF');
-  let ES = { e: 0, k: null, f: 0, o: [], p: 0, j: 1, c: {} };
+  let ES = { e: 0, k: null, f: 0, o: [], p: 0, j: 1, c: {}, d: 5 };
   const calc = () => {
     if (!ES.k) return null; const P = PJ[ES.k], f = P.f.o[ES.f]; let a = 0, m = 0, dv = false, per = ''; const L = [f[0]];
     if (ES.k === 'annee') { if (f[1] == null) dv = true; else if (ES.p) { m = f[1][1]; per = 'par mois, sur 12 mois'; } else { a = f[1][0]; per = 'par an'; } if (f[1]) L.push(ES.p ? 'paiement au mois' : 'paiement à l’année'); }
@@ -331,6 +331,47 @@
     return { a, m, dv, per, L };
   };
   const txtEst = r => !r ? '' : (r.a || r.m) ? `dès ${fmt(r.a || r.m)} €${r.a && r.m ? `, puis ${fmt(r.m)} € par mois` : r.per ? ' ' + r.per : ''}${r.dv ? ', plus une partie sur devis' : ''}` : 'sur devis';
+
+  /* frise de date du devis */
+  const MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+  const NM = 24, M0 = (() => { const n = new Date(); return { a: n.getFullYear(), m: n.getMonth() }; })();
+  const moisDe = i => { const t = M0.m + i; return { a: M0.a + Math.floor(t / 12), m: t % 12 }; };
+  const libM = i => { const x = moisDe(i); return MOIS[x.m][0].toUpperCase() + MOIS[x.m].slice(1) + ' ' + x.a; };
+  const delai = i => i === 0 ? 'ce mois-ci' : i === 1 ? 'le mois prochain' : `dans ${i} mois`;
+  const conseil = (k, i) => {
+    if (i == null) return 'Aucun souci : la date se cale ensemble, au moment du devis.';
+    const ete = [4, 5, 6, 7, 8].includes(moisDe(i).m);
+    if (k === 'mariage') return i < 3 ? 'Délai court : la disponibilité est vérifiée dès réception de la demande.' : i < 9 ? (ete ? 'Bon délai, sur une période très demandée : mieux vaut bloquer la date sans attendre.' : 'Bon délai : le temps de se rencontrer et de préparer la journée.') : 'La date est bloquée dès l’acompte versé, rien d’autre à prévoir d’ici là.';
+    return i === 0 ? 'Ce mois-ci : la disponibilité est confirmée sous 48 h.' : i < 3 ? 'Bon délai pour préparer le repérage et le déroulé.' : (ete ? 'Saison des festivals : la date est bloquée dès l’acompte versé.' : 'La date est bloquée dès l’acompte versé.');
+  };
+  const friseH = k => {
+    let t = '', l = '';
+    for (let i = 0; i < NM; i++) { const x = moisDe(i); t += `<i class="${x.m === 0 || i === 0 ? 'a' : ''}"></i>`; if (x.m === 0) l += `<span style="left:${(i + .5) / NM * 100}%">${x.a}</span>`; }
+    l = `<span style="left:${.5 / NM * 100}%">Auj.</span>` + l;
+    return `<div class="q"><p>Quand&nbsp;?</p><div class="frise" id="frise">
+      <div class="fr-h"><b class="d" id="frM"></b><span id="frD"></span></div>
+      <div class="fr-r" id="frR" role="slider" tabindex="0" aria-label="Mois de l’événement" aria-valuemin="0" aria-valuemax="${NM - 1}"><div class="fr-t" style="--n:${NM}">${t}</div><div class="fr-l">${l}</div></div>
+      <p class="fr-n" id="frN"></p>
+      <button type="button" class="fr-x" data-nd>Date pas encore fixée</button></div></div>`;
+  };
+  const friseMaj = () => {
+    const f = $('#frise'); if (!f) return; const i = ES.d, nd = i == null;
+    f.classList.toggle('nd', nd);
+    $('#frM').textContent = nd ? 'À définir' : libM(i);
+    $('#frD').textContent = nd ? '' : delai(i);
+    $('#frN').textContent = conseil(ES.k, i);
+    $$('#frR .fr-t i').forEach((x, k) => { x.classList.toggle('on', k === i); x.classList.toggle('av', !nd && k < i); });
+    const r = $('#frR'); r.setAttribute('aria-valuenow', nd ? 0 : i); r.setAttribute('aria-valuetext', nd ? 'Date à définir' : libM(i));
+    $('[data-nd]', f).textContent = nd ? 'Choisir un mois' : 'Date pas encore fixée';
+  };
+  const friseLie = () => {
+    const r = $('#frR'); if (!r) return;
+    const pose = e => { const b = r.getBoundingClientRect(); const i = Math.max(0, Math.min(NM - 1, Math.floor((e.clientX - b.left) / b.width * NM))); if (i !== ES.d) { ES.d = i; friseMaj(); if (navigator.vibrate) try { navigator.vibrate(4); } catch (x) {} } };
+    r.addEventListener('pointerdown', e => { r.setPointerCapture(e.pointerId); pose(e); const mv = ev => pose(ev), up = () => { r.removeEventListener('pointermove', mv); r.removeEventListener('pointerup', up); }; r.addEventListener('pointermove', mv); r.addEventListener('pointerup', up); });
+    r.addEventListener('keydown', e => { const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (!d) return; e.preventDefault(); ES.d = Math.max(0, Math.min(NM - 1, (ES.d == null ? 0 : ES.d) + d)); friseMaj(); });
+    friseMaj();
+  };
+  const moisTxt = () => ES.d == null ? '' : MOIS[moisDe(ES.d).m] + ' ' + moisDe(ES.d).a;
   let dernier = null;
   const pied = () => {
     const r = calc(), cible = r ? (r.a || r.m || null) : null;
@@ -352,26 +393,36 @@
     } else if (ES.e === 1) {
       const P = PJ[ES.k];
       h += `<div class="q"><p>${P.l}</p></div><div class="q"><p>${P.f.l}</p><div class="opts">${P.f.o.map((o, i) => { const pr = o[1] == null ? 'sur devis' : Array.isArray(o[1]) ? (ES.k === 'app' ? (ES.p ? `dès ${fmt(o[1][2])} €` : `dès ${fmt(o[1][0])} €, puis ${o[1][1]} €/mois`) : (ES.p ? `dès ${o[1][1]} € par mois` : `dès ${fmt(o[1][0])} € par an`)) : `dès ${fmt(o[1])} €`; return `<button data-f="${i}" aria-pressed="${ES.f === i}">${o[0]}${o[2] ? `<small>${o[2]}</small>` : ''}<em>${pr}</em></button>`; }).join('')}</div></div>`;
+      if (P.date) h += friseH(ES.k);
       const f = P.f.o[ES.f]; if (f[3] === 'j') h += `<div class="q"><p>Nombre de jours</p><div class="opts" style="grid-template-columns:repeat(5,1fr)">${[1, 2, 3, 4, 5].map(j => `<button data-j="${j}" aria-pressed="${ES.j === j}" style="align-items:center">${j}</button>`).join('')}</div></div>`;
       if (P.p && f[1] != null) h += `<div class="q"><p>${P.p.l}</p><div class="opts">${P.p.o.map((o, i) => `<button data-p="${i}" aria-pressed="${ES.p === i}">${o[0]}<small>${o[1]}</small></button>`).join('')}</div></div>`;
       if (P.o) h += `<div class="q"><p>${P.o.l} (facultatif)</p><div class="opts">${P.o.o.map((o, i) => `<button data-o="${i}" aria-pressed="${ES.o.includes(i)}">${o[0]}<em>${o[1] == null ? 'sur devis' : '+' + fmt(o[1]) + ' €'}</em></button>`).join('')}</div></div>`;
     } else if (ES.e === 2) {
       const P = PJ[ES.k], r = calc(), c = ES.c, q = s => (s || '').replace(/"/g, '&quot;');
-      h += `<div class="recap"><b>${P.l}</b>${r.L.join(' · ')}<br>Estimation : ${txtEst(r)}</div><div class="form" style="margin-top:16px">
+      if (P.date && ES.d != null && !c.date) c.date = moisTxt().replace(/^./, m => m.toUpperCase()) + ', ';
+      h += `<div class="recap"><b>${P.l}</b>${r.L.concat(P.date && ES.d != null ? [moisTxt()] : []).join(' · ')}<br>Estimation : ${txtEst(r)}</div><div class="form" style="margin-top:16px">
         <label>Nom, structure<input id="eNom" autocomplete="name" value="${q(c.nom)}"></label>
         <label>E-mail<input id="eMail" type="email" autocomplete="email" value="${q(c.mail)}"></label>
         <label>Téléphone, si vous préférez être rappelé<input id="eTel" type="tel" autocomplete="tel" value="${q(c.tel)}"></label>
         ${P.date || ES.k === 'annee' ? `<label>${ES.k === 'annee' ? 'Vos temps forts de l’année, même approximatifs' : 'Date et lieu, même approximatifs'}<input id="eDate" value="${q(c.date)}"></label>` : ''}
         <label>Précisions<textarea id="eMsg" placeholder="Facultatif">${c.msg || ''}</textarea></label></div>`;
     } else {
-      h += `<div class="fini"><span class="ok-i">${ico('ok')}</span><h3>Demande envoyée.</h3><p>Réponse sous 48 h avec un devis détaillé.<br>Pour aller plus vite, un appel de 30 min est possible.</p><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:22px"><button class="bt" data-cal>Réserver un appel <span class="ar">${ico('ar')}</span></button><button class="bt cl" data-close>Fermer</button></div></div>`;
+      { const P = PJ[ES.k], r = calc(), mo = P.date ? moisTxt() : '', prem = (ES.c.nom || '').split(/[\s,]/)[0];
+      const etapes = [
+        ['Aujourd’hui', `Demande reçue : ${P.l.toLowerCase()}${mo ? ', ' + mo : ''}.`],
+        ['Sous 48 h', `Un devis détaillé, ${(r.a || r.m) ? 'sur la base de l’estimation ' + txtEst(r) : 'chiffré selon votre besoin'}.`],
+        ['À la signature', P.date ? 'Acompte de 30 % en ligne : la date vous est réservée.' : ES.k === 'app' && !ES.p ? 'Devis accepté : le projet démarre, sans mensualité d’avance.' : 'Acompte de 30 % en ligne : le projet démarre.']
+      ];
+      h += `<div class="fin2"><span class="ok-i">${ico('ok')}</span><h3 class="d">Merci${prem ? ' ' + prem.replace(/</g, '') : ''}.<span class="it">La suite, étape par étape.</span></h3>
+        <ol class="suite">${etapes.map((e, k) => `<li class="${k ? '' : 'on'}" style="--k:${k}"><b>${e[0]}</b><span>${e[1]}</span></li>`).join('')}</ol>
+        <div class="act2"><button class="bt" data-cal>Réserver un appel <span class="ar">${ico('ar')}</span></button><button class="bt cl" data-close>Fermer</button></div></div>`; }
     }
-    estB.innerHTML = h; estB.scrollTop = 0; pied();
+    estB.innerHTML = h; estB.scrollTop = 0; pied(); friseLie();
     $$('[data-close]', estB).forEach(b => b.addEventListener('click', fermeF));
   };
   const garde = () => { const g = id => { const e = $('#' + id); return e ? e.value.trim() : ''; }; if (ES.e === 2) ES.c = { nom: g('eNom'), mail: g('eMail'), tel: g('eTel'), date: g('eDate'), msg: g('eMsg') }; };
   const ouvreDevis = s => {
-    if (ES.e === 3) ES = { e: 0, k: null, f: 0, o: [], p: 0, j: 1, c: ES.c };
+    if (ES.e === 3) ES = { e: 0, k: null, f: 0, o: [], p: 0, j: 1, c: {}, d: 5 };
     if (s && s.k && PJ[s.k]) { ES.k = s.k; ES.f = s.f || 0; ES.o = (s.o || []).slice(); ES.j = 1; ES.p = s.k === 'app' ? (s.achat ? 1 : 0) : (s.mois ? 1 : 0); if (s.ph) ES.o = [0]; ES.e = 1; }
     else if (!ES.k) ES.e = 0;
     dernier = null; rendE(); ouvreF('#shE'); compte('/devis', 'Ouverture du devis');
@@ -380,6 +431,7 @@
     estB.addEventListener('click', e => {
       const b = e.target.closest('button'); if (!b) return; const d = b.dataset;
       if (d.k) { ES.k = d.k; ES.f = 0; ES.o = []; ES.p = 0; ES.j = 1; ES.e = 1; rendE(); compte('/devis/' + d.k, 'Devis : ' + PJ[d.k].l); return; }
+      if (d.nd != null) { ES.d = ES.d == null ? 5 : null; friseMaj(); return; }
       if (d.f != null) ES.f = +d.f; else if (d.p != null) ES.p = +d.p; else if (d.j) ES.j = +d.j; else if (d.o != null) { const i = +d.o; ES.o = ES.o.includes(i) ? ES.o.filter(x => x !== i) : [...ES.o, i]; } else return;
       const y = estB.scrollTop; rendE(); estB.scrollTop = y;
     });
@@ -391,7 +443,7 @@
         if (!c.nom) { toast('Indiquez votre nom ou celui de votre structure.'); $('#eNom').focus(); return; }
         if (!mailOk(c.mail)) { toast('Cette adresse e-mail semble incomplète.'); $('#eMail').focus(); return; }
         const P = PJ[ES.k], r = calc(); b.disabled = true;
-        try { await envoie({ _subject: 'Demande de devis : ' + P.l.toLowerCase(), Projet: P.l, 'Détail': r.L.join(', '), Estimation: txtEst(r), Nom: c.nom, Email: c.mail, 'Téléphone': c.tel, 'Date et lieu': c.date || '', Message: c.msg || '' }); ES.e = 3; rendE(); compte('/devis/envoye', 'Demande de devis envoyée'); }
+        try { await envoie({ _subject: 'Demande de devis : ' + P.l.toLowerCase(), Projet: P.l, 'Détail': r.L.join(', '), Estimation: txtEst(r), Nom: c.nom, Email: c.mail, 'Téléphone': c.tel, 'Date et lieu': c.date || '', Message: c.msg || '' }); ES.e = 3; if (!reduit) { const fl = document.createElement('div'); fl.className = 'flash'; document.body.appendChild(fl); setTimeout(() => fl.remove(), 600); } rendE(); compte('/devis/envoye', 'Demande de devis envoyée'); }
         catch (er) { b.disabled = false; toast('L’envoi a échoué. Écrivez à contact@studioes.fr.'); }
       }
     });
