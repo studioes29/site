@@ -353,7 +353,13 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
   .sto>img{flex:0 0 46%;transform:none!important;scroll-snap-align:start}
   .dev .phn{display:none}
 }
-@view-transition{navigation:auto}.fh .win img{view-transition-name:projet}::view-transition-group(projet){animation-duration:.7s;animation-timing-function:cubic-bezier(.7,0,.16,1)}::view-transition-old(projet),::view-transition-new(projet){height:100%;object-fit:cover;overflow:clip}@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}</style>
+@view-transition{navigation:auto}.fh .win img{view-transition-name:projet}::view-transition-group(projet){animation-duration:.7s;animation-timing-function:cubic-bezier(.7,0,.16,1)}::view-transition-old(projet),::view-transition-new(projet){height:100%;object-fit:cover;overflow:clip}@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}.bref{width:min(100% - 2*var(--g,24px),1360px);margin:clamp(30px,4vw,60px) auto clamp(10px,2vw,30px);display:grid;grid-template-columns:1.4fr 1.2fr .8fr;gap:0;border-top:1px solid rgba(32,32,32,.14);border-bottom:1px solid rgba(32,32,32,.14)}
+.bref>div{padding:22px 24px 24px 0}.bref>div+div{padding-left:24px;border-left:1px solid rgba(32,32,32,.14)}
+.bref dt{font-size:12.5px;font-weight:600;opacity:.6;margin-bottom:8px}.bref dd{margin:0;font-size:16px;line-height:1.5}
+.bref .dis{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:10px}.bref .dis em{display:inline-flex;align-items:center;gap:6px;font-style:normal;font-size:13.5px;font-weight:500}.bref .dis em::before{content:"";width:12px;height:12px;border-radius:3px;background:var(--kc)}
+.bref .nb{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(30px,3vw,44px);letter-spacing:-.03em;line-height:1}
+@media (max-width:860px){.bref{grid-template-columns:1fr}.bref>div,.bref>div+div{padding:18px 0;border-left:0}.bref>div+div{border-top:1px solid rgba(32,32,32,.14)}}
+@view-transition{navigation:auto}</style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -387,6 +393,8 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
     
   </div>
 </section>
+<section class="bref" aria-label="Le projet en bref"><div><dl><dt>Contexte</dt><dd>Une application de budget personnel, pensée pour le téléphone : suivre son solde, ses enveloppes et ses objectifs d’épargne sans tableur.</dd></dl></div><div><dl><dt>Le travail réalisé</dt><dd>Nom, identité, conception des parcours, design d’interface et développement de l’application.</dd></dl><p class="dis"><em style="--kc:#5B4EB0">Web</em><em style="--kc:#B5583F">Design graphique</em></p></div><div><dl><dt>Supports produits</dt><dd class="nb">8 écrans clés</dd></dl></div></section>
+
 
 <div class="w">
 <section class="ch" aria-labelledby="c1">
@@ -428,14 +436,14 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
 </section>
 
 </div>
-<section class="cqd" aria-labelledby="cqd" style="padding-top:0"><div class="w"><h2 class="d" id="cqd" data-r>Les livrables <span class="se">en images</span></h2></div>
+<section class="cqd" aria-labelledby="cqd" style="padding-top:0"><div class="w"><h2 class="d" id="cqd" data-r>Les supports <span class="se">produits</span></h2></div>
   <div class="cqd-w" tabindex="0" role="region" aria-label="Livrables"><div class="mq" style="--ar:3/4"><figure><img src="img/main.webp" alt="Écran d’ouverture" loading="lazy" decoding="async"><figcaption><b>Identité</b><span>Nom, logotype, icône et palette.</span></figcaption></figure><figure><img src="img/tableau.webp" alt="Tableau de bord" loading="lazy" decoding="async"><figcaption><b>Tableau de bord</b><span>Solde et projection de fin de mois.</span></figcaption></figure><figure><img src="img/categories.webp" alt="Catégories" loading="lazy" decoding="async"><figcaption><b>Catégories</b><span>Le budget, poste par poste.</span></figcaption></figure><figure><img src="img/budget.webp" alt="Écrans budget" loading="lazy" decoding="async"><figcaption><b>Budget</b><span>Classique ou inversé.</span></figcaption></figure><figure><img src="img/objectifs.webp" alt="Objectifs" loading="lazy" decoding="async"><figcaption><b>Objectifs</b><span>L’épargne qui avance.</span></figcaption></figure><figure><img src="img/semaine.webp" alt="Résumé de la semaine" loading="lazy" decoding="async"><figcaption><b>Résumé de la semaine</b><span>Dépenses par jour et par catégorie.</span></figcaption></figure><figure><img src="img/evolution.webp" alt="Évolution" loading="lazy" decoding="async"><figcaption><b>Évolution</b><span>Six mois en un coup d’œil.</span></figcaption></figure><figure><img src="img/transactions.webp" alt="Transactions" loading="lazy" decoding="async"><figcaption><b>Application</b><span>Une version installable sur téléphone.</span></figcaption></figure></div></div></section>
 
 <section class="end w" aria-labelledby="fin">
   <h2 class="d" id="fin" data-r>Une application à imaginer&#8239;? <span class="se">Parlons-en.</span></h2>
   <div class="bts" data-r>
     <a class="bt bt-a" href="/#devis">Demander un devis<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
-    <a class="bt bt-g" href="/#contact">Réserver un appel<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
+    <a class="bt bt-g" href="/#cal">Réserver un appel<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
   </div>
 </section>
 </main>

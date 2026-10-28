@@ -1,30 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-  <url><loc>https://studioes.fr/</loc><lastmod>2026-10-28</lastmod><priority>1.0</priority>
+  <url><loc>https://studioes.fr/</loc><lastmod>2026-10-29</lastmod><priority>1.0</priority>
     <image:image><image:loc>https://studioes.fr/og.jpg</image:loc></image:image>
-    <image:image><image:loc>https://studioes.fr/h/mariage-1600.webp</image:loc></image:image>
-    <image:image><image:loc>https://studioes.fr/h/festival-1600.webp</image:loc></image:image>
+    <image:image><image:loc>https://studioes.fr/h/hx-photo.webp</image:loc></image:image>
   </url>
-  <url><loc>https://studioes.fr/metiers/photographie/</loc><lastmod>2026-10-28</lastmod><priority>0.9</priority>
-    <image:image><image:loc>https://studioes.fr/h/mariage-1600.webp</image:loc></image:image>
+  <url><loc>https://studioes.fr/metiers/photographie/</loc><lastmod>2026-10-29</lastmod><priority>0.9</priority>
+    <image:image><image:loc>https://studioes.fr/og-photo.jpg</image:loc></image:image>
+    <image:image><image:loc>https://studioes.fr/p/philippe-katerine-2.jpg</image:loc></image:image>
+    <image:image><image:loc>https://studioes.fr/p/gael-faye-1.jpg</image:loc></image:image>
   </url>
-  <url><loc>https://studioes.fr/metiers/sites-et-outils/</loc><lastmod>2026-10-28</lastmod><priority>0.9</priority>
+  <url><loc>https://studioes.fr/metiers/sites-et-outils/</loc><lastmod>2026-10-29</lastmod><priority>0.9</priority>
+    <image:image><image:loc>https://studioes.fr/og-web.jpg</image:loc></image:image>
     <image:image><image:loc>https://studioes.fr/projets/pierceval-tattoo/img/cover.webp</image:loc></image:image>
   </url>
-  <url><loc>https://studioes.fr/projets/pierceval-tattoo/</loc><lastmod>2026-10-28</lastmod><priority>0.7</priority>
-    <image:image><image:loc>https://studioes.fr/projets/pierceval-tattoo/img/og.jpg</image:loc></image:image>
+  <url><loc>https://studioes.fr/metiers/graphisme/</loc><lastmod>2026-10-29</lastmod><priority>0.9</priority>
+    <image:image><image:loc>https://studioes.fr/projets/la-soute/img/affiche.webp</image:loc></image:image>
+    <image:image><image:loc>https://studioes.fr/projets/mjc-la-marelle/img/cover.webp</image:loc></image:image>
   </url>
-  <url><loc>https://studioes.fr/projets/la-soute/</loc><lastmod>2026-10-28</lastmod><priority>0.7</priority>
+  <url><loc>https://studioes.fr/offres/</loc><lastmod>2026-10-29</lastmod><priority>0.8</priority></url>
+  <url><loc>https://studioes.fr/realisations/</loc><lastmod>2026-10-29</lastmod><priority>0.8</priority></url>
+  <url><loc>https://studioes.fr/projets/pierceval-tattoo/</loc><lastmod>2026-10-29</lastmod><priority>0.7</priority>
+    <image:image><image:loc>https://studioes.fr/projets/pierceval-tattoo/img/og.webp</image:loc></image:image>
+  </url>
+  <url><loc>https://studioes.fr/projets/la-soute/</loc><lastmod>2026-10-29</lastmod><priority>0.7</priority>
     <image:image><image:loc>https://studioes.fr/projets/la-soute/img/og.jpg</image:loc></image:image>
   </url>
-  <url><loc>https://studioes.fr/projets/flouz/</loc><lastmod>2026-10-28</lastmod><priority>0.7</priority>
+  <url><loc>https://studioes.fr/projets/flouz/</loc><lastmod>2026-10-29</lastmod><priority>0.7</priority>
     <image:image><image:loc>https://studioes.fr/projets/flouz/img/og.jpg</image:loc></image:image>
   </url>
-  <url><loc>https://studioes.fr/projets/fl-auto/</loc><lastmod>2026-10-28</lastmod><priority>0.7</priority>
+  <url><loc>https://studioes.fr/projets/fill/</loc><lastmod>2026-10-29</lastmod><priority>0.7</priority>
+    <image:image><image:loc>https://studioes.fr/projets/fill/img/og.jpg</image:loc></image:image>
+  </url>
+  <url><loc>https://studioes.fr/projets/fl-auto/</loc><lastmod>2026-10-29</lastmod><priority>0.7</priority>
     <image:image><image:loc>https://studioes.fr/projets/fl-auto/img/og.jpg</image:loc></image:image>
   </url>
-  <url><loc>https://studioes.fr/metiers/graphisme/</loc><lastmod>2026-10-28</lastmod><priority>0.9</priority>
-    <image:image><image:loc>https://studioes.fr/p/saisons-ellipse-8.jpg</image:loc></image:image>
+  <url><loc>https://studioes.fr/projets/mjc-la-marelle/</loc><lastmod>2026-10-29</lastmod><priority>0.7</priority>
+    <image:image><image:loc>https://studioes.fr/projets/mjc-la-marelle/img/og.jpg</image:loc></image:image>
   </url>
-  <url><loc>https://studioes.fr/realisations/</loc><lastmod>2026-10-28</lastmod><priority>0.8</priority></url>
+  <url><loc>https://studioes.fr/projets/mam-our-et-merveilles/</loc><lastmod>2026-10-29</lastmod><priority>0.7</priority>
+    <image:image><image:loc>https://studioes.fr/projets/mam-our-et-merveilles/img/og.jpg</image:loc></image:image>
+  </url>
 </urlset>

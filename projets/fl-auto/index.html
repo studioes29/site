@@ -347,7 +347,13 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
   .sto>img{flex:0 0 46%;transform:none!important;scroll-snap-align:start}
   .dev .phn{display:none}
 }
-@view-transition{navigation:auto}.fh .win img{view-transition-name:projet}::view-transition-group(projet){animation-duration:.7s;animation-timing-function:cubic-bezier(.7,0,.16,1)}::view-transition-old(projet),::view-transition-new(projet){height:100%;object-fit:cover;overflow:clip}@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}</style>
+@view-transition{navigation:auto}.fh .win img{view-transition-name:projet}::view-transition-group(projet){animation-duration:.7s;animation-timing-function:cubic-bezier(.7,0,.16,1)}::view-transition-old(projet),::view-transition-new(projet){height:100%;object-fit:cover;overflow:clip}@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}.bref{width:min(100% - 2*var(--g,24px),1360px);margin:clamp(30px,4vw,60px) auto clamp(10px,2vw,30px);display:grid;grid-template-columns:1.4fr 1.2fr .8fr;gap:0;border-top:1px solid rgba(32,32,32,.14);border-bottom:1px solid rgba(32,32,32,.14)}
+.bref>div{padding:22px 24px 24px 0}.bref>div+div{padding-left:24px;border-left:1px solid rgba(32,32,32,.14)}
+.bref dt{font-size:12.5px;font-weight:600;opacity:.6;margin-bottom:8px}.bref dd{margin:0;font-size:16px;line-height:1.5}
+.bref .dis{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:10px}.bref .dis em{display:inline-flex;align-items:center;gap:6px;font-style:normal;font-size:13.5px;font-weight:500}.bref .dis em::before{content:"";width:12px;height:12px;border-radius:3px;background:var(--kc)}
+.bref .nb{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(30px,3vw,44px);letter-spacing:-.03em;line-height:1}
+@media (max-width:860px){.bref{grid-template-columns:1fr}.bref>div,.bref>div+div{padding:18px 0;border-left:0}.bref>div+div{border-top:1px solid rgba(32,32,32,.14)}}
+@view-transition{navigation:auto}</style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -381,6 +387,8 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
     
   </div>
 </section>
+<section class="bref" aria-label="Le projet en bref"><div><dl><dt>Contexte</dt><dd>Un garage automobile qui ouvre ses portes : il lui fallait un nom lisible depuis la route, une signalétique et des photos avant l’ouverture.</dd></dl></div><div><dl><dt>Le travail réalisé</dt><dd>Logo, cartes de visite, enseigne, signalétique d’accès et reportage photo à l’atelier.</dd></dl><p class="dis"><em style="--kc:#B5583F">Design graphique</em><em style="--kc:#3E7D63">Photographie</em></p></div><div><dl><dt>Supports produits</dt><dd class="nb">6 supports</dd></dl></div></section>
+
 
 <div class="w">
 <section class="ch" aria-labelledby="c1">
@@ -424,14 +432,14 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
 </section>
 </div>
 
-<section class="cqd" aria-labelledby="cqd" style="padding-top:0"><div class="w"><h2 class="d" id="cqd" data-r>Les livrables <span class="se">en images</span></h2></div>
+<section class="cqd" aria-labelledby="cqd" style="padding-top:0"><div class="w"><h2 class="d" id="cqd" data-r>Les supports <span class="se">produits</span></h2></div>
   <div class="cqd-w" tabindex="0" role="region" aria-label="Livrables"><div class="mq" style="--ar:3/4"><figure><img src="img/logo.webp" alt="Logo" loading="lazy" decoding="async"><figcaption><b>Logo et variantes</b><span>Monogramme et carré doré, sur fond clair et foncé.</span></figcaption></figure><figure><img src="img/cdv.webp" alt="Cartes de visite" loading="lazy" decoding="async"><figcaption><b>Cartes de visite</b><span>Recto verso, prêtes pour l’imprimeur.</span></figcaption></figure><figure><img src="img/sig-enseigne.webp" alt="Enseigne posée" loading="lazy" decoding="async"><figcaption><b>Enseigne de façade</b><span>Visible depuis la route.</span></figcaption></figure><figure><img src="img/sig-fleche.webp" alt="Panneau directionnel posé" loading="lazy" decoding="async"><figcaption><b>Signalétique d’accès</b><span>La flèche vers l’accueil, dans le bâtiment.</span></figcaption></figure><figure><img src="img/sig-horaires.webp" alt="Horaires en vitrophanie" loading="lazy" decoding="async"><figcaption><b>Horaires</b><span>En vitrophanie sur la porte d’entrée.</span></figcaption></figure><figure><img src="img/photo-3.webp" alt="Photo" loading="lazy" decoding="async"><figcaption><b>Reportage photo</b><span>L’atelier et le gérant au travail.</span></figcaption></figure></div></div></section>
 
 <section class="end w" aria-labelledby="fin">
   <h2 class="d" id="fin" data-r>Une activité à lancer&#8239;? <span class="se">Parlons-en.</span></h2>
   <div class="bts" data-r>
     <a class="bt bt-a" href="/#devis">Demander un devis<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
-    <a class="bt bt-g" href="/#contact">Réserver un appel<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
+    <a class="bt bt-g" href="/#cal">Réserver un appel<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
   </div>
 </section>
 </main>

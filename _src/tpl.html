@@ -58,12 +58,13 @@
 
 <header class="hd" id="hd">
   <div class="w">
-    <a class="lg" href="/" aria-label="Studio ES, accueil"><svg aria-hidden="true"><use href="#logo"/></svg><span>Studio ES</span></a>
+    <div class="hd-g"><a class="ret" href="/" data-ret aria-label="Retour"><svg class="i"><use href="#al"/></svg></a><a class="lg" href="/" aria-label="Studio ES, accueil"><svg aria-hidden="true"><use href="#logo"/></svg><span>Studio ES</span></a></div>
     <nav class="nav" aria-label="Menu principal">
       <a href="/metiers/photographie/">Photographie</a>
       <a href="/metiers/sites-et-outils/">Web</a>
       <a href="/metiers/graphisme/">Graphisme</a>
       <a href="/realisations/">Réalisations</a>
+      <a href="/offres/">Offres</a>
       <a href="/#fill" class="nv-fill">Fill</a>
       <a href="/#contact">Contact</a>
     </nav>
@@ -100,7 +101,7 @@
 <footer class="ft">
   <div class="w">
     <div><a class="lg" href="/" aria-label="Studio ES, accueil"><svg aria-hidden="true"><use href="#logo"/></svg><span>Studio ES</span></a><p>Photographie, web et design graphique, en Bretagne.<br>Il pleut parfois, la lumière reste belle.</p></div>
-    <div><p class="h5">Studio</p><ul><li><a href="/metiers/photographie/">Photographie</a></li><li><a href="/metiers/sites-et-outils/">Sites et applications</a></li><li><a href="/metiers/graphisme/">Design graphique</a></li><li><a href="/realisations/">Réalisations</a></li></ul></div>
+    <div><p class="h5">Studio</p><ul><li><a href="/metiers/photographie/">Photographie</a></li><li><a href="/metiers/sites-et-outils/">Sites et applications</a></li><li><a href="/metiers/graphisme/">Design graphique</a></li><li><a href="/realisations/">Réalisations</a></li><li><a href="/offres/">Offres et tarifs</a></li></ul></div>
     <div><p class="h5">Contact</p><ul><li><a href="mailto:contact@studioes.fr">contact@studioes.fr</a></li><li><a href="tel:+33651222107">06&nbsp;51&nbsp;22&nbsp;21&nbsp;07</a></li><li><button type="button" data-cal>Réserver un appel</button></li></ul></div>
     <div><p class="h5">Suivre</p><ul><li><a href="https://www.instagram.com/ewen.studioes/" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://fill.studioes.fr">Fill, communication externalisée</a></li><li><a href="https://declic.studioes.fr" target="_blank" rel="noopener">Déclic, le jeu</a></li></ul></div>
     <div class="bas"><span>© 2026 Studio ES</span><button type="button" data-legal>Mentions légales</button></div>
@@ -123,6 +124,10 @@
     <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none">
     <div class="ok"><small>Réponse sous 48 h.</small><button class="bt" type="submit">Envoyer <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
   </form>
+</section>
+<section class="sheet sh-cal" id="shC" role="dialog" aria-modal="true" aria-labelledby="shCT" hidden>
+  <div class="sh-h"><div><h2 id="shCT">Réserver un appel</h2><p class="etp">30 minutes en visio ou au téléphone.</p></div><button type="button" class="x" data-close aria-label="Fermer"><svg class="i"><use href="#x"/></svg></button></div>
+  <div class="sh-b"><iframe id="calF" title="Agenda de Studio ES" loading="lazy"></iframe><p class="cal-s">L’agenda ne s’affiche pas&nbsp;? <a href="https://cal.eu/studioes/30min" target="_blank" rel="noopener">Ouvrir l’agenda en grand</a></p></div>
 </section>
 <section class="sheet" id="shL" role="dialog" aria-modal="true" aria-labelledby="shLT" hidden>
   <div class="sh-h"><h2 id="shLT">Mentions légales</h2><button type="button" class="x" data-close aria-label="Fermer"><svg class="i"><use href="#x"/></svg></button></div>

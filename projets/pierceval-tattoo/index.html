@@ -319,7 +319,13 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
   .sto>img{flex:0 0 46%;transform:none!important;scroll-snap-align:start}
   .dev .phn{display:none}
 }
-@view-transition{navigation:auto}.fh .win img{view-transition-name:projet}::view-transition-group(projet){animation-duration:.7s;animation-timing-function:cubic-bezier(.7,0,.16,1)}::view-transition-old(projet),::view-transition-new(projet){height:100%;object-fit:cover;overflow:clip}@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}</style>
+@view-transition{navigation:auto}.fh .win img{view-transition-name:projet}::view-transition-group(projet){animation-duration:.7s;animation-timing-function:cubic-bezier(.7,0,.16,1)}::view-transition-old(projet),::view-transition-new(projet){height:100%;object-fit:cover;overflow:clip}@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}.bref{width:min(100% - 2*var(--g,24px),1360px);margin:clamp(30px,4vw,60px) auto clamp(10px,2vw,30px);display:grid;grid-template-columns:1.4fr 1.2fr .8fr;gap:0;border-top:1px solid rgba(32,32,32,.14);border-bottom:1px solid rgba(32,32,32,.14)}
+.bref>div{padding:22px 24px 24px 0}.bref>div+div{padding-left:24px;border-left:1px solid rgba(32,32,32,.14)}
+.bref dt{font-size:12.5px;font-weight:600;opacity:.6;margin-bottom:8px}.bref dd{margin:0;font-size:16px;line-height:1.5}
+.bref .dis{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:10px}.bref .dis em{display:inline-flex;align-items:center;gap:6px;font-style:normal;font-size:13.5px;font-weight:500}.bref .dis em::before{content:"";width:12px;height:12px;border-radius:3px;background:var(--kc)}
+.bref .nb{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(30px,3vw,44px);letter-spacing:-.03em;line-height:1}
+@media (max-width:860px){.bref{grid-template-columns:1fr}.bref>div,.bref>div+div{padding:18px 0;border-left:0}.bref>div+div{border-top:1px solid rgba(32,32,32,.14)}}
+@view-transition{navigation:auto}</style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -352,6 +358,8 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
     <div class="out" id="hp"><img src="img/m-rdv-type.webp" width="600" height="1298" alt="La prise de rendez-vous du site sur téléphone"></div>
   </div>
 </section>
+<section class="bref" aria-label="Le projet en bref"><div><dl><dt>Contexte</dt><dd>Un studio de tatouage et de piercing ouvert depuis trente ans, sans site internet : les rendez-vous se prenaient par téléphone et sur Instagram.</dd></dl></div><div><dl><dt>Le travail réalisé</dt><dd>Identité déclinée, rédaction, design et développement du site, réservation en ligne, carte cadeau et kit de lancement.</dd></dl><p class="dis"><em style="--kc:#5B4EB0">Web</em><em style="--kc:#B5583F">Design graphique</em></p></div><div><dl><dt>Supports produits</dt><dd class="nb">13 stories, 1 site</dd></dl></div></section>
+
 
 
 <div class="w">
@@ -498,7 +506,7 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
   <h2 class="d" id="fin" data-r>Un site à construire&#8239;? <span class="se">Parlons-en.</span></h2>
   <div class="bts" data-r>
     <a class="bt bt-a" href="/#devis">Demander un devis<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
-    <a class="bt bt-g" href="/#contact">Réserver un appel<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
+    <a class="bt bt-g" href="/#cal">Réserver un appel<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
   </div>
 </section>
 </main>

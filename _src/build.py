@@ -43,7 +43,8 @@ TR = [
     ('Campagnes', '#r=campagnes', '/p/t/saisons-ellipse-8.webp', 'graph', 'Saisons culturelles, recrutement, prévention'),
     ('Inauguration', '#r=inauguration', '/p/t/inaug-digue-7.webp', 'photo', 'Événementiel et institutions'),
     ('FL Auto', '/projets/fl-auto/', '/projets/fl-auto/img/cover-800.webp', 'graph photo', 'Identité, signalétique et reportage'),
-    ('flouz.', '/projets/flouz/', '/projets/flouz/img/cover-800.webp', 'web', 'Application de budget'),
+    ('flouz.', '/projets/flouz/', '/projets/flouz/img/cover-800.webp', 'web graph', 'Application de budget'),
+    ('Fill', '/projets/fill/', '/projets/fill/img/cover-800.webp', 'web graph', 'Marque, site et simulateur'),
     ('Philippe Katerine', '#r=philippe-katerine', '/p/t/philippe-katerine-2.webp', 'photo', 'Concert'),
     ('Identités visuelles', '#r=identites', '/p/t/maison-ble-1.webp', 'graph', 'Logotypes, univers et déclinaisons'),
     ('Mam’our et merveilles', '/projets/mam-our-et-merveilles/', '/projets/mam-our-et-merveilles/img/cover-800.webp', 'graph', 'Identité et réseaux sociaux'),
@@ -60,25 +61,26 @@ TR = [
 ]
 NOM = {'photo': 'Photographie', 'web': 'Web', 'graph': 'Graphisme'}
 def tuile(t, cls='', n=0):
+    """Carte nuancier : l'image cadrée sur une puce claire, l'étiquette dessous avec les pastilles de discipline."""
     titre, lien, img, tags, ligne = t
     w, h = taille(img)
     g = lien[3:] if lien.startswith('#r=') else ''
-    lab = ''.join('<em class="k-%s">%s</em>' % (x, NOM[x]) for x in tags.split())
+    T = tags.split()
+    lab = ''.join('<em class="k-%s">%s</em>' % (x, NOM[x]) for x in T)
     href = '/' + lien if g else lien
-    num = '<i class="tl-n">%02d</i>' % n if n else ''
-    trans = ' tl-x' if len(tags.split()) > 1 else ''
-    return ('<a class="tl tl-%s%s%s" href="%s"%s data-t="%s"><span class="tl-i"><img src="%s" alt="%s, %s" loading="lazy" decoding="async" width="%d" height="%d"></span>'
-            '<span class="tl-l">%s<b>%s</b><span>%s</span><small>%s</small></span></a>') % (
-        tags.split()[0], trans, cls, href, ' data-r="%s"' % g if g else '', tags, img, titre, ligne[0].lower() + ligne[1:], w, h, num, titre, ligne, lab)
+    badge = '<span class="nu-b">%d disciplines</span>' % len(T) if len(T) > 1 else ''
+    return ('<a class="nu nu-%s%s%s" href="%s"%s data-t="%s"><span class="nu-i"><img src="%s" alt="%s, %s" loading="lazy" decoding="async" width="%d" height="%d">%s</span>'
+            '<span class="nu-l"><b>%s</b><span>%s</span><small>%s</small></span></a>') % (
+        T[0], ' nu-x' if len(T) > 1 else '', cls, href, ' data-r="%s"' % g if g else '', tags, img, titre, ligne[0].lower() + ligne[1:], w, h, badge, titre, ligne, lab)
 
-SEL = ['Matmatah', 'Pierceval Tattoo', 'Les Petites Folies', 'FL Auto, l’atelier', 'La Soute', 'Campagnes', 'Inauguration', 'MJC La Marelle']
-selection = '<div class="ed-g">' + ''.join(tuile(next(t for t in TR if t[0] == n), ' rv', i + 1) for i, n in enumerate(SEL)) + '</div>'
+SEL = ['Matmatah', 'Pierceval Tattoo', 'Les Petites Folies', 'La Soute', 'FL Auto, l’atelier', 'Campagnes', 'Inauguration', 'MJC La Marelle']
+selection = ''.join(tuile(next(t for t in TR if t[0] == n)) for n in SEL)
 HOME = HOME.replace('{SELECTION}', selection)
-# bannière : chaque mot est découpé en lettres, pour qu'elles se recomposent une à une
-def lettres(m):
-    mot = m.group(2)
-    return m.group(1) + ''.join('<u style="--k:%d">%s</u>' % (i, '&nbsp;' if c == ' ' else c) for i, c in enumerate(mot)) + '</span>'
-HOME = re.sub(r'(<span data-a="\d">)([^<]+)</span>', lettres, HOME.split('<p class="hx-leg">')[0]) + '<p class="hx-leg">' + HOME.split('<p class="hx-leg">')[1]
+# bannière : les phrases et le nom sont découpés en lettres, pour qu'elles se recomposent une à une
+def lettres(txt):
+    return ''.join('<u style="--k:%d">%s</u>' % (i, '&nbsp;' if c == ' ' else c) for i, c in enumerate(txt))
+HOME = re.sub(r'(<p class="hx-mots"[^>]*>)(.*?)(</p>)', lambda m: m.group(1) + re.sub(r'(<span data-a="\d">)([^<]+)</span>', lambda n: n.group(1) + lettres(n.group(2)) + '</span>', m.group(2)) + m.group(3), HOME, flags=re.S)
+HOME = HOME.replace('<span class="hx-l">Studio ES</span>', '<span class="hx-l" aria-hidden="true">' + lettres('Studio ES') + '</span><span class="sr">Studio ES</span>')
 # l'animation démarre avant le premier affichage, sauf si le visiteur a demandé moins de mouvement
 HOME = HOME.replace('<section class="hero hx" id="hx" data-dark aria-labelledby="h1">', '<section class="hero hx" id="hx" data-dark aria-labelledby="h1"><script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.currentScript.parentNode.dataset.a=1</script>')
 
@@ -117,8 +119,9 @@ rl = entete('Réalisations', 'Réalisations', 'Toutes disciplines.', 'Reportages
 <section class="sec feuille rl-f u-papier" id="travaux-tous" aria-label="Réalisations">
   <div class="w">
     <div class="chips rv" data-filtre role="group" aria-label="Filtrer les réalisations"><button type="button" aria-pressed="true" data-f="">Tout<small>%d</small></button>%s</div>
-    <div class="rl-g">%s</div>
   </div>
+  <div class="nu-g rl-g" data-grp aria-label="Réalisations">%s</div>
+  <div class="dots" aria-hidden="true"></div>
 </section>
 ''' % (len(TR), ''.join('<button type="button" aria-pressed="false" data-f="%s">%s<small>%d</small></button>' % (k, NOM[k], n[k]) for k in NOM), ''.join(tuile(t) for t in TR)) + contact_p
 page('realisations', 'Réalisations · Studio ES', 'Portfolio de Studio ES : reportages photo, sites et applications, identités, campagnes et éditions, en Bretagne.', 'https://studioes.fr/realisations/', rl, ld=LD('Réalisations', 'https://studioes.fr/realisations/', 'Portfolio photographie, web et design graphique'))

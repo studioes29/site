@@ -10,6 +10,14 @@
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const rangs = el => [...el.children].forEach((c, i) => c.style.setProperty('--i', i));
 
+  /* une nouvelle page s'ouvre toujours en haut, sauf si son adresse vise une rubrique précise */
+  try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
+  const nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+  if (!location.hash && (!nav || nav.type !== 'back_forward')) scrollTo(0, 0);
+  /* bouton retour : la page précédente du site si elle existe, sinon l'accueil ; caché sur l'accueil */
+  const ret = document.querySelector('[data-ret]');
+  if (ret) { if (document.getElementById('hx')) ret.hidden = true;
+    ret.addEventListener('click', e => { try { if (document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1) { e.preventDefault(); history.back(); } } catch (x) {} }); }
   /* en-tête, dock et retour en haut : verre dépoli, version nuit au-dessus des rubriques sombres */
   const hd = $('#hd'), dock = $('#dock'), hautBt = $('.haut-bt'), sombres = $$('[data-dark]'), feuilles = $$('.feuille');
   /* empilement : chaque rubrique se fige à sa fin, la suivante glisse par-dessus */
@@ -183,8 +191,8 @@
   /* points sous les carrousels mobiles */
   $$('[data-grp]').forEach(g => {
     const d = g.nextElementSibling; if (!d || !d.classList.contains('dots')) return;
-    const n = g.children.length; d.innerHTML = '<i></i>'.repeat(n);
-    const maj = () => { const w = g.scrollWidth - g.clientWidth; const k = w > 0 ? Math.round(g.scrollLeft / w * (n - 1)) : 0; $$('i', d).forEach((x, j) => x.classList.toggle('on', j === k)); };
+    d.innerHTML = '<i></i>'.repeat(g.children.length);
+    const maj = () => { const n = [...g.children].filter(x => !x.hidden).length; const w = g.scrollWidth - g.clientWidth; const k = w > 0 ? Math.round(g.scrollLeft / w * (n - 1)) : 0; $$('i', d).forEach((x, j) => x.classList.toggle('on', j === k)); };
     g.addEventListener('scroll', maj, { passive: true }); maj();
   });
 
@@ -497,8 +505,16 @@
   };
   const ouvreCal = () => {
     compte('/rendez-vous/ouverture', 'Ouverture de l’agenda');
-    if (calPret && window.Cal && Cal.ns && Cal.ns.rdv) { try { Cal.ns.rdv('modal', { calLink: 'studioes/30min', config: { layout: 'month_view', theme: 'light' } }); return; } catch (e) {} }
-    window.open(CAL, '_blank', 'noopener');
+    /* l'agenda s'ouvre toujours par-dessus le site : fenêtre Cal.com si son script est prêt, sinon notre propre feuille avec l'agenda intégré */
+    const modale = () => { try { Cal.ns.rdv('modal', { calLink: 'studioes/30min', config: { layout: 'month_view', theme: 'light' } }); return true; } catch (e) { return false; } };
+    if (calPret && window.Cal && Cal.ns && Cal.ns.rdv && modale()) return;
+    calCharge(); const t0 = Date.now(); toast('Ouverture de l’agenda…');
+    const attend = () => { if (calPret && window.Cal && Cal.ns && Cal.ns.rdv && modale()) return; if (Date.now() - t0 < 2500) return setTimeout(attend, 120); feuilleCal(); };
+    attend();
+  };
+  const feuilleCal = () => {
+    const f = $('#calF'); if (!f.src) f.src = 'https://app.cal.eu/studioes/30min/embed?embed=&layout=month_view&theme=light&embedType=inline';
+    ouvreF('#shC');
   };
   document.addEventListener('click', e => { const b = e.target.closest('[data-cal]'); if (!b) return; e.preventDefault(); e.stopPropagation(); if (ouverte) fermeF(); ouvreCal(); });
   const ctc = $('#contact'); if (ctc) new IntersectionObserver((e, o) => { if (e[0].isIntersecting) { o.disconnect(); calCharge(); } }, { rootMargin: '800px 0px' }).observe(ctc);
@@ -509,6 +525,7 @@
 (() => { const H = location.hash;
   if (H === '#mentions') { const b = document.querySelector('[data-legal]'); if (b) setTimeout(() => b.click(), 300); return; }
   if (H === '#devis' || H === '#estimer') { const b = document.querySelector('[data-est]'); if (b) setTimeout(() => b.click(), 300); return; }
+  if (H === '#cal') { const b = document.querySelector('[data-cal]'); try { history.replaceState(null, '', location.pathname); } catch (e) {} if (b) setTimeout(() => b.click(), 300); return; }
   const vers = { '#photographie': '/metiers/photographie/', '#travaux': '/metiers/photographie/#photographie', '#web': '/metiers/sites-et-outils/', '#realisations': '/realisations/', '#applications': '/metiers/sites-et-outils/#applications', '#offre': '/metiers/photographie/#formules', '#offres': '/metiers/photographie/#formules' }[H];
   if (vers && !document.getElementById(H.slice(1))) { location.replace(vers); return; }
   const m = { '#rdv': 'contact' }[H]; const t = m && document.getElementById(m); if (t) setTimeout(() => t.scrollIntoView(), 200); })();
@@ -520,10 +537,12 @@ setInterval(function(){if(document.hidden)return;im[k].classList.remove('on');k=
 /* Réalisations : filtres par discipline, un projet peut porter plusieurs étiquettes */
 (() => {
   const f = document.querySelector('[data-filtre]'); if (!f) return;
-  const tl = [...document.querySelectorAll('.rl-g .tl')];
+  const tl = [...document.querySelectorAll('.rl-g .nu')], g = document.querySelector('.rl-g');
   f.addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return; const k = b.dataset.f;
     f.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
     tl.forEach((t, i) => { const on = !k || t.dataset.t.split(' ').includes(k); t.hidden = !on; if (on) { t.classList.remove('in'); void t.offsetWidth; t.classList.add('in'); } });
+    if (g) { g.scrollLeft = 0; g.dispatchEvent(new Event('scroll')); }
+    const d = g && g.nextElementSibling; if (d && d.classList.contains('dots')) { const n = tl.filter(t => !t.hidden).length; d.innerHTML = '<i></i>'.repeat(n); g.dispatchEvent(new Event('scroll')); }
   });
 })();

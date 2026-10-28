@@ -346,7 +346,13 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
   .sto>img{flex:0 0 46%;transform:none!important;scroll-snap-align:start}
   .dev .phn{display:none}
 }
-@view-transition{navigation:auto}.fh .win img{view-transition-name:projet}::view-transition-group(projet){animation-duration:.7s;animation-timing-function:cubic-bezier(.7,0,.16,1)}::view-transition-old(projet),::view-transition-new(projet){height:100%;object-fit:cover;overflow:clip}@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}</style>
+@view-transition{navigation:auto}.fh .win img{view-transition-name:projet}::view-transition-group(projet){animation-duration:.7s;animation-timing-function:cubic-bezier(.7,0,.16,1)}::view-transition-old(projet),::view-transition-new(projet){height:100%;object-fit:cover;overflow:clip}@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}.bref{width:min(100% - 2*var(--g,24px),1360px);margin:clamp(30px,4vw,60px) auto clamp(10px,2vw,30px);display:grid;grid-template-columns:1.4fr 1.2fr .8fr;gap:0;border-top:1px solid rgba(32,32,32,.14);border-bottom:1px solid rgba(32,32,32,.14)}
+.bref>div{padding:22px 24px 24px 0}.bref>div+div{padding-left:24px;border-left:1px solid rgba(32,32,32,.14)}
+.bref dt{font-size:12.5px;font-weight:600;opacity:.6;margin-bottom:8px}.bref dd{margin:0;font-size:16px;line-height:1.5}
+.bref .dis{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:10px}.bref .dis em{display:inline-flex;align-items:center;gap:6px;font-style:normal;font-size:13.5px;font-weight:500}.bref .dis em::before{content:"";width:12px;height:12px;border-radius:3px;background:var(--kc)}
+.bref .nb{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(30px,3vw,44px);letter-spacing:-.03em;line-height:1}
+@media (max-width:860px){.bref{grid-template-columns:1fr}.bref>div,.bref>div+div{padding:18px 0;border-left:0}.bref>div+div{border-top:1px solid rgba(32,32,32,.14)}}
+@view-transition{navigation:auto}</style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -380,6 +386,8 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
     
   </div>
 </section>
+<section class="bref" aria-label="Le projet en bref"><div><dl><dt>Contexte</dt><dd>La brochure de saison d’une MJC et centre social : près de trente pages de contenus, six pôles, à faire tenir en vingt-quatre pages lisibles.</dd></dl></div><div><dl><dt>Le travail réalisé</dt><dd>Direction artistique, couverture illustrée d’après photo, mise en page des 24 pages et fichiers pour l’imprimeur.</dd></dl><p class="dis"><em style="--kc:#B5583F">Design graphique</em></p></div><div><dl><dt>Supports produits</dt><dd class="nb">24 pages</dd></dl></div></section>
+
 
 <div class="w">
 <section class="ch" aria-labelledby="c1">
@@ -421,7 +429,7 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
 </section>
 </div>
 
-<section class="cqd" aria-labelledby="cqd" style="padding-top:0"><div class="w"><h2 class="d" id="cqd" data-r>Les livrables <span class="se">en images</span></h2></div>
+<section class="cqd" aria-labelledby="cqd" style="padding-top:0"><div class="w"><h2 class="d" id="cqd" data-r>Les supports <span class="se">produits</span></h2></div>
   <div class="cqd-w" tabindex="0" role="region" aria-label="Livrables"><div class="mq" style="--ar:758/1075"><figure><img src="img/p1.webp" alt="Couverture de la brochure" loading="lazy" decoding="async"><figcaption><b>Couverture illustrée</b><span>La Longère photographiée, puis redessinée.</span></figcaption></figure><figure><img src="img/p2.webp" alt="Page Activités régulières" loading="lazy" decoding="async"><figcaption><b>Brochure de 24 pages</b><span>Mise en page, fichier prêt pour l’imprimeur.</span></figcaption></figure><figure><img src="img/p3.webp" alt="Page École de musique" loading="lazy" decoding="async"><figcaption><b>École de musique</b><span>Parcours et cours individuels.</span></figcaption></figure><figure><img src="img/p4.webp" alt="Page Espace Jeunesse" loading="lazy" decoding="async"><figcaption><b>Espace Jeunesse</b><span>Ouverture, horaires, projets.</span></figcaption></figure><figure><img src="img/p5.webp" alt="Page Espace Familles Adultes" loading="lazy" decoding="async"><figcaption><b>Espace Familles Adultes</b><span>Accompagnement à la scolarité.</span></figcaption></figure><figure><img src="img/p6.webp" alt="Page Chantier d’insertion" loading="lazy" decoding="async"><figcaption><b>Chantier d’insertion</b><span>Friperie, laverie, candidatures.</span></figcaption></figure><figure><img src="img/p7.webp" alt="Page Animations culturelles" loading="lazy" decoding="async"><figcaption><b>Animations culturelles</b><span>Documentaires, expositions.</span></figcaption></figure><figure><img src="img/p8.webp" alt="Page Spectacles" loading="lazy" decoding="async"><figcaption><b>Spectacles</b><span>Dates, tarifs, réservations.</span></figcaption></figure></div></div></section>
 
 
@@ -429,7 +437,7 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
   <h2 class="d" id="fin" data-r>Une saison à mettre en pages&#8239;? <span class="se">Parlons-en.</span></h2>
   <div class="bts" data-r>
     <a class="bt bt-a" href="/#devis">Demander un devis<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
-    <a class="bt bt-g" href="/#contact">Réserver un appel<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
+    <a class="bt bt-g" href="/#cal">Réserver un appel<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
   </div>
 </section>
 </main>
