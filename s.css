@@ -1878,3 +1878,7 @@ body{color:var(--encre)}
 #calF{flex:1;width:100%;min-height:min(70vh,640px);border:0;border-radius:18px;background:#fff}
 .cal-s{margin-top:10px;font-size:13px;color:var(--mu);text-align:center}
 .cal-s a{text-decoration:underline}
+/* la bannière n'hérite plus de l'apparition de l'ancien titre */
+.hx h1.hx-nom>span{opacity:1;animation:none;transform:none}
+.hx h1.hx-nom>.hx-l{display:block}
+@media (max-width:860px){.hx{padding-bottom:calc(var(--fr) + 128px)}}
