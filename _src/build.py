@@ -36,7 +36,7 @@ def taille(chemin):
 # (titre, lien ou galerie, image, étiquettes, ligne)
 TR = [
     ('Pierceval Tattoo', '/projets/pierceval-tattoo/', '/projets/pierceval-tattoo/img/cover-800.webp', 'web graph', 'Site, réservation en ligne et carte cadeau'),
-    ('Matmatah', '#r=matmatah', '/p/t/matmatah-1.webp', 'photo', 'Concert'),
+    ('Matmatah', '#r=matmatah', '/p/matmatah-10.jpg', 'photo', 'Concert'),
     ('La Soute', '/projets/la-soute/', '/projets/la-soute/img/cover-800.webp', 'web graph photo', 'Identité, saison culturelle et site'),
     ('Les Petites Folies', '#r=pub-petites-folies', '/p/t/pub-petites-folies-1.webp', 'photo', 'Festival'),
     ('MJC La Marelle', '/projets/mjc-la-marelle/', '/projets/mjc-la-marelle/img/cover-800.webp', 'graph web', 'Brochure de saison et site'),
@@ -59,19 +59,28 @@ TR = [
     ('Festidreuz', '#r=pub-festidreuz', '/p/t/pub-festidreuz-1.webp', 'photo', 'Festival'),
 ]
 NOM = {'photo': 'Photographie', 'web': 'Web', 'graph': 'Graphisme'}
-def tuile(t, cls=''):
+def tuile(t, cls='', n=0):
     titre, lien, img, tags, ligne = t
     w, h = taille(img)
     g = lien[3:] if lien.startswith('#r=') else ''
-    lab = ' · '.join(NOM[x] for x in tags.split())
+    lab = ''.join('<em class="k-%s">%s</em>' % (x, NOM[x]) for x in tags.split())
     href = '/' + lien if g else lien
-    return ('<a class="tl%s" href="%s"%s data-t="%s"><span class="tl-i"><img src="%s" alt="" loading="lazy" decoding="async" width="%d" height="%d"></span>'
-            '<span class="tl-l"><b>%s</b><span>%s</span><small>%s</small></span></a>') % (
-        cls, href, ' data-r="%s"' % g if g else '', tags, img, w, h, titre, ligne, lab)
+    num = '<i class="tl-n">%02d</i>' % n if n else ''
+    trans = ' tl-x' if len(tags.split()) > 1 else ''
+    return ('<a class="tl tl-%s%s%s" href="%s"%s data-t="%s"><span class="tl-i"><img src="%s" alt="%s, %s" loading="lazy" decoding="async" width="%d" height="%d"></span>'
+            '<span class="tl-l">%s<b>%s</b><span>%s</span><small>%s</small></span></a>') % (
+        tags.split()[0], trans, cls, href, ' data-r="%s"' % g if g else '', tags, img, titre, ligne[0].lower() + ligne[1:], w, h, num, titre, ligne, lab)
 
-SEL = ['Matmatah', 'Pierceval Tattoo', 'Les Petites Folies', 'La Soute', 'Inauguration', 'MJC La Marelle', 'Campagnes', 'FL Auto']
-selection = '<div class="sel-g">' + ''.join(tuile(next(t for t in TR if t[0] == n), ' rv') for n in SEL) + '</div>'
+SEL = ['Matmatah', 'Pierceval Tattoo', 'Les Petites Folies', 'FL Auto, l’atelier', 'La Soute', 'Campagnes', 'Inauguration', 'MJC La Marelle']
+selection = '<div class="ed-g">' + ''.join(tuile(next(t for t in TR if t[0] == n), ' rv', i + 1) for i, n in enumerate(SEL)) + '</div>'
 HOME = HOME.replace('{SELECTION}', selection)
+# bannière : chaque mot est découpé en lettres, pour qu'elles se recomposent une à une
+def lettres(m):
+    mot = m.group(2)
+    return m.group(1) + ''.join('<u style="--k:%d">%s</u>' % (i, '&nbsp;' if c == ' ' else c) for i, c in enumerate(mot)) + '</span>'
+HOME = re.sub(r'(<span data-a="\d">)([^<]+)</span>', lettres, HOME.split('<p class="hx-leg">')[0]) + '<p class="hx-leg">' + HOME.split('<p class="hx-leg">')[1]
+# l'animation démarre avant le premier affichage, sauf si le visiteur a demandé moins de mouvement
+HOME = HOME.replace('<section class="hero hx" id="hx" data-dark aria-labelledby="h1">', '<section class="hero hx" id="hx" data-dark aria-labelledby="h1"><script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.currentScript.parentNode.dataset.a=1</script>')
 
 HEAD_END = T.index('<main id="haut">'); FOOT = T.index('</main>')
 def page(path, title, desc, canon, main, home=False, ld='', og=''):
@@ -100,86 +109,12 @@ def nettoie(s):
     s = re.sub(r'<div class="sec-t rv">.*?</div>\s*', '', s, count=1, flags=re.S)
     return s
 contact_p = nettoie(contact).replace('<div class="ct">', '<div class="sec-t rv"><h2 class="d" id="t-ct">Parlons de<span class="it">votre projet.</span></h2><p class="lead">Réponse sous 48 h, devis gratuit et sans engagement.</p></div>\n    <div class="ct">', 1)
-def entete(nom, titre, it, lead, cls=''):
-    return ('<section class="mh%s" aria-labelledby="h1"><div class="w">\n  <p class="fil"><a href="/">Studio ES</a><span>/</span><span>%s</span></p>\n'
-            '  <h1 class="d" id="h1">%s<span class="it">%s</span></h1>\n  <p class="lead">%s</p>\n</div></section>') % (cls, nom, titre, it, lead)
-def LD(nom, url, service, offres=()):
-    g = [{"@type": "Service", "name": service, "url": url, "provider": {"@id": "https://studioes.fr/#studio"}, "areaServed": {"@type": "AdministrativeArea", "name": "Bretagne"}},
-         {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Studio ES", "item": "https://studioes.fr/"}, {"@type": "ListItem", "position": 2, "name": nom, "item": url}]}]
-    if offres: g[0]["offers"] = [{"@type": "Offer", "name": n, "priceCurrency": "EUR", "price": str(p), "priceSpecification": {"@type": "PriceSpecification", "minPrice": p, "priceCurrency": "EUR"}} for n, p in offres]
-    return json.dumps({"@context": "https://schema.org", "@graph": g}, ensure_ascii=False)
-def croise(titre, texte, lien, lib, img):
-    return ('<section class="sec feuille cr-f" aria-label="Et aussi"><div class="w croise2 rv"><a class="cr-i" href="%s" aria-label="Voir"><img src="%s" alt="" loading="lazy"></a>'
-            '<div class="cr-tx"><h2 class="d">%s</h2><p>%s</p><a class="bt" href="%s">%s %s</a></div></div></section>') % (lien, img, titre, texte, lien, lib, ar())
-
-# ---------- Photographie : le portfolio d'abord, les formules ensuite ----------
-bp = sect('photographie', B).split('\n')
-offres_ph = '\n'.join(bp[4:44])          # grp + dots
-travaux = '\n'.join(bp[45:49])          # titre, filtres et rail
-ph = entete('Photographie', 'Photographie', 'Vos moments forts, sur le vif.', 'Concerts, festivals, cérémonies, vie d’une entreprise, mariages : un reportage discret en Bretagne, sans poses ni mise en scène, puis une sélection resserrée et retouchée, prête à servir.', ' mh-ph') + '''
-<section class="sec feuille ph-f" id="photographie" aria-labelledby="t-tr">
-  <div class="w">
-''' + travaux.replace('<h3 class="d">Reportages récents</h3>', '<h2 class="d" id="t-tr">Reportages</h2>') + '''
-</section>
-<section class="sec feuille fo-f" id="formules" aria-labelledby="t-fo">
-  <div class="w">
-    <div class="sec-t rv"><h2 class="d" id="t-fo">Les formules<span class="it">Événement, suivi annuel, mariage.</span></h2><p class="lead">Des prix connus d’avance, modulables selon la durée. Le devis précise le reste.</p></div>
-''' + offres_ph + '''
-  </div>
-</section>
-''' + croise('Le studio fait aussi<span class="it">des sites et des applications.</span>', 'Un site clair et bien référencé, ou une application qui fait gagner du temps. Et quand il faut de belles photos pour l’habiller, elles sont déjà là.', '/metiers/sites-et-outils/', 'Voir le web', '/projets/pierceval-tattoo/img/cover-800.webp') + '\n' + contact_p
-page('metiers/photographie', 'Photographe de concert, d’événement et de mariage en Bretagne · Studio ES', 'Reportages photo sur le vif dans le Finistère et en Bretagne : concerts et festivals, événements et institutions, portraits et métiers, mariages. Événement dès 250 €.', 'https://studioes.fr/metiers/photographie/', ph, og='og-photo.jpg', ld=LD('Photographie', 'https://studioes.fr/metiers/photographie/', 'Reportage photo d’événement, de concert et de mariage', [('Événement', 250), ('Suivi photo annuel', 1290), ('Mariage', 1290)]))
-
-# ---------- Web : les réalisations d'abord, les offres ensuite ----------
-bw = sect('web', B).split('\n')
-offres_web = '\n'.join(bw[4:48])         # sous-titre, grp, dots, vraies photos, note
-reals = '\n'.join(bw[48:56])           # titre et rail des réalisations
-wb = entete('Web', 'Web', 'Sites et applications sur mesure.', 'Pour les TPE, commerces, artisans et collectivités de Bretagne : un site clair, rédigé et bien référencé localement, et des applications qui font gagner du temps au quotidien.', ' mh-wb') + '''
-<section class="sec feuille dk" id="web" data-dark aria-labelledby="realisations">
-  <div class="w">
-''' + reals.replace('<h3 class="d">Réalisations web</h3>', '<h2 class="d">Réalisations</h2>') + '''
-</section>
-<section class="sec feuille dk wb-o" data-dark aria-label="Les offres de site">
-  <div class="w">
-''' + offres_web + '''
-  </div>
-</section>
-''' + sect('applications', B) + '\n' + croise('Le studio fait aussi<span class="it">de la photographie.</span>', 'Concerts, festivals, cérémonies, vie d’une entreprise, mariages : un reportage discret, puis une sélection resserrée et retouchée.', '/metiers/photographie/', 'Voir la photographie', '/p/t/matmatah-1.webp') + '\n' + contact_p
-page('metiers/sites-et-outils', 'Sites internet et applications en Bretagne · Studio ES', 'Sites internet pour TPE, associations et collectivités dès 990 €, applications sur mesure dès 190 € : réservation, devis, inscriptions. Études de cas et tarifs.', 'https://studioes.fr/metiers/sites-et-outils/', wb, og='og-web.jpg', ld=LD('Web', 'https://studioes.fr/metiers/sites-et-outils/', 'Création de sites internet et d’applications web', [('Site Essentiel', 990), ('Site Vitrine', 1990), ('Site sur mesure', 4490), ('Application sur mesure', 190)]))
-
-# ---------- Design graphique : trois familles, sur devis ----------
-def mosa(ids):
-    out = ''
-    for g in ids:
-        gg = next(x for x in GRAPH if x[0] == g)
-        for n in gg[3][:4]:
-            w, h = taille('/p/t/%s.webp' % n)
-            out += '<button type="button" data-r="%s" aria-label="Voir : %s"><img src="/p/t/%s.webp" alt="" loading="lazy" width="%d" height="%d"></button>' % (g, gg[1], n, w, h)
-    return out
-def famille(n, id, titre, it, texte, points, ids, cas, k):
-    cas_h = ''.join('<a class="gr-c" href="%s">%s %s</a>' % (l, t, '<svg class="i"><use href="#ne"/></svg>') for t, l in cas)
-    return ('''<section class="sec feuille gr-f gr-%s" id="%s" aria-labelledby="t-%s">
-  <div class="w gr">
-    <div class="gr-t rv"><p class="ds-n">%s</p><h2 class="d" id="t-%s">%s<span class="it">%s</span></h2><p class="lead">%s</p>
-      <ul class="ds-b">%s</ul>%s
-      <button type="button" class="bt" data-est data-k="%s">Parler de mon projet %s</button></div>
-    <div class="gr-m rv">%s</div>
-  </div>
-</section>''') % (id, id, id, n, id, titre, it, texte, ''.join('<li>%s</li>' % p for p in points), '<p class="gr-cs">' + cas_h + '</p>' if cas_h else '', k, ar(), mosa(ids))
-gr = entete('Design graphique', 'Graphisme', 'Identités, campagnes, éditions.', 'Une direction artistique qui tient sur tous les supports : l’identité d’un lieu ou d’une marque, la campagne d’une saison, la brochure qu’on garde. Chaque projet est chiffré sur devis.', ' mh-gr') + '\n' + \
-    famille('01', 'identites', 'Identités visuelles', 'Une identité complète, pas seulement un logo.', 'Logotype, univers graphique, typographies, couleurs et règles de déclinaison : de quoi rester reconnaissable sur l’enseigne, le site et les réseaux.', ['Logotype et univers', 'Charte et typographies', 'Signalétique et déclinaisons'], ['identites', 'signaletique'], [('FL Auto', '/projets/fl-auto/'), ('Pierceval Tattoo', '/projets/pierceval-tattoo/'), ('Mam’our et merveilles', '/projets/mam-our-et-merveilles/')], 'identite') + '\n' + \
-    famille('02', 'campagnes', 'Campagnes et directions artistiques', 'Une idée, déclinée partout.', 'Festivals, saisons culturelles, événements, recrutement, communication institutionnelle : un concept fort, puis l’affiche, les réseaux, l’affichage et la presse.', ['Concept et direction artistique', 'Affiches et déclinaisons', 'Saisons culturelles et événements'], ['campagnes', 'affiches'], [('La Soute', '/projets/la-soute/')], 'campagne') + '\n' + \
-    famille('03', 'editions', 'Édition et supports imprimés', 'Des pages qui se lisent.', 'Brochures, programmes, magazines, catalogues et dépliants : une grille claire, une hiérarchie lisible, et des fichiers prêts pour l’imprimeur.', ['Brochures et programmes de saison', 'Magazines et catalogues', 'Systèmes éditoriaux réutilisables'], ['editions'], [('MJC La Marelle', '/projets/mjc-la-marelle/')], 'edition') + '''
-<section class="sec feuille fl-f fl-c" aria-label="Production régulière">
-  <div class="w fl-ct rv"><p>Besoin de supports chaque mois plutôt que d’un projet&nbsp;? Publications, affiches courantes, newsletters : c’est le rôle de <b>Fill</b>, le service de communication régulière conçu par Studio ES.</p><a class="bt" href="https://fill.studioes.fr">Découvrir Fill <span class="ar"><svg class="i"><use href="#ne"/></svg></span></a></div>
-</section>
-''' + contact_p
-page('metiers/graphisme', 'Design graphique en Bretagne : identités, campagnes, éditions · Studio ES', 'Identités visuelles, campagnes et directions artistiques, brochures et éditions pour les lieux culturels, collectivités et entreprises de Bretagne. Sur devis.', 'https://studioes.fr/metiers/graphisme/', gr, ld=LD('Design graphique', 'https://studioes.fr/metiers/graphisme/', 'Identité visuelle, campagne et édition'))
+exec(open(os.path.join(D, 'metiers.py'), encoding='utf8').read())
 
 # ---------- Réalisations : toutes disciplines, plusieurs étiquettes par projet ----------
 n = {k: sum(1 for t in TR if k in t[3].split()) for k in NOM}
-rl = entete('Réalisations', 'Réalisations', 'Toutes disciplines.', 'Reportages, sites, identités, campagnes et éditions. Un projet qui mêle plusieurs disciplines se retrouve dans chacune.', ' mh-rl') + '''
-<section class="sec feuille rl-f" id="travaux-tous" aria-label="Réalisations">
+rl = entete('Réalisations', 'Réalisations', 'Toutes disciplines.', 'Reportages, sites, identités, campagnes et éditions. Un projet qui mêle plusieurs disciplines se retrouve dans chacune.', ' u-noir mh-rl', FG('Portfolio', 'left:-2vw;bottom:-.2em', 'o'), '', '', True) + '''
+<section class="sec feuille rl-f u-papier" id="travaux-tous" aria-label="Réalisations">
   <div class="w">
     <div class="chips rv" data-filtre role="group" aria-label="Filtrer les réalisations"><button type="button" aria-pressed="true" data-f="">Tout<small>%d</small></button>%s</div>
     <div class="rl-g">%s</div>

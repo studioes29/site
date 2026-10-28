@@ -17,11 +17,14 @@
   /* la hauteur de chaque rubrique est mesurée seulement quand elle change vraiment, le haut de figeage est calculé en CSS sur la petite hauteur d'écran : rien ne saute quand la barre du navigateur mobile apparaît */
   const fige = () => pile.forEach(el => { el.classList.add('empile'); const h = el.offsetHeight; if (Math.abs((el._h || 0) - h) > 2) { el._h = h; el.style.setProperty('--h', h + 'px'); } });
   fige(); if (window.ResizeObserver) { const ro = new ResizeObserver(() => fige()); pile.forEach(el => ro.observe(el)); }
-  const sur = y => sombres.some(s => { const r = s.getBoundingClientRect(); return r.top < y && r.bottom > y; });
+  /* la rubrique visible à une hauteur donnée est la dernière feuille qui la recouvre */
+  const ici = y => { let h = null; for (const el of pile) { const r = el.getBoundingClientRect(); if (r.top <= y && r.bottom > y) h = el; } return h; };
+  const sur = y => { const h = ici(y); return !!h && h.hasAttribute('data-dark'); };
+  const teinte = (el, y) => { const h = ici(y); const f = h ? getComputedStyle(h).getPropertyValue('--fond').trim() : ''; if (f !== el._f) { el._f = f; el.style.setProperty('--hf', f || 'var(--papier)'); } };
   let tic = false;
   const etat = () => {
     tic = false; const y = scrollY, H = innerHeight;
-    hd.classList.toggle('on', y > 10); hd.classList.toggle('dk', sur(32));
+    hd.classList.toggle('on', y > 10); hd.classList.toggle('dk', sur(32)); teinte(hd, 32);
     const loin = y > H * 1.2;
     if (dock) { dock.classList.toggle('dk', sur(H - 40)); dock.classList.toggle('haut', loin); }
     if (hautBt) { hautBt.classList.toggle('on', loin); hautBt.classList.toggle('dk', sur(H - 50)); }
@@ -55,6 +58,7 @@
     if (!el) return; const txt = v == null ? 'Sur devis' : fmt(v);
     el.classList.toggle('txt', v == null); const px = el.closest('.px'); if (px) px.classList.toggle('sd', v == null);
     if (el.dataset.t === txt) return; el.dataset.t = txt; el.dataset.v = v == null ? '' : v;
+    const sr = el.querySelector('.sr'); if (sr) sr.textContent = txt;
     if (el.dataset.vu) odo(el, txt, false);
   };
   /* première apparition : les chiffres tournent depuis zéro quand la carte entre à l'écran */
@@ -157,7 +161,7 @@
   addEventListener('resize', () => cartes.forEach(repere));
   document.fonts && document.fonts.ready.then(() => cartes.forEach(repere));
   const vraies = $('.vraies');
-  if (swPh) swPh.addEventListener('change', () => { if (vraies) vraies.classList.toggle('on', swPh.checked); $$('[data-k="site"]').forEach(c => majCarte(c)); });
+  if (swPh) swPh.addEventListener('change', () => { if (vraies) vraies.classList.toggle('on', swPh.checked); $$('[data-of][data-k="site"]').forEach(c => majCarte(c)); });
 
   /* carrousels tactiles : le sens du geste est décidé au départ ; vertical, les cartes restent immobiles */
   const verrou = el => {
@@ -276,7 +280,7 @@
   const ouvreGal = r => {
     if (!gp || !r) return; G.r = r;
     $('#gpK').textContent = K[r.k] || 'Reportage'; const gpf = $('.gp-f .d'); if (gpf) gpf.textContent = GRAPH.includes(r) ? 'Un projet graphique\u00a0?' : 'Un événement à photographier\u00a0?'; $('#gpT').textContent = r.t; $('#gpS').textContent = r.ph.length + ' photos';
-    const RAT = window.RAT || {}; gpG.innerHTML = r.ph.map((p, i) => `<button data-i="${i}" aria-label="Agrandir la photo ${i + 1}" style="aspect-ratio:${RAT[p] || .75}"><img src="/p/t/${p}.webp" width="640" height="${Math.round(640 / (RAT[p] || .75))}" alt="${r.t}, photo ${i + 1}" loading="${i < 6 ? 'eager' : 'lazy'}" decoding="async"></button>`).join('');
+    const RAT = window.RAT || {}; gpG.innerHTML = r.ph.map((p, i) => `<button data-i="${i}" aria-label="Agrandir la photo ${i + 1}" style="aspect-ratio:${RAT[p] || .75}"${i ? '' : ' class="une"'}><img src="${i ? `/p/t/${p}.webp` : `/p/${p}.jpg`}" onload="this.classList.add('ok')" width="640" height="${Math.round(640 / (RAT[p] || .75))}" alt="${r.t}, photo ${i + 1}" loading="${i < 6 ? 'eager' : 'lazy'}" decoding="async"></button>`).join('');
     const tous = GRAPH.includes(r) ? GRAPH : REPS; const autres = tous.filter(x => x !== r && x.k === r.k).concat(tous.filter(x => x !== r && x.k !== r.k)).slice(0, 4);
     $('#gpSim').innerHTML = autres.map(x => `<button data-r="${x.id}"><img src="/p/t/${x.ph[0]}.webp" alt="" loading="lazy"><b>${x.t}</b></button>`).join('');
     if (gp.hidden) { avantG = document.activeElement; gp.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => gp.classList.add('on'))); document.documentElement.style.overflow = 'hidden'; if (dock) dock.classList.add('cache'); setTimeout(() => $('#gpB').focus({ preventScroll: true }), 80); }
@@ -341,7 +345,8 @@
     if (P.o) ES.o.forEach(i => { const o = P.o.o[i]; if (o[1] == null) dv = true; else a += o[1]; L.push(o[0]); });
     return { a, m, dv, per, L };
   };
-  const txtEst = r => !r ? '' : (r.a || r.m) ? `dès ${fmt(r.a || r.m)} €${r.a && r.m ? `, puis ${fmt(r.m)} € par mois` : r.per ? ' ' + r.per : ''}${r.dv ? ', plus une partie sur devis' : ''}` : 'sur devis';
+  const eng = () => ES.k === 'site' ? ', 12 mois minimum' : ES.k === 'app' && !ES.p ? ', 18 mois minimum' : '';
+  const txtEst = r => !r ? '' : (r.a || r.m) ? `dès ${fmt(r.a || r.m)} €${r.a && r.m ? `, puis ${fmt(r.m)} € par mois${eng()}` : r.per ? ' ' + r.per : ''}${r.dv ? ', plus une partie sur devis' : ''}` : 'sur devis';
 
   /* frise de date du devis */
   const MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
@@ -387,7 +392,7 @@
   const pied = () => {
     const r = calc(), cible = r ? (r.a || r.m || null) : null;
     const v = !r ? `<small>Estimation</small><span class="v"><i>Choisissez votre projet</i></span>`
-      : cible ? `<small>Estimation</small><span class="v"><small>dès</small><b class="prix" id="estN"></b><i>€${r.a && r.m ? `, puis ${fmt(r.m)} € par mois` : r.per ? ' ' + r.per : ''}${r.dv ? ', plus une partie sur devis' : ''}</i></span>`
+      : cible ? `<small>Estimation</small><span class="v"><small>dès</small><b class="prix" id="estN"></b><i>€${r.a && r.m ? `, puis ${fmt(r.m)} € par mois${eng()}` : r.per ? ' ' + r.per : ''}${r.dv ? ', plus une partie sur devis' : ''}</i></span>`
       : `<small>Estimation</small><span class="v"><b class="sd">Sur devis</b></span>`;
     const act = ES.e === 0 ? `<button class="bt cl sm" data-cal>Préférer un appel</button>`
       : ES.e === 1 ? `<button class="bt cl sm" data-nav="-1">Retour</button><button class="bt sm" data-nav="1">Continuer <span class="ar">${ico('ar')}</span></button>`
@@ -398,9 +403,11 @@
   };
   const rendE = () => {
     $$('#estP i').forEach((x, i) => x.classList.toggle('on', i <= Math.min(ES.e, 2)));
+    const L = $('#estL'); if (L) L.textContent = ES.e === 3 ? 'Demande envoyée' : `Étape ${ES.e + 1} sur 3 : ${['votre projet', 'les détails', 'vos coordonnées'][ES.e]}`;
     let h = '';
     if (ES.e === 0) {
-      ['Photographie', 'Web', 'Design graphique'].forEach(g => { h += `<div class="q"><p>${g}</p><div class="opts ch">${Object.entries(PJ).filter(([, P]) => P.g === g).map(([k, P]) => `<button data-k="${k}" aria-pressed="${ES.k === k}">${ico(P.ic)}<span>${P.l}</span></button>`).join('')}</div></div>`; });
+      const GR = ['Photographie', 'Web', 'Design graphique']; if (ES.g) GR.sort((a, b) => (b === ES.g) - (a === ES.g));
+      GR.forEach(g => { h += `<div class="q${ES.g && g !== ES.g ? ' q-aut' : ES.g ? ' q-ici' : ''}"><p>${ES.g && g !== ES.g ? 'Ou bien, ' + g.toLowerCase() : g}</p><div class="opts ch">${Object.entries(PJ).filter(([, P]) => P.g === g).map(([k, P]) => `<button data-k="${k}" aria-pressed="${ES.k === k}">${ico(P.ic)}<span>${P.l}</span></button>`).join('')}</div></div>`; });
     } else if (ES.e === 1) {
       const P = PJ[ES.k];
       h += `<div class="q"><p>${P.l}</p></div><div class="q"><p>${P.f.l}</p><div class="opts">${P.f.o.map((o, i) => { const pr = o[1] == null ? 'sur devis' : Array.isArray(o[1]) ? (ES.k === 'app' ? (ES.p ? `dès ${fmt(o[1][2])} €` : `dès ${fmt(o[1][0])} €, puis ${o[1][1]} €/mois`) : (ES.p ? `dès ${o[1][1]} € par mois` : `dès ${fmt(o[1][0])} € par an`)) : `dès ${fmt(o[1])} €`; return `<button data-f="${i}" aria-pressed="${ES.f === i}">${o[0]}${o[2] ? `<small>${o[2]}</small>` : ''}<em>${pr}</em></button>`; }).join('')}</div></div>`;
@@ -411,7 +418,7 @@
     } else if (ES.e === 2) {
       const P = PJ[ES.k], r = calc(), c = ES.c, q = s => (s || '').replace(/"/g, '&quot;');
       if (P.date && ES.d != null && !c.date) c.date = moisTxt().replace(/^./, m => m.toUpperCase()) + ', ';
-      h += `<div class="recap"><b>${P.l}</b>${r.L.concat(P.date && ES.d != null ? [moisTxt()] : []).join(' · ')}<br>Estimation : ${txtEst(r)}</div><div class="form" style="margin-top:16px">
+      h += `<div class="recap"><button type="button" class="rc-mod" data-mod>Modifier</button><b>${P.l}</b>${r.L.concat(P.date && ES.d != null ? [moisTxt()] : []).join(' · ')}<br>Estimation : ${txtEst(r)}</div><div class="form" style="margin-top:16px">
         <label>Nom, structure<input id="eNom" autocomplete="name" value="${q(c.nom)}"></label>
         <label>E-mail<input id="eMail" type="email" autocomplete="email" value="${q(c.mail)}"></label>
         <label>Téléphone, si vous préférez être rappelé<input id="eTel" type="tel" autocomplete="tel" value="${q(c.tel)}"></label>
@@ -431,9 +438,10 @@
     estB.innerHTML = h; estB.scrollTop = 0; pied(); friseLie();
     $$('[data-close]', estB).forEach(b => b.addEventListener('click', fermeF));
   };
+  const erreur = t => { let e = $('#estErr'); if (!e) { e = document.createElement('p'); e.id = 'estErr'; e.className = 'err'; e.setAttribute('role', 'alert'); const f = $('.form', estB); if (f) f.after(e); else estB.appendChild(e); } e.innerHTML = t; e.hidden = !t; };
   const garde = () => { const g = id => { const e = $('#' + id); return e ? e.value.trim() : ''; }; if (ES.e === 2) ES.c = { nom: g('eNom'), mail: g('eMail'), tel: g('eTel'), date: g('eDate'), msg: g('eMsg') }; };
   const ouvreDevis = s => {
-    if (ES.e === 3) ES = { e: 0, k: null, f: 0, o: [], p: 0, j: 1, c: {}, d: 5 };
+    if (ES.e === 3) ES = { e: 0, k: null, f: 0, o: [], p: 0, j: 1, c: {}, d: 5, g: ES.g };
     if (s && s.k && PJ[s.k]) { ES.k = s.k; ES.f = s.f || 0; ES.o = (s.o || []).slice(); ES.j = 1; ES.p = s.k === 'app' ? (s.achat ? 1 : 0) : (s.mois ? 1 : 0); if (s.ph) ES.o = [0]; ES.e = 1; }
     else if (!ES.k) ES.e = 0;
     dernier = null; rendE(); ouvreF('#shE'); compte('/devis', 'Ouverture du devis');
@@ -443,6 +451,7 @@
       const b = e.target.closest('button'); if (!b) return; const d = b.dataset;
       if (d.k) { ES.k = d.k; ES.f = 0; ES.o = []; ES.p = 0; ES.j = 1; ES.e = 1; rendE(); compte('/devis/' + d.k, 'Devis : ' + PJ[d.k].l); return; }
       if (d.nd != null) { ES.d = ES.d == null ? 5 : null; friseMaj(); return; }
+      if (d.mod != null) { garde(); ES.e = 1; rendE(); return; }
       if (d.f != null) ES.f = +d.f; else if (d.p != null) ES.p = +d.p; else if (d.j) ES.j = +d.j; else if (d.o != null) { const i = +d.o; ES.o = ES.o.includes(i) ? ES.o.filter(x => x !== i) : [...ES.o, i]; } else return;
       const y = estB.scrollTop; rendE(); estB.scrollTop = y;
     });
@@ -451,14 +460,15 @@
       if (b.dataset.nav) { garde(); ES.e = Math.max(0, ES.e + Number(b.dataset.nav)); rendE(); if (ES.e === 2) setTimeout(() => { const n = $('#eNom'); if (n && !n.value) n.focus({ preventScroll: true }); }, 350); return; }
       if (b.dataset.envoi != null) {
         garde(); const c = ES.c;
-        if (!c.nom) { toast('Indiquez votre nom ou celui de votre structure.'); $('#eNom').focus(); return; }
-        if (!mailOk(c.mail)) { toast('Cette adresse e-mail semble incomplète.'); $('#eMail').focus(); return; }
-        const P = PJ[ES.k], r = calc(); b.disabled = true;
+        const faute = (id, t) => { const f = $('#' + id); f.setAttribute('aria-invalid', 'true'); f.addEventListener('input', () => f.removeAttribute('aria-invalid'), { once: true }); erreur(t); f.focus(); };
+        if (!c.nom) { faute('eNom', 'Indiquez votre nom ou celui de votre structure.'); return; }
+        if (!mailOk(c.mail)) { faute('eMail', 'Cette adresse e-mail semble incomplète.'); return; }
+        erreur(''); const P = PJ[ES.k], r = calc(); b.disabled = true; b.classList.add('charge'); b.firstChild.textContent = 'Envoi en cours ';
         try { await envoie({ _subject: 'Demande de devis : ' + P.l.toLowerCase(), Projet: P.l, 'Détail': r.L.join(', '), Estimation: txtEst(r), Nom: c.nom, Email: c.mail, 'Téléphone': c.tel, 'Date et lieu': c.date || '', Message: c.msg || '' }); ES.e = 3; if (!reduit) { const fl = document.createElement('div'); fl.className = 'flash'; document.body.appendChild(fl); setTimeout(() => fl.remove(), 600); } rendE(); compte('/devis/envoye', 'Demande de devis envoyée'); }
-        catch (er) { b.disabled = false; toast('L’envoi a échoué. Écrivez à contact@studioes.fr.'); }
+        catch (er) { b.disabled = false; b.classList.remove('charge'); b.firstChild.textContent = 'Réessayer '; erreur('L’envoi n’a pas abouti. Vérifiez votre connexion et réessayez, ou écrivez à <a href="mailto:contact@studioes.fr">contact@studioes.fr</a> : vos choix sont conservés.'); }
       }
     });
-    $$('[data-est]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); ouvreDevis(b.dataset.k && PJ[b.dataset.k] ? { k: b.dataset.k, f: 0, o: [] } : null); }));
+    $$('[data-est]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); ES.g = b.dataset.g || (b.dataset.k && PJ[b.dataset.k] ? PJ[b.dataset.k].g : null); ouvreDevis(b.dataset.k && PJ[b.dataset.k] ? { k: b.dataset.k, f: 0, o: [] } : null); }));
   }
 
   /* message libre */
@@ -468,10 +478,10 @@
     if (!d.nom) { toast('Indiquez votre nom ou celui de votre structure.'); return; }
     if (!mailOk(d.email)) { toast('Cette adresse e-mail semble incomplète.'); return; }
     if (!d.message) { toast('Quelques mots sur votre projet, et c’est parti.'); return; }
-    const bt = $('button[type=submit]', form); bt.disabled = true;
+    const bt = $('button[type=submit]', form); bt.disabled = true; bt.classList.add('charge');
     try { await envoie({ _subject: 'Nouveau message depuis studioes.fr', Nom: d.nom, Email: d.email, 'Téléphone': d.tel || '', Message: d.message }); form.reset(); fermeF(); toast('Message envoyé. Réponse sous 48 h.'); compte('/contact/envoye', 'Message envoyé'); }
-    catch (er) { toast('L’envoi a échoué. Écrivez à contact@studioes.fr.'); }
-    bt.disabled = false;
+    catch (er) { toast('L’envoi n’a pas abouti. Réessayez ou écrivez à contact@studioes.fr.'); }
+    bt.disabled = false; bt.classList.remove('charge');
   });
 
   /* appel de 30 min : fenêtre Cal.com par-dessus le site, nouvel onglet en secours */
