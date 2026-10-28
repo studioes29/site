@@ -221,13 +221,17 @@
   $$('[data-rail]').forEach(b => b.addEventListener('click', () => { const R = rails.find(x => x.el.id === b.dataset.rail); if (!R) return; R.tiens(8000); R.el.scrollBy({ left: Number(b.dataset.d) * R.el.clientWidth * .7, behavior: 'smooth' }); setTimeout(() => R.pos = R.el.scrollLeft, 700); }));
 
   /* reportages */
-  const K = { scene: 'Concert', public: 'Festival et public', corp: 'Entreprise, collectivité' };
-  const FI = [['tout', 'Tout'], ['scene', 'Concerts'], ['public', 'Festivals et public'], ['corp', 'Entreprises et collectivités']];
+  const K = { scene: 'Concert', public: 'Festival', corp: 'Événementiel et institutions', ident: 'Identités visuelles', camp: 'Campagnes', edit: 'Éditions' };
+  // trois familles de reportages : concerts et festivals, événementiel et institutions, portraits et métiers
+  const CAT = r => r.k === 'corp' ? (r.id === 'fl-auto-photo' ? 'metier' : 'inst') : 'concert';
+  const FI = [['tout', 'Tout'], ['concert', 'Concerts et festivals'], ['inst', 'Événementiel et institutions'], ['metier', 'Portraits et métiers']];
+  const GRAPH = window.GRAPH || [];
+  const trouve = id => REPS.find(x => x.id === id) || GRAPH.find(x => x.id === id);
   const REPS = window.REPS || []; let filtre = 'tout';
   const railR = $('#rail'), chips = $('#chips');
   const dessine = () => {
     if (!railR) return;
-    const L = filtre === 'tout' ? REPS : REPS.filter(r => r.k === filtre);
+    const L = filtre === 'tout' ? REPS : REPS.filter(r => CAT(r) === filtre);
     let h = '';
     L.forEach((r, i) => {
       h += `<button class="rc" data-r="${r.id}" aria-label="Voir le reportage ${r.t}"><span class="im"><img src="/p/t/${r.ph[0]}.webp" alt="" loading="${i < 8 ? 'eager' : 'lazy'}" decoding="async"><span class="rafale" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></span></span><span class="lab"><b>${r.t}</b><span>${K[r.k] || ''}</span><small>${r.ph.length} photos</small></span></button>`;
@@ -237,7 +241,7 @@
   if (railR) {
     rail(railR);
     FI.forEach(([k, l], i) => {
-      const n = k === 'tout' ? REPS.length : REPS.filter(r => r.k === k).length; if (!n) return;
+      const n = k === 'tout' ? REPS.length : REPS.filter(r => CAT(r) === k).length; if (!n) return;
       const b = document.createElement('button'); b.innerHTML = `${l}<small>${n}</small>`; b.setAttribute('aria-pressed', String(!i));
       b.addEventListener('click', () => { $$('button', chips).forEach(x => x.setAttribute('aria-pressed', String(x === b))); filtre = k; dessine(); });
       chips.appendChild(b);
@@ -271,9 +275,9 @@
   let avantG = null;
   const ouvreGal = r => {
     if (!gp || !r) return; G.r = r;
-    $('#gpK').textContent = K[r.k] || 'Reportage'; $('#gpT').textContent = r.t; $('#gpS').textContent = r.ph.length + ' photos';
+    $('#gpK').textContent = K[r.k] || 'Reportage'; const gpf = $('.gp-f .d'); if (gpf) gpf.textContent = GRAPH.includes(r) ? 'Un projet graphique\u00a0?' : 'Un événement à photographier\u00a0?'; $('#gpT').textContent = r.t; $('#gpS').textContent = r.ph.length + ' photos';
     const RAT = window.RAT || {}; gpG.innerHTML = r.ph.map((p, i) => `<button data-i="${i}" aria-label="Agrandir la photo ${i + 1}" style="aspect-ratio:${RAT[p] || .75}"><img src="/p/t/${p}.webp" width="640" height="${Math.round(640 / (RAT[p] || .75))}" alt="${r.t}, photo ${i + 1}" loading="${i < 6 ? 'eager' : 'lazy'}" decoding="async"></button>`).join('');
-    const autres = REPS.filter(x => x !== r && x.k === r.k).concat(REPS.filter(x => x !== r && x.k !== r.k)).slice(0, 4);
+    const tous = GRAPH.includes(r) ? GRAPH : REPS; const autres = tous.filter(x => x !== r && x.k === r.k).concat(tous.filter(x => x !== r && x.k !== r.k)).slice(0, 4);
     $('#gpSim').innerHTML = autres.map(x => `<button data-r="${x.id}"><img src="/p/t/${x.ph[0]}.webp" alt="" loading="lazy"><b>${x.t}</b></button>`).join('');
     if (gp.hidden) { avantG = document.activeElement; gp.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => gp.classList.add('on'))); document.documentElement.style.overflow = 'hidden'; if (dock) dock.classList.add('cache'); setTimeout(() => $('#gpB').focus({ preventScroll: true }), 80); }
     gp.scrollTop = 0; try { history.replaceState(null, '', '#r=' + r.id); } catch (e) {}
@@ -286,15 +290,19 @@
   if (gp) {
     $('#gpB').addEventListener('click', fermeGal);
     gpG.addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (b) ouvreLb(+b.dataset.i); });
-    $('#gpSim').addEventListener('click', e => { const b = e.target.closest('[data-r]'); if (b) ouvreGal(REPS.find(r => r.id === b.dataset.r)); });
-    $('#gpGo').addEventListener('click', () => { const r = G.r; fermeGal(); ouvreDevis({ k: r && r.k === 'corp' ? 'evenement' : 'evenement', f: r && r.k === 'public' ? 2 : 0, o: [] }); });
+    $('#gpSim').addEventListener('click', e => { const b = e.target.closest('[data-r]'); if (b) ouvreGal(trouve(b.dataset.r)); });
+    $('#gpGo').addEventListener('click', () => { const r = G.r; fermeGal(); const gk = r && { ident: 'identite', camp: 'campagne', edit: 'edition' }[r.k]; ouvreDevis(gk ? { k: gk, f: 0, o: [] } : { k: 'evenement', f: r && r.k === 'public' ? 2 : 0, o: [] }); });
     $('#lbP').addEventListener('click', () => ouvreLb(G.i - 1)); $('#lbN').addEventListener('click', () => ouvreLb(G.i + 1)); $('#lbX').addEventListener('click', fermeLb);
     lb.addEventListener('click', e => { if (e.target === lb) fermeLb(); });
     let x0 = null; lb.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true }); lb.addEventListener('touchend', e => { if (x0 == null) return; const d = e.changedTouches[0].clientX - x0; if (Math.abs(d) > 50) ouvreLb(G.i + (d < 0 ? 1 : -1)); x0 = null; }, { passive: true });
     addEventListener('keydown', e => { if (!lb.hidden) { if (e.key === 'ArrowRight') ouvreLb(G.i + 1); else if (e.key === 'ArrowLeft') ouvreLb(G.i - 1); else if (e.key === 'Escape') fermeLb(); } else if (!gp.hidden && e.key === 'Escape') fermeGal(); });
   }
+  document.addEventListener('click', e => {
+    const c = e.target.closest('[data-r]'); if (!c || c.closest('#rail') || c.closest('#gpSim') || !gp) return;
+    const r = trouve(c.dataset.r); if (!r) return; e.preventDefault(); ouvreGal(r);
+  });
   const h = location.hash.match(/^#r=([\w-]+)/);
-  if (h) { const r = REPS.find(x => x.id === h[1]); if (r && gp) setTimeout(() => ouvreGal(r), 300); else { const go = { soute: '/projets/la-soute/', marelle: '/projets/mjc-la-marelle/' }[h[1]]; if (go) location.replace(go); else { const t = $('#travaux'); if (t) setTimeout(() => t.scrollIntoView(), 200); } } }
+  if (h) { const r = trouve(h[1]); if (r && gp) setTimeout(() => ouvreGal(r), 300); else { const go = { soute: '/projets/la-soute/', marelle: '/projets/mjc-la-marelle/' }[h[1]]; if (go) location.replace(go); else { const t = $('#travaux'); if (t) setTimeout(() => t.scrollIntoView(), 200); } } }
 
   /* feuilles */
   const voile = $('#voile'); let ouverte = null, avant = null;
@@ -318,7 +326,10 @@
     evenement: { l: 'Un événement', g: 'Photographie', ic: 'ap', date: 1, f: { l: 'Durée', o: [['Concert', 250, 'Spectacle, 1 h 30 à 2 h'], ['Demi-journée', 350, '4 h sur place'], ['Journée ou festival', 550, '8 h sur place, par jour', 'j']] }, o: { l: 'Options', o: [['Sélection livrée le soir même', 150], ['Une heure de plus', 80]] } },
     annee: { l: 'Un suivi photo annuel', g: 'Photographie', ic: 'ca', f: { l: 'Forfait', o: [['4 demi-journées', [1290, 109], 'soit 323 € l’une'], ['8 demi-journées', [2490, 209], 'soit 311 € l’une'], ['12 demi-journées', [3590, 299], 'soit 299 € l’une'], ['Plus de 12', null, 'sur devis']] }, p: { l: 'Paiement', o: [['Par an', 'en une fois'], ['Par mois', 'sur 12 mois']] } },
     site: { l: 'Un site internet', g: 'Web', ic: 'ec', f: { l: 'Formule', o: [['Essentiel', 990, 'Une page'], ['Vitrine', 1990, '3 à 5 pages'], ['Sur mesure', 4490, 'Arborescence libre'], ['À définir ensemble', null, 'On en parle']] }, o: { l: 'En plus', o: [['Reportage photo du lieu et de l’équipe', 350], ['Réservation ou espace membres', null]] } },
-    app: { l: 'Une application', g: 'Web', ic: 'pl', f: { l: 'Projet', o: [['Devis en ligne', [190, 85, 1090]], ['Application web', [390, 150, 2790]], ['Avec automatisations', [790, 250, 5490]], ['Une idée à préciser', null, 'On en parle']] }, p: { l: 'Formule', o: [['Abonnement', 'engagement de 18 mois'], ['Achat', 'l’application vous appartient']] } }
+    app: { l: 'Une application', g: 'Web', ic: 'pl', f: { l: 'Projet', o: [['Devis en ligne', [190, 85, 1090]], ['Application web', [390, 150, 2790]], ['Avec automatisations', [790, 250, 5490]], ['Une idée à préciser', null, 'On en parle']] }, p: { l: 'Formule', o: [['Abonnement', 'engagement de 18 mois'], ['Achat', 'l’application vous appartient']] } },
+    identite: { l: 'Une identité visuelle', g: 'Design graphique', ic: 'gr', f: { l: 'Projet', o: [['Logo et univers', null, 'Logotype, couleurs, typographies'], ['Identité complète', null, 'Charte et déclinaisons'], ['Identité et signalétique', null, 'Enseigne, panneaux, lieux'], ['À définir ensemble', null, 'On en parle']] } },
+    campagne: { l: 'Une campagne', g: 'Design graphique', ic: 'ms', date: 1, f: { l: 'Projet', o: [['Événement ou festival', null, 'Affiche et déclinaisons'], ['Saison culturelle', null, 'Direction artistique de saison'], ['Recrutement ou institution', null, 'Message, affichage, réseaux'], ['À définir ensemble', null, 'On en parle']] } },
+    edition: { l: 'Une édition', g: 'Design graphique', ic: 's3', date: 1, f: { l: 'Support', o: [['Brochure ou programme', null, '8 à 40 pages'], ['Magazine ou catalogue', null, 'Numéros réguliers'], ['Dépliant ou plaquette', null, 'Recto verso, plis'], ['À définir ensemble', null, 'On en parle']] } },
   };
   const estB = $('#estB'), estF = $('#estF');
   let ES = { e: 0, k: null, f: 0, o: [], p: 0, j: 1, c: {}, d: 5 };
@@ -389,7 +400,7 @@
     $$('#estP i').forEach((x, i) => x.classList.toggle('on', i <= Math.min(ES.e, 2)));
     let h = '';
     if (ES.e === 0) {
-      ['Photographie', 'Web'].forEach(g => { h += `<div class="q"><p>${g}</p><div class="opts ch">${Object.entries(PJ).filter(([, P]) => P.g === g).map(([k, P]) => `<button data-k="${k}" aria-pressed="${ES.k === k}">${ico(P.ic)}<span>${P.l}</span></button>`).join('')}</div></div>`; });
+      ['Photographie', 'Web', 'Design graphique'].forEach(g => { h += `<div class="q"><p>${g}</p><div class="opts ch">${Object.entries(PJ).filter(([, P]) => P.g === g).map(([k, P]) => `<button data-k="${k}" aria-pressed="${ES.k === k}">${ico(P.ic)}<span>${P.l}</span></button>`).join('')}</div></div>`; });
     } else if (ES.e === 1) {
       const P = PJ[ES.k];
       h += `<div class="q"><p>${P.l}</p></div><div class="q"><p>${P.f.l}</p><div class="opts">${P.f.o.map((o, i) => { const pr = o[1] == null ? 'sur devis' : Array.isArray(o[1]) ? (ES.k === 'app' ? (ES.p ? `dès ${fmt(o[1][2])} €` : `dès ${fmt(o[1][0])} €, puis ${o[1][1]} €/mois`) : (ES.p ? `dès ${o[1][1]} € par mois` : `dès ${fmt(o[1][0])} € par an`)) : `dès ${fmt(o[1])} €`; return `<button data-f="${i}" aria-pressed="${ES.f === i}">${o[0]}${o[2] ? `<small>${o[2]}</small>` : ''}<em>${pr}</em></button>`; }).join('')}</div></div>`;
@@ -447,7 +458,7 @@
         catch (er) { b.disabled = false; toast('L’envoi a échoué. Écrivez à contact@studioes.fr.'); }
       }
     });
-    $$('[data-est]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); ouvreDevis(null); }));
+    $$('[data-est]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); ouvreDevis(b.dataset.k && PJ[b.dataset.k] ? { k: b.dataset.k, f: 0, o: [] } : null); }));
   }
 
   /* message libre */
@@ -488,8 +499,21 @@
 (() => { const H = location.hash;
   if (H === '#mentions') { const b = document.querySelector('[data-legal]'); if (b) setTimeout(() => b.click(), 300); return; }
   if (H === '#devis' || H === '#estimer') { const b = document.querySelector('[data-est]'); if (b) setTimeout(() => b.click(), 300); return; }
-  const m = { '#rdv': 'contact', '#offre': 'photographie', '#offres': 'photographie' }[H]; const t = m && document.getElementById(m); if (t) setTimeout(() => t.scrollIntoView(), 200); })();
+  const vers = { '#photographie': '/metiers/photographie/', '#travaux': '/metiers/photographie/#photographie', '#web': '/metiers/sites-et-outils/', '#realisations': '/realisations/', '#applications': '/metiers/sites-et-outils/#applications', '#offre': '/metiers/photographie/#formules', '#offres': '/metiers/photographie/#formules' }[H];
+  if (vers && !document.getElementById(H.slice(1))) { location.replace(vers); return; }
+  const m = { '#rdv': 'contact' }[H]; const t = m && document.getElementById(m); if (t) setTimeout(() => t.scrollIntoView(), 200); })();
 
 /* bannière : fondu entre les photos, une toutes les 5 secondes */
 (function(){var f=document.querySelector('.h2p');if(!f||matchMedia('(prefers-reduced-motion: reduce)').matches)return;var im=[].slice.call(f.querySelectorAll('img')),c=document.getElementById('h2c'),k=0;
 setInterval(function(){if(document.hidden)return;im[k].classList.remove('on');k=(k+1)%im.length;im[k].classList.add('on');c.textContent=im[k].dataset.c;},5000);})();
+
+/* Réalisations : filtres par discipline, un projet peut porter plusieurs étiquettes */
+(() => {
+  const f = document.querySelector('[data-filtre]'); if (!f) return;
+  const tl = [...document.querySelectorAll('.rl-g .tl')];
+  f.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return; const k = b.dataset.f;
+    f.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    tl.forEach((t, i) => { const on = !k || t.dataset.t.split(' ').includes(k); t.hidden = !on; if (on) { t.classList.remove('in'); void t.offsetWidth; t.classList.add('in'); } });
+  });
+})();
