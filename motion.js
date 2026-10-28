@@ -4,22 +4,13 @@
   const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
-  /* ---------- 1. la bannière : photographie, interface, affiche, puis le studio ---------- */
+  /* ---------- 1. la bannière : quatre plans d'une même scène ---------- */
   const hx = $('#hx');
   if (hx) {
-    const T = [[0, 1], [2600, 2], [3900, 'defile'], [5400, 3], [7900, 4]], FIN = 9300;
-    const DUR = { 1: 2600, 2: 2800, 3: 2500 };
+    /* plan 1 photo, 2 web, 3 graphisme, 4 composition finale (data-s 0 à 3) */
+    const T = [[0, 0], [2600, 1], [3500, 'defile'], [5400, 2], [7900, 3]], FIN = 8000;
     const bt = $('#hxP');
-    const mots = a => $$('.hx-mots span', hx).forEach(s => {
-      const ici = s.dataset.a === String(a);
-      if (s.classList.contains('on') && !ici) { s.classList.remove('on'); s.classList.add('sort'); setTimeout(() => s.classList.remove('sort'), 800); }
-      if (ici) { s.classList.remove('sort'); s.classList.add('on'); }
-    });
-    const disc = a => $$('.hx-disc li', hx).forEach(li => {
-      const n = +li.dataset.a; li.style.setProperty('--dur', (DUR[n] || 2600) + 'ms');
-      li.classList.toggle('on', n === a); li.classList.toggle('fait', n < a);
-    });
-    const pose = a => { hx.dataset.a = a; mots(a); disc(a); };
+    const pose = n => { hx.dataset.s = n; $$('.sc-disc li', hx).forEach(li => li.classList.toggle('on', +li.dataset.s === n)); };
     let t0 = 0, ecoule = 0, k = 0, joue = false, fini = false, vis = true, raf = 0;
     const libelle = () => {
       if (!bt) return;
@@ -36,24 +27,24 @@
       if (ecoule >= FIN) { joue = false; fini = true; libelle(); return; }
       raf = requestAnimationFrame(tic);
     };
-    const lance = () => {
-      hx.classList.remove('defile'); k = 0; ecoule = 0; fini = false; joue = true;
-      $$('.hx-mots span', hx).forEach(s => s.classList.remove('on', 'sort'));
-      $$('.hx-disc li', hx).forEach(li => li.classList.remove('on', 'fait'));
+    const lance = rejoue => {
+      k = 0; ecoule = 0; fini = false; joue = true;
+      if (rejoue) {
+        /* on referme la scène en douceur, puis la caméra repart */
+        hx.classList.remove('defile'); pose(0);
+        $$('.sc-photo picture, .sc-cut picture', hx).forEach(p => { p.style.animation = 'none'; void p.offsetWidth; p.style.animation = ''; });
+      }
       requestAnimationFrame(t => { t0 = t; if (!raf) raf = requestAnimationFrame(tic); }); libelle();
     };
-    if (reduit) { delete hx.dataset.a; }
+    if (reduit) { delete hx.dataset.s; }
     else {
-      const im = $('.hx-ph img', hx), go = () => { if (!joue && !fini) lance(); };
-      if (im.complete) go(); else { im.addEventListener('load', go, { once: true }); setTimeout(go, 1600); }
+      lance(false);
       new IntersectionObserver(e => { vis = e[0].isIntersecting; }, { threshold: .1 }).observe(hx);
       if (bt) bt.addEventListener('click', () => {
-        if (fini) { lance(); return; }
+        if (fini) { lance(true); return; }
         joue = !joue; if (joue) requestAnimationFrame(t => { t0 = t - ecoule; if (!raf) raf = requestAnimationFrame(tic); });
-        hx.querySelectorAll('*').forEach(x => x.getAnimations && x.getAnimations().forEach(an => joue ? an.play() : an.pause()));
         libelle();
       });
-      /* parallaxe très légère au pointeur, une fois la composition posée */
       if (matchMedia('(hover: hover)').matches) hx.addEventListener('pointermove', e => { const r = hx.getBoundingClientRect(); hx.style.setProperty('--mx', ((e.clientX - r.left) / r.width - .5).toFixed(3)); hx.style.setProperty('--my', ((e.clientY - r.top) / r.height - .5).toFixed(3)); });
     }
   }

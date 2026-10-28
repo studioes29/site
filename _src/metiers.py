@@ -28,12 +28,13 @@ def FG(t, st, cl=''):
 bp = sect('photographie', B).split('\n')
 offres_ph = '\n'.join(bp[4:44])
 travaux = '\n'.join(bp[45:49])
-TETES = [('philippe-katerine', 'Philippe Katerine', '/p/philippe-katerine-2.jpg'), ('la-fouine', 'La Fouine', '/p/la-fouine-2.jpg'), ('fatal-bazooka', 'Fatal Bazooka', '/p/fatal-bazooka-1.jpg'),
-         ('gael-faye', 'Gaël Faye', '/p/gael-faye-1.jpg'), ('mentissa', 'Mentissa', '/p/mentissa-2.jpg'), ('danakil', 'Danakil', '/p/danakil-7.jpg'),
-         ('axel-bauer', 'Axel Bauer', '/p/axel-bauer-1.jpg'), ('synapson', 'Synapson', '/p/synapson-1.jpg')]
-NPH = {r['id']: len(r['ph']) for r in json.loads(re.search(r'window.REPS=(\[.*?\]);', open(os.path.join(RACINE, 'reps.js'), encoding='utf8').read(), re.S).group(1))}
-tetes = ''.join('<button type="button" class="ta ta%d" data-r="%s" aria-label="Voir le reportage %s, %d photos"><img src="%s" alt="" loading="lazy"><span><b class="d">%s</b><small>%d photos</small></span></button>' % (
-    i + 1, r, t, NPH.get(r, 0), im, t, NPH.get(r, 0)) for i, (r, t, im) in enumerate(TETES))
+# une sélection d'images, toutes familles confondues ; aucun reportage n'est mis en avant pour sa notoriété
+SELPH = [('philippe-katerine', 'Philippe Katerine', 'Concert', '/p/philippe-katerine-2.jpg'), ('inauguration', 'Inauguration', 'Institution', '/p/inaug-digue-5.jpg'),
+         ('pub-eucalyptus', 'Le Chant de l’Eucalyptus', 'Festival', '/p/pub-eucalyptus-2.jpg'), ('gael-faye', 'Gaël Faye', 'Concert', '/p/gael-faye-1.jpg'),
+         ('fl-auto-photo', 'FL Auto', 'Portrait de métier', '/p/fl-auto-photo-2.jpg'), ('voeux-ph', 'Cérémonie des vœux', 'Institution', '/p/voeux-ph-2.jpg'),
+         ('mentissa', 'Mentissa', 'Concert', '/p/mentissa-2.jpg'), ('forum-asso', 'Forum des associations', 'Événement', '/p/forum-asso-11.jpg')]
+tetes = ''.join('<button type="button" class="ta ta%d" data-r="%s" aria-label="Voir le reportage %s"><img src="%s" alt="" loading="lazy"><span><b class="d">%s</b><small>%s</small></span></button>' % (
+    i + 1, r, t, im, t, k) for i, (r, t, k, im) in enumerate(SELPH))
 AUDELA = [('pub-petites-folies', 'Festivals', 'Les Petites Folies, Le Chant de l’Eucalyptus, Festidreuz', '/p/t/pub-petites-folies-2.webp'),
           ('inauguration', 'Institutions', 'Inaugurations, cérémonies des vœux, commémorations', '/p/t/voeux-ph-2.webp'),
           ('fl-auto-photo', 'Entreprises et portraits', 'Un atelier, une équipe, des gestes de métier', '/projets/fl-auto/img/photo-2.webp'),
@@ -44,32 +45,32 @@ def ad(r, t, l, im):
     return o + '<span class="ad-i"><img src="%s" alt="" loading="lazy"></span><span class="ad-l"><b class="d">%s</b><span>%s</span></span>' % (im, t, l) + f
 audela = ''.join(ad(*x) for x in AUDELA)
 ph_droite = '<figure class="mh-ph" aria-hidden="true"><img class="a" src="/p/helena-3.jpg" alt="" fetchpriority="high" width="825" height="1100"><img class="b" src="/p/t/voeux-ph-2.webp" alt=""><img class="c" src="/projets/fl-auto/img/photo-2.webp" alt=""></figure>'
-ph_act = '<div class="mh-ac"><button type="button" class="bt" data-est data-k="evenement">Demander un devis %s</button><a class="ln" href="#tetes">Voir les reportages</a></div>' % AR
+ph_act = '<div class="mh-ac"><button type="button" class="bt" data-est data-k="evenement">Demander un devis %s</button><a class="ln" href="#reportages">Voir les reportages</a></div>' % AR
 ph = entete('Photographie', 'Photographie', 'Vos moments forts, sur le vif.', 'Concerts, festivals, cérémonies, vie d’une entreprise, mariages : un reportage discret en Bretagne, sans poses ni mise en scène, puis une sélection resserrée et retouchée, prête à servir.',
             ' u-noir mh-ph-s', FG('Photo', 'left:-1vw;bottom:-.44em;font-size:calc(var(--fg-t) * 1.1)'), ph_droite, ph_act, True)
 ph += '''
-<section class="sec feuille dk ph-f u-foret" id="tetes" data-dark aria-labelledby="t-tr">
-  ''' + FG('Scène', 'right:-2vw;top:-.36em;--vy:-80px;font-size:calc(var(--fg-t) * .9)') + '''
+<section class="sec feuille dk ph-f u-foret" id="reportages" data-dark aria-labelledby="t-tr">
+  ''' + FG('Reportage', 'right:-2vw;top:-.36em;--vy:-80px;font-size:calc(var(--fg-t) * .72)') + '''
   <div class="w">
-    <div class="sec-t rv"><div><p class="pt"><i>01</i><span>Sur scène</span></p><h2 class="d" id="t-tr">Têtes d’affiche<span class="it">Concerts et festivals.</span></h2></div><p class="lead">Des artistes de premier plan, photographiés au plus près de la scène. Chaque reportage s’ouvre en grand.</p></div>
+    <div class="sec-t rv"><div><p class="pt"><i>01</i><span>Portfolio</span></p><h2 class="d" id="t-tr">Reportages<span class="it">Une sélection d’images, puis tous les reportages.</span></h2></div><p class="lead">Concerts, festivals, institutions, entreprises : quelques images choisies, puis l’ensemble des reportages à parcourir. Chaque reportage s’ouvre en grand.</p></div>
     <div class="tetes">''' + tetes + '''</div>
 ''' + travaux.replace('<h3 class="d">Reportages récents</h3>', '<h3 class="d">Tous les reportages</h3>').replace('id="travaux"', 'id="photographie"') + '''
 </section>
 <section class="sec feuille ad-f u-papier" id="au-dela" aria-labelledby="t-ad">
   ''' + FG('Sur le vif', 'left:-2vw;bottom:-.3em;--vy:-60px;font-family:var(--sf);font-style:italic;font-weight:300;font-size:calc(var(--fg-t) * .62)') + '''
   <div class="w">
-    <div class="sec-t rv"><div><p class="pt"><i>02</i><span>Au-delà de la scène</span></p><h2 class="d" id="t-ad">Événements,<span class="it">entreprises, mariages.</span></h2></div><p class="lead">La même discrétion pour une inauguration, un atelier ou une journée de mariage.</p></div>
+    <div class="sec-t rv"><div><p class="pt"><i>02</i><span>Au-delà de la scène</span></p><h2 class="d" id="t-ad">Au-delà de la scène<span class="it">Événements, entreprises, mariages.</span></h2></div><p class="lead">La même discrétion pour une inauguration, un atelier ou une journée de mariage.</p></div>
     <div class="adl">''' + audela + '''</div>
   </div>
 </section>
 <section class="sec feuille fo-f u-menthe" id="formules" aria-labelledby="t-fo">
   ''' + FG('Formules', 'right:-3vw;top:-.38em;--vy:-70px;font-size:calc(var(--fg-t) * .62)') + '''
   <div class="w">
-    <div class="sec-t rv"><div><p class="pt"><i>03</i><span>Les formules</span></p><h2 class="d" id="t-fo">Événement, suivi,<span class="it">mariage.</span></h2></div><p class="lead">Des prix connus d’avance, modulables selon la durée. Le devis précise le reste.</p></div>
+    <div class="sec-t rv"><div><p class="pt"><i>03</i><span>Les formules</span></p><h2 class="d" id="t-fo">Les formules<span class="it">Événement, suivi annuel, mariage.</span></h2></div><p class="lead">Des prix connus d’avance, modulables selon la durée. Le devis précise le reste.</p></div>
 ''' + offres_ph + '''
   </div>
 </section>
-''' + croise('Le studio fait aussi<span class="it">des sites et des applications.</span>', 'Un site clair et bien référencé, ou une application qui fait gagner du temps. Et quand il faut de belles photos pour l’habiller, elles sont déjà là.', '/metiers/sites-et-outils/', 'Découvrir le web', '/projets/pierceval-tattoo/img/cover-800.webp', 'u-violet dk') + '\n' + \
+''' + croise('Web et digital<span class="it">Le studio conçoit aussi des sites et des applications.</span>', 'Un site clair et bien référencé, ou une application qui fait gagner du temps. Et quand il faut de belles photos pour l’habiller, elles sont déjà là.', '/metiers/sites-et-outils/', 'Découvrir le web', '/projets/pierceval-tattoo/img/cover-800.webp', 'u-violet dk') + '\n' + \
     contact_m('Événement, suivi annuel ou mariage : quelques choix, une estimation immédiate.', 'Photographie')
 page('metiers/photographie', 'Photographe de concert, d’événement et de mariage en Bretagne · Studio ES', 'Reportages photo en Bretagne : concerts et festivals (Philippe Katerine, Gaël Faye, Matmatah…), événements institutionnels, entreprises, portraits et mariages. Événement dès 250 €.', 'https://studioes.fr/metiers/photographie/', ph, og='og-photo.jpg',
      ld=LD('Photographie', 'https://studioes.fr/metiers/photographie/', 'Reportage photo d’événement, de concert et de mariage', [('Événement', 250), ('Suivi photo annuel', 1290), ('Mariage', 1290)]))
@@ -124,18 +125,18 @@ wb += '''
 <section class="sec feuille vi-f u-lilas" id="vitrine" aria-labelledby="t-vi">
   ''' + FG('Écrans', 'left:-2vw;bottom:-.34em;--vy:-80px;font-size:calc(var(--fg-t) * .8)') + '''
   <div class="w">
-    <div class="sec-t rv"><div><p class="pt"><i>01</i><span>Réalisations</span></p><h2 class="d" id="t-vi">Trois projets,<span class="it">trois expériences.</span></h2></div><p class="lead">Choisissez un projet, puis une fonctionnalité : l’écran correspondant s’affiche.</p></div>
+    <div class="sec-t rv"><div><p class="pt"><i>01</i><span>Réalisations</span></p><h2 class="d" id="t-vi">Réalisations web<span class="it">Trois projets, trois usages.</span></h2></div><p class="lead">Choisissez un projet, puis une fonctionnalité : l’écran correspondant s’affiche.</p></div>
     <div class="vi rv">''' + vitrine() + '''</div>
   </div>
 </section>
 <section class="sec feuille dk wb-o u-violet" id="web" data-dark aria-labelledby="t-of">
   ''' + FG('Sites', 'right:-2vw;bottom:-.4em;--vx:-50px;--vy:-40px;font-size:calc(var(--fg-t) * .85)') + '''
   <div class="w">
-    <div class="sec-t rv"><div><p class="pt"><i>02</i><span>Les offres</span></p><h2 class="d" id="t-of">Un site,<span class="it">à votre mesure.</span></h2></div><p class="lead">Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris. Le suivi mensuel garde le site à jour.</p></div>
+    <div class="sec-t rv"><div><p class="pt"><i>02</i><span>Les offres</span></p><h2 class="d" id="t-of">Sites internet<span class="it">Une création, puis un suivi mensuel.</span></h2></div><p class="lead">Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris. Le suivi mensuel garde le site à jour.</p></div>
 ''' + offres_web.replace('<div class="sous rv"><h3 class="d">Site internet</h3><p>Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris.</p></div>', '') + '''
   </div>
 </section>
-''' + sect('applications', B) + '\n' + croise('Le studio fait aussi<span class="it">de la photographie.</span>', 'Concerts, festivals, cérémonies, vie d’une entreprise, mariages : un reportage discret, puis une sélection resserrée et retouchée.', '/metiers/photographie/', 'Découvrir la photographie', '/p/t/matmatah-1.webp', 'u-foret dk') + '\n' + \
+''' + sect('applications', B) + '\n' + croise('Photographie<span class="it">Le studio photographie aussi vos événements.</span>', 'Concerts, festivals, cérémonies, vie d’une entreprise, mariages : un reportage discret, puis une sélection resserrée et retouchée.', '/metiers/photographie/', 'Découvrir la photographie', '/p/t/matmatah-1.webp', 'u-foret dk') + '\n' + \
     contact_m('Site ou application : quelques choix, une estimation immédiate.', 'Web')
 page('metiers/sites-et-outils', 'Sites internet et applications en Bretagne · Studio ES', 'Sites internet, réservation en ligne et applications sur mesure pour les TPE, lieux culturels et collectivités de Bretagne : Pierceval Tattoo, La Soute, flouz. Sites dès 990 €.', 'https://studioes.fr/metiers/sites-et-outils/', wb, og='og-web.jpg',
      ld=LD('Web', 'https://studioes.fr/metiers/sites-et-outils/', 'Création de sites internet et d’applications web', [('Site Essentiel', 990), ('Site Vitrine', 1990), ('Site sur mesure', 4490), ('Application sur mesure', 190)]))
@@ -220,20 +221,20 @@ of = entete('Offres', 'Offres', 'Prix connus d’avance.', 'Photographie, sites 
 of += '''
 <section class="sec feuille fo-f u-menthe" id="of-photo" aria-labelledby="t-op">
   <div class="w">
-    <div class="sec-t rv"><div><p class="pt"><i>01</i><span>Photographie</span></p><h2 class="d" id="t-op">Événement, suivi,<span class="it">mariage.</span></h2></div><p class="lead">Un reportage ponctuel, un photographe attitré à l’année ou une journée de mariage. Livraison d’une sélection retouchée, droits d’utilisation inclus.</p></div>
+    <div class="sec-t rv"><div><p class="pt"><i>01</i><span>Photographie</span></p><h2 class="d" id="t-op">Les formules<span class="it">Événement, suivi annuel, mariage.</span></h2></div><p class="lead">Un reportage ponctuel, un photographe attitré à l’année ou une journée de mariage. Livraison d’une sélection retouchée, droits d’utilisation inclus.</p></div>
 ''' + offres_ph + '''
   </div>
 </section>
 <section class="sec feuille dk wb-o u-violet" id="of-web" data-dark aria-labelledby="t-ow">
   <div class="w">
-    <div class="sec-t rv"><div><p class="pt"><i>02</i><span>Sites internet</span></p><h2 class="d" id="t-ow">Un site,<span class="it">puis son suivi.</span></h2></div><p class="lead">Un prix de création, puis 35 € par mois de suivi, douze mois minimum : hébergement, nom de domaine, sauvegardes, mises à jour et 30 minutes de modifications par mois.</p></div>
+    <div class="sec-t rv"><div><p class="pt"><i>02</i><span>Sites internet</span></p><h2 class="d" id="t-ow">Sites internet<span class="it">Une création, puis un suivi mensuel.</span></h2></div><p class="lead">Un prix de création, puis 35 € par mois de suivi, douze mois minimum : hébergement, nom de domaine, sauvegardes, mises à jour et 30 minutes de modifications par mois.</p></div>
 ''' + offres_web.replace('<div class="sous rv"><h3 class="d">Site internet</h3><p>Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris.</p></div>', '') + '''
   </div>
 </section>
 ''' + sect('applications', B) + '''
 <section class="sec feuille u-rose" id="of-graph" aria-labelledby="t-og">
   <div class="w">
-    <div class="sec-t rv"><div><p class="pt"><i>04</i><span>Design graphique</span></p><h2 class="d" id="t-og">Sur devis,<span class="it">selon le projet.</span></h2></div><p class="lead">Une identité, une campagne ou une édition se chiffrent après un premier échange : nombre de supports, déclinaisons, délais et impression.</p></div>
+    <div class="sec-t rv"><div><p class="pt"><i>04</i><span>Design graphique</span></p><h2 class="d" id="t-og">Design graphique<span class="it">Sur devis, selon le projet.</span></h2></div><p class="lead">Une identité, une campagne ou une édition se chiffrent après un premier échange : nombre de supports, déclinaisons, délais et impression.</p></div>
     <div class="og rv"><button type="button" class="og-c" data-est data-k="identite"><b class="d">Identité visuelle</b><span>Logo, charte, déclinaisons et signalétique.</span><em>Demander un devis ''' + AR + '''</em></button><button type="button" class="og-c" data-est data-k="campagne"><b class="d">Campagne</b><span>Concept, affiche et déclinaisons.</span><em>Demander un devis ''' + AR + '''</em></button><button type="button" class="og-c" data-est data-k="edition"><b class="d">Édition</b><span>Brochure, programme, magazine.</span><em>Demander un devis ''' + AR + '''</em></button></div>
   </div>
 </section>

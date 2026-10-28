@@ -405,17 +405,24 @@
     const act = ES.e === 0 ? `<button class="bt cl sm" data-cal>Préférer un appel</button>`
       : ES.e === 1 ? `<button class="bt cl sm" data-nav="-1">Retour</button><button class="bt sm" data-nav="1">Continuer <span class="ar">${ico('ar')}</span></button>`
       : `<button class="bt cl sm" data-nav="-1">Retour</button><button class="bt sm" data-envoi>Envoyer la demande <span class="ar">${ico('ar')}</span></button>`;
+    if (ES.e === 'fill') { estF.innerHTML = `<div class="tot"><small>Accompagnement régulier</small><span class="v"><i>Sur fill.studioes.fr</i></span></div><div class="act"><button class="bt cl sm" data-nav="0">Retour</button></div>`; return; }
     estF.innerHTML = ES.e === 3 ? '' : `<div class="tot">${v}</div><div class="act">${act}</div>`;
     const n = $('#estN');
     if (n) { n._ch = dernier; odo(n, fmt(cible), !dernier); dernier = n._ch; } else dernier = null;
   };
   const rendE = () => {
-    $$('#estP i').forEach((x, i) => x.classList.toggle('on', i <= Math.min(ES.e, 2)));
-    const L = $('#estL'); if (L) L.textContent = ES.e === 3 ? 'Demande envoyée' : `Étape ${ES.e + 1} sur 3 : ${['votre projet', 'les détails', 'vos coordonnées'][ES.e]}`;
+    $$('#estP i').forEach((x, i) => x.classList.toggle('on', ES.e === 'fill' ? i === 0 : i <= Math.min(ES.e, 2)));
+    const L = $('#estL'); if (L) L.textContent = ES.e === 'fill' ? 'Accompagnement régulier' : ES.e === 3 ? 'Demande envoyée' : `Étape ${ES.e + 1} sur 3 : ${['votre projet', 'les détails', 'vos coordonnées'][ES.e]}`;
     let h = '';
     if (ES.e === 0) {
       const GR = ['Photographie', 'Web', 'Design graphique']; if (ES.g) GR.sort((a, b) => (b === ES.g) - (a === ES.g));
       GR.forEach(g => { h += `<div class="q${ES.g && g !== ES.g ? ' q-aut' : ES.g ? ' q-ici' : ''}"><p>${ES.g && g !== ES.g ? 'Ou bien, ' + g.toLowerCase() : g}</p><div class="opts ch">${Object.entries(PJ).filter(([, P]) => P.g === g).map(([k, P]) => `<button data-k="${k}" aria-pressed="${ES.k === k}">${ico(P.ic)}<span>${P.l}</span></button>`).join('')}</div></div>`; });
+      h += `<div class="q q-fill"><p>Un accompagnement régulier</p><div class="opts ch"><button data-fill>${ico('cu')}<span>Une communication suivie chaque mois<small>Publications, actualités, créations</small></span></button></div></div>`;
+    } else if (ES.e === 'fill') {
+      h += `<div class="fl-go"><svg class="fl-lgo" viewBox="0 0 1376 720" role="img" aria-label="Fill"><g fill="#1A1A1A"><path d="M100 700V262C100 158 168 90 274 90H300V214H282C246 214 224 236 224 274V700Z"/><rect x="18" y="330" width="282" height="104" rx="8"/><rect x="360" y="330" width="124" height="370" rx="8"/><circle cx="422" cy="178" r="72"/></g><g fill="none" stroke-width="96" stroke-linecap="round" stroke-linejoin="round"><path stroke="#7052B3" d="M560 655C590 540 672 260 732 144C762 74 854 59 860 120C866 234 800 400 660 570C630 620 640 668 710 664C750 662 763 640 788 600"/><path stroke="#FF8A6B" d="M788 600C818 540 900 260 960 144C990 74 1082 59 1088 120C1094 234 1028 400 888 570C858 620 868 668 938 664C1038 660 1088 615 1188 612C1258 610 1288 600 1318 575"/></g></svg>
+        <h3 class="d">Ce besoin est pris en charge par Fill.</h3>
+        <p>Fill est le service de communication externalisée conçu par Studio ES pour les collectivités et les entreprises : publications, actualités, créations et suivi, avec un prix fixe chaque mois.</p>
+        <div class="fl-go-a"><a class="bt" href="https://fill.studioes.fr/simulateur/">Estimer mon besoin sur Fill <span class="ar">${ico('ne')}</span></a><a class="bt cl" href="https://fill.studioes.fr/diagnostic/">Faire le diagnostic</a></div></div>`;
     } else if (ES.e === 1) {
       const P = PJ[ES.k];
       h += `<div class="q"><p>${P.l}</p></div><div class="q"><p>${P.f.l}</p><div class="opts">${P.f.o.map((o, i) => { const pr = o[1] == null ? 'sur devis' : Array.isArray(o[1]) ? (ES.k === 'app' ? (ES.p ? `dès ${fmt(o[1][2])} €` : `dès ${fmt(o[1][0])} €, puis ${o[1][1]} €/mois`) : (ES.p ? `dès ${o[1][1]} € par mois` : `dès ${fmt(o[1][0])} € par an`)) : `dès ${fmt(o[1])} €`; return `<button data-f="${i}" aria-pressed="${ES.f === i}">${o[0]}${o[2] ? `<small>${o[2]}</small>` : ''}<em>${pr}</em></button>`; }).join('')}</div></div>`;
@@ -459,12 +466,14 @@
       const b = e.target.closest('button'); if (!b) return; const d = b.dataset;
       if (d.k) { ES.k = d.k; ES.f = 0; ES.o = []; ES.p = 0; ES.j = 1; ES.e = 1; rendE(); compte('/devis/' + d.k, 'Devis : ' + PJ[d.k].l); return; }
       if (d.nd != null) { ES.d = ES.d == null ? 5 : null; friseMaj(); return; }
+      if (d.fill != null) { ES.e = 'fill'; rendE(); compte('/devis/fill', 'Devis : redirection vers Fill'); return; }
       if (d.mod != null) { garde(); ES.e = 1; rendE(); return; }
       if (d.f != null) ES.f = +d.f; else if (d.p != null) ES.p = +d.p; else if (d.j) ES.j = +d.j; else if (d.o != null) { const i = +d.o; ES.o = ES.o.includes(i) ? ES.o.filter(x => x !== i) : [...ES.o, i]; } else return;
       const y = estB.scrollTop; rendE(); estB.scrollTop = y;
     });
     estF.addEventListener('click', async e => {
       const b = e.target.closest('button'); if (!b) return;
+      if (b.dataset.nav === '0') { ES.e = 0; rendE(); return; }
       if (b.dataset.nav) { garde(); ES.e = Math.max(0, ES.e + Number(b.dataset.nav)); rendE(); if (ES.e === 2) setTimeout(() => { const n = $('#eNom'); if (n && !n.value) n.focus({ preventScroll: true }); }, 350); return; }
       if (b.dataset.envoi != null) {
         garde(); const c = ES.c;

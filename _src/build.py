@@ -76,13 +76,8 @@ def tuile(t, cls='', n=0):
 SEL = ['Matmatah', 'Pierceval Tattoo', 'Les Petites Folies', 'La Soute', 'FL Auto, l’atelier', 'Campagnes', 'Inauguration', 'MJC La Marelle']
 selection = ''.join(tuile(next(t for t in TR if t[0] == n)) for n in SEL)
 HOME = HOME.replace('{SELECTION}', selection)
-# bannière : les phrases et le nom sont découpés en lettres, pour qu'elles se recomposent une à une
-def lettres(txt):
-    return ''.join('<u style="--k:%d">%s</u>' % (i, '&nbsp;' if c == ' ' else c) for i, c in enumerate(txt))
-HOME = re.sub(r'(<p class="hx-mots"[^>]*>)(.*?)(</p>)', lambda m: m.group(1) + re.sub(r'(<span data-a="\d">)([^<]+)</span>', lambda n: n.group(1) + lettres(n.group(2)) + '</span>', m.group(2)) + m.group(3), HOME, flags=re.S)
-HOME = HOME.replace('<span class="hx-l">Studio ES</span>', '<span class="hx-l" aria-hidden="true">' + lettres('Studio ES') + '</span><span class="sr">Studio ES</span>')
 # l'animation démarre avant le premier affichage, sauf si le visiteur a demandé moins de mouvement
-HOME = HOME.replace('<section class="hero hx" id="hx" data-dark aria-labelledby="h1">', '<section class="hero hx" id="hx" data-dark aria-labelledby="h1"><script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.currentScript.parentNode.dataset.a=1</script>')
+HOME = HOME.replace('<section class="hero sc" id="hx" data-dark aria-labelledby="h1">', '<section class="hero sc" id="hx" data-dark aria-labelledby="h1"><script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.currentScript.parentNode.dataset.s=0</script>')
 
 HEAD_END = T.index('<main id="haut">'); FOOT = T.index('</main>')
 def page(path, title, desc, canon, main, home=False, ld='', og=''):
@@ -110,7 +105,7 @@ def nettoie(s):
     s = re.sub(r'<div class="qui rv">.*?</div></div>\s*', '', s, count=1, flags=re.S)
     s = re.sub(r'<div class="sec-t rv">.*?</div>\s*', '', s, count=1, flags=re.S)
     return s
-contact_p = nettoie(contact).replace('<div class="ct">', '<div class="sec-t rv"><h2 class="d" id="t-ct">Parlons de<span class="it">votre projet.</span></h2><p class="lead">Réponse sous 48 h, devis gratuit et sans engagement.</p></div>\n    <div class="ct">', 1)
+contact_p = nettoie(contact).replace('<div class="ct">', '<div class="sec-t rv"><h2 class="d" id="t-ct">Contact<span class="it">Parlons de votre projet.</span></h2><p class="lead">Réponse sous 48 h, devis gratuit et sans engagement.</p></div>\n    <div class="ct">', 1)
 exec(open(os.path.join(D, 'metiers.py'), encoding='utf8').read())
 
 # ---------- Réalisations : toutes disciplines, plusieurs étiquettes par projet ----------
