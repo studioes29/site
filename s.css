@@ -2112,3 +2112,6 @@ body{color:var(--encre)}
 .wb-bar em{color:#5E5E5E}
 .feuille[class*="u-"]:not(.dk) .pt i,.mh[class*="u-"]:not(.dk) .pt i,.in>.pt>i{color:color-mix(in srgb,var(--acc) 80%,#000)}
 .hd:not(.dk) .nv-fill{color:#55389A}
+
+/* devis : les choix du premier écran ne reprennent pas la grille des chapitres de l'accueil (.ch) */
+.opts.ch{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));grid-template-rows:none;gap:8px}
