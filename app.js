@@ -502,12 +502,12 @@
   });
 
   /* appel de 30 min : fenêtre Cal.com par-dessus le site, nouvel onglet en secours */
-  const CAL = 'https://cal.eu/studioes/30min'; let calPret = false, calLance = false;
+  const CAL = 'https://cal.com/studioes/30min'; let calPret = false, calLance = false;
   const calCharge = () => {
     if (calLance) return; calLance = true;
     try {
-      (function (C, A, L) { const p = function (a, ar) { a.q.push(ar); }; const d = C.document; C.Cal = C.Cal || function () { const cal = C.Cal; const ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; const s = d.createElement('script'); s.src = A; s.onload = () => { calPret = true; }; d.head.appendChild(s); cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const ns = ar[1]; api.q = api.q || []; if (typeof ns === 'string') { cal.ns[ns] = cal.ns[ns] || api; p(cal.ns[ns], ar); p(cal, ['initNamespace', ns]); } else p(cal, ar); return; } p(cal, ar); }; })(window, 'https://app.cal.eu/embed/embed.js', 'init');
-      Cal('init', 'rdv', { origin: 'https://app.cal.eu' });
+      (function (C, A, L) { const p = function (a, ar) { a.q.push(ar); }; const d = C.document; C.Cal = C.Cal || function () { const cal = C.Cal; const ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; const s = d.createElement('script'); s.src = A; s.onload = () => { calPret = true; }; d.head.appendChild(s); cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const ns = ar[1]; api.q = api.q || []; if (typeof ns === 'string') { cal.ns[ns] = cal.ns[ns] || api; p(cal.ns[ns], ar); p(cal, ['initNamespace', ns]); } else p(cal, ar); return; } p(cal, ar); }; })(window, 'https://app.cal.com/embed/embed.js', 'init');
+      Cal('init', 'rdv', { origin: 'https://app.cal.com' });
       Cal.ns.rdv('ui', { theme: 'light', hideEventTypeDetails: false, layout: 'month_view', cssVarsPerTheme: { light: { 'cal-brand': '#141414', 'cal-brand-emphasis': '#2a2a2a', 'cal-brand-text': '#ffffff' } } });
       Cal.ns.rdv('on', { action: 'bookingSuccessful', callback: () => compte('/rendez-vous/pris', 'Rendez-vous pris') });
     } catch (e) {}
@@ -522,7 +522,7 @@
     attend();
   };
   const feuilleCal = () => {
-    const f = $('#calF'); if (!f.src) f.src = 'https://app.cal.eu/studioes/30min/embed?embed=&layout=month_view&theme=light&embedType=inline';
+    const f = $('#calF'); if (!f.src) f.src = 'https://app.cal.com/studioes/30min/embed?embed=&layout=month_view&theme=light&embedType=inline';
     ouvreF('#shC');
   };
   document.addEventListener('click', e => { const b = e.target.closest('[data-cal]'); if (!b) return; e.preventDefault(); e.stopPropagation(); if (ouverte) fermeF(); ouvreCal(); });
