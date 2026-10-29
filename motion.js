@@ -47,6 +47,7 @@
       /* dès que la scène se rétracte, elle se pose sur le papier du portfolio : les lettres qui sortent de l'image passent à l'encre */
       sc.style.setProperty('--st', p > 0 ? '0px' : H + 'px'); sc.style.setProperty('--fo', p > 0 ? 0 : 1);
       hx.style.setProperty('--q', clamp((p - .06) / .5, 0, 1).toFixed(4));
+      if (sel) sel.style.setProperty('--sel', clamp((p - .45) / .55, 0, 1).toFixed(4));
       sc.style.setProperty('--o', (1 - clamp(p / .14, 0, 1)).toFixed(3));
       /* le menu passe en clair seulement quand le papier apparaît derrière lui */
       if (haut > 56) { if (hx.hasAttribute('data-dark')) { hx.removeAttribute('data-dark'); hx.style.setProperty('--fond', 'var(--papier)'); } }
@@ -75,6 +76,21 @@
       }
     }
   }
+
+  /* ---------- 1 bis. cartes photo : le nombre d'images, et au survol le reportage défile ---------- */
+  const REPS = window.REPS || [];
+  $$('.nu-photo[data-r]').forEach(c => {
+    const r = REPS.find(x => x.id === c.dataset.r); if (!r) return;
+    const i = $('.nu-i', c); const n = document.createElement('span'); n.className = 'nu-n'; n.textContent = r.ph.length + ' photos'; i.appendChild(n);
+    if (reduit || !matchMedia('(hover: hover)').matches) return;
+    let t = 0, k = 0, imgs = [];
+    c.addEventListener('pointerenter', () => {
+      if (!imgs.length) imgs = r.ph.slice(1, 5).map(id => { const im = new Image(); im.className = 'nu-f'; im.alt = ''; im.decoding = 'async'; im.src = (window.RACINE || '/') + 'p/t/' + id + '.webp'; i.insertBefore(im, n); return im; });
+      clearInterval(t); k = 0;
+      t = setInterval(() => { imgs.forEach((im, j) => im.classList.toggle('on', j === k % imgs.length && im.complete)); k++; }, 900);
+    });
+    c.addEventListener('pointerleave', () => { clearInterval(t); imgs.forEach(im => im.classList.remove('on')); });
+  });
 
   /* ---------- 2. chapitres : le filigrane glisse à contre-sens, les images se recomposent ---------- */
   /* recomposition : les images d'un chapitre convergent vers leur place pendant que le chapitre entre à l'écran */

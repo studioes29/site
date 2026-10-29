@@ -73,14 +73,17 @@ def tuile(t, cls='', n=0):
             '<span class="nu-l"><b>%s</b><span>%s</span><small>%s</small></span></a>') % (
         T[0], ' nu-x' if len(T) > 1 else '', cls, href, ' data-r="%s"' % g if g else '', tags, img, titre, ligne[0].lower() + ligne[1:], w, h, badge, titre, ligne, lab)
 
-SEL = ['Matmatah', 'Pierceval Tattoo', 'Les Petites Folies', 'La Soute', 'FL Auto, l’atelier', 'Campagnes', 'Inauguration', 'MJC La Marelle']
+SEL = ['Genezio', 'Pierceval Tattoo', 'Les Petites Folies', 'La Soute', 'FL Auto', 'Campagnes', 'Inauguration', 'MJC La Marelle']
 # la première carte reçoit la photographie de la bannière : au défilement, la scène se rétracte exactement à sa place
 SCENE = ('Genezio', '#r=genezio', '/h/scene-900.webp', 'photo', 'Concert')
 carte = tuile(SCENE, ' nu-scene')
 # la carte reçoit exactement les mêmes fichiers que la scène plein écran (déjà en cache) : aucun changement d'image à l'arrivée
 carte = re.sub(r'<img src="/h/scene-900.webp"([^>]*?) loading="lazy"', r'<picture><img src="/h/scene-1536.webp"\1', carte).replace('</span><span class="nu-l">', '</span><span class="nu-l">', 1)
 carte = carte.replace('height="1200"></span>', 'height="1200"></picture></span>', 1)
-selection = carte + ''.join(tuile(next(t for t in TR if t[0] == n)) for n in SEL[1:])
+selection = carte + ''.join(tuile(next(t for t in TR if t[0] == n), ' nu-1' if n == 'MJC La Marelle' else '') for n in SEL[1:])
+# chaque carte connaît son rang : à l'arrivée de la photographie, les autres projets se posent autour d'elle, l'un après l'autre
+_i = iter(range(100))
+selection = re.sub(r'<a class="nu ', lambda m: '<a style="--i:%d" class="nu ' % next(_i), selection)
 HOME = HOME.replace('{SELECTION}', selection)
 # l'animation démarre avant le premier affichage, sauf si le visiteur a demandé moins de mouvement
 HOME = HOME.replace('<section class="hero sx" id="hx" data-dark aria-labelledby="h1">', '<section class="hero sx" id="hx" data-dark aria-labelledby="h1"><script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches){var s=document.currentScript.parentNode;s.classList.add("vol");setTimeout(function(){if(!s.dataset.m)s.classList.remove("vol")},2500)}</script>')
