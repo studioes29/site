@@ -21,14 +21,12 @@
   /* en-tête, dock et retour en haut : verre dépoli, version nuit au-dessus des rubriques sombres */
   const hd = $('#hd'), dock = $('#dock'), hautBt = $('.haut-bt'), sombres = $$('[data-dark]'), feuilles = $$('.feuille');
   /* empilement : chaque rubrique se fige à sa fin, la suivante glisse par-dessus */
-  const secs = [...document.querySelectorAll('main > *')].filter(el => el.matches('section, .hero, .mh'));
-  /* seule la rubrique qu'une feuille posée vient recouvrir se fige */
-  const pile = secs.filter(el => el.nextElementSibling && el.nextElementSibling.matches('.feuille.pose'));
+  const pile = [...document.querySelectorAll('main > .hero, main > .mh, main > .feuille')];
   /* la hauteur de chaque rubrique est mesurée seulement quand elle change vraiment, le haut de figeage est calculé en CSS sur la petite hauteur d'écran : rien ne saute quand la barre du navigateur mobile apparaît */
   const fige = () => pile.forEach(el => { el.classList.add('empile'); const h = el.offsetHeight; if (Math.abs((el._h || 0) - h) > 2) { el._h = h; el.style.setProperty('--h', h + 'px'); } });
   fige(); if (window.ResizeObserver) { const ro = new ResizeObserver(() => fige()); pile.forEach(el => ro.observe(el)); }
   /* la rubrique visible à une hauteur donnée est la dernière feuille qui la recouvre */
-  const ici = y => { let h = null; for (const el of secs) { const r = el.getBoundingClientRect(); if (r.top <= y && r.bottom > y) h = el; } return h; };
+  const ici = y => { let h = null; for (const el of pile) { const r = el.getBoundingClientRect(); if (r.top <= y && r.bottom > y) h = el; } return h; };
   const sur = y => { const h = ici(y); return !!h && h.hasAttribute('data-dark'); };
   const teinte = (el, y) => { const h = ici(y); const f = h ? getComputedStyle(h).getPropertyValue('--fond').trim() : ''; if (f !== el._f) { el._f = f; el.style.setProperty('--hf', f || 'var(--papier)'); } };
   let tic = false;
@@ -38,7 +36,7 @@
     const loin = y > H * 1.2;
     if (dock) { dock.classList.toggle('dk', sur(H - 40)); dock.classList.toggle('haut', loin); }
     if (hautBt) { hautBt.classList.toggle('on', loin); hautBt.classList.toggle('dk', sur(H - 50)); }
-    pile.forEach(el => { const n = el.nextElementSibling; if (!n) return; const d = clamp((H * .3 - n.getBoundingClientRect().top) / (H * .3), 0, 1); el.style.setProperty('--dim', reduit ? 0 : (d * d * .34).toFixed(3)); });
+    pile.forEach((el, i) => { const n = pile[i + 1]; if (!n) return; const d = clamp((H * .3 - n.getBoundingClientRect().top) / (H * .3), 0, 1); el.style.setProperty('--dim', reduit ? 0 : (d * d * .34).toFixed(3)); });
   };
   addEventListener('scroll', () => { if (!tic) { tic = true; requestAnimationFrame(etat); } }, { passive: true });
   addEventListener('resize', etat); etat();
@@ -49,7 +47,21 @@
   $$('.rv').forEach(e => io.observe(e));
 
   /* prix : chaque chiffre est une bande qui tourne, les chiffres s'arrêtent l'un après l'autre avec un léger rebond */
-  const odo = (el, txt) => { el.innerHTML = `<span class="sr">${txt}</span><span class="v" aria-hidden="true">${txt}</span>`; };
+  const HC = 1.08, BANDE = '0123456789'.repeat(3).split('').map(d => `<span class="c">${d}</span>`).join('');
+  const odo = (el, txt, depuisZero) => {
+    if (!/\d/.test(txt)) { el.innerHTML = `<span class="sr">${txt}</span><span class="v" aria-hidden="true">${txt}</span>`; el._ch = null; if (!reduit) el.animate([{ opacity: 0, transform: 'translateY(.2em)' }, { opacity: 1, transform: 'none' }], { duration: 450, easing: 'ease-out' }); return; }
+    const ch = [...txt].filter(c => /\d/.test(c)).map(Number), anc = depuisZero ? [] : (el._ch || []);
+    el.innerHTML = `<span class="sr">${txt}</span>` + '<span class="od" aria-hidden="true">' + [...txt].map(c => /\d/.test(c) ? `<span class="dg"><span>${BANDE}</span></span>` : '<span class="sp"></span>').join('') + '</span>';
+    const cols = $$('.dg>span', el), n = cols.length; let fin = 0;
+    cols.forEach((c, i) => {
+      const d = ch[i], p = anc[anc.length - n + i];
+      if (reduit || (p === d && anc.length === n)) { c.style.transform = `translateY(${-d * HC}em)`; return; }
+      const dep = p == null ? 0 : p, arr = 20 + d, dur = 650 + i * 150; fin = Math.max(fin, dur);
+      c.animate([{ transform: `translateY(${-dep * HC}em)`, filter: 'blur(0)' }, { filter: 'blur(1.4px)', offset: .5 }, { transform: `translateY(${-arr * HC}em)`, filter: 'blur(0)' }], { duration: dur, easing: 'cubic-bezier(.22,.8,.26,1.14)', fill: 'forwards' });
+    });
+    if (fin && !reduit) el.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.07)' }, { transform: 'scale(1)' }], { duration: 360, delay: fin - 140, easing: 'ease-out' });
+    el._ch = ch;
+  };
   const prix = (el, v) => {
     if (!el) return; const txt = v == null ? 'Sur devis' : fmt(v);
     el.classList.toggle('txt', v == null); const px = el.closest('.px'); if (px) px.classList.toggle('sd', v == null);
@@ -57,7 +69,9 @@
     const sr = el.querySelector('.sr'); if (sr) sr.textContent = txt;
     if (el.dataset.vu) odo(el, txt, false);
   };
-  $$('.prix').forEach(el => { el.dataset.t = el.textContent.trim().replace(/\s/g, NB); el.dataset.vu = 1; odo(el, el.dataset.t); });
+  /* première apparition : les chiffres tournent depuis zéro quand la carte entre à l'écran */
+  const prixVus = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { const el = e.target; prixVus.unobserve(el); el.dataset.vu = 1; odo(el, el.dataset.t, true); } }), { threshold: .6 });
+  $$('.prix').forEach(el => { el.dataset.t = el.textContent.trim().replace(/\s/g, NB); el.innerHTML = `<span class="sr">${el.dataset.t}</span><span class="v" aria-hidden="true" style="visibility:hidden">${el.dataset.t}</span>`; if (reduit) { el.dataset.vu = 1; odo(el, el.dataset.t, true); } else prixVus.observe(el); });
 
   /* cartes d'accueil : inclinaison légère au pointeur */
   if (!tactile && !reduit) $$('[data-tilt]').forEach(c => {
@@ -214,7 +228,7 @@
     });
     requestAnimationFrame(derive);
   };
-  /* plus de défilement automatique : le rail bouge quand on le fait bouger */
+  requestAnimationFrame(derive);
   addEventListener('touchstart', () => rails.forEach(R => { R.attente = Math.max(R.attente, performance.now() + 6000); }), { passive: true });
   $$('[data-rail]').forEach(b => b.addEventListener('click', () => { const R = rails.find(x => x.el.id === b.dataset.rail); if (!R) return; R.tiens(8000); R.el.scrollBy({ left: Number(b.dataset.d) * R.el.clientWidth * .7, behavior: 'smooth' }); setTimeout(() => R.pos = R.el.scrollLeft, 700); }));
 
@@ -274,8 +288,7 @@
   const ouvreGal = r => {
     if (!gp || !r) return; G.r = r;
     $('#gpK').textContent = K[r.k] || 'Reportage'; const gpf = $('.gp-f .d'); if (gpf) gpf.textContent = GRAPH.includes(r) ? 'Un projet graphique\u00a0?' : 'Un événement à photographier\u00a0?'; $('#gpT').textContent = r.t; $('#gpS').textContent = r.ph.length + ' photos';
-    const RAT = window.RAT || {}; gpG.innerHTML = r.ph.map((p, i) => `<button data-i="${i}" aria-label="Agrandir la photo ${i + 1}" style="aspect-ratio:${RAT[p] || .75}"${i ? '' : ' class="une"'}><img src="${i ? `/p/t/${p}.webp` : `/p/${p}.jpg`}" width="640" height="${Math.round(640 / (RAT[p] || .75))}" alt="${r.t}, photo ${i + 1}" loading="${i < 6 ? 'eager' : 'lazy'}" decoding="async"></button>`).join('');
-    gpG.querySelectorAll('img').forEach(im => { const ok = () => im.classList.add('ok'); if (im.complete) ok(); else im.addEventListener('load', ok, { once: true }); });
+    const RAT = window.RAT || {}; gpG.innerHTML = r.ph.map((p, i) => `<button data-i="${i}" aria-label="Agrandir la photo ${i + 1}" style="aspect-ratio:${RAT[p] || .75}"${i ? '' : ' class="une"'}><img src="${i ? `/p/t/${p}.webp` : `/p/${p}.jpg`}" onload="this.classList.add('ok')" width="640" height="${Math.round(640 / (RAT[p] || .75))}" alt="${r.t}, photo ${i + 1}" loading="${i < 6 ? 'eager' : 'lazy'}" decoding="async"></button>`).join('');
     const tous = GRAPH.includes(r) ? GRAPH : REPS; const autres = tous.filter(x => x !== r && x.k === r.k).concat(tous.filter(x => x !== r && x.k !== r.k)).slice(0, 4);
     $('#gpSim').innerHTML = autres.map(x => `<button data-r="${x.id}"><img src="/p/t/${x.ph[0]}.webp" alt="" loading="lazy"><b>${x.t}</b></button>`).join('');
     if (gp.hidden) { avantG = document.activeElement; gp.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => gp.classList.add('on'))); document.documentElement.style.overflow = 'hidden'; if (dock) dock.classList.add('cache'); setTimeout(() => $('#gpB').focus({ preventScroll: true }), 80); }

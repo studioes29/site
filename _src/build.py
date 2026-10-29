@@ -60,18 +60,18 @@ TR = [
     ('Festidreuz', '#r=pub-festidreuz', '/p/t/pub-festidreuz-1.webp', 'photo', 'Festival'),
 ]
 NOM = {'photo': 'Photographie', 'web': 'Web', 'graph': 'Graphisme'}
-NOMS = {'photo': 'photographie', 'web': 'web', 'graph': 'design graphique'}
 def tuile(t, cls='', n=0):
-    """Une réalisation : l'image à son format, la légende dessous (titre, intervention, disciplines en toutes lettres)."""
+    """Carte nuancier : l'image cadrée sur une puce claire, l'étiquette dessous avec les pastilles de discipline."""
     titre, lien, img, tags, ligne = t
     w, h = taille(img)
     g = lien[3:] if lien.startswith('#r=') else ''
     T = tags.split()
-    dis = ', '.join(NOMS[x] for x in T); dis = dis[0].upper() + dis[1:]
+    lab = ''.join('<em class="k-%s">%s</em>' % (x, NOM[x]) for x in T)
     href = '/' + lien if g else lien
-    return ('<a class="nu nu-%s%s%s" href="%s"%s data-t="%s"><span class="nu-i"><img src="%s" alt="%s, %s" loading="lazy" decoding="async" width="%d" height="%d"></span>'
+    badge = '<span class="nu-b">%d disciplines</span>' % len(T) if len(T) > 1 else ''
+    return ('<a class="nu nu-%s%s%s" href="%s"%s data-t="%s"><span class="nu-i"><img src="%s" alt="%s, %s" loading="lazy" decoding="async" width="%d" height="%d">%s</span>'
             '<span class="nu-l"><b>%s</b><span>%s</span><small>%s</small></span></a>') % (
-        T[0], ' nu-x' if len(T) > 1 else '', cls, href, ' data-r="%s"' % g if g else '', tags, img, titre, ligne[0].lower() + ligne[1:], w, h, titre, ligne, dis)
+        T[0], ' nu-x' if len(T) > 1 else '', cls, href, ' data-r="%s"' % g if g else '', tags, img, titre, ligne[0].lower() + ligne[1:], w, h, badge, titre, ligne, lab)
 
 SEL = ['Genezio', 'Pierceval Tattoo', 'Les Petites Folies', 'La Soute', 'FL Auto', 'Campagnes', 'Inauguration', 'MJC La Marelle']
 # la première carte reçoit la photographie de la bannière : au défilement, la scène se rétracte exactement à sa place
@@ -84,7 +84,7 @@ selection = carte + ''.join(tuile(next(t for t in TR if t[0] == n), ' nu-1' if n
 # chaque carte connaît son rang : à l'arrivée de la photographie, les autres projets se posent autour d'elle, l'un après l'autre
 _i = iter(range(100))
 selection = re.sub(r'<a class="nu ', lambda m: '<a style="--i:%d" class="nu ' % next(_i), selection)
-HOME = HOME.replace('{SELECTION}', selection).replace('{NSEL}', str(len(SEL))).replace('{NTOT}', str(len(TR)))
+HOME = HOME.replace('{SELECTION}', selection)
 # l'animation démarre avant le premier affichage, sauf si le visiteur a demandé moins de mouvement
 HOME = HOME.replace('<section class="hero sx" id="hx" data-dark aria-labelledby="h1">', '<section class="hero sx" id="hx" data-dark aria-labelledby="h1"><script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches){var s=document.currentScript.parentNode;s.classList.add("vol");setTimeout(function(){if(!s.dataset.m)s.classList.remove("vol")},2500)}</script>')
 
@@ -113,28 +113,23 @@ def page(path, title, desc, canon, main, home=False, ld='', og=''):
 page('', 'Studio ES · Photographie, web et design graphique en Bretagne', 'Studio indépendant en Bretagne : photographie de concert, d’événement et de mariage, sites internet et applications, identités visuelles, campagnes et éditions.', 'https://studioes.fr/', HOME + '\n' + sect('contact'), True)
 
 contact = sect('contact')
-contact_p = re.sub(r'<!--qui-->.*?<!--/qui-->', '', contact, flags=re.S)
+def nettoie(s):
+    s = re.sub(r'<div class="qui rv">.*?</div></div>\s*', '', s, count=1, flags=re.S)
+    s = re.sub(r'<div class="sec-t rv">.*?</div>\s*', '', s, count=1, flags=re.S)
+    return s
+contact_p = nettoie(contact).replace('<div class="ct">', '<div class="sec-t rv"><h2 class="d" id="t-ct">Contact<span class="it">Parlons de votre projet.</span></h2><p class="lead">Réponse sous 48 h, devis gratuit et sans engagement.</p></div>\n    <div class="ct">', 1)
 exec(open(os.path.join(D, 'metiers.py'), encoding='utf8').read())
 
 # ---------- Réalisations : toutes disciplines, plusieurs étiquettes par projet ----------
 n = {k: sum(1 for t in TR if k in t[3].split()) for k in NOM}
-rl = entete('Réalisations', 'Réalisations', '', '%d projets : reportages, sites, identités, campagnes et éditions. Un projet qui mêle plusieurs disciplines apparaît sous chacune.' % len(TR), ' u-papier mh-rl') + '''
-<section class="sec rl-f u-papier" id="travaux-tous" aria-label="Réalisations">
+rl = entete('Réalisations', 'Réalisations', 'Toutes disciplines.', 'Reportages, sites, identités, campagnes et éditions. Un projet qui mêle plusieurs disciplines se retrouve dans chacune.', ' u-noir mh-rl', FG('Portfolio', 'left:-2vw;bottom:-.2em', 'o'), '', '', True) + '''
+<section class="sec feuille rl-f u-papier" id="travaux-tous" aria-label="Réalisations">
   <div class="w">
-    <div class="chips" data-filtre role="group" aria-label="Filtrer les réalisations"><button type="button" aria-pressed="true" data-f="">Tout <small>%d</small></button>%s</div>
+    <div class="chips rv" data-filtre role="group" aria-label="Filtrer les réalisations"><button type="button" aria-pressed="true" data-f="">Tout<small>%d</small></button>%s</div>
   </div>
   <div class="nu-g rl-g" data-grp aria-label="Réalisations">%s</div>
   <div class="dots" aria-hidden="true"></div>
 </section>
-''' % (len(TR), ''.join('<button type="button" aria-pressed="false" data-f="%s">%s <small>%d</small></button>' % (k, NOM[k], n[k]) for k in NOM), ''.join(tuile(t) for t in TR)) + contact_p
+''' % (len(TR), ''.join('<button type="button" aria-pressed="false" data-f="%s">%s<small>%d</small></button>' % (k, NOM[k], n[k]) for k in NOM), ''.join(tuile(t) for t in TR)) + contact_p
 page('realisations', 'Réalisations · Studio ES', 'Portfolio de Studio ES : reportages photo, sites et applications, identités, campagnes et éditions, en Bretagne.', 'https://studioes.fr/realisations/', rl, ld=LD('Réalisations', 'https://studioes.fr/realisations/', 'Portfolio photographie, web et design graphique'))
-
-# la couche de direction artistique est maintenue à part (_src/da.css) et recopiée en fin de feuille de style
-_m = '/* ==== DA (source : _src/da.css) ==== */'
-_css = open(os.path.join(D, 'base.css'), encoding='utf8').read().rstrip() + '\n' + _m + '\n' + open(os.path.join(D, 'da.css'), encoding='utf8').read()
-open(os.path.join(OUT, 's.css'), 'w', encoding='utf8').write(_css)
-import subprocess
-try: subprocess.run(['node', os.path.join(D, 'optimise.cjs')], check=False)
-except FileNotFoundError: print('optimise : Node absent, s.css laissé complet')
-subprocess.run([sys.executable, os.path.join(D, 'securite.py'), OUT], check=True)
 print('ok')

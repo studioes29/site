@@ -23,7 +23,7 @@
 <link rel="preload" href="/f/br.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/f/it.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/f/ur-i.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="{P}s.css?v=22">
+<link rel="stylesheet" href="{P}s.css?v=21">
 <script>/* GoatCounter : mesure d'audience sans cookie, uniquement sur studioes.fr */if (/(^|\.)studioes\.fr$/.test(location.hostname) && !location.hostname.startsWith('dossiers')) { const g = document.createElement('script'); g.async = true; g.src = 'https://gc.zgo.at/count.js'; g.dataset.goatcounter = 'https://studioes.goatcounter.com/count'; document.head.appendChild(g); }</script>
 </head>
 <body>
@@ -68,7 +68,7 @@
       <a href="/#fill" class="nv-fill">Fill</a>
       <a href="/#contact">Contact</a>
     </nav>
-    <button type="button" class="bt sm" data-est>Demander un devis</button>
+    <button type="button" class="bt sm" data-est>Demander un devis <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button>
   </div>
 </header>
 
@@ -83,25 +83,24 @@
 
 <main id="haut">
 {HOME}
-<section class="sec feuille pose ct-f dk u-encre" id="contact" data-dark aria-labelledby="t-ct">
-  <svg class="fg-m" viewBox="101 57 98 186" aria-hidden="true"><use href="#logo"/></svg>
-  <div class="w ctn">
-    <h2 class="d ctn-t" id="t-ct">Contact</h2>
-    <!--qui--><figure class="ctn-p"><img src="/images/ewen.webp" alt="Ewen Soupault" width="640" height="853" loading="lazy"><figcaption class="leg">Ewen Soupault, photographe, graphiste et développeur</figcaption></figure>
-    <p class="ctn-x">La personne qui vous répond est celle qui photographie, dessine et met en ligne. Aucun intermédiaire entre votre demande et le travail.</p><!--/qui-->
-    <ul class="ctn-l">
-      <li><button type="button" class="ca" data-est><b class="d">Demander un devis</b><span data-dv>Trois étapes, une estimation immédiate.</span></button></li>
-      <li><button type="button" class="ca" data-cal><b class="d">Réserver un appel</b><span>30 minutes, en visio ou au téléphone.</span></button></li>
-      <li><button type="button" class="ca" data-msg><b class="d">Écrire un message</b><span>Le projet en quelques lignes.</span></button></li>
-    </ul>
-    <p class="ctn-d"><a href="mailto:contact@studioes.fr">contact@studioes.fr</a><a href="tel:+33651222107">06&nbsp;51&nbsp;22&nbsp;21&nbsp;07</a><a href="https://www.instagram.com/ewen.studioes/" target="_blank" rel="noopener">Instagram</a><span>Réponse sous 48&nbsp;h, devis gratuit.</span></p>
+<section class="sec feuille ct-f dk u-encre" id="contact" data-dark aria-labelledby="t-ct">
+  <svg class="fg-m o" style="left:-6vw;top:-4vw;height:min(80vw,1100px);--vy:-160px" viewBox="101 57 98 186" aria-hidden="true"><use href="#logo"/></svg>
+  <span class="fg" style="right:-2vw;bottom:-.2em;--vy:-70px;font-size:calc(var(--fg-t) * .62)" aria-hidden="true">Studio ES</span>
+  <div class="w">
+    <div class="qui rv"><img src="/images/ewen.webp" alt="Ewen Soupault" width="640" height="853" loading="lazy"><div><h2 class="d" id="t-ct">Contact<span class="it">Parlons de votre projet.</span></h2><p class="lead">Derrière Studio ES, Ewen Soupault : photographe, graphiste et développeur. Un seul interlocuteur, de la première idée au résultat final, pour que l’image, le site et les supports parlent d’une même voix.</p><p class="mu2">Réponse sous 48 h, devis gratuit et sans engagement.</p></div></div>
+    <div class="ct">
+      <button type="button" class="ca rec grain rv" data-est><span class="sheen" aria-hidden="true"></span><span class="ico"><svg class="i"><use href="#cl"/></svg></span><span class="tx"><b class="d">Demander un devis</b><span>Quelques choix, une estimation immédiate, votre demande part en un clic.</span></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span></button>
+      <button type="button" class="ca rv" data-cal style="--i:1"><span class="ico"><svg class="i"><use href="#ca"/></svg></span><span class="tx"><b class="d">Réserver un appel</b><span>30 minutes en visio ou au téléphone, sans engagement.</span></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span></button>
+      <button type="button" class="ca rv" data-msg style="--i:2"><span class="ico"><svg class="i"><use href="#ms"/></svg></span><span class="tx"><b class="d">Écrire un message</b><span>Votre projet en quelques lignes, à votre rythme.</span></span><span class="fl" aria-hidden="true"><svg class="i"><use href="#ar"/></svg></span></button>
+    </div>
+    <div class="dir rv"><a href="mailto:contact@studioes.fr"><svg class="i"><use href="#ma"/></svg>contact@studioes.fr</a><a href="tel:+33651222107"><svg class="i"><use href="#ph"/></svg>06&nbsp;51&nbsp;22&nbsp;21&nbsp;07</a><a href="https://www.instagram.com/ewen.studioes/" target="_blank" rel="noopener"><svg class="i"><use href="#ig"/></svg>@ewen.studioes</a></div>
   </div>
 </section>
 </main>
 
 <footer class="ft">
   <div class="w">
-    <div><a class="lg" href="/" aria-label="Studio ES, accueil"><svg aria-hidden="true"><use href="#logo"/></svg><span>Studio ES</span></a><p>Photographie, sites et design graphique, en Bretagne.<br>Il pleut parfois, la lumière reste belle.</p></div>
+    <div><a class="lg" href="/" aria-label="Studio ES, accueil"><svg aria-hidden="true"><use href="#logo"/></svg><span>Studio ES</span></a><p>Photographie, web et design graphique, en Bretagne.<br>Il pleut parfois, la lumière reste belle.</p></div>
     <div><p class="h5">Studio</p><ul><li><a href="/metiers/photographie/">Photographie</a></li><li><a href="/metiers/sites-et-outils/">Sites et applications</a></li><li><a href="/metiers/graphisme/">Design graphique</a></li><li><a href="/realisations/">Réalisations</a></li><li><a href="/offres/">Offres et tarifs</a></li></ul></div>
     <div><p class="h5">Contact</p><ul><li><a href="mailto:contact@studioes.fr">contact@studioes.fr</a></li><li><a href="tel:+33651222107">06&nbsp;51&nbsp;22&nbsp;21&nbsp;07</a></li><li><button type="button" data-cal>Réserver un appel</button></li></ul></div>
     <div><p class="h5">Suivre</p><ul><li><a href="https://www.instagram.com/ewen.studioes/" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://fill.studioes.fr">Fill, communication externalisée</a></li><li><a href="https://declic.studioes.fr" target="_blank" rel="noopener">Déclic, le jeu</a></li></ul></div>
@@ -123,7 +122,7 @@
     <label>Téléphone, si vous préférez être rappelé<input name="tel" type="tel" autocomplete="tel"></label>
     <label>Votre projet<textarea name="message" required></textarea></label>
     <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none">
-    <div class="ok"><small>Réponse sous 48 h.</small><button class="bt" type="submit">Envoyer le message</button></div>
+    <div class="ok"><small>Réponse sous 48 h.</small><button class="bt" type="submit">Envoyer <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
   </form>
 </section>
 <section class="sheet sh-cal" id="shC" role="dialog" aria-modal="true" aria-labelledby="shCT" hidden>
@@ -146,7 +145,7 @@
   <div class="gp-h"><div class="w"><button type="button" class="x" id="gpB" aria-label="Fermer la galerie"><svg class="i"><use href="#al"/></svg></button><div class="t"><small id="gpK"></small><h2 class="d" id="gpT">Reportage</h2></div><span class="n" id="gpS"></span></div></div>
   <div class="w">
     <div class="gp-g" id="gpG"></div>
-    <div class="gp-f"><p class="d">Un événement à photographier&nbsp;?</p><button type="button" class="bt" id="gpGo">Demander un devis</button></div>
+    <div class="gp-f"><p class="d">Un événement à photographier&nbsp;?</p><button type="button" class="bt" id="gpGo">Demander mon devis <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button></div>
     <div class="gp-s"><h3 class="d">Autres reportages</h3><div id="gpSim"></div></div>
   </div>
 </div>
@@ -160,7 +159,7 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="{P}reps.js?v=9"></script>
-<script src="{P}app.js?v=22"></script>
-<script src="{P}motion.js?v=22"></script>
+<script src="{P}app.js?v=21"></script>
+<script src="{P}motion.js?v=21"></script>
 </body>
 </html>
