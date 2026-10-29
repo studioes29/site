@@ -11,95 +11,78 @@
       <picture class="sx-cut" aria-hidden="true"><img src="/h/scene-cut-1536.webp" alt="" width="1536" height="2048" decoding="async" fetchpriority="low"></picture>
     </div>
     <div class="sx-pied">
-      <p class="sx-pro">Photographie <i>·</i> Web <i>·</i> Design graphique</p>
-      <div class="sx-act"><a class="bt sx-bt" href="/realisations/">Découvrir les réalisations <span class="ar"><svg class="i"><use href="#ar"/></svg></span></a><button type="button" class="sx-pa" id="hxP" aria-label="Mettre l’animation en pause"><svg class="i" viewBox="0 0 24 24"><path d="M9 6v12M15 6v12"/></svg><span>Pause</span></button></div>
+      <p class="sx-pro">Photographie, sites et design graphique. Studio basé en Bretagne.</p>
+      <div class="sx-act"><a class="bt sx-bt" href="/realisations/">Voir les réalisations</a><p class="sx-leg">Genezio, sur scène</p><button type="button" class="sx-pa" id="hxP" aria-label="Mettre l’animation en pause"><svg class="i" viewBox="0 0 24 24"><path d="M9 6v12M15 6v12"/></svg><span>Pause</span></button></div>
     </div>
   </div>
 <script>(function(){var h=document.getElementById('hx');if(!h||!h.classList.contains('vol'))return;var s=h.querySelector('.sx-sc'),c=getComputedStyle(s),W=s.clientWidth,H=s.clientHeight,P=function(v){return v.trim().split(/\s+/).map(function(x){return parseFloat(x)/100})},o=P(c.getPropertyValue('--op')),z=P(c.getPropertyValue('--zo')),q=(parseFloat(c.getPropertyValue('--zs'))||1)+.025,k=Math.max(W/1536,H/2048),bw=1536*k,bh=2048*k,bx=(W-bw)*o[0],by=(H-bh)*o[1],ox=W*z[0],oy=H*z[1];bx=ox+(bx-ox)*q;by=oy+(by-oy)*q;bw*=q;bh*=q;[['--bw',bw],['--bh',bh],['--bx',bx],['--by',by],['--sw',W],['--sh',H]].forEach(function(a){s.style.setProperty(a[0],a[1]+'px')});h.querySelectorAll('.sx-nom .sx-l').forEach(function(l){var n=l.closest('.sx-nom'),x=0,y=0,e=l;while(e&&e!==n){x+=e.offsetLeft;y+=e.offsetTop;e=e.offsetParent}l.style.setProperty('--lx',x+'px');l.style.setProperty('--ly',y+'px')});document.documentElement.classList.add('sx-js');var d=0,g=function(){if(!d){d=1;h.classList.add('go')}};if(document.fonts)document.fonts.ready.then(g);setTimeout(g,700)})()</script>
 </section>
 
-<section class="sec feuille sel-f u-papier" id="selection" aria-labelledby="t-sel">
-  <span class="fg" style="left:-1.5vw;top:-.34em;--vy:-50px" aria-hidden="true">Studio ES</span>
-  <svg class="fg-m" style="right:-7vw;bottom:-10vw;height:min(58vw,820px);--vy:-110px" viewBox="101 57 98 186" aria-hidden="true"><use href="#logo"/></svg>
+<section class="sec feuille pose sel-f u-papier" id="selection" aria-labelledby="t-sel">
   <div class="w">
-    <div class="sec-t rv"><div><p class="pt"><i>Portfolio</i><span>Projets récents</span></p><h2 class="d" id="t-sel">Sélection<span class="it">Photographie, web et design graphique.</span></h2></div><p class="lead">Reportages, sites, identités et campagnes récents. Les projets les plus complets réunissent les trois disciplines.</p></div>
+    <div class="idx"><h2 class="d" id="t-sel">Sélection</h2><p class="idx-n">{NSEL} projets sur {NTOT}. Les plus complets réunissent photographie, web et design graphique.</p></div>
   </div>
   <div class="nu-g" data-grp aria-label="Sélection de projets">{SELECTION}</div>
   <div class="dots" aria-hidden="true"></div>
-  <div class="w"><p class="tout rv"><a class="bt" href="/realisations/">Toutes les réalisations <span class="ar"><svg class="i"><use href="#ar"/></svg></span></a></p></div>
+  <div class="w"><p class="tout"><a class="ln" href="/realisations/">Les {NTOT} réalisations</a></p></div>
 </section>
 
-<section class="sec feuille dk ds-f ds-ph u-noir" data-dark aria-labelledby="t-d1">
-  <span class="fg" style="right:-3vw;bottom:-.42em;--vx:-60px;--vy:-30px;font-size:calc(var(--fg-t) * 1.15)" aria-hidden="true">Photo</span>
-  <div class="w ch">
-    <div class="ch-t">
-      <p class="pt rv"><i>01</i><span>Photographie</span></p>
-      <h2 class="d rv" id="t-d1">Photographie<span class="it">Vos moments forts, sur le vif.</span></h2>
+<section class="sec dk ch-ph u-noir" data-dark aria-labelledby="t-d1">
+  <div class="w cph">
+    <h2 class="d cph-t" id="t-d1">Photographie</h2>
+    <button type="button" class="cph-a" data-r="commemo" aria-label="Voir le reportage Cérémonie commémorative"><img src="/p/commemo-1.jpg" alt="" loading="lazy" width="825" height="1100"><span class="leg">Cérémonie commémorative</span></button>
+    <div class="cph-x">
+      <p class="cph-p">Concerts, festivals, cérémonies, entreprises, mariages. Un reportage discret, sans poses, puis une sélection resserrée et retouchée.</p>
+      <p class="cph-n"><b>36</b> reportages en ligne, <b>272</b> photographies, dont 28 concerts.</p>
+      <a class="bt" href="/metiers/photographie/">Voir les reportages</a>
     </div>
-    <div class="ch-m ph-pl" data-recompo aria-label="Quatre reportages">
-      <button type="button" class="pl-a" data-r="commemo" style="--dx:-6vw;--dy:8vh;--dr:-4deg" aria-label="Voir le reportage Cérémonie commémorative"><img src="/p/commemo-1.jpg" alt="" loading="lazy" width="825" height="1100"><span>Cérémonie commémorative</span></button>
-      <button type="button" class="pl-b" data-r="gael-faye" style="--dx:8vw;--dy:-6vh;--dr:5deg" aria-label="Voir le reportage Gaël Faye"><img src="/p/gael-faye-4.jpg" alt="" loading="lazy" width="825" height="1100"><span>Gaël Faye</span></button>
-      <button type="button" class="pl-c" data-r="pub-eucalyptus" style="--dx:10vw;--dy:10vh;--dr:-3deg" aria-label="Voir le reportage Le Chant de l’Eucalyptus"><img src="/p/pub-eucalyptus-14.jpg" alt="" loading="lazy" width="1100" height="945"><span>Le Chant de l’Eucalyptus</span></button>
-      <button type="button" class="pl-d" data-r="forum-asso" style="--dx:-4vw;--dy:14vh;--dr:6deg" aria-label="Voir le reportage Forum des associations"><img src="/p/forum-asso-11.jpg" alt="" loading="lazy" width="880" height="1100"><span>Forum des associations</span></button>
-    </div>
-    <div class="ch-x rv">
-      <p class="ch-p">Concerts, festivals, cérémonies, entreprises, mariages : un reportage discret, puis une sélection resserrée et retouchée.</p>
-      <a class="bt" href="/metiers/photographie/">Découvrir la photographie <span class="ar"><svg class="i"><use href="#ar"/></svg></span></a>
+    <div class="cph-b">
+      <button type="button" data-r="gael-faye" aria-label="Voir le reportage Gaël Faye"><img src="/p/gael-faye-4.jpg" alt="" loading="lazy" width="825" height="1100"><span class="leg">Gaël Faye</span></button>
+      <button type="button" data-r="pub-eucalyptus" aria-label="Voir le reportage Le Chant de l’Eucalyptus"><img src="/p/pub-eucalyptus-14.jpg" alt="" loading="lazy" width="1100" height="945"><span class="leg">Le Chant de l’Eucalyptus</span></button>
+      <button type="button" data-r="forum-asso" aria-label="Voir le reportage Forum des associations"><img src="/p/forum-asso-11.jpg" alt="" loading="lazy" width="880" height="1100"><span class="leg">Forum des associations</span></button>
     </div>
   </div>
 </section>
 
-<section class="sec feuille ds-f ds-wb u-lilas" aria-labelledby="t-d2">
-  <span class="fg" style="left:-2vw;top:-.3em;--vy:-70px;font-size:calc(var(--fg-t) * 1.2)" aria-hidden="true">Web</span>
-  <div class="w ch ch-inv">
-    <div class="ch-t">
-      <p class="pt rv"><i>02</i><span>Web et digital</span></p>
-      <h2 class="d rv" id="t-d2">Web et digital<span class="it">Sites, applications, outils.</span></h2>
+<section class="sec ch-wb u-papier" aria-labelledby="t-d2">
+  <div class="w cwb">
+    <div class="cwb-t">
+      <h2 class="d" id="t-d2">Sites et<br>applications</h2>
+      <p>Pierceval Tattoo prend ses rendez-vous en ligne, La Soute vend ses places, flouz suit un budget. Trois outils dessinés et développés au studio.</p>
+      <a class="ln" href="/metiers/sites-et-outils/">Le web au studio</a>
     </div>
-    <div class="ch-m wb-tri" data-recompo aria-label="Trois réalisations web">
-      <a class="wt-a" href="/projets/pierceval-tattoo/" style="--dx:-10vw;--dy:6vh;--dr:-3deg" aria-label="Étude de cas Pierceval Tattoo"><span class="wb-bar"><i></i><i></i><i></i><em>piercevaltattoo.fr</em></span><span class="wt-pg"><img src="/projets/pierceval-tattoo/img/d-rdv-type.webp" alt="" loading="lazy"></span><small>Réservation en ligne · Pierceval Tattoo</small></a>
-      <a class="wt-b" href="/projets/la-soute/" style="--dx:8vw;--dy:-10vh;--dr:6deg" aria-label="Étude de cas La Soute"><span class="wt-tel"><img src="/projets/la-soute/img/soute-8.webp" alt="" loading="lazy" width="480" height="1039"></span><small>Site de saison · La Soute</small></a>
-      <a class="wt-c" href="/projets/flouz/" style="--dx:12vw;--dy:12vh;--dr:-5deg" aria-label="Étude de cas flouz."><span class="wt-app"><img src="/projets/flouz/img/budget.webp" alt="" loading="lazy" width="1200" height="1600"></span><small>Budgets · flouz.</small></a>
+    <a class="cwb-a" href="/projets/pierceval-tattoo/"><span class="ecr"><img src="/projets/pierceval-tattoo/img/d-rdv-type.webp" alt="" loading="lazy" width="1440" height="880"></span><span class="leg">piercevaltattoo.fr, la prise de rendez-vous</span></a>
+    <a class="cwb-b" href="/projets/la-soute/"><span class="ecr tel"><img src="/projets/la-soute/img/soute-8.webp" alt="" loading="lazy" width="480" height="1039"></span><span class="leg">La Soute, la saison sur téléphone</span></a>
+    <a class="cwb-c" href="/projets/flouz/"><span class="ecr"><img src="/projets/flouz/img/budget.webp" alt="" loading="lazy" width="1200" height="1600"></span><span class="leg">flouz, les budgets du mois</span></a>
+  </div>
+</section>
+
+<section class="sec ch-gr u-sable" aria-labelledby="t-d3">
+  <div class="w cgr">
+    <div class="cgr-t">
+      <h2 class="d" id="t-d3">Design<br>graphique</h2>
+      <p>Une affiche d’exposition, un programme pour un espace jeunes, l’identité d’une maison d’assistantes maternelles. Identités, campagnes et éditions, jusqu’au fichier prêt pour l’imprimeur.</p>
+      <a class="ln" href="/metiers/graphisme/">Le graphisme au studio</a>
     </div>
-    <div class="ch-x rv">
-      <p class="ch-p">Un site de réservation, le site d’une salle de concert, une application de budget : des usages différents, une même exigence de clarté.</p>
-      <a class="bt" href="/metiers/sites-et-outils/">Découvrir le web <span class="ar"><svg class="i"><use href="#ar"/></svg></span></a>
+    <div class="cgr-m">
+      <button type="button" class="cgr-a" data-r="affiches" aria-label="Voir les affiches"><img src="/p/t/affiches-6.webp" alt="" loading="lazy" width="640" height="800"><span class="leg">Affiche d’exposition</span></button>
+      <button type="button" class="cgr-b" data-r="editions" aria-label="Voir les éditions"><img src="/p/t/editions-5.webp" alt="" loading="lazy" width="640" height="800"><span class="leg">Programme de l’Espace Jeunes</span></button>
+      <a class="cgr-c" href="/projets/mam-our-et-merveilles/" aria-label="Étude de cas Mam’our et merveilles"><img src="/projets/mam-our-et-merveilles/img/cover.webp" alt="" loading="lazy" width="1400" height="980"><span class="leg">Mam’our et merveilles, identité</span></a>
     </div>
   </div>
 </section>
 
-<section class="sec feuille dk ds-f ds-gr u-terre" data-dark aria-labelledby="t-d3">
-  <span class="fg v" style="right:-.1em;top:-.04em;--vy:-90px;font-size:calc(var(--fg-t) * .78)" aria-hidden="true">Design</span>
-  <div class="w ch">
-    <div class="ch-t">
-      <p class="pt rv"><i>03</i><span>Design graphique</span></p>
-      <h2 class="d rv" id="t-d3">Design graphique<span class="it">Identités, campagnes, éditions.</span></h2>
-    </div>
-    <div class="ch-m gr-pl" data-recompo aria-label="Trois créations graphiques">
-      <button type="button" class="ed-c gp-a" data-r="affiches" style="--dx:-8vw;--dy:10vh;--dr:-8deg" aria-label="Voir les affiches"><img src="/p/t/affiches-6.webp" alt="" loading="lazy" width="640" height="800"><span>Affiche · Paralympiques</span></button>
-      <button type="button" class="ed-c gp-b" data-r="editions" style="--dx:6vw;--dy:-8vh;--dr:7deg" aria-label="Voir les éditions"><img src="/p/t/editions-5.webp" alt="" loading="lazy" width="640" height="800"><span>Programme · Espace Jeunes</span></button>
-      <a class="ed-c gp-c" href="/projets/mam-our-et-merveilles/" style="--dx:10vw;--dy:12vh;--dr:-4deg" aria-label="Étude de cas Mam’our et merveilles"><img src="/projets/mam-our-et-merveilles/img/cover.webp" alt="" loading="lazy" width="1400" height="980"><span>Identité · Mam’our et merveilles</span></a>
-    </div>
-    <div class="ch-x rv">
-      <p class="ch-p">Une identité qui tient sur tous les supports, une campagne déclinée avec cohérence, des éditions qui se lisent.</p>
-      <a class="bt" href="/metiers/graphisme/">Découvrir le graphisme <span class="ar"><svg class="i"><use href="#ar"/></svg></span></a>
-    </div>
-  </div>
-</section>
-
-<section class="sec feuille fl-f" id="fill" aria-labelledby="t-fill">
+<section class="sec fl-f" id="fill" aria-labelledby="t-fill">
   <div class="w fl-g">
-    <div class="fl-t rv">
+    <div class="fl-t">
       <svg class="fl-lg" viewBox="0 0 1376 720" role="img" aria-label="Fill"><g fill="#1A1A1A"><path d="M100 700V262C100 158 168 90 274 90H300V214H282C246 214 224 236 224 274V700Z"/><rect x="18" y="330" width="282" height="104" rx="8"/><rect x="360" y="330" width="124" height="370" rx="8"/><circle cx="422" cy="178" r="72"/></g><g fill="none" stroke-width="96" stroke-linecap="round" stroke-linejoin="round"><path stroke="#7052B3" d="M560 655C590 540 672 260 732 144C762 74 854 59 860 120C866 234 800 400 660 570C630 620 640 668 710 664C750 662 763 640 788 600"/><path stroke="#FF8A6B" d="M788 600C818 540 900 260 960 144C990 74 1082 59 1088 120C1094 234 1028 400 888 570C858 620 868 668 938 664C1038 660 1088 615 1188 612C1258 610 1288 600 1318 575"/></g></svg>
-      <h2 class="d" id="t-fill">Communication externalisée<span class="it">Votre communication, sans perdre le fil.</span></h2>
-      <p class="lead">Fill est un service de communication externalisée pour les collectivités et les entreprises qui n’ont pas de service dédié : un interlocuteur, un rythme régulier, un prix fixe chaque mois.</p>
-      <ul class="fl-b3"><li><b>Publications</b><span>Réseaux sociaux, actualités du site, newsletter.</span></li><li><b>Créations</b><span>Affiches, visuels, supports imprimés.</span></li><li><b>Suivi</b><span>Un calendrier tenu, chaque demande confirmée sous 24 h ouvrées.</span></li></ul>
-      <p class="fl-pr">Une communication organisée, sans recrutement.</p>
-      <div class="ds-ac"><a class="bt" href="https://fill.studioes.fr">Découvrir Fill <span class="ar"><svg class="i"><use href="#ne"/></svg></span></a><a class="ln" href="https://fill.studioes.fr/simulateur/">Estimer mon besoin</a></div>
+      <h2 class="d" id="t-fill">La communication courante, en abonnement</h2>
+      <p class="lead">Fill prend en charge les publications, les actualités du site, la newsletter et les affiches des communes et des entreprises qui n’ont pas de service communication. Une marque conçue par Studio ES, dès 490&nbsp;€ HT par mois.</p>
+      <div class="ds-ac"><a class="bt" href="https://fill.studioes.fr">fill.studioes.fr</a><a class="ln" href="/projets/fill/">La conception de la marque</a></div>
     </div>
-    <div class="fl-v rv" data-recompo aria-hidden="true">
-      <div class="fl-d" style="--dx:-6vw;--dy:10vh;--dr:-4deg"><span class="fl-b"><i></i><i></i><i></i><em>fill.studioes.fr</em></span><img src="/images/fill-site.webp" alt="" loading="lazy" width="1440" height="900"></div>
-      <div class="fl-m" style="--dx:8vw;--dy:14vh;--dr:8deg"><img src="/images/fill-mobile.webp" alt="" loading="lazy" width="390" height="844"></div>
+    <div class="fl-v" aria-hidden="true">
+      <img class="fl-d" src="/images/fill-site.webp" alt="" loading="lazy" width="1440" height="900">
+      <img class="fl-m" src="/images/fill-mobile.webp" alt="" loading="lazy" width="390" height="844">
     </div>
   </div>
 </section>

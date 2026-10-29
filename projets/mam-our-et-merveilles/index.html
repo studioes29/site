@@ -354,6 +354,7 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
 .bref .nb{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(30px,3vw,44px);letter-spacing:-.03em;line-height:1}
 @media (max-width:860px){.bref{grid-template-columns:1fr}.bref>div,.bref>div+div{padding:18px 0;border-left:0}.bref>div+div{border-top:1px solid rgba(32,32,32,.14)}}
 @view-transition{navigation:auto}</style>
+<link rel="stylesheet" href="/projets/p.css?v=1">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -366,7 +367,7 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
 <header class="top" id="top">
   <a class="ret" href="/realisations/" aria-label="Retour"><svg aria-hidden="true"><use href="#a"/></svg></a>
   <a class="logo" href="/" aria-label="Studio ES, accueil"><svg viewBox="0 0 98 186" aria-hidden="true"><use href="#logo"/></svg><span>Studio ES</span></a>
-  <nav class="nav" aria-label="Menu principal"><a href="/metiers/photographie/">Photographie</a><a href="/metiers/sites-et-outils/">Web</a><a href="/metiers/graphisme/">Graphisme</a><a href="/realisations/">Réalisations</a><a href="/#fill" class="nv-fill">Fill</a><a href="/#contact">Contact</a></nav>
+  <nav class="nav" aria-label="Menu principal"><a href="/metiers/photographie/">Photographie</a><a href="/metiers/sites-et-outils/">Web</a><a href="/metiers/graphisme/">Graphisme</a><a href="/realisations/">Réalisations</a><a href="/offres/">Offres</a><a href="/#fill" class="nv-fill">Fill</a><a href="/#contact">Contact</a></nav>
   <a class="cta" href="/#devis">Demander un devis<i><svg aria-hidden="true"><use href="#a"/></svg></i></a>
 </header>
 
@@ -431,7 +432,7 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
   <div class="cqd-w" tabindex="0" role="region" aria-label="Livrables"><div class="mq" style="--ar:16/10"><figure><img src="img/b2.webp" alt="Symbole" loading="lazy" decoding="async"><figcaption><b>Symbole</b><span>Un trèfle, un cœur dans la contre-forme.</span></figcaption></figure><figure><img src="img/b4.webp" alt="Palette" loading="lazy" decoding="async"><figcaption><b>Palette</b><span>Huit couleurs, douces et franches.</span></figcaption></figure><figure><img src="img/b5.webp" alt="Typographie" loading="lazy" decoding="async"><figcaption><b>Typographie</b><span>Ronde et généreuse, deux registres.</span></figcaption></figure><figure><img src="img/b3.webp" alt="Logo sur fond vert" loading="lazy" decoding="async"><figcaption><b>Logo</b><span>Le symbole et le nom, en version claire.</span></figcaption></figure><figure><img src="img/b9.webp" alt="Casiers" loading="lazy" decoding="async"><figcaption><b>Casiers</b><span>Un prénom par enfant.</span></figcaption></figure><figure><img src="img/b12.webp" alt="Papier" loading="lazy" decoding="async"><figcaption><b>Motif</b><span>En répétition, pour le papier.</span></figcaption></figure><figure><img src="img/reseaux-profil.webp" alt="Réseaux" loading="lazy" decoding="async"><figcaption><b>Réseaux sociaux</b><span>Photo de profil et couverture.</span></figcaption></figure></div></div></section>
 
 <section class="end w" aria-labelledby="fin">
-  <h2 class="d" id="fin" data-r>Une identité à créer&#8239;? <span class="se">Parlons-en.</span></h2>
+  <h2 class="d" id="fin" data-r>Une identité à créer&#8239;?</h2>
   <div class="bts" data-r>
     <a class="bt bt-a" href="/#devis">Demander un devis<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
     <a class="bt bt-g" href="/#cal">Réserver un appel<span class="o"><svg aria-hidden="true"><use href="#a"/></svg></span></a>
@@ -484,7 +485,7 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
   addEventListener('pointermove', e => { if (!down) return; const d = e.clientX - x0; mv = Math.max(mv, Math.abs(d)); if (mv > 5) { w.classList.add('drag'); w.scrollLeft = s0 - d; } });
   addEventListener('pointerup', () => { if (down) { down = false; setTimeout(() => w.classList.remove('drag'), 0); } });
   (function loop(now) { const dt = Math.min(64, now - (last || now)); last = now; const max = w.scrollWidth - w.clientWidth;
-    if (!RM && !done && max > 8 && vis && !document.hidden && now > hold && !down) { if (Math.abs(w.scrollLeft - pos) > 2) pos = w.scrollLeft; pos = Math.min(max, pos + (FINE ? .03 : .024) * dt); w.scrollLeft = pos; if (pos >= max - 1) done = true; }
+    if (!1 && !RM && !done && max > 8 && vis && !document.hidden && now > hold && !down) { if (Math.abs(w.scrollLeft - pos) > 2) pos = w.scrollLeft; pos = Math.min(max, pos + (FINE ? .03 : .024) * dt); w.scrollLeft = pos; if (pos >= max - 1) done = true; }
     else pos = w.scrollLeft;
     requestAnimationFrame(loop); })(performance.now());
 })();
