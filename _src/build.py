@@ -74,10 +74,12 @@ def tuile(t, cls='', n=0):
         T[0], ' nu-x' if len(T) > 1 else '', cls, href, ' data-r="%s"' % g if g else '', tags, img, titre, ligne[0].lower() + ligne[1:], w, h, badge, titre, ligne, lab)
 
 SEL = ['Matmatah', 'Pierceval Tattoo', 'Les Petites Folies', 'La Soute', 'FL Auto, l’atelier', 'Campagnes', 'Inauguration', 'MJC La Marelle']
-selection = ''.join(tuile(next(t for t in TR if t[0] == n)) for n in SEL)
+# la première carte reçoit la photographie de la bannière : au défilement, la scène se rétracte exactement à sa place
+SCENE = ('Genezio', '#r=genezio', '/h/scene-900.webp', 'photo', 'Concert')
+selection = tuile(SCENE, ' nu-scene') + ''.join(tuile(next(t for t in TR if t[0] == n)) for n in SEL[1:])
 HOME = HOME.replace('{SELECTION}', selection)
 # l'animation démarre avant le premier affichage, sauf si le visiteur a demandé moins de mouvement
-HOME = HOME.replace('<section class="hero sc" id="hx" data-dark aria-labelledby="h1">', '<section class="hero sc" id="hx" data-dark aria-labelledby="h1"><script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.currentScript.parentNode.dataset.s=0</script>')
+HOME = HOME.replace('<section class="hero sx" id="hx" data-dark aria-labelledby="h1">', '<section class="hero sx" id="hx" data-dark aria-labelledby="h1"><script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches){var s=document.currentScript.parentNode;s.classList.add("vol");setTimeout(function(){if(!s.dataset.m)s.classList.remove("vol")},3000)}</script>')
 
 HEAD_END = T.index('<main id="haut">'); FOOT = T.index('</main>')
 def page(path, title, desc, canon, main, home=False, ld='', og=''):

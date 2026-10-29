@@ -1,51 +1,67 @@
-/* Studio ES V2 : bannière montée en quatre temps, filigranes, feuilles qui se posent, cartes projets */
+/* Studio ES : bannière en une scène, filigranes, feuilles qui se posent, cartes projets */
 (() => {
   const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
-  /* ---------- 1. la bannière : quatre plans d'une même scène ---------- */
+  /* ---------- 1. la bannière : une scène, trois plans, puis la rétractation vers la première carte ---------- */
   const hx = $('#hx');
-  if (hx) {
-    /* plan 1 photo, 2 web, 3 graphisme, 4 composition finale (data-s 0 à 3) */
-    const T = [[0, 0], [2600, 1], [3500, 'defile'], [5400, 2], [7900, 3]], FIN = 8000;
-    const bt = $('#hxP');
-    const pose = n => { hx.dataset.s = n; $$('.sc-disc li', hx).forEach(li => li.classList.toggle('on', +li.dataset.s === n)); };
-    let t0 = 0, ecoule = 0, k = 0, joue = false, fini = false, vis = true, raf = 0;
-    const libelle = () => {
-      if (!bt) return;
-      bt.querySelector('span').textContent = fini ? 'Revoir' : joue ? 'Pause' : 'Lecture';
-      bt.setAttribute('aria-label', fini ? 'Revoir l’animation' : joue ? 'Mettre l’animation en pause' : 'Reprendre l’animation');
-      bt.querySelector('path').setAttribute('d', fini ? 'M5 12a7 7 0 1 0 2-5M5 4v4h4' : joue ? 'M9 6v12M15 6v12' : 'M8 5l11 7-11 7z');
-      hx.classList.toggle('arret', !joue && !fini);
+  if (hx && hx.classList.contains('sx')) {
+    hx.dataset.m = 1; document.documentElement.classList.add('sx-js');
+    const sc = $('.sx-sc', hx), bt = $('#hxP'), sel = $('#selection');
+    const carte = () => $('.nu-scene .nu-i');
+    const lettres = $$('.sx-nom .sx-l', hx);
+    const IW = 1536, IH = 2048, vol = hx.classList.contains('vol') && !reduit;
+    let W = 0, H = 0, S = 1;
+    /* les lettres sont remplies par la même photographie, surexposée : on cale l'image sur le cadrage plein écran */
+    const mesure = () => {
+      W = innerWidth; H = vol ? innerHeight : hx.offsetHeight;
+      const op = getComputedStyle(sc).getPropertyValue('--op').trim().split(/\s+/).map(v => parseFloat(v) / 100);
+      const k = Math.max(W / IW, H / IH), bw = IW * k, bh = IH * k;
+      sc.style.setProperty('--bw', bw + 'px'); sc.style.setProperty('--bh', bh + 'px');
+      sc.style.setProperty('--bx', (W - bw) * op[0] + 'px'); sc.style.setProperty('--by', (H - bh) * op[1] + 'px');
+      sc.style.setProperty('--sw', W + 'px'); sc.style.setProperty('--sh', H + 'px');
+      lettres.forEach(l => { const nom = l.closest('.sx-nom'); let x = 0, y = 0, e = l; while (e && e !== nom && e !== document.body) { x += e.offsetLeft; y += e.offsetTop; e = e.offsetParent; } l.style.setProperty('--lx', x + 'px'); l.style.setProperty('--ly', y + 'px'); });
+      if (sel) S = Math.max(H * .5, sel.getBoundingClientRect().top + scrollY);
     };
-    const tic = t => {
-      raf = 0; if (!joue) return;
-      if (!vis || document.hidden) { t0 = t - ecoule; raf = requestAnimationFrame(tic); return; }
-      ecoule = t - t0;
-      while (k < T.length && ecoule >= T[k][0]) { const e = T[k][1]; if (e === 'defile') hx.classList.add('defile'); else pose(e); k++; }
-      if (ecoule >= FIN) { joue = false; fini = true; libelle(); return; }
-      raf = requestAnimationFrame(tic);
+    /* au défilement : la photographie se rétracte jusqu'à la place exacte de la première carte, les lettres sortent par le haut */
+    const ease = p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+    let der = -1;
+    const pas = () => {
+      if (!vol) return;
+      const p = clamp(scrollY / S, 0, 1);
+      if (p === der) return; der = p;
+      hx.classList.toggle('fini', p >= 1); hx.classList.toggle('mue', p > .001 && p < 1);
+      const e = ease(p), c = carte();
+      if (p > 0 && c) {
+        const r = c.getBoundingClientRect();
+        sc.style.setProperty('--cx', r.left * e + 'px'); sc.style.setProperty('--cy', r.top * e + 'px');
+        sc.style.setProperty('--cw', W + (r.width - W) * e + 'px'); sc.style.setProperty('--ch', H + (r.height - H) * e + 'px');
+        sc.style.setProperty('--cr', 13 * e + 'px');
+      } else { ['--cx', '--cy', '--cw', '--ch', '--cr'].forEach(v => sc.style.removeProperty(v)); }
+      sc.style.setProperty('--ce', e.toFixed(4));
+      if (sel) sc.style.setProperty('--st', clamp(sel.getBoundingClientRect().top, 0, H) + 'px');
+      sc.style.setProperty('--dz', (Math.sin(Math.PI * p) * .07).toFixed(4));
+      hx.style.setProperty('--q', clamp((p - .1) / .6, 0, 1).toFixed(4));
+      sc.style.setProperty('--o', (1 - clamp(p / .16, 0, 1)).toFixed(3));
     };
-    const lance = rejoue => {
-      k = 0; ecoule = 0; fini = false; joue = true;
-      if (rejoue) {
-        /* on referme la scène en douceur, puis la caméra repart */
-        hx.classList.remove('defile'); pose(0);
-        $$('.sc-photo picture, .sc-cut picture', hx).forEach(p => { p.style.animation = 'none'; void p.offsetWidth; p.style.animation = ''; });
-      }
-      requestAnimationFrame(t => { t0 = t; if (!raf) raf = requestAnimationFrame(tic); }); libelle();
-    };
-    if (reduit) { delete hx.dataset.s; }
-    else {
-      lance(false);
-      new IntersectionObserver(e => { vis = e[0].isIntersecting; }, { threshold: .1 }).observe(hx);
+    const tout = () => { mesure(); der = -1; pas(); };
+    tout(); if (document.fonts) document.fonts.ready.then(tout);
+    addEventListener('resize', tout); addEventListener('load', tout);
+    if (vol) {
+      let t = false; addEventListener('scroll', () => { if (!t) { t = true; requestAnimationFrame(() => { t = false; pas(); }); } }, { passive: true });
+      /* l'ouverture ne démarre qu'une fois la photographie et la police prêtes */
+      const im = $('.sx-ph img', hx); let parti = false;
+      const go = () => { if (parti) return; parti = true; tout(); hx.classList.add('go'); };
+      Promise.all([im.decode ? im.decode().catch(() => {}) : Promise.resolve(), document.fonts ? document.fonts.ready : Promise.resolve()]).then(go);
+      setTimeout(go, 2200);
       if (bt) bt.addEventListener('click', () => {
-        if (fini) { lance(true); return; }
-        joue = !joue; if (joue) requestAnimationFrame(t => { t0 = t - ecoule; if (!raf) raf = requestAnimationFrame(tic); });
-        libelle();
+        const arret = hx.classList.toggle('pause');
+        bt.querySelector('span').textContent = arret ? 'Lecture' : 'Pause';
+        bt.setAttribute('aria-label', arret ? 'Reprendre l’animation' : 'Mettre l’animation en pause');
+        bt.querySelector('path').setAttribute('d', arret ? 'M8 5l11 7-11 7z' : 'M9 6v12M15 6v12');
       });
-      if (matchMedia('(hover: hover)').matches) hx.addEventListener('pointermove', e => { const r = hx.getBoundingClientRect(); hx.style.setProperty('--mx', ((e.clientX - r.left) / r.width - .5).toFixed(3)); hx.style.setProperty('--my', ((e.clientY - r.top) / r.height - .5).toFixed(3)); });
+      if (matchMedia('(hover: hover)').matches) addEventListener('pointermove', e => { if (scrollY > H * .5 || hx.classList.contains('pause')) return; sc.style.setProperty('--mx', (e.clientX / W - .5).toFixed(3)); sc.style.setProperty('--my', (e.clientY / H - .5).toFixed(3)); }, { passive: true });
     }
   }
 
