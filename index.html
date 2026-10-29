@@ -92,15 +92,15 @@
       <picture class="sx-ph" aria-hidden="true"><img src="/h/scene-1536.webp" alt="" width="1536" height="2048" fetchpriority="high" decoding="async"></picture>
       <span class="sx-voile" aria-hidden="true"></span>
       <h1 id="h1" class="sx-nom"><span class="sx-mots" aria-hidden="true"><span class="sx-w sx-w1"><span class="sx-x" style="--k:0"><span class="sx-l">S</span></span><span class="sx-x" style="--k:1"><span class="sx-l">t</span></span><span class="sx-x" style="--k:2"><span class="sx-l">u</span></span><span class="sx-x" style="--k:3"><span class="sx-l">d</span></span><span class="sx-x" style="--k:4"><span class="sx-l">i</span></span><span class="sx-x" style="--k:5"><span class="sx-l">o</span></span></span> <span class="sx-w sx-w2"><span class="sx-x" style="--k:6"><span class="sx-l">E</span></span><span class="sx-x" style="--k:7"><span class="sx-l">S</span></span></span></span><span class="sr">Studio ES, photographie, web et design graphique en Bretagne</span></h1>
-      <span class="sx-lu" aria-hidden="true"><img class="sx-lum" src="/h/scene-lum.webp" alt="" width="1152" height="1536" decoding="async"></span>
-      <picture class="sx-cut" aria-hidden="true"><img src="/h/scene-cut-1536.webp" alt="" width="1536" height="2048" decoding="async"></picture>
+      <span class="sx-lu" aria-hidden="true"><img class="sx-lum" src="/h/scene-lum.webp" alt="" width="1152" height="1536" decoding="async" fetchpriority="low"></span>
+      <picture class="sx-cut" aria-hidden="true"><img src="/h/scene-cut-1536.webp" alt="" width="1536" height="2048" decoding="async" fetchpriority="low"></picture>
     </div>
     <div class="sx-pied">
       <p class="sx-pro">Photographie <i>·</i> Web <i>·</i> Design graphique</p>
       <div class="sx-act"><a class="bt sx-bt" href="/realisations/">Découvrir les réalisations <span class="ar"><svg class="i"><use href="#ar"/></svg></span></a><button type="button" class="sx-pa" id="hxP" aria-label="Mettre l’animation en pause"><svg class="i" viewBox="0 0 24 24"><path d="M9 6v12M15 6v12"/></svg><span>Pause</span></button></div>
     </div>
   </div>
-
+<script>(function(){var h=document.getElementById('hx');if(!h||!h.classList.contains('vol'))return;var s=h.querySelector('.sx-sc'),c=getComputedStyle(s),W=s.clientWidth,H=s.clientHeight,P=function(v){return v.trim().split(/\s+/).map(function(x){return parseFloat(x)/100})},o=P(c.getPropertyValue('--op')),z=P(c.getPropertyValue('--zo')),q=(parseFloat(c.getPropertyValue('--zs'))||1)+.025,k=Math.max(W/1536,H/2048),bw=1536*k,bh=2048*k,bx=(W-bw)*o[0],by=(H-bh)*o[1],ox=W*z[0],oy=H*z[1];bx=ox+(bx-ox)*q;by=oy+(by-oy)*q;bw*=q;bh*=q;[['--bw',bw],['--bh',bh],['--bx',bx],['--by',by],['--sw',W],['--sh',H]].forEach(function(a){s.style.setProperty(a[0],a[1]+'px')});h.querySelectorAll('.sx-nom .sx-l').forEach(function(l){var n=l.closest('.sx-nom'),x=0,y=0,e=l;while(e&&e!==n){x+=e.offsetLeft;y+=e.offsetTop;e=e.offsetParent}l.style.setProperty('--lx',x+'px');l.style.setProperty('--ly',y+'px')});document.documentElement.classList.add('sx-js');var d=0,g=function(){if(!d){d=1;h.classList.add('go')}};if(document.fonts)document.fonts.ready.then(g);setTimeout(g,700)})()</script>
 </section>
 
 <section class="sec feuille sel-f u-papier" id="selection" aria-labelledby="t-sel">
@@ -264,7 +264,7 @@
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="/reps.js?v=8"></script>
+<script src="/reps.js?v=9"></script>
 <script src="/graph.js?v=1"></script>
 <script src="/app.js?v=21"></script>
 <script src="/motion.js?v=21"></script>

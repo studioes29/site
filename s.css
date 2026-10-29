@@ -2106,3 +2106,9 @@ body{color:var(--encre)}
 @media (prefers-reduced-motion:reduce){.flb-livre,.flb-f{transition:none}}
 .vis-t h2 .it{display:block;font-size:max(.42em,20px);letter-spacing:-.008em;margin-top:.22em;line-height:1.12;opacity:.74}
 @media (max-width:860px){.vis-tel{width:min(56vw,calc((100svh - 400px) * .47))}}
+/* contrastes (recette) : textes de petite taille au-dessus de 4,5:1 */
+.ft .h5,.ft .bas{color:#62615C}
+.u-papier .pt i{color:#9E4731}
+.wb-bar em{color:#5E5E5E}
+.feuille[class*="u-"]:not(.dk) .pt i,.mh[class*="u-"]:not(.dk) .pt i,.in>.pt>i{color:color-mix(in srgb,var(--acc) 80%,#000)}
+.hd:not(.dk) .nv-fill{color:#55389A}
