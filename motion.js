@@ -154,3 +154,59 @@
     cur.textContent = p.querySelector('.vp-f button span').textContent;
   });
 })();
+
+/* web : la visite d'un site, pilotée par le défilement de la page */
+(() => {
+  const v = document.querySelector('[data-vis]'); if (!v) return;
+  const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const D = v.dataset.d.split(',').map(Number), M = v.dataset.m.split(',').map(Number);
+  const ec = v.querySelector('.vis-ec'), tec = v.querySelector('.vis-tec'), di = ec.querySelector('img'), mi = tec.querySelector('img');
+  const li = [...v.querySelectorAll('.vis-e li')], n = li.length;
+  const marque = k => li.forEach((l, j) => l.classList.toggle('on', j === k));
+  /* position dans le site (en pixels de la capture ordinateur) : la page défile par paliers, chaque partie marque un temps d'arrêt */
+  const versM = y => { let k = 0; while (k < n - 1 && y >= D[k + 1]) k++; const f = (y - D[k]) / (D[k + 1] - D[k]); return M[k] + f * (M[k + 1] - M[k]); };
+  const pose = y => {
+    const kd = di.clientWidth / 1200, km = mi.clientWidth / 480;
+    const maxD = Math.max(0, di.clientHeight - ec.clientHeight), maxM = Math.max(0, mi.clientHeight - tec.clientHeight);
+    di.style.setProperty('--y', Math.min(maxD, y * kd).toFixed(1)); mi.style.setProperty('--y', Math.min(maxM, versM(y) * km).toFixed(1));
+    let k = 0; while (k < n - 1 && y + 40 >= D[k + 1]) k++; marque(k);
+  };
+  if (reduit) {
+    /* sans animation : on fait défiler les écrans à la main, les étapes y conduisent */
+    li.forEach((l, k) => l.querySelector('button').addEventListener('click', () => { marque(k); ec.scrollTo({ top: D[k] * di.clientWidth / 1200 }); tec.scrollTo({ top: M[k] * mi.clientWidth / 480 }); }));
+    return;
+  }
+  /* chaque partie occupe une part égale du défilement : 70 % de glissement, 30 % d'arrêt pour lire */
+  const ver = p => { const s = p * (n - 1), k = Math.min(n - 2, Math.floor(s)), f = s - k, g = Math.min(1, f / .7); const e = g * g * (3 - 2 * g); return D[k] + e * (D[k + 1] - D[k]); };
+  const prog = () => { const r = v.getBoundingClientRect(); return Math.max(0, Math.min(1, -r.top / Math.max(1, r.height - innerHeight))); };
+  let t = false;
+  const pas = () => { t = false; pose(ver(prog())); };
+  addEventListener('scroll', () => { if (!t) { t = true; requestAnimationFrame(pas); } }, { passive: true });
+  addEventListener('resize', pas); di.addEventListener('load', pas); mi.addEventListener('load', pas); pas();
+  /* une étape cliquée : la page défile jusqu'à elle */
+  li.forEach((l, k) => l.querySelector('button').addEventListener('click', () => {
+    const r = v.getBoundingClientRect(), H = r.height - innerHeight; scrollTo({ top: scrollY + r.top + H * k / (n - 1) + 2, behavior: 'smooth' });
+  }));
+})();
+
+/* graphisme : la brochure se feuillette */
+(() => {
+  const f = document.querySelector('[data-flb]'); if (!f) return;
+  const livre = f.querySelector('.flb-livre'), ff = [...livre.querySelectorAll('.flb-f')], N = ff.length;
+  const p = f.querySelector('.flb-p'), s = f.querySelector('.flb-s'), lab = f.querySelector('.flb-n');
+  const NOM = ['Couverture', 'Pages 2 et 3', 'Pages 4 et 5', 'Pages 6 et 7', 'Page 8'];
+  let i = 0;
+  const pose = () => {
+    livre.dataset.i = i;
+    ff.forEach((l, k) => { const t = k < i; l.classList.toggle('tourne', t); l.style.setProperty('--z', t ? 10 + k : 10 + N - k); });
+    p.disabled = i === 0; s.disabled = i === N; lab.textContent = NOM[i];
+  };
+  /* pendant qu'une page tourne, elle passe au-dessus des autres */
+  const va = d => { const j = Math.max(0, Math.min(N, i + d)); if (j === i) return; const l = ff[d > 0 ? i : j]; l.style.setProperty('--z', 60); i = j; setTimeout(pose, 1050); ff.forEach((x, k) => x.classList.toggle('tourne', k < i)); livre.dataset.i = i; p.disabled = i === 0; s.disabled = i === N; lab.textContent = NOM[i]; };
+  p.addEventListener('click', () => va(-1)); s.addEventListener('click', () => va(1));
+  livre.addEventListener('click', e => { if (livre.moved) return; const r = livre.getBoundingClientRect(); va(e.clientX > r.left + r.width / 2 ? 1 : -1); });
+  let x0 = null; livre.addEventListener('pointerdown', e => { x0 = e.clientX; livre.moved = false; });
+  addEventListener('pointerup', e => { if (x0 === null) return; const d = e.clientX - x0; x0 = null; if (Math.abs(d) > 40) { livre.moved = true; va(d < 0 ? 1 : -1); setTimeout(() => livre.moved = false, 50); } });
+  f.addEventListener('keydown', e => { if (e.key === 'ArrowRight') { e.preventDefault(); va(1); } if (e.key === 'ArrowLeft') { e.preventDefault(); va(-1); } });
+  livre.tabIndex = 0; pose();
+})();

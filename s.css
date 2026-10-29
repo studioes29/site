@@ -2026,3 +2026,83 @@ body{color:var(--encre)}
 .fl-go-a{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
 .fl-go-a .bt:not(.cl){background:#1A1A1A}
 @media (max-width:860px){.ph-pl .pl-d span{display:none}}
+
+/* ================================================================
+   Web : la visite. Le site de Pierceval Tattoo défile dans le navigateur et dans le téléphone au rythme de la page ;
+   la colonne de gauche nomme la partie affichée. Sans animation : les deux écrans se font défiler à la main.
+   ================================================================ */
+.vis-f{padding:0}
+.vis-piste{position:relative;height:440vh}
+.vis-sc{position:sticky;top:0;height:100svh;display:flex;align-items:center;overflow:hidden}
+.vis-g{display:grid;grid-template-columns:minmax(0,4.2fr) minmax(0,7.8fr);gap:clamp(28px,4vw,72px);align-items:center;width:min(100% - 2*var(--g),var(--max))}
+.vis-t h2{font-size:clamp(40px,4.4vw,72px);line-height:.95;letter-spacing:-.04em}
+.vis-e{display:grid;gap:4px;margin:clamp(20px,2.6vw,34px) 0 clamp(20px,2.4vw,30px);counter-reset:none}
+.vis-e button{display:grid;grid-template-columns:30px 1fr;column-gap:10px;width:100%;padding:10px 12px;border-radius:12px;text-align:left;color:inherit;opacity:.5;transition:opacity .35s,background .35s}
+.vis-e i{grid-row:1/3;font-style:normal;font-size:13px;font-weight:600;padding-top:3px;color:var(--acc)}
+.vis-e b{font-family:var(--d);font-weight:700;font-size:18px;letter-spacing:-.01em}
+.vis-e span{display:none;font-size:15px;line-height:1.45;color:var(--tm);margin-top:3px}
+.vis-e .on button{opacity:1;background:rgba(255,255,255,.07)}
+.vis-e .on span{display:block}
+.vis-e button:hover{opacity:.85}
+.vis-ac{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px}
+.vis-m{position:relative;padding-right:clamp(40px,7vw,110px)}
+.vis-nav{border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 40px 90px -40px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.08)}
+.vis-nav .wb-bar{display:flex;align-items:center;gap:6px;height:30px;padding:0 12px;background:#F1EEF6}
+.vis-nav .wb-bar i{width:9px;height:9px;border-radius:50%;background:#D5D0DE}
+.vis-nav .wb-bar em{margin:0 auto;padding:2px 12px;border-radius:6px;background:#fff;font-style:normal;font-size:12px;color:#5b5568}
+.vis-ec{position:relative;aspect-ratio:16/10;max-height:calc(100svh - 190px);overflow:hidden;background:#1d1220}
+.vis-ec img,.vis-tec img{display:block;width:100%;height:auto;transform:translate3d(0,calc(var(--y,0) * -1px),0);will-change:transform}
+.vis-tel{position:absolute;right:0;bottom:-6%;width:clamp(130px,15vw,230px);padding:7px;border-radius:30px;background:#0e0e12;box-shadow:0 30px 70px -26px rgba(0,0,0,.8),inset 0 0 0 1px rgba(255,255,255,.12)}
+.vis-tec{aspect-ratio:9/19.3;border-radius:23px;overflow:hidden;background:#1d1220}
+@media (max-width:860px){
+  .vis-piste{height:380vh}
+  .vis-g{grid-template-columns:1fr;gap:16px;align-content:center}
+  .vis-t h2{font-size:clamp(34px,10vw,46px)}
+  .vis-t .pt{margin-bottom:6px}
+  .vis-e{margin:12px 0 0;gap:0}
+  .vis-e li:not(.on){display:none}
+  .vis-e .on button{background:none;padding:0}
+  .vis-ac{display:none}
+  .vis-m{padding:0;display:flex;justify-content:center}
+  .vis-nav{display:none}
+  .vis-tel{position:relative;right:auto;bottom:auto;width:min(58vw,calc((100svh - 330px) * .47))}
+}
+@media (prefers-reduced-motion:reduce){
+  .vis-piste{height:auto}
+  .vis-sc{position:relative;height:auto;padding:clamp(80px,9vw,130px) 0}
+  .vis-ec,.vis-tec{overflow-y:auto;overscroll-behavior:contain}
+  .vis-ec img,.vis-tec img{transform:none}
+  @media (max-width:860px){.vis-tel{width:min(70vw,300px)}}
+}
+
+/* ================================================================
+   Graphisme : la brochure se feuillette. Sur ordinateur, les pages tournent sur la reliure ;
+   sur téléphone, une page à la fois, en glissant.
+   ================================================================ */
+.flb{margin-top:clamp(30px,4vw,56px)}
+.flb-livre{position:relative;width:min(100%,1180px,calc((100svh - 190px) * 1.41));margin:0 auto;aspect-ratio:1516/1075;perspective:2600px;transition:transform .9s cubic-bezier(.6,.05,.25,1);cursor:pointer;touch-action:pan-y}
+.flb-livre[data-i="0"]{transform:translateX(-25%)}
+.flb-livre[data-i="4"]{transform:translateX(25%)}
+.flb-f{position:absolute;left:50%;top:0;width:50%;height:100%;transform-origin:0 50%;transform-style:preserve-3d;transition:transform 1.05s cubic-bezier(.6,.05,.25,1);z-index:var(--z,1)}
+.flb-f.tourne{transform:rotateY(-180deg)}
+.flb-f img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:0 4px 4px 0;box-shadow:0 30px 60px -34px rgba(40,30,10,.55),0 1px 2px rgba(40,30,10,.18)}
+.flb-f img.dos{transform:rotateY(180deg);border-radius:4px 0 0 4px}
+.flb-livre::after{content:"";position:absolute;top:0;bottom:0;left:50%;width:7%;transform:translateX(-50%);background:linear-gradient(90deg,rgba(0,0,0,0),rgba(0,0,0,.16) 48%,rgba(255,255,255,.08) 52%,rgba(0,0,0,0));pointer-events:none;z-index:40;opacity:0;transition:opacity .5s}
+.flb-livre:not([data-i="0"]):not([data-i="4"])::after{opacity:1}
+.flb-ui{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:clamp(18px,2vw,26px)}
+.flb-ui button{display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:var(--encre);color:#fff;font-size:18px}
+.flb-ui button:disabled{opacity:.3;cursor:default}
+.flb-n{min-width:11em;text-align:center;font-weight:600;font-size:15px}
+.flb-aide{text-align:center;margin-top:8px;font-size:14px;color:var(--tm)}
+.flb-bande{display:none}
+@media (max-width:860px){
+  .flb-livre,.flb-ui,.flb-aide{display:none}
+  .flb-bande{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 calc(-1 * var(--g));padding:4px var(--g) 10px;scroll-padding-inline:var(--g);scrollbar-width:none}
+  .flb-bande::-webkit-scrollbar{display:none}
+  .flb-bande figure{flex:0 0 82vw;scroll-snap-align:start}
+  .flb-bande img{width:100%;height:auto;border-radius:4px;box-shadow:0 20px 40px -24px rgba(40,30,10,.5)}
+  .flb-bande figcaption{margin-top:8px;font-size:14px;color:var(--tm)}
+}
+@media (prefers-reduced-motion:reduce){.flb-livre,.flb-f{transition:none}}
+.vis-t h2 .it{display:block;font-size:max(.42em,20px);letter-spacing:-.008em;margin-top:.22em;line-height:1.12;opacity:.74}
+@media (max-width:860px){.vis-tel{width:min(56vw,calc((100svh - 400px) * .47))}}
