@@ -76,10 +76,14 @@ def tuile(t, cls='', n=0):
 SEL = ['Matmatah', 'Pierceval Tattoo', 'Les Petites Folies', 'La Soute', 'FL Auto, l’atelier', 'Campagnes', 'Inauguration', 'MJC La Marelle']
 # la première carte reçoit la photographie de la bannière : au défilement, la scène se rétracte exactement à sa place
 SCENE = ('Genezio', '#r=genezio', '/h/scene-900.webp', 'photo', 'Concert')
-selection = tuile(SCENE, ' nu-scene') + ''.join(tuile(next(t for t in TR if t[0] == n)) for n in SEL[1:])
+carte = tuile(SCENE, ' nu-scene')
+# la carte reçoit exactement les mêmes fichiers que la scène plein écran (déjà en cache) : aucun changement d'image à l'arrivée
+carte = re.sub(r'<img src="/h/scene-900.webp"([^>]*?) loading="lazy"', r'<picture><img src="/h/scene-1536.webp"\1', carte).replace('</span><span class="nu-l">', '</span><span class="nu-l">', 1)
+carte = carte.replace('height="1200"></span>', 'height="1200"></picture></span>', 1)
+selection = carte + ''.join(tuile(next(t for t in TR if t[0] == n)) for n in SEL[1:])
 HOME = HOME.replace('{SELECTION}', selection)
 # l'animation démarre avant le premier affichage, sauf si le visiteur a demandé moins de mouvement
-HOME = HOME.replace('<section class="hero sx" id="hx" data-dark aria-labelledby="h1">', '<section class="hero sx" id="hx" data-dark aria-labelledby="h1"><script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches){var s=document.currentScript.parentNode;s.classList.add("vol");setTimeout(function(){if(!s.dataset.m)s.classList.remove("vol")},3000)}</script>')
+HOME = HOME.replace('<section class="hero sx" id="hx" data-dark aria-labelledby="h1">', '<section class="hero sx" id="hx" data-dark aria-labelledby="h1"><script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches){var s=document.currentScript.parentNode;s.classList.add("vol");setTimeout(function(){if(!s.dataset.m)s.classList.remove("vol")},2500)}</script>')
 
 HEAD_END = T.index('<main id="haut">'); FOOT = T.index('</main>')
 def page(path, title, desc, canon, main, home=False, ld='', og=''):
@@ -92,6 +96,9 @@ def page(path, title, desc, canon, main, home=False, ld='', og=''):
     h = re.sub(r'(<meta property="og:description" content=")[^"]*', lambda m: m.group(1) + desc, h)
     if og: h = h.replace('content="https://studioes.fr/og.jpg"', 'content="https://studioes.fr/' + og + '"')
     h = h.replace('<meta name="robots" content="noindex">', '<meta name="robots" content="%s">' % ROBOTS)
+    if home:
+        # la photographie de la bannière part en premier, au bon format
+        h = h.replace('<link rel="preload" href="/f/br.woff2"', '<link rel="preload" as="image" href="/h/scene-1536.webp" fetchpriority="high">\n<link rel="preload" href="/f/br.woff2"', 1)
     if not home:
         h = h.replace('<a class="evite" href="#selection">', '<a class="evite" href="#h1">')
         h = re.sub(r'<script type="application/ld\+json">.*?</script>', '<script type="application/ld+json">' + ld + '</script>' if ld else '', h, count=1, flags=re.S)

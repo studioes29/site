@@ -13,55 +13,66 @@
     const lettres = $$('.sx-nom .sx-l', hx);
     const IW = 1536, IH = 2048, vol = hx.classList.contains('vol') && !reduit;
     let W = 0, H = 0, S = 1;
-    /* les lettres sont remplies par la même photographie, surexposée : on cale l'image sur le cadrage plein écran */
+    const pc = v => v.trim().split(/\s+/).map(x => parseFloat(x) / 100);
+    /* les lettres sont remplies par la même photographie, surexposée : on cale l'image sur le cadrage plein écran (zoom vertical compris) */
     const mesure = () => {
-      W = innerWidth; H = vol ? innerHeight : hx.offsetHeight;
-      const op = getComputedStyle(sc).getPropertyValue('--op').trim().split(/\s+/).map(v => parseFloat(v) / 100);
-      const k = Math.max(W / IW, H / IH), bw = IW * k, bh = IH * k;
+      W = sc.clientWidth; H = sc.clientHeight;
+      const cs = getComputedStyle(sc), op = pc(cs.getPropertyValue('--op')), zo = pc(cs.getPropertyValue('--zo')), zs = (parseFloat(cs.getPropertyValue('--zs')) || 1) + .025;
+      const k = Math.max(W / IW, H / IH); let bw = IW * k, bh = IH * k, bx = (W - bw) * op[0], by = (H - bh) * op[1];
+      const ox = W * zo[0], oy = H * zo[1]; bx = ox + (bx - ox) * zs; by = oy + (by - oy) * zs; bw *= zs; bh *= zs;
       sc.style.setProperty('--bw', bw + 'px'); sc.style.setProperty('--bh', bh + 'px');
-      sc.style.setProperty('--bx', (W - bw) * op[0] + 'px'); sc.style.setProperty('--by', (H - bh) * op[1] + 'px');
+      sc.style.setProperty('--bx', bx + 'px'); sc.style.setProperty('--by', by + 'px');
       sc.style.setProperty('--sw', W + 'px'); sc.style.setProperty('--sh', H + 'px');
       lettres.forEach(l => { const nom = l.closest('.sx-nom'); let x = 0, y = 0, e = l; while (e && e !== nom && e !== document.body) { x += e.offsetLeft; y += e.offsetTop; e = e.offsetParent; } l.style.setProperty('--lx', x + 'px'); l.style.setProperty('--ly', y + 'px'); });
       if (sel) S = Math.max(H * .5, sel.getBoundingClientRect().top + scrollY);
     };
-    /* au défilement : la photographie se rétracte jusqu'à la place exacte de la première carte, les lettres sortent par le haut */
-    const ease = p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+    /* au défilement : la photographie se rétracte jusqu'à la place exacte de la première carte ;
+       les déformations (zoom, parallaxe, lumière, ombres) s'éteignent en même temps, les lettres sortent par le haut */
+    const ease = p => p * p * p * (p * (p * 6 - 15) + 10);
     let der = -1;
     const pas = () => {
       if (!vol) return;
       const p = clamp(scrollY / S, 0, 1);
       if (p === der) return; der = p;
-      hx.classList.toggle('fini', p >= 1); hx.classList.toggle('mue', p > .001 && p < 1);
-      const e = ease(p), c = carte();
+      hx.classList.toggle('fini', p >= 1); hx.classList.toggle('mue', p > 0 && p < 1);
+      const e = ease(p), c = carte(); let haut = 0;
       if (p > 0 && c) {
-        const r = c.getBoundingClientRect();
+        const r = c.getBoundingClientRect(); haut = r.top * e;
         sc.style.setProperty('--cx', r.left * e + 'px'); sc.style.setProperty('--cy', r.top * e + 'px');
         sc.style.setProperty('--cw', W + (r.width - W) * e + 'px'); sc.style.setProperty('--ch', H + (r.height - H) * e + 'px');
         sc.style.setProperty('--cr', 13 * e + 'px');
       } else { ['--cx', '--cy', '--cw', '--ch', '--cr'].forEach(v => sc.style.removeProperty(v)); }
       sc.style.setProperty('--ce', e.toFixed(4));
-      if (sel) sc.style.setProperty('--st', clamp(sel.getBoundingClientRect().top, 0, H) + 'px');
-      sc.style.setProperty('--dz', (Math.sin(Math.PI * p) * .07).toFixed(4));
-      hx.style.setProperty('--q', clamp((p - .1) / .6, 0, 1).toFixed(4));
-      sc.style.setProperty('--o', (1 - clamp(p / .16, 0, 1)).toFixed(3));
+      sc.style.setProperty('--dz', (Math.sin(Math.PI * e) * .05).toFixed(4));
+      /* dès que la scène se rétracte, elle se pose sur le papier du portfolio : les lettres qui sortent de l'image passent à l'encre */
+      sc.style.setProperty('--st', p > 0 ? '0px' : H + 'px'); sc.style.setProperty('--fo', p > 0 ? 0 : 1);
+      hx.style.setProperty('--q', clamp((p - .06) / .5, 0, 1).toFixed(4));
+      sc.style.setProperty('--o', (1 - clamp(p / .14, 0, 1)).toFixed(3));
+      /* le menu passe en clair seulement quand le papier apparaît derrière lui */
+      if (haut > 56) { if (hx.hasAttribute('data-dark')) { hx.removeAttribute('data-dark'); hx.style.setProperty('--fond', 'var(--papier)'); } }
+      else if (!hx.hasAttribute('data-dark')) { hx.setAttribute('data-dark', ''); hx.style.removeProperty('--fond'); }
     };
     const tout = () => { mesure(); der = -1; pas(); };
     tout(); if (document.fonts) document.fonts.ready.then(tout);
     addEventListener('resize', tout); addEventListener('load', tout);
     if (vol) {
       let t = false; addEventListener('scroll', () => { if (!t) { t = true; requestAnimationFrame(() => { t = false; pas(); }); } }, { passive: true });
-      /* l'ouverture ne démarre qu'une fois la photographie et la police prêtes */
-      const im = $('.sx-ph img', hx); let parti = false;
+      /* l'ouverture démarre dès que la police est prête (ou au plus tard après 0,6 s) : la fente révèle la photographie au fil de son arrivée */
+      let parti = false;
       const go = () => { if (parti) return; parti = true; tout(); hx.classList.add('go'); };
-      Promise.all([im.decode ? im.decode().catch(() => {}) : Promise.resolve(), document.fonts ? document.fonts.ready : Promise.resolve()]).then(go);
-      setTimeout(go, 2200);
+      (document.fonts ? document.fonts.ready : Promise.resolve()).then(go); setTimeout(go, 600);
       if (bt) bt.addEventListener('click', () => {
         const arret = hx.classList.toggle('pause');
         bt.querySelector('span').textContent = arret ? 'Lecture' : 'Pause';
         bt.setAttribute('aria-label', arret ? 'Reprendre l’animation' : 'Mettre l’animation en pause');
         bt.querySelector('path').setAttribute('d', arret ? 'M8 5l11 7-11 7z' : 'M9 6v12M15 6v12');
       });
-      if (matchMedia('(hover: hover)').matches) addEventListener('pointermove', e => { if (scrollY > H * .5 || hx.classList.contains('pause')) return; sc.style.setProperty('--mx', (e.clientX / W - .5).toFixed(3)); sc.style.setProperty('--my', (e.clientY / H - .5).toFixed(3)); }, { passive: true });
+      /* profondeur au pointeur, lissée image par image */
+      if (matchMedia('(hover: hover)').matches) {
+        let cx = 0, cy = 0, tx = 0, ty = 0, raf = 0;
+        const glisse = () => { cx += (tx - cx) * .08; cy += (ty - cy) * .08; sc.style.setProperty('--mx', cx.toFixed(4)); sc.style.setProperty('--my', cy.toFixed(4)); raf = Math.abs(tx - cx) + Math.abs(ty - cy) > .001 ? requestAnimationFrame(glisse) : 0; };
+        addEventListener('pointermove', e => { if (scrollY > H * .3 || hx.classList.contains('pause')) return; tx = e.clientX / W - .5; ty = e.clientY / H - .5; if (!raf) raf = requestAnimationFrame(glisse); }, { passive: true });
+      }
     }
   }
 
