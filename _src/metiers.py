@@ -230,7 +230,7 @@ gr += '''
   </div>
 </section>
 <section class="sec feuille fl-f fl-c" aria-label="Fill">
-  <div class="w fl-ct rv"><p>Pour une production régulière plutôt qu’un projet ponctuel, Studio ES a conçu <b>Fill</b>, un service de communication externalisée pour les communes et les entreprises.</p><div class="ds-ac"><a class="bt" href="https://fill.studioes.fr">Découvrir Fill <span class="ar"><svg class="i"><use href="#ne"/></svg></span></a><a class="ln" href="/projets/fill/">La conception de Fill</a><a class="ln" href="https://fill.studioes.fr/espace/">Espace client</a></div></div>
+  <div class="w fl-ct rv"><p>Pour une production régulière plutôt qu’un projet ponctuel, Studio ES a conçu <b>Fill</b>, un service de communication externalisée pour les communes et les entreprises.</p><div class="ds-ac"><a class="bt" href="https://fill.studioes.fr">Découvrir Fill <span class="ar"><svg class="i"><use href="#ne"/></svg></span></a><a class="bt cl" href="https://fill.studioes.fr/espace/">Espace client Fill <span class="ar"><svg class="i"><use href="#ne"/></svg></span></a><a class="ln" href="/projets/fill/">La conception de Fill</a></div></div>
 </section>
 ''' + contact_m('Identité, campagne ou édition : décrivez le projet, le devis suit.', 'Design graphique')
 page('metiers/graphisme', 'Design graphique en Bretagne : identités, campagnes, éditions · Studio ES', 'Identités visuelles, campagnes et directions artistiques, brochures et éditions pour les lieux culturels, collectivités et entreprises de Bretagne : La Soute, Pierceval Tattoo, MJC La Marelle. Sur devis.', 'https://studioes.fr/metiers/graphisme/', gr,
