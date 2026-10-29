@@ -47,8 +47,7 @@ window.STUDIO_CGV = [
     "Pour un événement daté, une annulation à moins de 30 jours de la date entraîne en outre le paiement de 50 % du prix de la prestation. Un report à une date disponible est accepté sans frais une fois.",
     "Le prestataire peut suspendre une prestation en cas de non-paiement ou de manquement grave du client, après une mise en demeure restée sans effet pendant huit jours."]],
   ["11. Client particulier", [
-    "Le client particulier qui commande à distance dispose d'un délai de rétractation de 14 jours à compter de l'acceptation du devis, par simple écrit adressé à contact@studioes.fr. S'il demande que la prestation commence avant la fin de ce délai, il règle la part déjà réalisée.",
-    "En cas de litige, il peut recourir gratuitement à un médiateur de la consommation : [médiateur à désigner]."]],
+    "Le client particulier qui commande à distance dispose d'un délai de rétractation de 14 jours à compter de l'acceptation du devis, par simple écrit adressé à contact@studioes.fr. S'il demande que la prestation commence avant la fin de ce délai, il règle la part déjà réalisée."]],
   ["12. Responsabilité", [
     "Le prestataire est tenu d'une obligation de moyens. Sa responsabilité est limitée aux dommages directs et au montant de la prestation concernée.",
     "Il ne répond ni des contenus fournis ou validés par le client, ni des services de tiers (plateformes, hébergeurs, imprimeurs), ni d'un cas de force majeure."]],
