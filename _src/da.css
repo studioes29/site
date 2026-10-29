@@ -365,3 +365,9 @@ h2.d{text-wrap:balance}
 .pu-l{display:none!important}
 .aut-g{gap:10px!important}
 @media (max-width:860px){.sx-pro{white-space:normal!important;font-size:15px!important}}
+/* chaque rubrique forme sa propre pile : une rubrique figée ne passe jamais au-dessus des suivantes */
+main>section{position:relative;z-index:0}
+.vp-f button span{color:var(--mu)!important}
+.vp-f button::before,.vp-f button::after{display:none!important}
+/* devis : les choix du premier écran ne doivent pas hériter de la grille des anciens chapitres (.ch) */
+.opts.ch{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(180px,1fr))!important;grid-template-rows:none!important;gap:8px!important;flex-direction:unset}

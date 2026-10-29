@@ -130,8 +130,11 @@ rl = entete('Réalisations', 'Réalisations', '', '%d projets : reportages, site
 page('realisations', 'Réalisations · Studio ES', 'Portfolio de Studio ES : reportages photo, sites et applications, identités, campagnes et éditions, en Bretagne.', 'https://studioes.fr/realisations/', rl, ld=LD('Réalisations', 'https://studioes.fr/realisations/', 'Portfolio photographie, web et design graphique'))
 
 # la couche de direction artistique est maintenue à part (_src/da.css) et recopiée en fin de feuille de style
-_css = open(os.path.join(RACINE, 's.css'), encoding='utf8').read()
 _m = '/* ==== DA (source : _src/da.css) ==== */'
-_css = _css.split(_m)[0].rstrip() + '\n' + _m + '\n' + open(os.path.join(D, 'da.css'), encoding='utf8').read()
+_css = open(os.path.join(D, 'base.css'), encoding='utf8').read().rstrip() + '\n' + _m + '\n' + open(os.path.join(D, 'da.css'), encoding='utf8').read()
 open(os.path.join(OUT, 's.css'), 'w', encoding='utf8').write(_css)
+import subprocess
+try: subprocess.run(['node', os.path.join(D, 'optimise.cjs')], check=False)
+except FileNotFoundError: print('optimise : Node absent, s.css laissé complet')
+subprocess.run([sys.executable, os.path.join(D, 'securite.py'), OUT], check=True)
 print('ok')

@@ -75,7 +75,7 @@ ph += '''
 </section>
 ''' + croise('Le studio fait aussi les sites', 'Un site de réservation, la billetterie d’une salle, une application de budget. Les photos qui l’habillent sont déjà faites.', '/metiers/sites-et-outils/', 'Sites et applications', '/projets/pierceval-tattoo/img/cover-800.webp', 'u-sable') + '\n' + \
     contact_m('Événement, suivi annuel ou mariage : quelques choix, une estimation immédiate.', 'Photographie')
-page('metiers/photographie', 'Photographe de concert, d’événement et de mariage en Bretagne · Studio ES', 'Reportages photo en Bretagne : concerts et festivals (Philippe Katerine, Gaël Faye, Matmatah…), événements institutionnels, entreprises, portraits et mariages. Événement dès 250 €.', 'https://studioes.fr/metiers/photographie/', ph, og='og-photo.jpg',
+page('metiers/photographie', 'Photographe de concert, d’événement et de mariage en Bretagne', 'Reportages photo en Bretagne : concerts (Philippe Katerine, Gaël Faye, Matmatah), institutions, entreprises et mariages. 36 reportages en ligne, dès 250 €.', 'https://studioes.fr/metiers/photographie/', ph, og='og-photo.jpg',
      ld=LD('Photographie', 'https://studioes.fr/metiers/photographie/', 'Reportage photo d’événement, de concert et de mariage', [('Événement', 250), ('Suivi photo annuel', 1290), ('Mariage', 1290)]))
 
 # ---------- Web : trois projets à égalité, la vitrine, puis les offres ----------
@@ -160,7 +160,7 @@ wb += '''
 </section>
 ''' + sect('applications', B) + '\n' + croise('Le studio photographie aussi', 'Concerts, festivals, cérémonies, entreprises, mariages : 36 reportages en ligne.', '/metiers/photographie/', 'Voir les reportages', '/p/t/matmatah-1.webp', 'u-papier') + '\n' + \
     contact_m('Site ou application : quelques choix, une estimation immédiate.', 'Web')
-page('metiers/sites-et-outils', 'Sites internet et applications en Bretagne · Studio ES', 'Sites internet, réservation en ligne et applications sur mesure pour les TPE, lieux culturels et collectivités de Bretagne : Pierceval Tattoo, La Soute, flouz. Sites dès 990 €.', 'https://studioes.fr/metiers/sites-et-outils/', wb, og='og-web.jpg',
+page('metiers/sites-et-outils', 'Sites internet et applications en Bretagne · Studio ES', 'Sites, réservation en ligne et applications pour les TPE, lieux culturels et collectivités de Bretagne : Pierceval Tattoo, La Soute, flouz. Dès 990 €.', 'https://studioes.fr/metiers/sites-et-outils/', wb, og='og-web.jpg',
      ld=LD('Web', 'https://studioes.fr/metiers/sites-et-outils/', 'Création de sites internet et d’applications web', [('Site Essentiel', 990), ('Site Vitrine', 1990), ('Site sur mesure', 4490), ('Application sur mesure', 190)]))
 
 # ---------- Design graphique : trois familles, l'ensemble puis le détail ----------
@@ -235,7 +235,7 @@ gr += '''
   <div class="w fl-ct"><p>Pour une production régulière plutôt qu’un projet ponctuel, Studio ES a conçu <b>Fill</b>, la communication courante des communes et des entreprises, en abonnement.</p><div class="ds-ac"><a class="bt" href="https://fill.studioes.fr">fill.studioes.fr</a><a class="ln" href="/projets/fill/">La conception de Fill</a></div></div>
 </section>
 ''' + contact_m('Identité, campagne ou édition : décrivez le projet, le devis suit.', 'Design graphique')
-page('metiers/graphisme', 'Design graphique en Bretagne : identités, campagnes, éditions · Studio ES', 'Identités visuelles, campagnes et directions artistiques, brochures et éditions pour les lieux culturels, collectivités et entreprises de Bretagne : La Soute, Pierceval Tattoo, MJC La Marelle. Sur devis.', 'https://studioes.fr/metiers/graphisme/', gr,
+page('metiers/graphisme', 'Design graphique en Bretagne : identités, campagnes, éditions', 'Identités visuelles, campagnes et éditions pour les lieux culturels, collectivités et entreprises de Bretagne : La Soute, Pierceval Tattoo, MJC La Marelle.', 'https://studioes.fr/metiers/graphisme/', gr,
      ld=LD('Design graphique', 'https://studioes.fr/metiers/graphisme/', 'Identité visuelle, campagne et édition'))
 
 # ---------- Offres : toutes les formules au même endroit ----------
@@ -262,5 +262,5 @@ of += '''
   </div>
 </section>
 ''' + contact_m('Trois étapes, une estimation immédiate.', '')
-page('offres', 'Offres et tarifs : photographie, sites et applications · Studio ES', 'Les formules de Studio ES : reportage photo dès 250 €, suivi photo annuel, mariage, sites internet dès 990 € avec suivi mensuel, applications en abonnement ou à l’achat. Design graphique sur devis.', 'https://studioes.fr/offres/', of,
+page('offres', 'Offres et tarifs : photographie, sites et applications · Studio ES', 'Tarifs de Studio ES : reportage photo dès 250 €, suivi annuel, mariage, sites dès 990 €, applications en abonnement ou à l’achat. Graphisme sur devis.', 'https://studioes.fr/offres/', of,
      ld=LD('Offres', 'https://studioes.fr/offres/', 'Photographie, sites internet et applications', [('Événement', 250), ('Suivi photo annuel', 1290), ('Mariage', 1290), ('Site Essentiel', 990), ('Site Vitrine', 1990), ('Site sur mesure', 4490), ('Application sur mesure', 190)]))
