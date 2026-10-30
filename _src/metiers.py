@@ -146,78 +146,75 @@ page('metiers/sites-et-outils', 'Sites internet et applications en Bretagne · S
      ld=LD('Web', 'https://studioes.fr/metiers/sites-et-outils/', 'Création de sites internet et d’applications web', [('Site Essentiel', 990), ('Site Vitrine', 1990), ('Site sur mesure', 4490), ('Application sur mesure', 190)]))
 
 # ---------- Design graphique : trois familles, l'ensemble puis le détail ----------
-def galbt(g, lib):
-    return '<button type="button" class="ln gal-b" data-r="%s">%s</button>' % (g, lib)
-def puces(g, n=5, skip=0, nom=''):
-    # les autres projets de la famille, en puces de nuancier numérotées
-    gg = next(x for x in GRAPH if x[0] == g); out = ''
-    for i, nn in enumerate(gg[3][skip:skip + n]):
-        out += '<button type="button" class="pu" data-r="%s" aria-label="Voir : %s"><span class="pu-i"><img src="/p/t/%s.webp" alt="" loading="lazy"></span><span class="pu-l"><b>%s</b><small>N° %02d</small></span></button>' % (g, gg[1], nn, nom, skip + i + 1)
-    return out
-def pantone(nom, code, c, txt='#fff'):
-    return '<li class="pan" style="--c:%s;--t:%s"><span class="pan-c"></span><span class="pan-l"><b>%s</b><small>%s</small></span></li>' % (c, txt, nom, code)
-def tete(n, id, titre, it, texte, k, cas=''):
-    return ('<div class="gr-t rv"><p class="pt"><i>%s</i><span>%s</span></p><h2 class="d" id="t-%s">%s<span class="it">%s</span></h2><div class="gr-tx"><p class="lead">%s</p>'
-            '<div class="ds-ac"><button type="button" class="bt" data-est data-k="%s">Parler de mon projet %s</button>%s</div></div></div>') % (n, titre, id, titre, it, texte, k, AR, cas)
-def detail(src, alt, pos, legende):
-    return '<figure class="det rv"><img src="%s" alt="%s" loading="lazy" style="object-position:%s"><figcaption>Détail · %s</figcaption></figure>' % (src, alt, pos, legende)
 gr_droite = ('<div class="mh-gr" aria-hidden="true"><img class="a" src="/projets/la-soute/img/affiche.webp" alt=""><img class="b" src="/projets/mjc-la-marelle/img/p1.webp" alt="">'
-             '<img class="c" src="/projets/pierceval-tattoo/img/identite.webp" alt=""></div>')
+             '<img class="c" src="/projets/christopher-poupon/img/application.webp" alt=""></div>')
 gr_act = '<div class="mh-ac"><button type="button" class="bt" data-est data-g="Design graphique">Parler de mon projet %s</button><a class="ln" href="#identites">Voir les projets</a></div>' % AR
 gr = entete('Design graphique', 'Graphisme', 'Identités, campagnes, éditions.', 'Une direction artistique qui tient sur tous les supports : l’identité d’un lieu ou d’une marque, la campagne d’une saison, la brochure qu’on garde. Chaque projet est chiffré sur devis.',
             ' u-rose mh-gr-s', FG('Design', 'left:-1vw;bottom:-.42em;font-size:calc(var(--fg-t) * 1.05)'), gr_droite, gr_act)
-gr += '''
+
+# ---------- cartes nuancier : une carte par projet, vers son étude de cas (ou sa galerie) ----------
+# (nom, lien, vignette, couleur, ligne, nature)
+IDS = [
+    ('FL Auto', '/projets/fl-auto/', 'fl-auto', '#16213C', 'Garage automobile', 'Identité et signalétique'),
+    ('Christopher Poupon', '/projets/christopher-poupon/', 'christopher-poupon', '#1F3B2D', 'Paysagiste', 'Identité'),
+    ('Maison Blé', '/projets/maison-ble/', 'maison-ble', '#5C3B22', 'Boulangerie', 'Identité'),
+    ('Crèche Océane', '/projets/creche-oceane/', 'creche-oceane', '#F0901E', 'Petite enfance', 'Identité et signalétique'),
+    ('Laureen Boudigou', '/projets/laureen-boudigou/', 'laureen-boudigou', '#1D2635', 'Avocate', 'Identité'),
+    ('Mam’our et merveilles', '/projets/mam-our-et-merveilles/', 'mam-our-et-merveilles', '#3D5C49', 'Maison d’assistantes maternelles', 'Identité'),
+    ('Molan Move', '/projets/molan-move/', 'molan-move', '#133E6B', 'Événement sportif', 'Identité'),
+    ('Élodie Viconte', '/projets/elodie-viconte/', 'elodie-viconte', '#161616', 'Photographe', 'Identité'),
+    ('Pierceval Tattoo', '/projets/pierceval-tattoo/', 'pierceval-tattoo', '#2B1330', 'Studio de tatouage', 'Identité et site'),
+    ('Fill', '/projets/fill/', 'fill', '#7656D6', 'Communication externalisée', 'Marque et site'),
+]
+CAMP = [
+    ('La Soute', '/projets/la-soute/', 'la-soute', '#171A52', 'Saison culturelle', 'Direction artistique'),
+    ('Campagnes', '#r=campagnes', 't/saisons-ellipse-8', '#B5583F', 'Saisons, recrutement, prévention', 'Galerie'),
+    ('Affiches', '#r=affiches', 't/affiches-6', '#2E2B28', 'Expositions, spectacles, événements', 'Galerie'),
+]
+EDS = [
+    ('MJC La Marelle', '/projets/mjc-la-marelle/', 'mjc-la-marelle', '#1F4A33', 'Brochure de saison', 'Édition'),
+    ('Éditions', '#r=editions', 't/editions-5', '#8C6B3F', 'Brochures, programmes, dépliants', 'Galerie'),
+    ('Signalétique', '#r=signaletique', 't/carenage-1', '#2F4A5C', 'Lieux publics et commerces', 'Galerie'),
+]
+def pk(t, i):
+    nom, lien, img, c, ligne, nat = t
+    gal = lien.startswith('#r=')
+    src = '/p/%s.webp' % img if gal else '/p/n/%s.webp' % img
+    attr = ' href="/%s" data-r="%s"' % (lien, lien[3:]) if gal else ' href="%s"' % lien
+    fin = '<em>Voir la galerie</em>' if gal else '<em>Étude de cas</em>'
+    return ('<a class="pk" style="--c:%s;--i:%d"%s><span class="pk-i"><img src="%s" alt="%s" loading="lazy" decoding="async" width="640" height="640"></span>'
+            '<span class="pk-l"><b>%s</b><span>%s</span><small><i></i>%s · %s</small>%s</span></a>') % (c, i, attr, src, nom, nom, ligne, c.upper(), nat, fin)
+def nuancier(L, label): return '<div class="pk-g rv" role="list" aria-label="%s">%s</div>' % (label, ''.join(pk(t, i) for i, t in enumerate(L)))
+def tete(n, id, titre, it, texte, k):
+    return ('<div class="gr-t rv"><p class="pt"><i>%s</i><span>%s</span></p><h2 class="d" id="t-%s">%s<span class="it">%s</span></h2><div class="gr-tx"><p class="lead">%s</p>'
+            '<div class="ds-ac"><button type="button" class="bt" data-est data-k="%s">Parler de mon projet %s</button></div></div></div>') % (n, titre, id, titre, it, texte, k, AR)
+gr += """
 <section class="sec feuille gr-f gr-identites u-papier" id="identites" aria-labelledby="t-identites">
-  ''' + FG('Identité', 'right:-2vw;top:-.36em;--vy:-80px;font-size:calc(var(--fg-t) * .72)') + '''
+  """ + FG('Identité', 'right:-2vw;top:-.36em;--vy:-80px;font-size:calc(var(--fg-t) * .72)') + """
   <div class="w">
-    ''' + tete('01', 'identites', 'Identités visuelles', 'Un système complet, pas seulement un logo.', 'Logotype, couleurs, typographies et règles de déclinaison : de quoi rester reconnaissable sur l’enseigne, le site, la carte cadeau et les réseaux.', 'identite', '<a class="ln" href="/projets/pierceval-tattoo/">Étude de cas Pierceval Tattoo</a>') + '''
-    <div class="sys rv" aria-label="Le système d’identité de Pierceval Tattoo">
-      <figure class="sy sy-logo"><img src="''' + PV + '''id-logo.webp" alt="Logotype de Pierceval Tattoo" loading="lazy"><figcaption>Logotype</figcaption></figure>
-      <figure class="sy sy-pal"><ul class="pans">''' + pantone('Aubergine', '#2B1330', '#2B1330') + pantone('Rose', '#E58BD0', '#E58BD0', '#2B1330') + pantone('Peau', '#F3EDE4', '#F3EDE4', '#2B1330') + '''</ul><figcaption>Couleurs</figcaption></figure>
-      <figure class="sy sy-vit"><img src="''' + PV + '''id-vitrine.webp" alt="Le logotype en vitrine du studio" loading="lazy"><figcaption>Vitrine</figcaption></figure>
-      <figure class="sy sy-cad"><img src="''' + PV + '''id-cadeau.webp" alt="Carte cadeau imprimée" loading="lazy"><figcaption>Carte cadeau</figcaption></figure>
-      <figure class="sy sy-cdv"><img src="''' + PV + '''id-cdv-verso.webp" alt="Carte de visite" loading="lazy"><figcaption>Carte de visite</figcaption></figure>
-      <figure class="sy sy-web"><img src="''' + PV + '''m-hero.webp" alt="Le site sur téléphone" loading="lazy"><figcaption>Site</figcaption></figure>
-    </div>
-    ''' + detail(PV + 'id-vitrine.webp', 'Le logotype de Pierceval Tattoo en vitrophanie, vu de près', '50% 45%', 'le badge en vitrine, à taille réelle') + '''
-    <div class="aut rv"><p class="d">Autres identités</p><div class="aut-g">''' + puces('identites', 5, 2, 'Identité') + '''</div><div class="aut-l">''' + galbt('identites', 'Toutes les identités') + galbt('signaletique', 'La signalétique') + '''</div></div>
+    """ + tete('01', 'identites', 'Identités visuelles', 'Un système complet, pas seulement un logo.', 'Logotype, couleurs, typographies et règles de déclinaison : de quoi rester reconnaissable sur l’enseigne, le site, les papiers et les réseaux. Chaque carte ouvre l’étude de cas du projet.', 'identite') + """
+    """ + nuancier(IDS, 'Identités visuelles') + """
   </div>
 </section>
 <section class="sec feuille gr-f gr-campagnes dk u-terre" id="campagnes" data-dark aria-labelledby="t-campagnes">
-  ''' + FG('Campagne', 'left:-2vw;bottom:-.4em;--vx:50px;--vy:-50px;font-size:calc(var(--fg-t) * .78)') + '''
+  """ + FG('Campagne', 'left:-2vw;bottom:-.4em;--vx:50px;--vy:-50px;font-size:calc(var(--fg-t) * .78)') + """
   <div class="w">
-    ''' + tete('02', 'campagnes', 'Campagnes et directions artistiques', 'Une idée, déclinée partout.', 'Festivals, saisons culturelles, événements, recrutement : un concept fort, puis l’affiche, les réseaux, l’affichage et la presse.', 'campagne', '<a class="ln" href="/projets/la-soute/">Étude de cas La Soute</a>') + '''
-    <div class="camp rv">
-      <div class="cp-con"><p class="cp-k">Le concept</p><p class="cp-t d">Un hublot<span class="it">pour signature.</span></p><p class="cp-x">Le O de La Soute devient un hublot : il cadre les artistes, rythme les affiches et sert de repère sur chaque support.</p>
-        <ul class="pans">''' + pantone('Marine', '#13153E', '#13153E') + pantone('Corail', '#FF6B4F', '#FF6B4F', '#13153E') + pantone('Soleil', '#FFE45C', '#FFE45C', '#13153E') + pantone('Lilas', '#CBC3F3', '#CBC3F3', '#13153E') + '''</ul></div>
-      <figure class="cp-kv"><img src="/projets/la-soute/img/affiche.webp" alt="Affiche de concert de La Soute" loading="lazy"><figcaption>Affiche de concert</figcaption></figure>
-      <figure class="cp-d1"><img src="/projets/la-soute/img/soute-6.webp" alt="Affiche du temps fort" loading="lazy"><figcaption>Temps fort</figcaption></figure>
-      <figure class="cp-d2"><img src="/projets/la-soute/img/soute-5.webp" alt="Visuel de saison" loading="lazy"><figcaption>Saison</figcaption></figure>
-      <figure class="cp-d3"><img src="/projets/la-soute/img/soute-8.webp" alt="Déclinaison sur le site, sur téléphone" loading="lazy"><figcaption>Site</figcaption></figure>
-    </div>
-    ''' + detail('/projets/la-soute/img/affiche.webp', 'Le titre de l’affiche Louve Majeure, vu de près', '20% 64%', 'la typographie de l’affiche de concert') + '''
-    <div class="aut rv"><p class="d">Autres campagnes</p><div class="aut-g">''' + puces('campagnes', 5, 0, 'Campagne') + '''</div><div class="aut-l">''' + galbt('campagnes', 'Toutes les campagnes') + galbt('affiches', 'Les affiches') + '''</div></div>
+    """ + tete('02', 'campagnes', 'Campagnes et directions artistiques', 'Une idée, déclinée partout.', 'Festivals, saisons culturelles, événements, recrutement : un concept fort, puis l’affiche, les réseaux, l’affichage et la presse.', 'campagne') + """
+    """ + nuancier(CAMP, 'Campagnes') + """
   </div>
 </section>
 <section class="sec feuille gr-f gr-editions u-sable" id="editions" aria-labelledby="t-editions">
-  ''' + FG('Édition', 'right:-1vw;bottom:-.38em;--vy:-60px;font-family:var(--sf);font-style:italic;font-weight:300;font-size:calc(var(--fg-t) * .78)') + '''
+  """ + FG('Édition', 'right:-1vw;bottom:-.38em;--vy:-60px;font-family:var(--sf);font-style:italic;font-weight:300;font-size:calc(var(--fg-t) * .78)') + """
   <div class="w">
-    ''' + tete('03', 'editions', 'Édition et supports imprimés', 'Des pages qui se lisent.', 'Brochures, programmes, magazines et dépliants : une grille claire, une hiérarchie lisible, des fichiers prêts pour l’imprimeur.', 'edition', '<a class="ln" href="/projets/mjc-la-marelle/">Étude de cas MJC La Marelle</a>') + '''
-    <div class="flb rv" data-flb>
-      <div class="flb-livre" data-i="0" role="group" aria-label="Brochure de saison de la MJC La Marelle, à feuilleter"><div class="flb-f" data-l="0"><img src="/projets/mjc-la-marelle/img/p1.webp" alt="Brochure de la MJC La Marelle, page 1 : Couverture" loading="lazy" decoding="async"><img class="dos" src="/projets/mjc-la-marelle/img/p2.webp" alt="Brochure de la MJC La Marelle, page 2 : Activités régulières" loading="lazy" decoding="async"></div><div class="flb-f" data-l="1"><img src="/projets/mjc-la-marelle/img/p3.webp" alt="Brochure de la MJC La Marelle, page 3 : École de musique" loading="lazy" decoding="async"><img class="dos" src="/projets/mjc-la-marelle/img/p4.webp" alt="Brochure de la MJC La Marelle, page 4 : Espace Jeunesse" loading="lazy" decoding="async"></div><div class="flb-f" data-l="2"><img src="/projets/mjc-la-marelle/img/p5.webp" alt="Brochure de la MJC La Marelle, page 5 : Espace Familles Adultes" loading="lazy" decoding="async"><img class="dos" src="/projets/mjc-la-marelle/img/p6.webp" alt="Brochure de la MJC La Marelle, page 6 : Chantier d’insertion Friperie Laverie" loading="lazy" decoding="async"></div><div class="flb-f" data-l="3"><img src="/projets/mjc-la-marelle/img/p7.webp" alt="Brochure de la MJC La Marelle, page 7 : Animations culturelles" loading="lazy" decoding="async"><img class="dos" src="/projets/mjc-la-marelle/img/p8.webp" alt="Brochure de la MJC La Marelle, page 8 : Spectacles" loading="lazy" decoding="async"></div></div>
-      <div class="flb-ui"><button type="button" class="flb-p" aria-label="Page précédente" disabled>←</button><span class="flb-n" aria-live="polite">Couverture</span><button type="button" class="flb-s" aria-label="Page suivante">→</button></div>
-      <p class="flb-aide">Cliquez sur la page, glissez, ou utilisez les flèches du clavier pour tourner.</p>
-      <div class="flb-bande" tabindex="0" aria-label="Brochure de saison de la MJC La Marelle, page par page"><figure><img src="/projets/mjc-la-marelle/img/p1.webp" alt="Brochure de la MJC La Marelle, page 1 : Couverture" loading="lazy" decoding="async"><figcaption>1 / 8 · Couverture</figcaption></figure><figure><img src="/projets/mjc-la-marelle/img/p2.webp" alt="Brochure de la MJC La Marelle, page 2 : Activités régulières" loading="lazy" decoding="async"><figcaption>2 / 8 · Activités régulières</figcaption></figure><figure><img src="/projets/mjc-la-marelle/img/p3.webp" alt="Brochure de la MJC La Marelle, page 3 : École de musique" loading="lazy" decoding="async"><figcaption>3 / 8 · École de musique</figcaption></figure><figure><img src="/projets/mjc-la-marelle/img/p4.webp" alt="Brochure de la MJC La Marelle, page 4 : Espace Jeunesse" loading="lazy" decoding="async"><figcaption>4 / 8 · Espace Jeunesse</figcaption></figure><figure><img src="/projets/mjc-la-marelle/img/p5.webp" alt="Brochure de la MJC La Marelle, page 5 : Espace Familles Adultes" loading="lazy" decoding="async"><figcaption>5 / 8 · Espace Familles Adultes</figcaption></figure><figure><img src="/projets/mjc-la-marelle/img/p6.webp" alt="Brochure de la MJC La Marelle, page 6 : Chantier d’insertion Friperie Laverie" loading="lazy" decoding="async"><figcaption>6 / 8 · Chantier d’insertion Friperie Laverie</figcaption></figure><figure><img src="/projets/mjc-la-marelle/img/p7.webp" alt="Brochure de la MJC La Marelle, page 7 : Animations culturelles" loading="lazy" decoding="async"><figcaption>7 / 8 · Animations culturelles</figcaption></figure><figure><img src="/projets/mjc-la-marelle/img/p8.webp" alt="Brochure de la MJC La Marelle, page 8 : Spectacles" loading="lazy" decoding="async"><figcaption>8 / 8 · Spectacles</figcaption></figure></div>
-    </div>
-    ''' + detail('/projets/mjc-la-marelle/img/hero.webp', 'La couverture illustrée de la brochure de la MJC La Marelle, vue de près', '50% 50%', 'l’illustration de couverture, redessinée d’après photo') + '''
-    <div class="aut rv"><p class="d">Autres éditions</p><div class="aut-g">''' + puces('editions', 5, 5, 'Édition') + '''</div><div class="aut-l">''' + galbt('editions', 'Toutes les éditions') + '''</div></div>
+    """ + tete('03', 'editions', 'Édition et signalétique', 'Des pages qui se lisent.', 'Brochures, programmes, magazines, panneaux : une grille claire, une hiérarchie lisible, des fichiers prêts pour l’imprimeur.', 'edition') + """
+    """ + nuancier(EDS, 'Éditions et signalétique') + """
   </div>
 </section>
 <section class="sec feuille fl-f fl-c" aria-label="Fill">
   <div class="w fl-ct rv"><p>Pour une production régulière plutôt qu’un projet ponctuel, Studio ES a conçu <b>Fill</b>, un service de communication externalisée pour les communes et les entreprises.</p><div class="ds-ac"><a class="bt" href="https://fill.studioes.fr">Découvrir Fill <span class="ar"><svg class="i"><use href="#ne"/></svg></span></a><a class="bt cl" href="https://fill.studioes.fr/espace/">Espace client Fill <span class="ar"><svg class="i"><use href="#ne"/></svg></span></a><a class="ln" href="/projets/fill/">La conception de Fill</a></div></div>
 </section>
-''' + contact_m('Identité, campagne ou édition : décrivez le projet, le devis suit.', 'Design graphique')
-page('metiers/graphisme', 'Design graphique en Bretagne : identités, campagnes, éditions · Studio ES', 'Identités, campagnes et éditions pour les lieux culturels, collectivités et entreprises de Bretagne : La Soute, Pierceval Tattoo, MJC La Marelle. Sur devis.', 'https://studioes.fr/metiers/graphisme/', gr,
+""" + contact_m('Identité, campagne ou édition : décrivez le projet, le devis suit.', 'Design graphique')
+page('metiers/graphisme', 'Design graphique en Bretagne : identités, campagnes, éditions · Studio ES', 'Identités visuelles, campagnes, éditions et signalétique pour les entreprises, lieux culturels et collectivités de Bretagne, présentés en études de cas. Sur devis.', 'https://studioes.fr/metiers/graphisme/', gr,
      ld=LD('Design graphique', 'https://studioes.fr/metiers/graphisme/', 'Identité visuelle, campagne et édition'))
 
 # ---------- Offres : toutes les formules au même endroit ----------
