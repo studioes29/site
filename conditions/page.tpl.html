@@ -27,10 +27,9 @@ a{color:inherit}
 .top{position:sticky;top:0;z-index:20;height:60px;display:flex;align-items:center;justify-content:space-between;gap:16px;background:rgba(240,238,233,.72);-webkit-backdrop-filter:blur(22px) saturate(1.8);backdrop-filter:blur(22px) saturate(1.8);box-shadow:inset 0 -1px 0 var(--ln)}
 .logo{display:inline-flex;align-items:center;gap:10px;font:800 18px/1 var(--d);letter-spacing:-.03em;text-decoration:none}
 .logo svg{width:auto;height:26px}
-.cta{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 6px 0 16px;border-radius:999px;background:var(--tx);color:var(--bg);font-size:14px;font-weight:600;text-decoration:none}
-.cta i{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:rgba(240,238,233,.16)}
-.cta svg{width:13px;height:13px}
-.cta .cc{display:none}
+.ferme{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--s1);color:var(--tx);box-shadow:inset 0 0 0 1.5px var(--tx);text-decoration:none;transition:transform .3s}
+.ferme:hover{transform:rotate(90deg)}
+.ferme svg{width:16px;height:16px}
 .tete{padding-block:56px 34px}
 .fil{display:flex;gap:8px;font-size:14px;color:var(--mu);margin:0 0 18px}
 .fil a{text-decoration:none}
@@ -51,7 +50,7 @@ h1 .se{display:block;font:300 italic .4em/1.2 var(--sf);letter-spacing:-.01em;co
 .ft a{text-decoration:none}
 .ft a:hover{color:var(--tx)}
 @media (max-width:860px){.corps{grid-template-columns:1fr;gap:20px}.som{position:static;grid-template-columns:1fr 1fr}.som a{padding:5px 8px}}
-@media (max-width:480px){.som{grid-template-columns:1fr}.top .cta span{display:none}.top .cta .cc{display:inline}.cta{padding:0 6px 0 14px}}
+@media (max-width:480px){.som{grid-template-columns:1fr}}
 @media print{.top,.som,.ft{display:none}.feuille{box-shadow:none;padding:0}body{background:#fff}}
 </style>
 </head>
@@ -60,10 +59,11 @@ h1 .se{display:block;font:300 italic .4em/1.2 var(--sf);letter-spacing:-.01em;co
   <symbol id="logo" viewBox="101 57 98 186"><path fill="currentColor" d="M103.01,59.34h93.97s0,181.31,0,181.31h-93.97V59.34ZM195.66,60.67h-91.32v178.6s.17.18.18.18h91.14V60.67Z"/><polygon fill="currentColor" points="179.42 76.92 179.42 158.43 136.95 158.43 136.95 174.56 179.42 174.56 179.42 223.32 120.58 223.32 120.58 207.07 163.05 207.07 163.05 190.93 120.58 190.93 120.58 142.05 163.05 142.05 163.05 125.92 120.7 125.92 120.58 109.55 163.05 109.55 163.05 93.3 120.58 93.3 120.58 76.92 179.42 76.92"/></symbol>
   <symbol id="a" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="m" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="m4 7.5 8 5.5 8-5.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></symbol>
+  <symbol id="x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
 </defs></svg>
 <header class="top w">
   <a class="logo" href="/" aria-label="Studio ES, accueil"><svg viewBox="0 0 98 186" aria-hidden="true"><use href="#logo"/></svg><span>Studio ES</span></a>
-  <a class="cta" href="/#devis"><span>Demander un devis</span><span class="cc">Devis</span><i><svg aria-hidden="true"><use href="#a"/></svg></i></a>
+  <a class="ferme" id="ferme" href="/" aria-label="Fermer les conditions générales"><svg aria-hidden="true"><use href="#x"/></svg></a>
 </header>
 <main>
   <div class="w tete">
@@ -84,5 +84,6 @@ h1 .se{display:block;font:300 italic .4em/1.2 var(--sf);letter-spacing:-.01em;co
   <span><a href="/">Accueil</a> · <a href="https://fill.studioes.fr/conditions/">Conditions de Fill</a> · <a href="/#mentions">Mentions légales</a></span>
 </footer>
 <script>/* GoatCounter : mesure d'audience sans cookie, uniquement sur studioes.fr */if (/(^|\.)studioes\.fr$/.test(location.hostname) && !location.hostname.startsWith('dossiers')) { const g = document.createElement('script'); g.async = true; g.src = 'https://gc.zgo.at/count.js'; g.dataset.goatcounter = 'https://studioes.goatcounter.com/count'; document.head.appendChild(g); }</script>
+<script>/* la croix ramène à la page d’où vient le visiteur, sinon à l’accueil */document.getElementById("ferme").addEventListener("click",function(e){try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){e.preventDefault();history.back()}}catch(_){}});</script>
 </body>
 </html>
