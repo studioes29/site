@@ -6,9 +6,9 @@ def entete(nom, titre, it, lead, cls='', fg='', droite='', actions='', dark=Fals
     return ('<section class="mh%s"%s aria-labelledby="h1">%s<div class="w mh-g">\n  <div class="mh-t"><p class="fil"><a href="/">Studio ES</a><span>/</span><span>%s</span></p>\n'
             '  <h1 class="d" id="h1">%s%s</h1>\n  <p class="lead">%s</p>%s</div>%s\n</div></section>') % (cls, ' data-dark' if dark else '', fg, nom, titre, '<span class="it">%s</span>' % it if it else '', lead, actions, droite)
 
-ZONE = [{"@type": "AdministrativeArea", "name": n} for n in ("Bretagne", "Finistère", "Morbihan")] + [{"@type": "City", "name": n} for n in ("Quimper", "Lorient", "Quimperlé", "Concarneau", "Carhaix-Plouguer", "Brest", "Vannes")]
-ZONE_PH = '<br>Finistère, Morbihan et toute la Bretagne : Quimper, Lorient, Quimperlé, Concarneau, Carhaix, Brest, Vannes ; déplacements au-delà sur devis.'
-ZONE_WB = '<br>Finistère, Morbihan et toute la Bretagne : Quimper, Lorient, Quimperlé, Concarneau, Carhaix, Brest, Vannes ; rendez-vous sur place ou à distance.'
+ZONE = [{"@type": "AdministrativeArea", "name": "Bretagne"}, {"@type": "Country", "name": "France"}]
+ZONE_PH = ''
+ZONE_WB = ''
 
 def LD(nom, url, service, offres=()):
     g = [{"@type": "Service", "name": service, "url": url, "provider": {"@id": "https://studioes.fr/#studio"}, "areaServed": ZONE},
