@@ -137,7 +137,7 @@ def theme(slug):
             'main .d{font-family:"Marque",var(--d);font-weight:%d;letter-spacing:%s%s}main h1.d{line-height:.9}main .se{color:%s}main .n{color:%s}'
             'main .bref,main .ch,main .cqd,main .end{color:var(--tx)}main .bref dt,main .meta dt{color:var(--mu)}main .dis em{--kc:%s}'
             '%s</style>\n') % (w, bg, s1, s1, tx, mu, mu, ln, ac, ac, w, ls, ';text-transform:uppercase' if caps else '', ac, ac, ac,
-            'body{background:var(--bg);color:var(--tx)}main .chip,main .mq figure{background:#1E1E1E;color:#EDE7DC}main .bt-g{background:#2a2a2a;color:#EDE7DC}main .k span{background:#1E1E1E;color:#EDE7DC;box-shadow:inset 0 0 0 1px rgba(237,231,220,.14)}' if dark else '')
+            'body{background:var(--bg);color:var(--tx)}main .chip,main .mq figure{background:#1E1E1E;color:#EDE7DC}main .bt-g{background:#2a2a2a;color:#EDE7DC}main .fh .k span{background:#262626!important;color:#EDE7DC;box-shadow:inset 0 0 0 1px rgba(237,231,220,.14)}' if dark else '')
 
 def esc(s): return html.escape(s, quote=True)
 def nb(s): return s.replace(' :', ' :').replace(' ;', ' ;').replace(' ?', ' ?').replace(' !', ' !').replace('« ', '« ').replace(' »', ' »')
