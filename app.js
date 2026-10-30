@@ -326,9 +326,9 @@
   $$('[data-legal]').forEach(b => b.addEventListener('click', () => ouvreF('#shL')));
   $$('[data-msg]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); ouvreF('#shM'); setTimeout(() => $('#ecrire [name=nom]').focus({ preventScroll: true }), 450); }));
 
-  /* envoi par FormSubmit */
+  /* envoi par le service de formulaires (Supabase) */
   const envoie = async champs => {
-    const r = await fetch('https://formsubmit.co/ajax/contact@studioes.fr', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(Object.assign({ _template: 'table', _captcha: 'false' }, champs)) });
+    const r = await fetch('https://nfnbseonwgmtouxsaajd.supabase.co/functions/v1/formulaire', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(Object.assign({ _template: 'table', _captcha: 'false' }, champs)) });
     if (!r.ok) throw new Error('envoi'); return r;
   };
   const mailOk = m => /^\S+@\S+\.\S+$/.test(m || '');

@@ -6,9 +6,9 @@ import sys, os, re, glob, hashlib, base64
 RACINE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = ("default-src 'self'; script-src 'self' https://gc.zgo.at https://app.cal.com{h}; style-src 'self' 'unsafe-inline'; "
         "img-src 'self' data: https://studioes.goatcounter.com; font-src 'self'; "
-        "connect-src 'self' https://formsubmit.co https://studioes.goatcounter.com https://app.cal.com https://cal.com; "
+        "connect-src 'self' https://nfnbseonwgmtouxsaajd.supabase.co https://studioes.goatcounter.com https://app.cal.com https://cal.com; "
         "frame-src https://app.cal.com https://cal.com; "
-        "form-action 'self' https://formsubmit.co; base-uri 'self'; object-src 'none'; upgrade-insecure-requests")
+        "form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests")
 REF = '<meta name="referrer" content="strict-origin-when-cross-origin">'
 def pages(args):
     for a in args or [RACINE]:
