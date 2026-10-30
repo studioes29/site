@@ -1,5 +1,7 @@
 """Génère studioes.fr : accueil portfolio, pages métiers (photographie, web, graphisme) et réalisations.
-Usage : python3 build.py <PREFIXE_ASSETS> <DOSSIER_SORTIE> <robots>"""
+Usage : python3 build.py <PREFIXE_ASSETS> <DOSSIER_SORTIE> <robots>
+Feuille de style : la source lisible est _src/s.css ; /s.css en est la version minifiée, à refaire après chaque modification :
+npx lightningcss-cli@1 --minify _src/s.css -o s.css (puis incrémenter ?v= dans tpl.html)."""
 import re, sys, os, json
 from PIL import Image
 D = os.path.dirname(os.path.abspath(__file__)); RACINE = os.path.dirname(D)
