@@ -126,26 +126,6 @@ wb_act = '<div class="mh-ac"><button type="button" class="bt" data-est data-k="s
 wb = entete('Web', 'Web', 'Sites et applications sur mesure.', 'Un site de réservation, le site d’une salle de concert, une application de budget : des projets différents, conçus avec la même exigence de clarté, pour les TPE, les lieux culturels et les collectivités de Bretagne.' + ZONE_WB,
             ' u-nuit mh-wb-s', FG('Web', 'right:-3vw;top:-.36em;font-size:calc(var(--fg-t) * 1.25)'), wb_droite, wb_act, True)
 wb += '''
-<section class="sec feuille dk vis-f u-nuit" id="visite" data-dark aria-labelledby="t-vis">
-  <div class="vis-piste" data-vis data-d="0,750,1500,2249,2905,3539,4289" data-m="0,804,1842,2880,3918,4956,5994">
-    <div class="vis-sc">
-      <div class="w vis-g">
-        <div class="vis-t">
-          <p class="pt"><i>Visite</i><span>Pierceval Tattoo</span></p>
-          <h2 class="d" id="t-vis">Un site, de haut en bas<span class="it">Sur ordinateur et sur téléphone.</span></h2>
-          <ol class="vis-e"><li class="on"><button type="button" data-e="0"><i>01</i><b>Accueil</b><span>Les deux métiers dès l’ouverture, et la prise de rendez-vous toujours à portée.</span></button></li><li><button type="button" data-e="1"><i>02</i><b>Deux métiers</b><span>Le tatouage et le piercing ont chacun leur parcours, avec les tarifs et les acomptes annoncés.</span></button></li><li><button type="button" data-e="2"><i>03</i><b>Réalisations</b><span>Les tatouages classés par style, pour choisir avant d’appeler.</span></button></li><li><button type="button" data-e="3"><i>04</i><b>Suivi de cicatrisation</b><span>Trois questions, et le site indique les gestes à adopter jour après jour.</span></button></li><li><button type="button" data-e="4"><i>05</i><b>Questions fréquentes</b><span>Les réponses aux questions posées le plus souvent au téléphone.</span></button></li><li><button type="button" data-e="5"><i>06</i><b>Contact</b><span>L’adresse, les horaires et l’itinéraire, sans chercher.</span></button></li></ol>
-          <div class="vis-ac"><a class="bt" href="/projets/pierceval-tattoo/">Voir l’étude de cas ''' + AR + '''</a><a class="ln" href="https://piercevaltattoo.fr" target="_blank" rel="noopener">Ouvrir piercevaltattoo.fr</a></div>
-        </div>
-        <div class="vis-m" aria-label="Le site de Pierceval Tattoo, capturé page par page">
-          <div class="vis-nav"><div class="wb-bar"><i></i><i></i><i></i><em>piercevaltattoo.fr</em></div><div class="vis-ec" tabindex="0" aria-label="Pages du site sur ordinateur"><img src="/projets/pierceval-tattoo/img/visite-d.webp" alt="Le site de Pierceval Tattoo sur ordinateur, de l’accueil au contact" width="1200" height="4289" loading="lazy" decoding="async"></div></div>
-          <div class="vis-tel"><div class="vis-tec" tabindex="0" aria-label="Pages du site sur téléphone"><img src="/projets/pierceval-tattoo/img/visite-m.webp" alt="Le site de Pierceval Tattoo sur téléphone, de l’accueil au contact" width="480" height="5994" loading="lazy" decoding="async"></div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>'''
-
-wb += '''
 <section class="sec feuille vi-f u-lilas" id="vitrine" aria-labelledby="t-vi">
   ''' + FG('Écrans', 'left:-2vw;bottom:-.34em;--vy:-80px;font-size:calc(var(--fg-t) * .8)') + '''
   <div class="w">

@@ -1693,7 +1693,7 @@ body{color:var(--encre)}
 }
 .nu:focus-visible{outline:2px solid var(--encre);outline-offset:3px;border-radius:20px}
 @media (max-width:860px){
-  .nu-g{display:flex;width:auto;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;gap:10px;padding:4px var(--g) 8px;scroll-padding-inline:var(--g);overscroll-behavior-x:contain}
+  .nu-g{display:flex;width:auto;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;gap:10px;padding:4px var(--g) 32px;scroll-padding-inline:var(--g);overscroll-behavior-x:contain}
   .nu-g::-webkit-scrollbar{display:none}
   .nu{flex:0 0 76vw;max-width:340px;height:auto;scroll-snap-align:start}
   .nu-i{flex:none;aspect-ratio:4/5}
@@ -1756,7 +1756,7 @@ body{color:var(--encre)}
 .ad-l span{font-size:13.5px;line-height:1.4;color:var(--mu)}
 .ad:nth-child(2){margin-top:clamp(20px,3vw,50px)}.ad:nth-child(4){margin-top:clamp(20px,3vw,50px)}
 @media (hover:hover){.ad:hover{transform:translateY(-5px)}.ad:hover .ad-i img{transform:scale(1.05)}}
-@media (max-width:860px){.adl{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 calc(var(--g) * -1);padding:4px var(--g) 8px}.adl::-webkit-scrollbar{display:none}.ad{flex:0 0 70vw;scroll-snap-align:start}.ad:nth-child(n){margin-top:0}}
+@media (max-width:860px){.adl{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 calc(var(--g) * -1);padding:4px var(--g) 32px}.adl::-webkit-scrollbar{display:none}.ad{flex:0 0 70vw;scroll-snap-align:start}.ad:nth-child(n){margin-top:0}}
 
 /* web : trois projets dans l'en-tête, de même importance */
 .mh-trio{position:relative;display:grid;grid-template-columns:1.9fr .62fr .82fr;align-items:end;gap:clamp(10px,1.2vw,18px)}

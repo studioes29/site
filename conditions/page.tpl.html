@@ -30,6 +30,7 @@ a{color:inherit}
 .cta{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 6px 0 16px;border-radius:999px;background:var(--tx);color:var(--bg);font-size:14px;font-weight:600;text-decoration:none}
 .cta i{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:rgba(240,238,233,.16)}
 .cta svg{width:13px;height:13px}
+.cta .cc{display:none}
 .tete{padding-block:56px 34px}
 .fil{display:flex;gap:8px;font-size:14px;color:var(--mu);margin:0 0 18px}
 .fil a{text-decoration:none}
@@ -50,7 +51,7 @@ h1 .se{display:block;font:300 italic .4em/1.2 var(--sf);letter-spacing:-.01em;co
 .ft a{text-decoration:none}
 .ft a:hover{color:var(--tx)}
 @media (max-width:860px){.corps{grid-template-columns:1fr;gap:20px}.som{position:static;grid-template-columns:1fr 1fr}.som a{padding:5px 8px}}
-@media (max-width:480px){.som{grid-template-columns:1fr}.top .cta span{display:none}.cta{padding:0 6px}}
+@media (max-width:480px){.som{grid-template-columns:1fr}.top .cta span{display:none}.top .cta .cc{display:inline}.cta{padding:0 6px 0 14px}}
 @media print{.top,.som,.ft{display:none}.feuille{box-shadow:none;padding:0}body{background:#fff}}
 </style>
 </head>
@@ -62,7 +63,7 @@ h1 .se{display:block;font:300 italic .4em/1.2 var(--sf);letter-spacing:-.01em;co
 </defs></svg>
 <header class="top w">
   <a class="logo" href="/" aria-label="Studio ES, accueil"><svg viewBox="0 0 98 186" aria-hidden="true"><use href="#logo"/></svg><span>Studio ES</span></a>
-  <a class="cta" href="/#devis"><span>Demander un devis</span><i><svg aria-hidden="true"><use href="#a"/></svg></i></a>
+  <a class="cta" href="/#devis"><span>Demander un devis</span><span class="cc">Devis</span><i><svg aria-hidden="true"><use href="#a"/></svg></i></a>
 </header>
 <main>
   <div class="w tete">

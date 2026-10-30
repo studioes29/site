@@ -4,7 +4,7 @@ const fs = require("fs"), path = require("path"), vm = require("vm");
 const D = __dirname, ctx = {window: {}};
 vm.runInNewContext(fs.readFileSync(path.join(D, "cgv.js"), "utf8"), ctx);
 const W = ctx.window, tpl = fs.readFileSync(path.join(D, "page.tpl.html"), "utf8");
-const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const esc = s => s.replace(/'/g, "’").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const dt = v => { const [a, m, j] = v.split("-"); return +j + " " + ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"][+m - 1] + " " + a; };
 const ancre = t => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/^\d+\.\s*/, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const sommaire = W.STUDIO_CGV.map(a => `<li><a href="#${ancre(a[0])}">${esc(a[0].replace(/^\d+\.\s*/, ""))}</a></li>`).join("");
