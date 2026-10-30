@@ -2128,3 +2128,4 @@ body{color:var(--encre)}
   .fl-v{order:1}.fl-x{order:2}
 }
 .fl-x .fl-b3{margin-bottom:28px}
+.fl-f .bt.cl{background:transparent;color:#1A1A1A;box-shadow:inset 0 0 0 1.5px #1A1A1A}.fl-f .bt.cl .ar{background:rgba(26,26,26,.08);color:#1A1A1A}
