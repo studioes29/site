@@ -1,7 +1,7 @@
 /* Conditions générales de vente de Studio ES : SOURCE UNIQUE.
    Lue par la page https://studioes.fr/conditions/ et par le générateur de devis de dossiers.studioes.fr.
    Toute modification passe ici, avec une nouvelle date de version. */
-window.STUDIO_CGV_VERSION = "2026-10-29";
+window.STUDIO_CGV_VERSION = "2026-10-30";
 window.STUDIO_CGV_URL = "https://studioes.fr/conditions/";
 window.STUDIO_CGV_INTRO = "Les relations entre Studio ES (le prestataire) et le client sont régies par les présentes conditions générales de vente, complétées par le devis et ses conditions particulières. En cas de divergence, les conditions particulières prévalent. L'acceptation du devis implique l'adhésion à ces conditions. Les prestations de Fill, service de communication externalisée, relèvent de leurs propres conditions, publiées sur fill.studioes.fr/conditions.";
 window.STUDIO_CGV = [
@@ -47,7 +47,9 @@ window.STUDIO_CGV = [
     "Pour un événement daté, une annulation à moins de 30 jours de la date entraîne en outre le paiement de 50 % du prix de la prestation. Un report à une date disponible est accepté sans frais une fois.",
     "Le prestataire peut suspendre une prestation en cas de non-paiement ou de manquement grave du client, après une mise en demeure restée sans effet pendant huit jours."]],
   ["11. Client particulier", [
-    "Le client particulier qui commande à distance dispose d'un délai de rétractation de 14 jours à compter de l'acceptation du devis, par simple écrit adressé à contact@studioes.fr. S'il demande que la prestation commence avant la fin de ce délai, il règle la part déjà réalisée."]],
+    "Le client particulier qui commande à distance ou hors établissement dispose d'un délai de rétractation de 14 jours à compter de l'acceptation du devis (articles L221-18 et suivants du Code de la consommation). Il exerce ce droit en adressant à contact@studioes.fr le formulaire type de rétractation figurant en annexe, ou toute autre déclaration dénuée d'ambiguïté exprimant sa volonté de se rétracter. Les sommes versées lui sont remboursées au plus tard 14 jours après réception de sa décision, par le même moyen de paiement.",
+    "Si le client particulier demande expressément que la prestation commence avant la fin du délai de rétractation, il paie, en cas de rétractation, un montant correspondant au service fourni jusqu'à la communication de sa décision, proportionnel au prix total convenu (article L221-25).",
+    "Conformément à l'article L221-28, le droit de rétractation ne peut plus être exercé pour une prestation pleinement exécutée avant la fin du délai, lorsque son exécution a commencé à la demande expresse du client et avec sa reconnaissance de la perte de ce droit : c'est notamment le cas d'une prestation à date fixe (mariage, événement) commencée ou réalisée à sa demande dans ce délai."]],
   ["12. Responsabilité", [
     "Le prestataire est tenu d'une obligation de moyens. Sa responsabilité est limitée aux dommages directs et au montant de la prestation concernée.",
     "Il ne répond ni des contenus fournis ou validés par le client, ni des services de tiers (plateformes, hébergeurs, imprimeurs), ni d'un cas de force majeure."]],
@@ -59,5 +61,15 @@ window.STUDIO_CGV = [
     "Avec l'accord du client, le prestataire peut présenter le projet dans son portfolio et ses supports de communication. Le client peut être sollicité pour un avis en fin de prestation."]],
   ["15. Droit applicable et litiges", [
     "Les présentes conditions sont soumises au droit français. Les parties recherchent d'abord une solution amiable.",
-    "À défaut, le litige est porté devant le tribunal compétent du ressort du prestataire, ou devant la juridiction administrative pour un contrat public ; le client particulier peut aussi saisir le tribunal de son domicile."]]
+    "À défaut, le litige est porté devant le tribunal compétent du ressort du prestataire, ou devant la juridiction administrative pour un contrat public ; le client particulier peut aussi saisir le tribunal de son domicile."]],
+  ["Annexe. Formulaire type de rétractation", [
+    "(Formulaire prévu à l'article R221-1 du Code de la consommation. Veuillez compléter et renvoyer le présent formulaire uniquement si vous souhaitez vous rétracter du contrat.)",
+    "À l'attention de Studio ES, Ewen Soupault, entrepreneur individuel, contact@studioes.fr :",
+    "Je/Nous (*) vous notifie/notifions (*) par la présente ma/notre (*) rétractation du contrat portant sur la prestation de services ci-dessous :",
+    "Commandé le (*) / reçu le (*) :",
+    "Nom du (des) consommateur(s) :",
+    "Adresse du (des) consommateur(s) :",
+    "Signature du (des) consommateur(s) (uniquement en cas de notification du présent formulaire sur papier) :",
+    "Date :",
+    "(*) Rayez la mention inutile."]]
 ];
