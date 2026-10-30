@@ -2152,3 +2152,9 @@ body{color:var(--encre)}
 @media (max-width:1100px){.pk-g{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media (max-width:860px){.pk-g{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:600px){.pk-g{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pk{padding:6px 6px 0;border-radius:16px}.pk-i{border-radius:11px}.pk-l{padding:10px 5px 12px}.pk-l b{font-size:15.5px}.pk-l>span{font-size:12.5px}.pk-l small{font-size:11px;margin-top:7px}.pk-l em{display:none}}
+/* mobile : les cartes projets défilent à l'horizontale */
+@media (max-width:600px){
+  .pk-g{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin-inline:calc(var(--g) * -1);padding:4px var(--g) 34px;scroll-padding-inline:var(--g);overscroll-behavior-x:contain}
+  .pk-g::-webkit-scrollbar{display:none}
+  .pk{flex:0 0 64%;scroll-snap-align:start}
+}
