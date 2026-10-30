@@ -89,8 +89,55 @@ def restructure(c):
     if c['slug'] == 'creche-oceane': lv.insert(1, ('sig-1', 'Signalétique murale', 'Les murs de la crèche.'))
     c['liv'] = lv
 for c in C: restructure(c)
+
+# supports propres à chaque client (bespoke.py), à la place des supports génériques
+BESP = {
+ 'christopher-poupon': [('plan', 'wide', 'Plan de jardin coté, avec le monogramme en cartouche'), ('etiquettes', '', 'Étiquettes de végétaux'), ('affiche', '', 'Affiche'), ('application', 'wide', 'Devis, enveloppe et carte de correspondance'), ('cartes', 'wide', 'Cartes de visite, monogramme gaufré')],
+ 'maison-ble': [('vitrine', 'wide', 'La devanture, l’arche dorée sur la vitrine'), ('boite', '', 'Boîte à pâtisseries'), ('application', '', 'Sac à pain et étiquette'), ('ardoise', 'wide', 'La carte des pains'), ('cartes', 'wide', 'Cartes de visite, dorure à chaud')],
+ 'laureen-boudigou': [('plaque', '', 'Plaque professionnelle en laiton'), ('chemise', '', 'Chemise de dossier, cartouche gaufré'), ('site', 'wide', 'Le site du cabinet'), ('cartes', 'wide', 'Cartes de visite, dorure à chaud'), ('application', 'wide', 'Lettre à en-tête, enveloppe et correspondance')],
+ 'molan-move': [('affiche', '', 'Affiche de la course'), ('tshirt', '', 'T-shirt finisher'), ('application', 'wide', 'Dossard et médaille'), ('cartes', 'wide', 'Cartes')],
+ 'elodie-viconte': [('planche', 'wide', 'Planche contact, sélection au crayon gras'), ('bon', '', 'Bon cadeau et son enveloppe'), ('application', '', 'Pochette de tirages'), ('site', 'wide', 'Le site, en galerie'), ('cartes', 'wide', 'Cartes de visite, dorure à chaud')],
+ 'creche-oceane': [('portes', 'wide', 'Plaques des sections'), ('livret', 'wide', 'Livret d’accueil des familles'), ('sac', '', 'Sac des familles'), ('application', '', 'Badge de l’équipe et carnet de liaison'), ('cartes', 'wide', 'Cartes')],
+}
+LIVB = {
+ 'christopher-poupon': [('plan', 'Plan de jardin', 'Le monogramme en cartouche.'), ('etiquettes', 'Étiquettes de végétaux', 'Plantées au jardin.')],
+ 'maison-ble': [('vitrine', 'Devanture', 'L’arche dorée sur la vitrine.'), ('ardoise', 'Carte des pains', 'Au comptoir.')],
+ 'laureen-boudigou': [('plaque', 'Plaque', 'Laiton, à l’entrée.'), ('site', 'Site du cabinet', 'Accueil et domaines.')],
+ 'molan-move': [('tshirt', 'T-shirt finisher', 'Pour l’arrivée.')],
+ 'elodie-viconte': [('planche', 'Planche contact', 'La sélection au crayon.'), ('site', 'Site', 'Une galerie en noir.')],
+ 'creche-oceane': [('portes', 'Plaques des sections', 'Une couleur par section.'), ('livret', 'Livret d’accueil', 'Pour les familles.')],
+}
+for c in C:
+    for i, t in enumerate(c['ch']):
+        if t[0] == 'Les supports': c['ch'][i] = (t[0], t[1], t[2], BESP[c['slug']])
+    c['liv'] = c['liv'][:3] + LIVB[c['slug']] + c['liv'][3:]
+
 SIG = {'sig-1': ('creche-sig-1', (140, 0, 880, 1100)), 'sig-4': ('creche-sig-4', None), 'sig-6': ('creche-sig-6', None)}
 BR = json.load(open(os.path.join(SRC, 'brands.json')))
+
+
+# ---------- chaque page prend l'identité du client : police de titre, fond, couleur d'accent ----------
+TH = {  # (fond de page, surface, texte, accent, police, graisse, interlettrage, capitales)
+ 'christopher-poupon': ('#EFEADF', '#F7F3EA', '#1F3B2D', '#C2794A', 'oswald', 'Oswald', 600, '0', True),
+ 'maison-ble': ('#F5EFE4', '#FBF7EF', '#2A211C', '#9C7A3F', 'italiana', 'Italiana', 400, '.02em', False),
+ 'laureen-boudigou': ('#F5F2EC', '#FFFFFF', '#1D2635', '#8A7650', 'cormorant-garamond', 'Cormorant Garamond', 600, '-.01em', False),
+ 'molan-move': ('#F2F4F1', '#FFFFFF', '#133E6B', '#FF6A3D', 'outfit', 'Outfit', 700, '-.03em', False),
+ 'elodie-viconte': ('#141414', '#1E1E1E', '#EDE7DC', '#C4483B', 'poiret-one', 'Poiret One', 400, '0', False),
+ 'creche-oceane': ('#F6F0E8', '#FFFFFF', '#1F5C8F', '#F0901E', 'amatic-sc', 'Amatic SC', 700, '0', False),
+}
+def theme(slug):
+    bg, s1, tx, ac, pkg, fam, w, ls, caps = TH[slug]
+    d = os.path.join(R, 'projets', slug, 'f'); os.makedirs(d, exist_ok=True)
+    shutil.copy(os.path.join(SRC, 'fonts', pkg, 'files', '%s-latin-%d-normal.woff2' % (pkg, w)), os.path.join(d, 't.woff2'))
+    dark = sum(int(bg[i:i + 2], 16) for i in (1, 3, 5)) < 200
+    mu = 'rgba(237,231,220,.62)' if dark else 'color-mix(in srgb,%s 64%%,transparent)' % tx
+    ln = 'rgba(237,231,220,.14)' if dark else 'color-mix(in srgb,%s 14%%,transparent)' % tx
+    return ('<link rel="preload" href="f/t.woff2" as="font" type="font/woff2" crossorigin>\n<style>@font-face{font-family:"Marque";src:url(f/t.woff2) format("woff2");font-weight:%d;font-display:swap}'
+            ':root{--bg:%s;--s1:%s;--s2:%s;--tx:%s;--mu:%s;--fa:%s;--ln:%s;--pa:%s;--pink:%s}'
+            'main .d{font-family:"Marque",var(--d);font-weight:%d;letter-spacing:%s%s}main h1.d{line-height:.9}main .se{color:%s}main .n{color:%s}'
+            'main .bref,main .ch,main .cqd,main .end{color:var(--tx)}main .bref dt,main .meta dt{color:var(--mu)}main .dis em{--kc:%s}'
+            '%s</style>\n') % (w, bg, s1, s1, tx, mu, mu, ln, ac, ac, w, ls, ';text-transform:uppercase' if caps else '', ac, ac, ac,
+            'body{background:var(--bg);color:var(--tx)}main .chip,main .mq figure{background:#1E1E1E;color:#EDE7DC}main .bt-g{background:#2a2a2a;color:#EDE7DC}main .k span{background:#1E1E1E;color:#EDE7DC;box-shadow:inset 0 0 0 1px rgba(237,231,220,.14)}' if dark else '')
 
 def esc(s): return html.escape(s, quote=True)
 def nb(s): return s.replace(' :', ' :').replace(' ;', ' ;').replace(' ?', ' ?').replace(' !', ' !').replace('« ', '« ').replace(' »', ' »')
@@ -156,6 +203,7 @@ def page(c):
           '', '<section class="end w" aria-labelledby="fin">', '  <h2 class="d" id="fin" data-r>%s ? <span class="se">%s</span></h2>' % (esc(c['fin'][0]), esc(c['fin'][1])),
           '  <div class="bts" data-r>', '    <a class="bt bt-a" href="/#devis">Demander un devis<span class="o">%s</span></a>' % AR,
           '    <a class="bt bt-g" href="/#cal">Réserver un appel<span class="o">%s</span></a>' % AR, '  </div>', '</section>']
+    h = h.replace('</head>', theme(c['slug']) + '</head>', 1)
     out = h + '\n'.join(m) + '\n' + TAIL
     if re.search('[–—]', re.sub(r'<(script|style)[^>]*>.*?</\1>', '', out, flags=re.S)): raise SystemExit('tiret long dans ' + c['slug'])
     p = os.path.join(R, 'projets', c['slug'], 'index.html'); open(p, 'w', encoding='utf8').write(out)
