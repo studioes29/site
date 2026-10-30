@@ -459,7 +459,7 @@
     if (ES.e === 3) ES = { e: 0, k: null, f: 0, o: [], p: 0, j: 1, c: {}, d: 5, g: ES.g };
     if (s && s.k && PJ[s.k]) { ES.k = s.k; ES.f = s.f || 0; ES.o = (s.o || []).slice(); ES.j = 1; ES.p = s.k === 'app' ? (s.achat ? 1 : 0) : (s.mois ? 1 : 0); if (s.ph) ES.o = [0]; ES.e = 1; }
     else if (!ES.k) ES.e = 0;
-    dernier = null; rendE(); ouvreF('#shE'); compte('/devis', 'Ouverture du devis');
+    dernier = null; rendE(); ouvreF('#shE'); compte('devis-ouvert', 'Ouverture du devis');
   };
   if (estB) {
     estB.addEventListener('click', e => {
@@ -481,7 +481,7 @@
         if (!c.nom) { faute('eNom', 'Indiquez votre nom ou celui de votre structure.'); return; }
         if (!mailOk(c.mail)) { faute('eMail', 'Cette adresse e-mail semble incomplète.'); return; }
         erreur(''); const P = PJ[ES.k], r = calc(); b.disabled = true; b.classList.add('charge'); b.firstChild.textContent = 'Envoi en cours ';
-        try { await envoie({ _subject: 'Demande de devis : ' + P.l.toLowerCase(), Projet: P.l, 'Détail': r.L.join(', '), Estimation: txtEst(r), Nom: c.nom, Email: c.mail, 'Téléphone': c.tel, 'Date et lieu': c.date || '', Message: c.msg || '' }); ES.e = 3; if (!reduit) { const fl = document.createElement('div'); fl.className = 'flash'; document.body.appendChild(fl); setTimeout(() => fl.remove(), 600); } rendE(); compte('/devis/envoye', 'Demande de devis envoyée'); }
+        try { await envoie({ _subject: 'Demande de devis : ' + P.l.toLowerCase(), Projet: P.l, 'Détail': r.L.join(', '), Estimation: txtEst(r), Nom: c.nom, Email: c.mail, 'Téléphone': c.tel, 'Date et lieu': c.date || '', Message: c.msg || '' }); ES.e = 3; if (!reduit) { const fl = document.createElement('div'); fl.className = 'flash'; document.body.appendChild(fl); setTimeout(() => fl.remove(), 600); } rendE(); compte('devis-envoye', 'Demande de devis envoyée'); }
         catch (er) { b.disabled = false; b.classList.remove('charge'); b.firstChild.textContent = 'Réessayer '; erreur('L’envoi n’a pas abouti. Vérifiez votre connexion et réessayez, ou écrivez à <a href="mailto:contact@studioes.fr">contact@studioes.fr</a> : vos choix sont conservés.'); }
       }
     });
@@ -496,7 +496,7 @@
     if (!mailOk(d.email)) { toast('Cette adresse e-mail semble incomplète.'); return; }
     if (!d.message) { toast('Quelques mots sur votre projet, et c’est parti.'); return; }
     const bt = $('button[type=submit]', form); bt.disabled = true; bt.classList.add('charge');
-    try { await envoie({ _subject: 'Nouveau message depuis studioes.fr', Nom: d.nom, Email: d.email, 'Téléphone': d.tel || '', Message: d.message }); form.reset(); fermeF(); toast('Message envoyé. Réponse sous 48 h.'); compte('/contact/envoye', 'Message envoyé'); }
+    try { await envoie({ _subject: 'Nouveau message depuis studioes.fr', Nom: d.nom, Email: d.email, 'Téléphone': d.tel || '', Message: d.message }); form.reset(); fermeF(); toast('Message envoyé. Réponse sous 48 h.'); compte('message-envoye', 'Message envoyé'); }
     catch (er) { toast('L’envoi n’a pas abouti. Réessayez ou écrivez à contact@studioes.fr.'); }
     bt.disabled = false; bt.classList.remove('charge');
   });
@@ -509,11 +509,11 @@
       (function (C, A, L) { const p = function (a, ar) { a.q.push(ar); }; const d = C.document; C.Cal = C.Cal || function () { const cal = C.Cal; const ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; const s = d.createElement('script'); s.src = A; s.onload = () => { calPret = true; }; d.head.appendChild(s); cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const ns = ar[1]; api.q = api.q || []; if (typeof ns === 'string') { cal.ns[ns] = cal.ns[ns] || api; p(cal.ns[ns], ar); p(cal, ['initNamespace', ns]); } else p(cal, ar); return; } p(cal, ar); }; })(window, 'https://app.cal.com/embed/embed.js', 'init');
       Cal('init', 'rdv', { origin: 'https://app.cal.com' });
       Cal.ns.rdv('ui', { theme: 'light', hideEventTypeDetails: false, layout: 'month_view', cssVarsPerTheme: { light: { 'cal-brand': '#141414', 'cal-brand-emphasis': '#2a2a2a', 'cal-brand-text': '#ffffff' } } });
-      Cal.ns.rdv('on', { action: 'bookingSuccessful', callback: () => compte('/rendez-vous/pris', 'Rendez-vous pris') });
+      Cal.ns.rdv('on', { action: 'bookingSuccessful', callback: () => compte('rdv-pris', 'Rendez-vous pris') });
     } catch (e) {}
   };
   const ouvreCal = () => {
-    compte('/rendez-vous/ouverture', 'Ouverture de l’agenda');
+    compte('rdv-ouvert', 'Ouverture de l’agenda');
     /* l'agenda s'ouvre toujours par-dessus le site : fenêtre Cal.com si son script est prêt, sinon notre propre feuille avec l'agenda intégré */
     const modale = () => { try { Cal.ns.rdv('modal', { calLink: 'studioes/30min', config: { layout: 'month_view', theme: 'light' } }); return true; } catch (e) { return false; } };
     if (calPret && window.Cal && Cal.ns && Cal.ns.rdv && modale()) return;
@@ -525,6 +525,8 @@
     const f = $('#calF'); if (!f.src) f.src = 'https://app.cal.com/studioes/30min/embed?embed=&layout=month_view&theme=light&embedType=inline';
     ouvreF('#shC');
   };
+  /* liens vers Fill et son espace client : un événement court par destination */
+  document.addEventListener('click', e => { const a = e.target.closest('a[href^="https://fill.studioes.fr"]'); if (a) compte(/^https:\/\/fill\.studioes\.fr\/espace/.test(a.href) ? 'espace-fill' : 'fill', a.textContent.trim()); });
   document.addEventListener('click', e => { const b = e.target.closest('[data-cal]'); if (!b) return; e.preventDefault(); e.stopPropagation(); if (ouverte) fermeF(); ouvreCal(); });
   const ctc = $('#contact'); if (ctc) new IntersectionObserver((e, o) => { if (e[0].isIntersecting) { o.disconnect(); calCharge(); } }, { rootMargin: '800px 0px' }).observe(ctc);
   $$('[data-est]').forEach(b => b.addEventListener('pointerenter', calCharge, { once: true }));

@@ -6,8 +6,12 @@ def entete(nom, titre, it, lead, cls='', fg='', droite='', actions='', dark=Fals
     return ('<section class="mh%s"%s aria-labelledby="h1">%s<div class="w mh-g">\n  <div class="mh-t"><p class="fil"><a href="/">Studio ES</a><span>/</span><span>%s</span></p>\n'
             '  <h1 class="d" id="h1">%s%s</h1>\n  <p class="lead">%s</p>%s</div>%s\n</div></section>') % (cls, ' data-dark' if dark else '', fg, nom, titre, '<span class="it">%s</span>' % it if it else '', lead, actions, droite)
 
+ZONE = [{"@type": "AdministrativeArea", "name": n} for n in ("Bretagne", "Finistère", "Morbihan")] + [{"@type": "City", "name": n} for n in ("Quimper", "Lorient", "Quimperlé", "Concarneau", "Carhaix-Plouguer", "Brest", "Vannes")]
+ZONE_PH = '<br>Finistère, Morbihan et toute la Bretagne : Quimper, Lorient, Quimperlé, Concarneau, Carhaix, Brest, Vannes ; déplacements au-delà sur devis.'
+ZONE_WB = '<br>Finistère, Morbihan et toute la Bretagne : Quimper, Lorient, Quimperlé, Concarneau, Carhaix, Brest, Vannes ; rendez-vous sur place ou à distance.'
+
 def LD(nom, url, service, offres=()):
-    g = [{"@type": "Service", "name": service, "url": url, "provider": {"@id": "https://studioes.fr/#studio"}, "areaServed": {"@type": "AdministrativeArea", "name": "Bretagne"}},
+    g = [{"@type": "Service", "name": service, "url": url, "provider": {"@id": "https://studioes.fr/#studio"}, "areaServed": ZONE},
          {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Studio ES", "item": "https://studioes.fr/"}, {"@type": "ListItem", "position": 2, "name": nom, "item": url}]}]
     if offres: g[0]["offers"] = [{"@type": "Offer", "name": n, "priceCurrency": "EUR", "price": str(p), "priceSpecification": {"@type": "PriceSpecification", "minPrice": p, "priceCurrency": "EUR"}} for n, p in offres]
     return json.dumps({"@context": "https://schema.org", "@graph": g}, ensure_ascii=False)
@@ -46,7 +50,7 @@ def ad(r, t, l, im):
 audela = ''.join(ad(*x) for x in AUDELA)
 ph_droite = '<figure class="mh-ph" aria-hidden="true"><img class="a" src="/p/helena-3.jpg" alt="" fetchpriority="high" width="825" height="1100"><img class="b" src="/p/t/voeux-ph-2.webp" alt=""><img class="c" src="/projets/fl-auto/img/photo-2.webp" alt=""></figure>'
 ph_act = '<div class="mh-ac"><button type="button" class="bt" data-est data-k="evenement">Demander un devis %s</button><a class="ln" href="#reportages">Voir les reportages</a></div>' % AR
-ph = entete('Photographie', 'Photographie', 'Vos moments forts, sur le vif.', 'Concerts, festivals, cérémonies, vie d’une entreprise, mariages : un reportage discret en Bretagne, sans poses ni mise en scène, puis une sélection resserrée et retouchée, prête à servir.',
+ph = entete('Photographie', 'Photographie', 'Vos moments forts, sur le vif.', 'Concerts, festivals, cérémonies, vie d’une entreprise, mariages : un reportage discret en Bretagne, sans poses ni mise en scène, puis une sélection resserrée et retouchée, prête à servir.' + ZONE_PH,
             ' u-noir mh-ph-s', FG('Photo', 'left:-1vw;bottom:-.44em;font-size:calc(var(--fg-t) * 1.1)'), ph_droite, ph_act, True)
 ph += '''
 <section class="sec feuille dk ph-f u-foret" id="reportages" data-dark aria-labelledby="t-tr">
@@ -119,7 +123,7 @@ wb_droite = ('<div class="mh-trio" aria-hidden="true">'
              '<span class="tr-b"><img src="/projets/la-soute/img/soute-8.webp" alt="" width="480" height="1039"></span>'
              '<span class="tr-c"><img src="/projets/flouz/img/budget.webp" alt="" width="1200" height="1600"></span></div>')
 wb_act = '<div class="mh-ac"><button type="button" class="bt" data-est data-k="site">Démarrer mon site %s</button><a class="ln" href="#vitrine">Voir les réalisations</a></div>' % AR
-wb = entete('Web', 'Web', 'Sites et applications sur mesure.', 'Un site de réservation, le site d’une salle de concert, une application de budget : des projets différents, conçus avec la même exigence de clarté, pour les TPE, les lieux culturels et les collectivités de Bretagne.',
+wb = entete('Web', 'Web', 'Sites et applications sur mesure.', 'Un site de réservation, le site d’une salle de concert, une application de budget : des projets différents, conçus avec la même exigence de clarté, pour les TPE, les lieux culturels et les collectivités de Bretagne.' + ZONE_WB,
             ' u-nuit mh-wb-s', FG('Web', 'right:-3vw;top:-.36em;font-size:calc(var(--fg-t) * 1.25)'), wb_droite, wb_act, True)
 wb += '''
 <section class="sec feuille dk vis-f u-nuit" id="visite" data-dark aria-labelledby="t-vis">
