@@ -63,6 +63,32 @@ C = [
   liv=[('logo', 'Logo', 'Posé sur la photographie.'), ('sig-1', 'Signalétique murale', 'Le poisson, les phrases, les dessins.'), ('palette', 'Couleurs et typographies', 'Quatre teintes, deux familles.'), ('application', 'Badges et carnet', 'Pour l’équipe et les familles.'), ('reseaux', 'Réseaux sociaux', 'Profil et gabarits de publication.')],
   fin=('Un lieu à habiller', 'Parlons-en.')),
 ]
+# ---------- structure commune : signe, système, supports, réseaux ----------
+SYS = {
+ 'christopher-poupon': ('Le monogramme agrandi devient un fond, répété il devient un motif pour les papiers et les publications.', 'Rond comme la lettre C : la photographie se cadre dans un cercle, sur les affiches comme sur les réseaux.'),
+ 'maison-ble': ('L’épi agrandi habille les fonds, et l’arche cadre les photographies de pain.', 'L’arche reprend la bouche du four : elle cadre les images sur l’affiche et les réseaux.'),
+ 'laureen-boudigou': ('Le cartouche agrandi devient un fond à l’encre ; en motif, il signe la correspondance.', 'Un cadre net, un filet laiton : la même retenue sur l’affiche que sur la papeterie.'),
+ 'molan-move': ('Les deux formes du signe, agrandies, donnent l’élan des fonds ; en motif, elles rythment les publications.', 'Les photographies se coupent en biais, dans le sens de la course.'),
+ 'elodie-viconte': ('Le dessin agrandi, à peine visible sur le noir, sert de fond ; en motif, il signe les tirages.', 'Chaque image est présentée comme un tirage, avec sa marge blanche.'),
+ 'creche-oceane': ('La forme en amande du logo devient un motif à elle seule : elle se répète sur les fonds et cadre les photographies.', 'L’amande cadre les photographies de la crèche, sur l’affiche comme sur les réseaux.'),
+}
+def restructure(c):
+    old = {t: (se, tx, ims) for t, se, tx, ims in c['ch']}
+    first = c['ch'][0]; cols = c['ch'][1]; sup = [x for x in c['ch'] if x[0] == 'Les supports'][0]
+    sig = [x for x in c['ch'] if x[0] == 'La signalétique']
+    nom = c['nom']; sy = SYS[c['slug']]
+    ch = [(first[0], first[1], first[2], [('construction', 'wide', 'La construction du logo ' + nom), ('variantes', 'wide', 'Le logo sur les fonds de l’identité')]),
+          ('Le système', cols[1], sy[0] + ' ' + cols[2], [('systeme', 'wide', 'Le signe agrandi, le motif et la signature'), ('palette', 'wide', 'Palette et typographies de l’identité')]),
+          (sup[0], sup[1], sup[2] + ' ' + sy[1], [('affiche', '', 'Affiche'), ('cartes', '', 'Cartes de visite, dorure et gaufrage'), ('application', 'wide', 'Supports')])]
+    ch += sig
+    ch.append(('Les réseaux', 'en campagne', 'Six publications pensées ensemble : une phrase, une photographie, le motif, une information, une citation et la signature. La grille se lit d’un seul regard.', [('reseaux', 'wide', 'Grille de publications Instagram')]))
+    c['ch'] = ch
+    lv = [('construction', 'Construction', 'Proportions et zone de protection.'), ('systeme', 'Système graphique', 'Signe, motif, signature.'),
+          ('affiche', 'Affiche', 'Le cadre propre à l’identité.'), ('cartes', 'Cartes de visite', 'Dorure ou gaufrage.'), ('application', c['liv'][2][1] if c['slug'] != 'creche-oceane' else 'Badges et carnet', 'Les supports du métier.'),
+          ('reseaux', 'Réseaux sociaux', 'Une grille pensée ensemble.')]
+    if c['slug'] == 'creche-oceane': lv.insert(1, ('sig-1', 'Signalétique murale', 'Les murs de la crèche.'))
+    c['liv'] = lv
+for c in C: restructure(c)
 SIG = {'sig-1': ('creche-sig-1', (140, 0, 880, 1100)), 'sig-4': ('creche-sig-4', None), 'sig-6': ('creche-sig-6', None)}
 BR = json.load(open(os.path.join(SRC, 'brands.json')))
 
@@ -118,7 +144,7 @@ def page(c):
     for i, (t, se, tx, ims) in enumerate(c['ch'], 1):
         g = ''.join('\n    <img data-r%s src="img/%s.webp" width="%d" height="%d" alt="%s" loading="lazy">' % (' class="wide"' if cl else '', n, *sz(n), esc(a)) for n, cl, a in ims)
         sw = ''
-        if i == 2:
+        if t == 'Le système':
             sw = '\n    <div class="sw" role="group" aria-label="Palette">%s</div>' % ''.join('<i style="background:%s;color:%s">%s</i>' % (col, b['dark'] if sum(int(col[j:j + 2], 16) for j in (1, 3, 5)) > 450 else 'rgba(255,255,255,.8)', esc(n)) for n, col in pal)
         m += ['<section class="ch" aria-labelledby="c%d">' % i, '  <div class="tx" data-r>', '    <span class="n">%02d</span>' % i,
               '    <h2 class="d" id="c%d">%s <span class="se">%s</span></h2>' % (i, esc(t), esc(se)), '    <p>%s</p>%s' % (esc(nb(tx)), sw), '  </div>',
