@@ -13,3 +13,5 @@ const out = tpl.replace("{{VERSION}}", dt(W.STUDIO_CGV_VERSION)).replace("{{INTR
 if (/[–—]/.test(out)) { console.error("Tiret long ou demi-cadratin trouvé : corrige cgv.js"); process.exit(1); }
 fs.writeFileSync(path.join(D, "index.html"), out);
 console.log("conditions/index.html généré, version " + W.STUDIO_CGV_VERSION);
+/* sécurité : CSP par empreintes et politique de référent */
+require("child_process").execFileSync("python3", [path.join(D, "..", "_src", "securite.py"), path.join(D, "index.html")], {stdio: "inherit"});

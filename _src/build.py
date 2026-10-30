@@ -132,4 +132,7 @@ rl = entete('Réalisations', 'Réalisations', 'Toutes disciplines.', 'Reportages
 </section>
 ''' % (len(TR), ''.join('<button type="button" aria-pressed="false" data-f="%s">%s<small>%d</small></button>' % (k, NOM[k], n[k]) for k in NOM), ''.join(tuile(t) for t in TR)) + contact_p
 page('realisations', 'Réalisations · Studio ES', 'Portfolio de Studio ES : reportages photo, sites et applications, identités, campagnes et éditions, en Bretagne.', 'https://studioes.fr/realisations/', rl, ld=LD('Réalisations', 'https://studioes.fr/realisations/', 'Portfolio photographie, web et design graphique'))
+# sécurité : CSP par empreintes et politique de référent, sur les pages générées uniquement
+import subprocess
+subprocess.run([sys.executable, os.path.join(D, 'securite.py')] + [os.path.join(OUT, x, 'index.html') for x in ('', 'metiers/photographie', 'metiers/sites-et-outils', 'metiers/graphisme', 'offres', 'realisations')], check=True)
 print('ok')
