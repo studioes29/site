@@ -112,7 +112,7 @@ def page(path, title, desc, canon, main, home=False, ld='', og=''):
     d = os.path.join(OUT, path); os.makedirs(d, exist_ok=True)
     open(os.path.join(d, 'index.html'), 'w', encoding='utf8').write(h)
 
-page('', 'Studio ES · Photographie, web et design graphique en Bretagne', 'Studio indépendant en Bretagne : photographie de concert, d’événement et de mariage, sites internet et applications, identités visuelles, campagnes et éditions.', 'https://studioes.fr/', HOME + '\n' + sect('contact'), True)
+page('', 'Studio ES · Photographie, web et design graphique en Bretagne', 'Studio de photographie de reportage et de création web en Bretagne : événements, mariages, entreprises, sites internet et applications sur mesure.', 'https://studioes.fr/', HOME + '\n' + sect('contact'), True)
 
 contact = sect('contact')
 def nettoie(s):
