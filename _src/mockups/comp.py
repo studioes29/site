@@ -31,9 +31,12 @@ def save(img,name,w=2400):
     cv2.imwrite(S+'c_%s.jpg'%name,(cv2.resize(o,(1200,int(h*1200/w)))*255).astype(np.uint8),[cv2.IMWRITE_JPEG_QUALITY,88])
 import os; os.makedirs('out',exist_ok=True)
 
-def card(photo,k,quad,ref=None,gain=1.0):
+def card(photo,k,quad,ref=None,gain=1.0,tint=0.0):
     rgb,a=warp(flat(k),quad,photo.shape); m=quadmask(quad,photo.shape)
     sh=shade(photo,m,ref)*gain
+    if tint:
+        L=lum(photo)[...,None]; cast=photo/np.maximum(L,1e-3)
+        sh=sh*((1-tint)+tint*cast)
     # léger contraste du papier : on garde un peu des microdétails de la photo
     out=rgb*sh
     # grain du papier : détail fin de la photo, renforcé dans les aplats foncés
@@ -62,8 +65,8 @@ def ink(photo,k,quad,color_strength=0.92,rough=0.18,blur=0.6,disp=0):
 which=sys.argv[1:] or ['cartes','merci','fidelite','sac','pain']
 if 'cartes' in which:
     p=load('AdobeStock_577531893.jpeg')
-    p=card(p,'recto',[(1631,259),(2682,578),(2502,1161),(1440,828)])
-    p=card(p,'verso',[(1346,1096),(2406,1434),(2220,2029),(1152,1671)])
+    p=card(p,'recto',[(1631,259),(2682,578),(2502,1161),(1440,828)],tint=0.5)
+    p=card(p,'verso',[(1346,1096),(2406,1434),(2220,2029),(1152,1671)],tint=0.8)
     save(p,'cartes')
 if 'merci' in which:
     p=load('AdobeStock_412678071.jpeg'); s=3.421
