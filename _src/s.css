@@ -2152,17 +2152,15 @@ body{color:var(--encre)}
 @media (max-width:1100px){.pk-g{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media (max-width:860px){.pk-g{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:600px){.pk-g{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pk{padding:6px 6px 0;border-radius:16px}.pk-i{border-radius:11px}.pk-l{padding:10px 5px 12px}.pk-l b{font-size:15.5px}.pk-l>span{font-size:12.5px}.pk-l small{font-size:11px;margin-top:7px}.pk-l em{display:none}}
-/* mobile : les cartes projets défilent à l'horizontale */
-@media (max-width:600px){
-  .pk-g{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin-inline:calc(var(--g) * -1);padding:4px var(--g) 34px;scroll-padding-inline:var(--g);overscroll-behavior-x:contain}
-  .pk-g::-webkit-scrollbar{display:none}
-  .pk{flex:0 0 64%;scroll-snap-align:start}
-}
 
-/* Graphisme, rubrique « Et aussi » : les autres supports, sans exemple */
-.ea{order:4;list-style:none;margin:clamp(8px,1vw,14px) 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,1.4vw,20px)}
-.ea li{display:grid;gap:6px;align-content:start;background:var(--carte,#fff);border-radius:20px;padding:22px 24px 24px;box-shadow:0 1px #2020200d,0 22px 44px -32px #20202066}
-.ea b{font-family:var(--d);font-weight:700;letter-spacing:-.02em;font-size:20px;line-height:1.15;color:var(--tx)}
-.ea span{font-size:15px;line-height:1.45;color:var(--tm)}
-@media (max-width:900px){.ea{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:560px){.ea{grid-template-columns:1fr}.ea li{padding:18px 20px 20px}}
+/* Graphisme, rubrique « Et aussi » : cartes pantone sans image, la teinte et l'initiale en filigrane */
+.pk-t .pk-i{position:relative;display:grid;place-items:end start}
+.pk-w{font-family:var(--d);font-weight:800;font-size:clamp(90px,9vw,150px);line-height:.72;letter-spacing:-.06em;color:rgba(255,255,255,.13);margin:0 0 -.04em .06em;user-select:none}
+.pk-t{cursor:default}
+@media (hover:hover){.pk-t:hover{transform:translateY(-4px) rotate(-.4deg)}}
+/* « Voir plus » : les nuanciers longs se replient (2 lignes sur ordinateur, 4 cartes sur mobile) */
+.pk-plus{order:5;justify-self:start;align-self:flex-start;margin-top:clamp(18px,2vw,26px)}
+.dk .pk-plus{background:var(--ntx,#f3efe6);color:var(--nuit,#1b1a18)}
+.pk-plus .ar{transform:rotate(90deg)}
+@media (max-width:600px){.pk-t .pk-i{aspect-ratio:4/3}.pk-w{font-size:84px}}
+.pk[hidden],.pk-plus[hidden]{display:none}

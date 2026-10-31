@@ -564,3 +564,22 @@ setInterval(function(){if(document.hidden)return;im[k].classList.remove('on');k=
     const d = g && g.nextElementSibling; if (d && d.classList.contains('dots')) { const n = tl.filter(t => !t.hidden).length; d.innerHTML = '<i></i>'.repeat(n); g.dispatchEvent(new Event('scroll')); }
   });
 })();
+/* « Voir plus » : un nuancier de plus de deux lignes (quatre cartes sur mobile) se replie, un bouton l'ouvre */
+(() => {
+  const mob = matchMedia('(max-width:600px)');
+  document.querySelectorAll('.pk-g').forEach(g => {
+    const cartes = [...g.children], n = cartes.length;
+    if (n <= 4) return;
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'bt pk-plus';
+    b.innerHTML = 'Voir plus <span class="ar"><svg class="i"><use href="#ar"/></svg></span>';
+    g.after(b);
+    const maj = () => {
+      const lim = mob.matches ? 4 : 10, ouvert = g.classList.contains('ouvert');
+      cartes.forEach((c, i) => { c.hidden = !ouvert && i >= lim; });
+      b.hidden = ouvert || n <= lim;
+    };
+    b.addEventListener('click', () => { g.classList.add('ouvert'); maj(); const c = cartes[mob.matches ? 4 : 10]; if (c) c.querySelector('a,[tabindex]')?.focus?.({ preventScroll: true }); });
+    mob.addEventListener('change', maj); maj();
+  });
+})();
