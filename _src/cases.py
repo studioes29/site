@@ -46,7 +46,7 @@ C = [
   liv=[('logo', 'Logo et variantes', 'Sur fond clair, foncé et couleur.'), ('palette', 'Couleurs et typographies', 'Quatre teintes, une famille.'), ('application', 'Dossard', 'Le numéro lisible de loin.'), ('cartes', 'Cartes', 'Recto verso.'), ('reseaux', 'Réseaux sociaux', 'Profil et gabarits de publication.')],
   fin=('Un événement à annoncer', 'Parlons-en.')),
  dict(slug='elodie-viconte', nom='Élodie Viconte', se='La main, l’appareil, le déclic.', k=['Identité visuelle', 'Photographe'],
-  inter='Logo, couleurs, typographies, cartes de visite, tirages, tote bag, réseaux sociaux',
+  inter='Logo, couleurs, typographies, cartes de visite, tirages, réseaux sociaux',
   ctx='Une photographe : une signature dessinée, assez fine pour signer une image sans la recouvrir.',
   ch=[('Un dessin', 'au trait', 'Une main tient un appareil argentique, le flash part. Le nom en capitales Art déco, aux barres hautes, répond à la finesse du dessin ; « Photography », très espacé, ferme la composition.', [('logo', 'wide', 'Le logo d’Élodie Viconte sur fond noir'), ('variantes', 'wide', 'Le logo sur quatre fonds de la palette')]),
       ('Les couleurs', 'du laboratoire', 'Le noir et le papier baryté du tirage argentique, un gris sel d’argent et le rouge de la lampe du laboratoire, réservé aux détails.', [('palette', 'wide', 'Palette et typographies de l’identité')]),
