@@ -26,7 +26,7 @@ def nuancier(slug,new):
     """Met à jour la couleur de la carte nuancier (page Graphisme et metiers.py)."""
     f='metiers/graphisme/index.html'; s=open(f).read()
     m=re.search(r'--c:(#[0-9A-Fa-f]{6})(;--i:\d+" href="/projets/%s/")'%slug,s)
-    old=m.group(1); a=m.start(); b=s.index('· Identité',a)
+    old=m.group(1); a=m.start(); b=s.index('</a>',a)
     s=s[:a]+s[a:b].replace(old,new)+s[b:]; open(f,'w').write(s)
     f='_src/metiers.py'; t=open(f).read(); t=t.replace("'%s', '%s'"%(slug,old),"'%s', '%s'"%(slug,new)); open(f,'w').write(t)
     return old

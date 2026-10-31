@@ -183,7 +183,7 @@ def pk(t, i):
     attr = ' href="/%s" data-r="%s"' % (lien, lien[3:]) if gal else ' href="%s"' % lien
     fin = '<em>Voir la galerie</em>' if gal else ''
     return ('<a class="pk" style="--c:%s;--i:%d"%s><span class="pk-i"><img src="%s" alt="%s" loading="lazy" decoding="async" width="640" height="640"></span>'
-            '<span class="pk-l"><b>%s</b><span>%s</span><small><i></i>%s · %s</small>%s</span></a>') % (c, i, attr, src, nom, nom, ligne, c.upper(), nat, fin)
+            '<span class="pk-l"><b>%s</b><span>%s</span><small><i></i>%s</small>%s</span></a>') % (c, i, attr, src, nom, nom, ligne, nat, fin)
 def nuancier(L, label): return '<div class="pk-g rv" role="list" aria-label="%s">%s</div>' % (label, ''.join(pk(t, i) for i, t in enumerate(L)))
 def tete(n, id, titre, it, texte, k):
     return ('<div class="gr-t rv"><p class="pt"><i>%s</i><span>%s</span></p><h2 class="d" id="t-%s">%s<span class="it">%s</span></h2><div class="gr-tx"><p class="lead">%s</p>'

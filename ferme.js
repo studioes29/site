@@ -1,0 +1,2 @@
+/* Croix de fermeture des études de cas : revient à la page d'où vient le visiteur (même site), sinon au lien indiqué. */
+(function(){var f=document.getElementById("ferme");if(!f)return;f.addEventListener("click",function(e){try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&new URL(document.referrer).pathname!==location.pathname&&history.length>1){e.preventDefault();history.back()}}catch(_){}})})();

@@ -14,6 +14,12 @@
   try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
   const nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
   if (!location.hash && (!nav || nav.type !== 'back_forward')) scrollTo(0, 0);
+  /* au retour (bouton précédent, croix d'une étude de cas), la page reprend là où le visiteur l'avait quittée */
+  try {
+    addEventListener('pagehide', () => sessionStorage.setItem('y:' + location.pathname, scrollY));
+    if (nav && nav.type === 'back_forward') { const y = +sessionStorage.getItem('y:' + location.pathname) || 0;
+      if (y) { const va = () => scrollTo(0, y); va(); addEventListener('load', () => { va(); setTimeout(va, 120); }); } }
+  } catch (e) {}
   /* bouton retour : la page précédente du site si elle existe, sinon l'accueil ; caché sur l'accueil */
   const ret = document.querySelector('[data-ret]');
   if (ret) { if (document.getElementById('hx')) ret.hidden = true;

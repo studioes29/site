@@ -354,7 +354,7 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
 .bref .nb{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(30px,3vw,44px);letter-spacing:-.03em;line-height:1}
 @media (max-width:860px){.bref{grid-template-columns:1fr}.bref>div,.bref>div+div{padding:18px 0;border-left:0}.bref>div+div{border-top:1px solid rgba(32,32,32,.14)}}
 @view-transition{navigation:auto}</style>
-</head>
+<style>.ferme{position:fixed;z-index:59;top:80px;right:var(--side,24px);display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:var(--s1);color:var(--tx);box-shadow:inset 0 0 0 1.5px var(--tx),0 10px 30px -12px rgba(20,20,18,.35);text-decoration:none;transition:transform .3s}.ferme:hover{transform:rotate(90deg)}.ferme svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none}@media (max-width:860px){.ferme{display:none}}</style></head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
   <symbol id="logo" viewBox="101 57 98 186"><path fill="currentColor" d="M103.01,59.34h93.97s0,181.31,0,181.31h-93.97V59.34ZM195.66,60.67h-91.32v178.6s.17.18.18.18h91.14V60.67Z"/><polygon fill="currentColor" points="179.42 76.92 179.42 158.43 136.95 158.43 136.95 174.56 179.42 174.56 179.42 223.32 120.58 223.32 120.58 207.07 163.05 207.07 163.05 190.93 120.58 190.93 120.58 142.05 163.05 142.05 163.05 125.92 120.7 125.92 120.58 109.55 163.05 109.55 163.05 93.3 120.58 93.3 120.58 76.92 179.42 76.92"/></symbol>
@@ -370,6 +370,7 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
   <a class="cta" href="/#devis">Demander un devis<i><svg aria-hidden="true"><use href="#a"/></svg></i></a>
 </header>
 
+<a class="ferme" id="ferme" href="/metiers/graphisme/#identites" aria-label="Fermer le projet et revenir à la page Graphisme"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14"/></svg></a>
 <main>
 <section class="fh w" aria-labelledby="t" style="--pc:#221F20;--pc2:#B58B24">
   <div class="tx">
@@ -517,5 +518,6 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
   const r = document.querySelector('.top .ret'); if (r) r.addEventListener('click', e => { if (document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1) { e.preventDefault(); history.back(); } });
   document.querySelectorAll('.lr').forEach(l => { let x0 = 0, s0 = 0, bas = false, mv = false; l.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') return; bas = true; mv = false; x0 = e.clientX; s0 = l.scrollLeft; }); addEventListener('pointermove', e => { if (!bas) return; const d = e.clientX - x0; if (Math.abs(d) > 5) { mv = true; l.style.scrollSnapType = 'none'; l.scrollLeft = s0 - d; } }); addEventListener('pointerup', () => { if (bas) { bas = false; l.style.scrollSnapType = ''; } }); l.addEventListener('dragstart', e => e.preventDefault()); }); })();
 </script>
+<script src="/ferme.js" defer></script>
 </body>
 </html>
