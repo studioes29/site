@@ -7,10 +7,14 @@ def brightmask(path,thr=200,sat=40,k=15):
     return cv2.GaussianBlur(m.astype(np.float32),(0,0),1.2)[...,None]
 if 'tote' in w:
     p=load(ST+'AdobeStock_366673336.jpeg')
+    mk=cv2.imread('/home/claude/oc/tote_mask.png',0).astype(np.float32)/255; mk=cv2.GaussianBlur(mk,(0,0),1.5)[...,None]
+    L=lum(p); ref=np.percentile(L[mk[...,0]>.9],90); sh=np.clip(L/ref,0,1.15)[...,None]
+    teal=np.array([0x78,0x67,0x34],np.float32)/255  # BGR de #346778
+    p=p*(1-mk)+(teal*sh)*mk
     p=ink(p,F+'tote.png',[(970,1290),(1870,1290),(1874,1890),(966,1890)],0.95,0.2,0.7,disp=0.8); save(p,'oc_tote',O)
 if 'body' in w:
     p=load(ST+'AdobeStock_460631977.jpeg')
-    p=ink(p,F+'body.png',[(1310,830),(2090,830),(2092,1376),(1308,1376)],0.95,0.2,0.7,disp=1.0); save(p,'oc_body',O)
+    p=ink(p,F+'body.png',[(1440,830),(2220,830),(2222,1376),(1438,1376)],0.95,0.2,0.7,disp=1.0); save(p,'oc_body',O)
 if 'carte' in w:
     f=ST+'AdobeStock_470073700.jpeg'; p=load(f)
     im=cv2.imread(f); h=cv2.cvtColor(im,cv2.COLOR_BGR2HSV); mk=(h[...,1]<40).astype(np.uint8); mk=cv2.morphologyEx(mk,cv2.MORPH_CLOSE,np.ones((9,9),np.uint8)); mk=cv2.GaussianBlur(mk.astype(np.float32),(0,0),1.2)[...,None]
