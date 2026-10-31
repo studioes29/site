@@ -168,7 +168,16 @@ IDS = [
 ]
 CAMP = [
     ('La Soute', '/projets/la-soute/', 'la-soute', '#171A52', 'Saison culturelle', 'Direction artistique'),
-    ('Campagnes', '#r=campagnes', 't/saisons-ellipse-8', '#B5583F', 'Saisons, recrutement, prévention', 'Galerie'),
+    ('L’Ellipse', '/projets/saisons-ellipse/', 'saisons-ellipse', '#E0457B', 'Saison culturelle', 'Campagne'),
+    ('Campagnes de recrutement', '/projets/campagnes-de-recrutement/', 'campagnes-de-recrutement', '#3A3631', 'Recrutement', 'Campagne'),
+    ('Budget participatif', '/projets/budget-participatif/', 'budget-participatif', '#E8D41A', 'Participation citoyenne', 'Campagne'),
+    ('Objectif zéro plastique', '/projets/objectif-zero-plastique/', 'objectif-zero-plastique', '#24508F', 'Environnement', 'Campagne'),
+    ('Don d’organes et de sang', '/projets/don-d-organes/', 'don-d-organes', '#E0383E', 'Sensibilisation', 'Campagne'),
+    ('Été sportif', '/projets/ete-sportif/', 'ete-sportif', '#6E9E62', 'Animations sportives', 'Campagne'),
+    ('Fest’in d’mouettes', '/projets/festin-d-mouettes/', 'festin-d-mouettes', '#E5397B', 'Festival', 'Campagne'),
+    ('Vœux 2025', '/projets/voeux-2025/', 'voeux-2025', '#3B6DB5', 'Vœux', 'Campagne'),
+    ('Boucherie Les Fistons', '/projets/boucherie-les-fistons/', 'boucherie-les-fistons', '#6E3B22', 'Commerce', 'Campagne'),
+    ('Académie des sports', '/projets/academie-des-sports/', 'academie-des-sports', '#C9E62E', 'Sport', 'Identité et campagne'),
     ('Affiches', '#r=affiches', 't/affiches-6', '#2E2B28', 'Expositions, spectacles, événements', 'Galerie'),
 ]
 EDS = [
