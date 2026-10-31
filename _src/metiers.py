@@ -182,8 +182,6 @@ CAMP = [
 ]
 EDS = [
     ('MJC La Marelle', '/projets/mjc-la-marelle/', 'mjc-la-marelle', '#1F4A33', 'Brochure de saison', 'Édition'),
-    ('Éditions', '#r=editions', 't/editions-5', '#8C6B3F', 'Brochures, programmes, dépliants', 'Galerie'),
-    ('Signalétique', '#r=signaletique', 't/carenage-1', '#2F4A5C', 'Lieux publics et commerces', 'Galerie'),
 ]
 def pk(t, i):
     nom, lien, img, c, ligne, nat = t
