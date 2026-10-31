@@ -147,7 +147,7 @@ page('metiers/sites-et-outils', 'Sites internet et applications en Bretagne · S
 
 # ---------- Design graphique : trois familles, l'ensemble puis le détail ----------
 gr_droite = ('<div class="mh-gr" aria-hidden="true"><img class="a" src="/projets/la-soute/img/affiche.webp" alt=""><img class="b" src="/projets/mjc-la-marelle/img/p1.webp" alt="">'
-             '<img class="c" src="/projets/christopher-poupon/img/application.webp" alt=""></div>')
+             '<img class="c" src="/projets/christopher-poupon/img/m-van.webp" alt=""></div>')
 gr_act = '<div class="mh-ac"><button type="button" class="bt" data-est data-g="Design graphique">Parler de mon projet %s</button><a class="ln" href="#identites">Voir les projets</a></div>' % AR
 gr = entete('Design graphique', 'Graphisme', 'Identités, campagnes, éditions.', 'Une direction artistique qui tient sur tous les supports : l’identité d’un lieu ou d’une marque, la campagne d’une saison, la brochure qu’on garde. Chaque projet est chiffré sur devis.',
             ' u-rose mh-gr-s', FG('Design', 'left:-1vw;bottom:-.42em;font-size:calc(var(--fg-t) * 1.05)'), gr_droite, gr_act)
@@ -156,7 +156,7 @@ gr = entete('Design graphique', 'Graphisme', 'Identités, campagnes, éditions.'
 # (nom, lien, vignette, couleur, ligne, nature)
 IDS = [
     ('FL Auto', '/projets/fl-auto/', 'fl-auto', '#16213C', 'Garage automobile', 'Identité et signalétique'),
-    ('Christopher Poupon', '/projets/christopher-poupon/', 'christopher-poupon', '#1F3B2D', 'Paysagiste', 'Identité'),
+    ('Christopher Poupon', '/projets/christopher-poupon/', 'christopher-poupon', '#71AD6F', 'Paysagiste', 'Identité'),
     ('Maison Blé', '/projets/maison-ble/', 'maison-ble', '#B58B24', 'Boulangerie', 'Identité'),
     ('Crèche Océane', '/projets/creche-oceane/', 'creche-oceane', '#F1C155', 'Petite enfance', 'Identité et signalétique'),
     ('Laureen Boudigou', '/projets/laureen-boudigou/', 'laureen-boudigou', '#038B99', 'Avocate', 'Identité'),
