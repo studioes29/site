@@ -1,7 +1,7 @@
 import sys; sys.path.insert(0,'/home/claude/mk'); from complib import *
 import math
 ST='/home/claude/stock/'; F='/home/claude/cp/flats/'; O='/home/claude/cp/out'
-w=sys.argv[1:] or ['van','polo']
+w=sys.argv[1:] or []  # utilitaire et polo abandonnés
 if 'van' in w:
     p=load(ST+'AdobeStock_683691571.jpeg')
     p=ink(p,F+'van.png',[(2250,1118),(2905,1106),(2907,1318),(2250,1330)],0.97,0.05,0.6); save(p,'cp_van',O)

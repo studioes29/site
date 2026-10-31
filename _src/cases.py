@@ -14,8 +14,8 @@ AR = '<svg aria-hidden="true"><use href="#a"/></svg>'
 #  chapitres [(titre, se, texte, [(image, classe, alt)]), ...], livrables [(image, titre, ligne)], couleurs de la carte, fin)
 C = [
  dict(slug='christopher-poupon', nom='Christopher Poupon', se='Deux initiales, un seul trait.', k=['Identité visuelle', 'Paysagiste'],
-  inter='Logo, couleurs, typographies, cartes de visite, utilitaire, tenue',
-  ctx='Un paysagiste à son compte : une signature lisible sur un chantier comme sur un devis, floquée sur un utilitaire ou brodée sur un polo.',
+  inter='Logo, couleurs, typographies, cartes de visite',
+  ctx='Un paysagiste à son compte : une signature lisible sur un chantier comme sur un devis ou une carte de visite.',
   ch=[('Un monogramme', 'd’un seul tenant', 'Le C s’ouvre en arc et le P en descend : les deux initiales partagent le même trait épais. Le signe reste lisible brodé sur un gant de travail, et le nom en capitales étroites tient dessous sans l’écraser.', [('logo', 'wide', 'Le monogramme de Christopher Poupon sur fond vert sapin'), ('variantes', 'wide', 'Le logo sur quatre fonds de la palette')]),
       ('Les couleurs', 'du jardin', 'Un vert sapin pour le métier, une sauge et une terre cuite pour les supports secondaires, une craie à la place du blanc pur. Les titres en capitales étroites reprennent la géométrie du nom.', [('palette', 'wide', 'Palette et typographies de l’identité')]),
       ('Les supports', 'sur le terrain', 'Cartes de visite, papeterie, réseaux sociaux : partout, le monogramme seul suffit dès que la place manque.', [('cartes', 'wide', 'Cartes de visite recto verso'), ('application', 'wide', 'Devis, enveloppe et carte de correspondance'), ('photo', '', 'Le logo brodé sur un gant de travail'), ('reseaux', 'wide', 'Le profil Instagram et sa grille')])],
@@ -30,7 +30,7 @@ C = [
   liv=[('logo', 'Logo et variantes', 'Sur fond clair, foncé et couleur.'), ('palette', 'Couleurs et typographies', 'Quatre teintes, deux familles.'), ('application', 'Sac à pain et étiquette', 'Une couleur, sur kraft.'), ('cartes', 'Cartes de visite', 'Recto verso.'), ('reseaux', 'Réseaux sociaux', 'Profil et gabarits de publication.')],
   fin=('Une enseigne à faire connaître', 'Parlons-en.')),
  dict(slug='laureen-boudigou', nom='Laureen Boudigou', se='Un monogramme tenu au cordeau.', k=['Identité visuelle', 'Avocate'],
-  inter='Logo, couleurs, typographies, cartes de visite, utilitaire, tenue',
+  inter='Logo, couleurs, typographies, cartes de visite',
   ctx='Une avocate qui ouvre son cabinet : une identité sérieuse sans être austère, du papier à en-tête à la plaque de l’entrée.',
   ch=[('Un monogramme', 'en cartouche', 'Le L et le B s’imbriquent dans un cartouche aux lignes droites, traversé de bandes horizontales : la rigueur du métier, sans raideur. Le nom en romain à empattements équilibre le signe.', [('logo', 'wide', 'Le logo de Laureen Boudigou sur fond encre'), ('variantes', 'wide', 'Le logo sur quatre fonds de la palette')]),
       ('Les couleurs', 'du cabinet', 'Une encre presque noire, un laiton pour la plaque et les détails, une pierre et un ivoire pour les papiers. Les titres en garamond, les textes dans une linéale sobre.', [('palette', 'wide', 'Palette et typographies de l’identité')]),

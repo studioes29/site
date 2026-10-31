@@ -147,7 +147,7 @@ page('metiers/sites-et-outils', 'Sites internet et applications en Bretagne · S
 
 # ---------- Design graphique : trois familles, l'ensemble puis le détail ----------
 gr_droite = ('<div class="mh-gr" aria-hidden="true"><img class="a" src="/projets/la-soute/img/affiche.webp" alt=""><img class="b" src="/projets/mjc-la-marelle/img/p1.webp" alt="">'
-             '<img class="c" src="/projets/christopher-poupon/img/m-van.webp" alt=""></div>')
+             '<img class="c" src="/projets/christopher-poupon/img/m-cartes.webp" alt=""></div>')
 gr_act = '<div class="mh-ac"><button type="button" class="bt" data-est data-g="Design graphique">Parler de mon projet %s</button><a class="ln" href="#identites">Voir les projets</a></div>' % AR
 gr = entete('Design graphique', 'Graphisme', 'Identités, campagnes, éditions.', 'Une direction artistique qui tient sur tous les supports : l’identité d’un lieu ou d’une marque, la campagne d’une saison, la brochure qu’on garde. Chaque projet est chiffré sur devis.',
             ' u-rose mh-gr-s', FG('Design', 'left:-1vw;bottom:-.42em;font-size:calc(var(--fg-t) * 1.05)'), gr_droite, gr_act)
