@@ -161,7 +161,7 @@ IDS = [
     ('Crèche Océane', '/projets/creche-oceane/', 'creche-oceane', '#F1C155', 'Petite enfance', 'Identité et signalétique'),
     ('Laureen Boudigou', '/projets/laureen-boudigou/', 'laureen-boudigou', '#038B99', 'Avocate', 'Identité'),
     ('Mam’our et merveilles', '/projets/mam-our-et-merveilles/', 'mam-our-et-merveilles', '#3D5C49', 'Maison d’assistantes maternelles', 'Identité'),
-    ('Molan Move', '/projets/molan-move/', 'molan-move', '#133E6B', 'Événement sportif', 'Identité'),
+    ('Molan Move', '/projets/molan-move/', 'molan-move', '#EE3F60', 'Événement sportif', 'Identité'),
     ('Élodie Viconte', '/projets/elodie-viconte/', 'elodie-viconte', '#3D5876', 'Photographe', 'Identité'),
     ('Pierceval Tattoo', '/projets/pierceval-tattoo/', 'pierceval-tattoo', '#2B1330', 'Studio de tatouage', 'Identité et site'),
     ('Fill', '/projets/fill/', 'fill', '#7656D6', 'Communication externalisée', 'Marque et site'),

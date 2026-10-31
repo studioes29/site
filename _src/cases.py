@@ -38,7 +38,7 @@ C = [
   liv=[('logo', 'Logo et variantes', 'Sur fond clair, foncé et couleur.'), ('palette', 'Couleurs et typographies', 'Quatre teintes, deux familles.'), ('application', 'Papeterie', 'Lettre, enveloppe, correspondance.'), ('cartes', 'Cartes de visite', 'Recto verso.'), ('reseaux', 'Réseaux sociaux', 'Profil et gabarits de publication.')],
   fin=('Un cabinet à ouvrir', 'Parlons-en.')),
  dict(slug='molan-move', nom='Molan Move', se='Un élan en deux traits.', k=['Identité visuelle', 'Événement sportif'],
-  inter='Logo, couleurs, typographies, dossard, supports, réseaux sociaux',
+  inter='Logo, couleurs, affiches, dépliant, oriflamme, visuels web, réseaux sociaux',
   ctx='Un événement sportif à Moëlan-sur-Mer : un nom court et un signe qui se lisent sur un dossard, une affiche et une banderole d’arrivée.',
   ch=[('Un signe', 'en mouvement', 'Deux formes pleines, comme une foulée ou une vague, au-dessus d’un nom en minuscules arrondies. Les liaisons entre les lettres donnent au nom le rythme d’une course.', [('logo', 'wide', 'Le logo Molan Move sur fond bleu'), ('variantes', 'wide', 'Le logo sur quatre fonds de la palette')]),
       ('Les couleurs', 'du plein air', 'Un bleu marée, une écume et un orange pour l’effort : des couleurs franches, lisibles de loin et en plein soleil. Une seule famille de caractères, de la plus fine à la plus grasse.', [('palette', 'wide', 'Palette et typographies de l’identité')]),
