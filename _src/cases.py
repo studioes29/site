@@ -54,7 +54,7 @@ C = [
   liv=[('logo', 'Logo et variantes', 'Sur fond clair, foncé et couleur.'), ('palette', 'Couleurs et typographies', 'Quatre teintes, deux familles.'), ('application', 'Pochette de tirages', 'Pour la remise des images.'), ('cartes', 'Cartes de visite', 'Recto verso.'), ('reseaux', 'Réseaux sociaux', 'Profil et signature des images.')],
   fin=('Un regard à signer', 'Parlons-en.')),
  dict(slug='creche-oceane', nom='Crèche Océane', se='Un nom évidé.', k=['Identité et signalétique', 'Petite enfance'],
-  inter='Logo, couleurs, typographies, signalétique murale, badges, carnet de liaison, réseaux sociaux',
+  inter='Logo, couleurs, typographies, signalétique murale, palissade, textile, carte d’accueil, réseaux sociaux',
   ctx='La crèche de Moëlan-sur-Mer : un nom à faire vivre auprès des familles, et des murs à habiller sur le thème de la mer.',
   ch=[('Un nom', 'évidé', 'Le nom est découpé dans une forme blanche aux pointes douces, posée sur la photo : l’image se voit à travers les lettres. « Crèche » et « Moëlan-sur-Mer », écrits à la main, ajoutent la chaleur d’un dessin d’enfant.', [('variantes', 'wide', 'Le logo posé sur les photographies de la crèche et sur le bleu marine')]),
       ('Les couleurs', 'de la mer', 'Un orange vif et un bleu marine, ceux des murs de la crèche, une terre pour les écritures à la main et un lin pour les fonds. Les titres en capitales dessinées, les petits mots à la main.', [('palette', 'wide', 'Palette et typographies de l’identité')]),

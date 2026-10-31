@@ -158,7 +158,7 @@ IDS = [
     ('FL Auto', '/projets/fl-auto/', 'fl-auto', '#16213C', 'Garage automobile', 'Identité et signalétique'),
     ('Christopher Poupon', '/projets/christopher-poupon/', 'christopher-poupon', '#1F3B2D', 'Paysagiste', 'Identité'),
     ('Maison Blé', '/projets/maison-ble/', 'maison-ble', '#B58B24', 'Boulangerie', 'Identité'),
-    ('Crèche Océane', '/projets/creche-oceane/', 'creche-oceane', '#F0901E', 'Petite enfance', 'Identité et signalétique'),
+    ('Crèche Océane', '/projets/creche-oceane/', 'creche-oceane', '#F1C155', 'Petite enfance', 'Identité et signalétique'),
     ('Laureen Boudigou', '/projets/laureen-boudigou/', 'laureen-boudigou', '#038B99', 'Avocate', 'Identité'),
     ('Mam’our et merveilles', '/projets/mam-our-et-merveilles/', 'mam-our-et-merveilles', '#3D5C49', 'Maison d’assistantes maternelles', 'Identité'),
     ('Molan Move', '/projets/molan-move/', 'molan-move', '#133E6B', 'Événement sportif', 'Identité'),
