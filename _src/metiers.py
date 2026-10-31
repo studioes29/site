@@ -168,6 +168,7 @@ IDS = [
 ]
 CAMP = [
     ('La Soute', '/projets/la-soute/', 'la-soute', '#171A52', 'Saison culturelle', 'Direction artistique'),
+    ('MJC La Marelle', '/projets/mjc-la-marelle/', 'mjc-la-marelle', '#1F4A33', 'Brochure de saison', 'Édition'),
     ('L’Ellipse', '/projets/saisons-ellipse/', 'saisons-ellipse', '#E0457B', 'Saison culturelle', 'Campagne'),
     ('Campagnes de recrutement', '/projets/campagnes-de-recrutement/', 'campagnes-de-recrutement', '#3A3631', 'Recrutement', 'Campagne'),
     ('Budget participatif', '/projets/budget-participatif/', 'budget-participatif', '#E8D41A', 'Participation citoyenne', 'Campagne'),
@@ -180,9 +181,7 @@ CAMP = [
     ('Académie des sports', '/projets/academie-des-sports/', 'academie-des-sports', '#C9E62E', 'Sport', 'Identité et campagne'),
     ('Affiches', '#r=affiches', 't/affiches-6', '#2E2B28', 'Expositions, spectacles, événements', 'Galerie'),
 ]
-EDS = [
-    ('MJC La Marelle', '/projets/mjc-la-marelle/', 'mjc-la-marelle', '#1F4A33', 'Brochure de saison', 'Édition'),
-]
+EAUSSI = [('Édition', 'Brochures, programmes, magazines, livrets.'), ('Signalétique', 'Panneaux, plaques, totems, vitrophanie.'), ('Papeterie', 'Cartes de visite, en-têtes, cartes de correspondance, invitations.'), ('Affichage', 'Affiches, kakémonos, bâches, oriflammes, grands formats.'), ('Réseaux sociaux', 'Gabarits de publications et de stories, visuels de couverture.'), ('Présentations', 'Supports de présentation, dossiers de presse, rapports.'), ('Étiquettes et emballages', 'Étiquettes, packagings, sacs.'), ('Plans et pictogrammes', 'Plans d’accès, cartes illustrées, jeux de pictogrammes.'), ('Suivi d’impression', 'Fichiers prêts pour l’imprimeur, BAT, suivi de fabrication.')]
 def pk(t, i):
     nom, lien, img, c, ligne, nat = t
     gal = lien.startswith('#r=')
@@ -191,6 +190,7 @@ def pk(t, i):
     fin = '<em>Voir la galerie</em>' if gal else ''
     return ('<a class="pk" style="--c:%s;--i:%d"%s><span class="pk-i"><img src="%s" alt="%s" loading="lazy" decoding="async" width="640" height="640"></span>'
             '<span class="pk-l"><b>%s</b><span>%s</span><small><i></i>%s</small>%s</span></a>') % (c, i, attr, src, nom, nom, ligne, nat, fin)
+def eaussi(L): return '<ul class="ea rv" aria-label="Et aussi">%s</ul>' % ''.join('<li style="--i:%d"><b>%s</b><span>%s</span></li>' % (i, t, d) for i, (t, d) in enumerate(L))
 def nuancier(L, label): return '<div class="pk-g rv" role="list" aria-label="%s">%s</div>' % (label, ''.join(pk(t, i) for i, t in enumerate(L)))
 def tete(n, id, titre, it, texte, k):
     return ('<div class="gr-t rv"><p class="pt"><i>%s</i><span>%s</span></p><h2 class="d" id="t-%s">%s<span class="it">%s</span></h2><div class="gr-tx"><p class="lead">%s</p>'
@@ -211,10 +211,10 @@ gr += """
   </div>
 </section>
 <section class="sec feuille gr-f gr-editions u-sable" id="editions" aria-labelledby="t-editions">
-  """ + FG('Édition', 'right:-1vw;bottom:-.38em;--vy:-60px;font-family:var(--sf);font-style:italic;font-weight:300;font-size:calc(var(--fg-t) * .78)') + """
+  """ + FG('Et aussi', 'right:-1vw;bottom:-.38em;--vy:-60px;font-family:var(--sf);font-style:italic;font-weight:300;font-size:calc(var(--fg-t) * .78)') + """
   <div class="w">
-    """ + tete('03', 'editions', 'Édition et signalétique', 'Des pages qui se lisent.', 'Brochures, programmes, magazines, panneaux : une grille claire, une hiérarchie lisible, des fichiers prêts pour l’imprimeur.', 'edition') + """
-    """ + nuancier(EDS, 'Éditions et signalétique') + """
+    """ + tete('03', 'editions', 'Et aussi', 'Tout ce qui s’imprime, s’affiche ou se publie.', 'En dehors des identités et des campagnes, Studio ES conçoit aussi ces supports, seuls ou en complément d’un projet. Chaque demande est chiffrée sur devis.', 'edition') + """
+    """ + eaussi(EAUSSI) + """
   </div>
 </section>
 <section class="sec feuille fl-f fl-c" aria-label="Fill">
