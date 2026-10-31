@@ -22,8 +22,8 @@ C = [
   liv=[('logo', 'Logo et variantes', 'Sur fond clair, foncé et couleur.'), ('palette', 'Couleurs et typographies', 'Quatre teintes, deux familles.'), ('cartes', 'Cartes de visite', 'Recto verso.'), ('application', 'Papeterie', 'Devis, enveloppe, correspondance.'), ('reseaux', 'Réseaux sociaux', 'Profil et gabarits de publication.')],
   fin=('Une activité à lancer', 'Parlons-en.')),
  dict(slug='maison-ble', nom='Maison Blé', se='Un épi, une arche.', k=['Identité visuelle', 'Boulangerie'],
-  inter='Logo, couleurs, typographies, cartes, sac à pain, étiquettes, réseaux sociaux',
-  ctx='Une boulangerie artisanale : une identité sobre, qui se lit sur un sac à pain, une étiquette et une vitrine sans prendre le pas sur le produit.',
+  inter='Logo, couleurs, typographies, cartes, sac à pain, carte de fidélité, réseaux sociaux',
+  ctx='Une boulangerie artisanale : une identité sobre, qui se lit sur un sac à pain, une carte et une vitrine sans prendre le pas sur le produit.',
   ch=[('Un épi', 'dans une arche', 'L’épi est dessiné d’un trait fin, posé dans une arche aux angles arrondis qui rappelle la bouche du four. Le nom en capitales à fort contraste donne le ton d’une maison artisanale ; « Boulangerie », espacé, se lit en second.', [('logo', 'wide', 'Le logo Maison Blé sur fond brun'), ('variantes', 'wide', 'Le logo sur quatre fonds de la palette')]),
       ('Les couleurs', 'du pain', 'Elles viennent du pain lui-même : la croûte, le blé, le noir du fournil et la farine pour les fonds. Les titres à fort contraste répondent à un texte courant fin et espacé.', [('palette', 'wide', 'Palette et typographies de l’identité')]),
       ('Les supports', 'du comptoir', 'Le sac à pain en papier kraft porte le logo d’une seule couleur ; l’étiquette ronde ferme les sachets et identifie les pains.', [('application', '', 'Sac à pain kraft et étiquette ronde'), ('cartes', '', 'Cartes de visite recto verso'), ('photo', 'wide', 'Le logo posé sur la photographie des pains'), ('reseaux', 'wide', 'Le profil Instagram et sa grille')])],
@@ -203,7 +203,6 @@ def page(c):
           '', '<section class="end w" aria-labelledby="fin">', '  <h2 class="d" id="fin" data-r>%s ? <span class="se">%s</span></h2>' % (esc(c['fin'][0]), esc(c['fin'][1])),
           '  <div class="bts" data-r>', '    <a class="bt bt-a" href="/#devis">Demander un devis<span class="o">%s</span></a>' % AR,
           '    <a class="bt bt-g" href="/#cal">Réserver un appel<span class="o">%s</span></a>' % AR, '  </div>', '</section>']
-    h = h.replace('</head>', theme(c['slug']) + '</head>', 1)
     out = h + '\n'.join(m) + '\n' + TAIL
     if re.search('[–—]', re.sub(r'<(script|style)[^>]*>.*?</\1>', '', out, flags=re.S)): raise SystemExit('tiret long dans ' + c['slug'])
     p = os.path.join(R, 'projets', c['slug'], 'index.html'); open(p, 'w', encoding='utf8').write(out)
