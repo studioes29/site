@@ -191,7 +191,7 @@ def pk(t, i):
     return ('<a class="pk" style="--c:%s;--i:%d"%s><span class="pk-i"><img src="%s" alt="%s" loading="lazy" decoding="async" width="640" height="640"></span>'
             '<span class="pk-l"><b>%s</b><span>%s</span><small><i></i>%s</small>%s</span></a>') % (c, i, attr, src, nom, nom, ligne, nat, fin)
 EA_COL = ['#2F4A5C', '#C8553D', '#8C6B3F', '#1F4A33', '#D9A441', '#3E5C76', '#A3473A', '#5B6B4E', '#2B2A28']
-def eaussi(L): return '<div class="pk-g ea rv" role="list" aria-label="Et aussi">%s</div>' % ''.join('<div class="pk pk-t" role="listitem" style="--c:%s;--i:%d"><span class="pk-i"><span class="pk-w" aria-hidden="true">%s</span></span><span class="pk-l"><b>%s</b><span>%s</span><small><i></i>Sur devis</small></span></div>' % (EA_COL[i % len(EA_COL)], i, t[0], t, d) for i, (t, d) in enumerate(L))
+def eaussi(L): return '<div class="pk-g ea rv" role="list" aria-label="Et aussi">%s</div>' % ''.join('<div class="pk pk-t" role="listitem" style="--c:%s;--i:%d"><span class="pk-i"></span><span class="pk-l"><b>%s</b><span>%s</span></span></div>' % (EA_COL[i % len(EA_COL)], i, t, d) for i, (t, d) in enumerate(L))
 def nuancier(L, label): return '<div class="pk-g rv" role="list" aria-label="%s">%s</div>' % (label, ''.join(pk(t, i) for i, t in enumerate(L)))
 def tete(n, id, titre, it, texte, k):
     return ('<div class="gr-t rv"><p class="pt"><i>%s</i><span>%s</span></p><h2 class="d" id="t-%s">%s<span class="it">%s</span></h2><div class="gr-tx"><p class="lead">%s</p>'

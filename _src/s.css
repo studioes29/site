@@ -2153,14 +2153,14 @@ body{color:var(--encre)}
 @media (max-width:860px){.pk-g{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:600px){.pk-g{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pk{padding:6px 6px 0;border-radius:16px}.pk-i{border-radius:11px}.pk-l{padding:10px 5px 12px}.pk-l b{font-size:15.5px}.pk-l>span{font-size:12.5px}.pk-l small{font-size:11px;margin-top:7px}.pk-l em{display:none}}
 
-/* Graphisme, rubrique « Et aussi » : cartes pantone sans image, la teinte et l'initiale en filigrane */
-.pk-t .pk-i{position:relative;display:grid;place-items:end start}
-.pk-w{font-family:var(--d);font-weight:800;font-size:clamp(90px,9vw,150px);line-height:.72;letter-spacing:-.06em;color:rgba(255,255,255,.13);margin:0 0 -.04em .06em;user-select:none}
+/* Graphisme, rubrique « Et aussi » : cartes pantone sans image, un aplat bas et le texte */
+.pk-t .pk-i{aspect-ratio:auto;height:clamp(54px,5vw,72px)}
+.pk-t .pk-l{padding-bottom:16px}
 .pk-t{cursor:default}
 @media (hover:hover){.pk-t:hover{transform:translateY(-4px) rotate(-.4deg)}}
 /* « Voir plus » : les nuanciers longs se replient (2 lignes sur ordinateur, 4 cartes sur mobile) */
 .pk-plus{order:5;justify-self:start;align-self:flex-start;margin-top:clamp(18px,2vw,26px)}
 .dk .pk-plus{background:var(--ntx,#f3efe6);color:var(--nuit,#1b1a18)}
 .pk-plus .ar{transform:rotate(90deg)}
-@media (max-width:600px){.pk-t .pk-i{aspect-ratio:4/3}.pk-w{font-size:84px}}
+@media (max-width:600px){.pk-t .pk-i{height:44px}}
 .pk[hidden],.pk-plus[hidden]{display:none}
