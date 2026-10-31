@@ -17,7 +17,9 @@ def illu(color,k,clip=True):
 def lock(color,W,css='',text=True):
     k=W/LW
     t='<div style="position:absolute;left:%.1fpx;top:%.1fpx;width:%.1fpx;height:%.1fpx;background:%s;-webkit-mask:url(%s) center/contain no-repeat"></div>'%((2400-OX)*k,(2305-OY)*k,516*k,156*k,color,WM) if text else ''
-    return '<div style="position:absolute;width:%.1fpx;height:%.1fpx;%s">%s%s</div>'%(W,LH*k,css,illu(color,k),t)
+    # la boîte est centrée sur le nom (pas sur l'ensemble main + appareil) : le dessin est décalé vers la gauche
+    dx=((2400-OX)+516/2-LW/2)*k if text else 0
+    return '<div style="position:absolute;width:%.1fpx;height:%.1fpx;%s"><div style="position:absolute;inset:0;transform:translateX(%.1fpx)">%s%s</div></div>'%(W,LH*k,css,-dx,illu(color,k),t)
 BASE="*{margin:0;padding:0;box-sizing:border-box}#c{position:relative;overflow:hidden}.ph{position:absolute;background-size:cover;background-position:center}"
 def page(w,h,bg,body,css=''):
     return '<!doctype html><html><head><meta charset=utf-8><style>%s%s#c{width:%dpx;height:%dpx;background:%s}%s</style></head><body style="background:transparent"><div id=c>%s</div></body></html>'%(FONTS,BASE,w,h,bg,css,body)
