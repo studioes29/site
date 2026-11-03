@@ -84,7 +84,8 @@ def tuile(t, cls='', n=0):
     T = tags.split()
     lab = ''.join('<em class="k-%s">%s</em>' % (x, NOM[x]) for x in T)
     href = '/' + lien if g else lien
-    badge = ''
+    # ce que la carte ouvre, dit avant le clic : une galerie (visionneuse) ou une page d'étude de cas
+    badge = '<span class="nu-b">%s</span>' % (('Reportage' if T[0] == 'photo' else 'Galerie') if g else 'Étude de cas')
     return ('<a class="nu nu-%s%s%s" href="%s"%s data-t="%s"><span class="nu-i"><img src="%s" alt="%s, %s" loading="lazy" decoding="async" width="%d" height="%d">%s</span>'
             '<span class="nu-l"><b>%s</b><span>%s</span><small>%s</small></span></a>') % (
         T[0], ' nu-x' if len(T) > 1 else '', cls, href, ' data-r="%s"' % g if g else '', tags, img, titre, ligne[0].lower() + ligne[1:], w, h, badge, titre, ligne, lab)

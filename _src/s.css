@@ -2171,3 +2171,9 @@ body{color:var(--encre)}
 .ds-ph .bt.cl:hover,.ds-wb .bt.cl:hover,.ds-gr .bt.cl:hover{box-shadow:inset 0 0 0 2px currentColor}
 .ch-x .ds-ac{gap:10px 12px}
 .fl-x .lead+.ds-ac{margin-top:24px}
+/* sélection : l'interlocuteur dès le deuxième écran */
+.sel-d{display:grid;gap:18px;align-content:end}
+.sel-qui{display:flex;align-items:center;gap:14px;margin:0;max-width:30em;font-size:15px;line-height:1.45;color:var(--mu)}
+.sel-qui b{color:var(--ink);font-weight:600}
+.sel-qui img{flex:none;width:52px;height:52px;border-radius:50%;object-fit:cover;object-position:50% 20%;filter:grayscale(1)}
+.nu .nu-b{background:rgba(20,20,20,.74);color:#fff;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
