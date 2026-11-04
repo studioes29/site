@@ -281,6 +281,9 @@ p.inc svg{margin-top:2px}
 .bascule[data-v="1"]::before{transform:translateX(100%)}
 .bascule button[aria-pressed="true"]{color:#fff}
 .bascule[hidden]{display:none}
+.bascule[data-nf]{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:auto}
+.bascule[data-nf] button{padding:7px 11px;white-space:nowrap}
+.bascule[data-nf]::before{left:var(--x,3px);width:var(--w,0);transform:none;transition:left .5s var(--sp),width .5s var(--sp)}
 .of.rec .bascule{background:rgba(255,255,255,.09)}
 .of.rec .bascule button{color:rgba(255,255,255,.7)}
 .of.rec .bascule::before{background:#fff}

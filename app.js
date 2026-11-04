@@ -169,7 +169,9 @@
     const bm = $('.bascule[data-mo]', c);
     if (bm) $$('button', bm).forEach(b => b.addEventListener('click', () => { bm.dataset.v = b.dataset.v; $$('button', bm).forEach(x => x.setAttribute('aria-pressed', String(x === b))); c.dataset.mois = b.dataset.v; majCarte(c); }));
     const bn = $('.bascule[data-nf]', c);
-    if (bn) $$('button', bn).forEach(b => b.addEventListener('click', () => { $$('button', bn).forEach(x => x.setAttribute('aria-pressed', String(x === b))); c.dataset.nf = b.dataset.v; majCarte(c); }));
+    if (bn) { const pose = () => { const b = $('[aria-pressed="true"]', bn); if (b) { bn.style.setProperty('--x', b.offsetLeft + 'px'); bn.style.setProperty('--w', b.offsetWidth + 'px'); } };
+      $$('button', bn).forEach(b => b.addEventListener('click', () => { $$('button', bn).forEach(x => x.setAttribute('aria-pressed', String(x === b))); c.dataset.nf = b.dataset.v; pose(); majCarte(c); }));
+      pose(); addEventListener('resize', pose); document.fonts && document.fonts.ready.then(pose); }
     const ba = $('.bascule[data-ap]', c);
     if (ba) $$('button', ba).forEach(b => b.addEventListener('click', () => { ba.dataset.v = b.dataset.v; $$('button', ba).forEach(x => x.setAttribute('aria-pressed', String(x === b))); c.dataset.achat = b.dataset.v; majCarte(c); }));
     /* un clic n'importe où sur la carte ouvre le devis, avec ce qui a été choisi */
