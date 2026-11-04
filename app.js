@@ -369,6 +369,15 @@
   };
   /* site : nombre de mensualités choisi, ramené à une valeur que la formule propose (l'Essentiel s'arrête à 12) */
   const nfSite = f => { const nb = PJ.site.p.o[ES.p] ? PJ.site.p.o[ES.p][2] : 0; return f && f[1] && f[1][1].includes(nb) ? nb : 0; };
+  const lienCommande = () => {
+    const f = ES.f, P = PJ[ES.k]; if (!P) return '';
+    let p = [];
+    if (ES.k === 'site' && f < 2) { p = [f ? 'site-vitrine' : 'site-essentiel']; if (ES.o.includes(0)) p.push('site-photo'); if (ES.o.includes(1)) return ''; }
+    else if (ES.k === 'evenement' && f < 2) { p = [f ? 'demi' : 'concert']; if (ES.o.includes(0)) p.push('soir'); if (ES.o.includes(1)) p.push('heure'); }
+    else return '';
+    const nb = ES.k === 'site' ? nfSite(P.f.o[f]) : 0;
+    return 'https://dossiers.studioes.fr/commander/?p=' + p.join(',') + (nb ? '&nf=' + nb : '');
+  };
   const eng = () => ES.k === 'site' ? (nfSite(PJ.site.f.o[ES.f]) ? '' : ' de suivi') : ES.k === 'app' && !ES.p ? ', 18 mois minimum' : '';
   /* site en plusieurs fois avec reportage : la mensualité d'abord, le reportage réglé à la commande */
   const siteMois = r => ES.k === 'site' && nfSite(PJ.site.f.o[ES.f]) && r.m && r.a;
@@ -448,6 +457,8 @@
       const f = P.f.o[ES.f]; if (f[3] === 'j') h += `<div class="q"><p>Nombre de jours</p><div class="opts" style="grid-template-columns:repeat(5,1fr)">${[1, 2, 3, 4, 5].map(j => `<button data-j="${j}" aria-pressed="${ES.j === j}" style="align-items:center">${j}</button>`).join('')}</div></div>`;
       if (P.p && f[1] != null) h += `<div class="q"><p>${P.p.l}</p><div class="opts">${P.p.o.map((o, i) => ES.k === 'site' && o[2] && !f[1][1].includes(o[2]) ? '' : `<button data-p="${i}" aria-pressed="${ES.k === 'site' ? (nfSite(f) ? ES.p === i : i === 0) : ES.p === i}">${o[0]}<small>${o[1]}</small></button>`).join('')}</div></div>`;
       if (P.o) h += `<div class="q"><p>${P.o.l} (facultatif)</p><div class="opts">${P.o.o.map((o, i) => `<button data-o="${i}" aria-pressed="${ES.o.includes(i)}">${o[0]}<em>${o[1] == null ? 'sur devis' : '+' + fmt(o[1]) + ' €'}</em></button>`).join('')}</div></div>`;
+      /* ce qui se commande sans échange préalable : lien direct vers la page de commande (devis et paiement en ligne) */
+      const cmd = lienCommande(); if (cmd) h += `<div class="q cmd"><a class="bt" href="${cmd}">Commander en ligne <span class="ar">${ico('ar')}</span></a><small>Devis immédiat et paiement sécurisé par carte${ES.k === 'site' ? ', en une fois ou en plusieurs' : ''}. Ou continuez pour être recontacté.</small></div>`;
     } else if (ES.e === 2) {
       const P = PJ[ES.k], r = calc(), c = ES.c, q = s => (s || '').replace(/"/g, '&quot;');
       if (P.date && ES.d != null && !c.date) c.date = moisTxt().replace(/^./, m => m.toUpperCase()) + ', ';
