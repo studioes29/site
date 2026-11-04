@@ -148,7 +148,7 @@
     let v;
     const nf = Number(c.dataset.nf || 0);
     if (k === 'site') v = nf ? Math.floor(+$('.prix', c).dataset.b * 100 / nf) / 100 : +$('.prix', c).dataset.b + (swPh && swPh.checked ? 350 : 0);
-    else if (k === 'app') v = +$('.prix', c).dataset[achat ? 'ac' : 'ab'];
+    else if (k === 'app') v = nf ? Math.floor(+$('.prix', c).dataset.b * 100 / nf) / 100 : +$('.prix', c).dataset.b;
     else if (b && b.dataset.p) v = +(mois && b.dataset.m ? b.dataset.m : b.dataset.p) + $$('.opt .op', c).filter(i => i.getAttribute('aria-pressed') === 'true').reduce((s, i) => s + Number(i.dataset.p), 0);
     else v = null;
     return { k, f, o, mois, achat, nf, ph: k === 'site' && swPh && swPh.checked, v };
@@ -158,8 +158,7 @@
     const E = etatCarte(c); prix($('.prix', c), E.v);
     const u = $('[data-u]', c); if (u) u.textContent = E.mois ? '€/mois' : '€/an';
     const bm = $('.bascule[data-mo]', c); if (bm) bm.hidden = E.v == null;
-    if (E.k === 'app') { const d = $('.dt', c); d.innerHTML = E.achat ? d.dataset.ac : d.dataset.ab; }
-    if (E.k === 'site') { const d = $('.dt', c), un = $('.px .u', c); d.innerHTML = E.nf ? `en ${E.nf} fois sans frais, puis 9&nbsp;€ par mois de suivi${E.ph ? ', plus 350&nbsp;€ de reportage à la commande' : ''}` : 'en une fois (acompte de 30&nbsp;%), puis 9&nbsp;€ par mois de suivi'; if (un) un.textContent = E.nf ? '€/mois' : '€'; }
+    if (E.k === 'site' || E.k === 'app') { const d = $('.dt', c), un = $('.px .u', c), sv = c.dataset.sv || 9; d.innerHTML = E.nf ? `en ${E.nf} fois sans frais, puis ${sv}&nbsp;€ par mois de suivi${E.ph ? ', plus 350&nbsp;€ de reportage à la commande' : ''}` : `en une fois (acompte de 30&nbsp;%), puis ${sv}&nbsp;€ par mois de suivi`; if (un) un.textContent = E.nf ? '€/mois' : '€'; }
     repere(c);
   };
   const cartes = $$('[data-of]');
@@ -351,7 +350,7 @@
     evenement: { l: 'Un événement', g: 'Photographie', ic: 'ap', date: 1, f: { l: 'Durée', o: [['Concert', 250, 'Spectacle, 1 h 30 à 2 h'], ['Demi-journée', 350, '4 h sur place'], ['Journée ou festival', 550, '8 h sur place, par jour', 'j']] }, o: { l: 'Options', o: [['Sélection livrée le soir même', 150], ['Une heure de plus', 80]] } },
     annee: { l: 'Un suivi photo annuel', g: 'Photographie', ic: 'ca', f: { l: 'Forfait', o: [['4 demi-journées', [1290, 109], 'soit 323 € l’une'], ['8 demi-journées', [2490, 209], 'soit 311 € l’une'], ['12 demi-journées', [3590, 299], 'soit 299 € l’une'], ['Plus de 12', null, 'sur devis']] }, p: { l: 'Paiement', o: [['Par an', 'en une fois'], ['Par mois', 'sur 12 mois']] } },
     site: { l: 'Un site internet', g: 'Web', ic: 'ec', f: { l: 'Formule', o: [['Essentiel', [490, [6, 12]], 'Une page'], ['Vitrine', [990, [6, 12, 24]], '3 à 5 pages'], ['Sur mesure', [1990, [6, 12, 24]], 'Arborescence libre'], ['À définir ensemble', null, 'On en parle']] }, p: { l: 'Paiement, sans frais', o: [['En une fois', 'acompte de 30 %', 0], ['En 6 fois', 'par carte', 6], ['En 12 fois', 'par carte', 12], ['En 24 fois', 'par carte', 24]] }, o: { l: 'En plus', o: [['Reportage photo du lieu et de l’équipe', 350], ['Réservation ou espace membres', null]] } },
-    app: { l: 'Une application', g: 'Web', ic: 'pl', f: { l: 'Projet', o: [['Devis en ligne', [190, 85, 1090]], ['Application web', [390, 150, 2790]], ['Avec automatisations', [790, 250, 5490]], ['Une idée à préciser', null, 'On en parle']] }, p: { l: 'Formule', o: [['Abonnement', 'engagement de 18 mois'], ['Achat', 'l’application vous appartient']] } },
+    app: { l: 'Une application', g: 'Web', ic: 'pl', f: { l: 'Formule', o: [['Outil simple', [490, [6, 12], 9], 'Un jeu, une estimation, un quiz'], ['Application', [990, [6, 12, 24], 19], 'Comptes et données'], ['Plateforme', [1990, [6, 12, 24], 39], 'Toute une activité'], ['Une idée à préciser', null, 'On en parle']] }, p: { l: 'Paiement, sans frais', o: [['En une fois', 'acompte de 30 %', 0], ['En 6 fois', 'par carte', 6], ['En 12 fois', 'par carte', 12], ['En 24 fois', 'par carte', 24]] } },
     identite: { l: 'Une identité visuelle', g: 'Design graphique', ic: 'gr', f: { l: 'Projet', o: [['Logo et univers', null, 'Logotype, couleurs, typographies'], ['Identité complète', null, 'Charte et déclinaisons'], ['Identité et signalétique', null, 'Enseigne, panneaux, lieux'], ['À définir ensemble', null, 'On en parle']] } },
     campagne: { l: 'Une campagne', g: 'Design graphique', ic: 'ms', date: 1, f: { l: 'Projet', o: [['Événement ou festival', null, 'Affiche et déclinaisons'], ['Saison culturelle', null, 'Direction artistique de saison'], ['Recrutement ou institution', null, 'Message, affichage, réseaux'], ['À définir ensemble', null, 'On en parle']] } },
     edition: { l: 'Une édition', g: 'Design graphique', ic: 's3', date: 1, f: { l: 'Support', o: [['Brochure ou programme', null, '8 à 40 pages'], ['Magazine ou catalogue', null, 'Numéros réguliers'], ['Dépliant ou plaquette', null, 'Recto verso, plis'], ['À définir ensemble', null, 'On en parle']] } },
@@ -361,14 +360,13 @@
   const calc = () => {
     if (!ES.k) return null; const P = PJ[ES.k], f = P.f.o[ES.f]; let a = 0, m = 0, dv = false, per = ''; const L = [f[0]];
     if (ES.k === 'annee') { if (f[1] == null) dv = true; else if (ES.p) { m = f[1][1]; per = 'par mois, sur 12 mois'; } else { a = f[1][0]; per = 'par an'; } if (f[1]) L.push(ES.p ? 'paiement au mois' : 'paiement à l’année'); }
-    else if (ES.k === 'app') { if (f[1] == null) dv = true; else if (ES.p) { a = f[1][2]; L.push('à l’achat'); } else { a = f[1][0]; m = f[1][1]; L.push('en abonnement'); } }
-    else if (ES.k === 'site') { const nb = nfSite(f); if (f[1] == null) dv = true; else if (nb) { m = Math.floor(f[1][0] * 100 / nb) / 100 + 9; per = `par mois pendant ${nb} mois, suivi compris, puis 9 € par mois`; L.push(`en ${nb} fois sans frais`); } else { a = f[1][0]; m = 9; L.push('en une fois'); } }
+    else if (ES.k === 'site' || ES.k === 'app') { const nb = nfSite(f), sv = f[1] ? (f[1][2] || 9) : 9; if (f[1] == null) dv = true; else if (nb) { m = Math.floor(f[1][0] * 100 / nb) / 100 + sv; per = `par mois pendant ${nb} mois, suivi compris, puis ${sv} € par mois`; L.push(`en ${nb} fois sans frais`); } else { a = f[1][0]; m = sv; L.push('en une fois'); } }
     else { if (f[1] == null) dv = true; else a = f[1] * (f[3] === 'j' ? ES.j : 1); if (f[3] === 'j') L[0] += `, ${ES.j} jour${ES.j > 1 ? 's' : ''}`; }
     if (P.o) ES.o.forEach(i => { const o = P.o.o[i]; if (o[1] == null) dv = true; else a += o[1]; L.push(o[0]); });
     return { a, m, dv, per, L };
   };
   /* site : nombre de mensualités choisi, ramené à une valeur que la formule propose (l'Essentiel s'arrête à 12) */
-  const nfSite = f => { const nb = PJ.site.p.o[ES.p] ? PJ.site.p.o[ES.p][2] : 0; return f && f[1] && f[1][1].includes(nb) ? nb : 0; };
+  const nfSite = f => { const P = PJ[ES.k], nb = P && P.p && P.p.o[ES.p] ? P.p.o[ES.p][2] : 0; return f && f[1] && Array.isArray(f[1][1]) && f[1][1].includes(nb) ? nb : 0; };
   const lienCommande = () => {
     const f = ES.f, P = PJ[ES.k]; if (!P) return '';
     let p = [];
@@ -378,7 +376,7 @@
     const nb = ES.k === 'site' ? nfSite(P.f.o[f]) : 0;
     return 'https://dossiers.studioes.fr/commander/?p=' + p.join(',') + (nb ? '&nf=' + nb : '');
   };
-  const eng = () => ES.k === 'site' ? (nfSite(PJ.site.f.o[ES.f]) ? '' : ' de suivi') : ES.k === 'app' && !ES.p ? ', 18 mois minimum' : '';
+  const eng = () => ES.k === 'site' || ES.k === 'app' ? (nfSite(PJ[ES.k].f.o[ES.f]) ? '' : ' de suivi') : '';
   /* site en plusieurs fois avec reportage : la mensualité d'abord, le reportage réglé à la commande */
   const siteMois = r => ES.k === 'site' && nfSite(PJ.site.f.o[ES.f]) && r.m && r.a;
   const txtEst = r => !r ? '' : siteMois(r) ? `dès ${fmt(r.m)} € ${r.per}, plus ${fmt(r.a)} € de reportage photo à la commande${r.dv ? ', plus une partie sur devis' : ''}` : (r.a || r.m) ? `dès ${fmt(r.a || r.m)} €${r.a && r.m ? `, puis ${fmt(r.m)} € par mois${eng()}` : r.per ? ' ' + r.per : ''}${r.dv ? ', plus une partie sur devis' : ''}` : 'sur devis';
@@ -452,10 +450,10 @@
         <div class="fl-go-a"><a class="bt" href="https://fill.studioes.fr/simulateur/">Estimer mon besoin sur Fill <span class="ar">${ico('ne')}</span></a><a class="bt cl" href="https://fill.studioes.fr/diagnostic/">Faire le diagnostic</a></div></div>`;
     } else if (ES.e === 1) {
       const P = PJ[ES.k];
-      h += `<div class="q"><p>${P.l}</p></div><div class="q"><p>${P.f.l}</p><div class="opts">${P.f.o.map((o, i) => { const pr = o[1] == null ? 'sur devis' : Array.isArray(o[1]) ? (ES.k === 'app' ? (ES.p ? `dès ${fmt(o[1][2])} €` : `dès ${fmt(o[1][0])} €, puis ${o[1][1]} €/mois`) : ES.k === 'site' ? (nfSite(o) ? `dès ${fmt(Math.floor(o[1][0] * 100 / nfSite(o)) / 100)} € par mois` : `dès ${fmt(o[1][0])} €`) : (ES.p ? `dès ${o[1][1]} € par mois` : `dès ${fmt(o[1][0])} € par an`)) : `dès ${fmt(o[1])} €`; return `<button data-f="${i}" aria-pressed="${ES.f === i}">${o[0]}${o[2] ? `<small>${o[2]}</small>` : ''}<em>${pr}</em></button>`; }).join('')}</div></div>`;
+      h += `<div class="q"><p>${P.l}</p></div><div class="q"><p>${P.f.l}</p><div class="opts">${P.f.o.map((o, i) => { const pr = o[1] == null ? 'sur devis' : Array.isArray(o[1]) ? (ES.k === 'site' || ES.k === 'app' ? (nfSite(o) ? `dès ${fmt(Math.floor(o[1][0] * 100 / nfSite(o)) / 100)} € par mois` : `dès ${fmt(o[1][0])} €`) : (ES.p ? `dès ${o[1][1]} € par mois` : `dès ${fmt(o[1][0])} € par an`)) : `dès ${fmt(o[1])} €`; return `<button data-f="${i}" aria-pressed="${ES.f === i}">${o[0]}${o[2] ? `<small>${o[2]}</small>` : ''}<em>${pr}</em></button>`; }).join('')}</div></div>`;
       if (P.date) h += friseH(ES.k);
       const f = P.f.o[ES.f]; if (f[3] === 'j') h += `<div class="q"><p>Nombre de jours</p><div class="opts" style="grid-template-columns:repeat(5,1fr)">${[1, 2, 3, 4, 5].map(j => `<button data-j="${j}" aria-pressed="${ES.j === j}" style="align-items:center">${j}</button>`).join('')}</div></div>`;
-      if (P.p && f[1] != null) h += `<div class="q"><p>${P.p.l}</p><div class="opts">${P.p.o.map((o, i) => ES.k === 'site' && o[2] && !f[1][1].includes(o[2]) ? '' : `<button data-p="${i}" aria-pressed="${ES.k === 'site' ? (nfSite(f) ? ES.p === i : i === 0) : ES.p === i}">${o[0]}<small>${o[1]}</small></button>`).join('')}</div></div>`;
+      if (P.p && f[1] != null) h += `<div class="q"><p>${P.p.l}</p><div class="opts">${P.p.o.map((o, i) => (ES.k === 'site' || ES.k === 'app') && o[2] && !f[1][1].includes(o[2]) ? '' : `<button data-p="${i}" aria-pressed="${ES.k === 'site' || ES.k === 'app' ? (nfSite(f) ? ES.p === i : i === 0) : ES.p === i}">${o[0]}<small>${o[1]}</small></button>`).join('')}</div></div>`;
       if (P.o) h += `<div class="q"><p>${P.o.l} (facultatif)</p><div class="opts">${P.o.o.map((o, i) => `<button data-o="${i}" aria-pressed="${ES.o.includes(i)}">${o[0]}<em>${o[1] == null ? 'sur devis' : '+' + fmt(o[1]) + ' €'}</em></button>`).join('')}</div></div>`;
       /* ce qui se commande sans échange préalable : lien direct vers la page de commande (devis et paiement en ligne) */
       const cmd = lienCommande(); if (cmd) h += `<div class="q cmd"><a class="bt" href="${cmd}">Commander en ligne <span class="ar">${ico('ar')}</span></a><small>Devis immédiat et paiement sécurisé par carte${ES.k === 'site' ? ', en une fois ou en plusieurs' : ''}. Ou continuez pour être recontacté.</small></div>`;
@@ -486,7 +484,7 @@
   const garde = () => { const g = id => { const e = $('#' + id); return e ? e.value.trim() : ''; }; if (ES.e === 2) ES.c = { nom: g('eNom'), mail: g('eMail'), tel: g('eTel'), date: g('eDate'), msg: g('eMsg') }; };
   const ouvreDevis = s => {
     if (ES.e === 3) ES = { e: 0, k: null, f: 0, o: [], p: 0, j: 1, c: {}, d: 5, g: ES.g };
-    if (s && s.k && PJ[s.k]) { ES.k = s.k; ES.f = s.f || 0; ES.o = (s.o || []).slice(); ES.j = 1; ES.p = s.k === 'app' ? (s.achat ? 1 : 0) : s.k === 'site' ? Math.max(0, PJ.site.p.o.findIndex(o => o[2] === (s.nf || 0))) : (s.mois ? 1 : 0); if (s.ph) ES.o = [0]; ES.e = 1; }
+    if (s && s.k && PJ[s.k]) { ES.k = s.k; ES.f = s.f || 0; ES.o = (s.o || []).slice(); ES.j = 1; ES.p = s.k === 'site' || s.k === 'app' ? Math.max(0, PJ[s.k].p.o.findIndex(o => o[2] === (s.nf || 0))) : (s.mois ? 1 : 0); if (s.ph) ES.o = [0]; ES.e = 1; }
     else if (!ES.k) ES.e = 0;
     dernier = null; rendE(); ouvreF('#shE'); compte('devis-ouvert', 'Ouverture du devis');
   };

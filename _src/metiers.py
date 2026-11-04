@@ -145,7 +145,7 @@ wb += '''
 ''' + sect('applications', B) + '\n' + croise('Photographie<span class="it">Le studio photographie aussi vos événements.</span>', 'Concerts, festivals, cérémonies, vie d’une entreprise, mariages : un reportage discret, puis une sélection resserrée et retouchée.', '/metiers/photographie/', 'Découvrir la photographie', '/p/t/matmatah-1.webp', 'u-foret dk') + '\n' + \
     contact_m('Site ou application : quelques choix, une estimation immédiate.', 'Web')
 page('metiers/sites-et-outils', 'Sites internet et applications en Bretagne · Studio ES', 'Sites, réservation en ligne et applications sur mesure pour les TPE, lieux culturels et collectivités de Bretagne : Pierceval Tattoo, La Soute. Dès 990 €.', 'https://studioes.fr/metiers/sites-et-outils/', wb, og='og-web.jpg',
-     ld=LD('Web', 'https://studioes.fr/metiers/sites-et-outils/', 'Création de sites internet et d’applications web', [('Site Essentiel', 490), ('Site Vitrine', 990), ('Site sur mesure', 1990), ('Application sur mesure', 190)]))
+     ld=LD('Web', 'https://studioes.fr/metiers/sites-et-outils/', 'Création de sites internet et d’applications web', [('Site Essentiel', 490), ('Site Vitrine', 990), ('Site sur mesure', 1990), ('Application', 490)]))
 
 # ---------- Design graphique : trois familles, l'ensemble puis le détail ----------
 gr_droite = ('<div class="mh-gr" aria-hidden="true"><img class="a" src="/projets/la-soute/img/affiche.webp" alt=""><img class="b" src="/projets/mjc-la-marelle/img/p1.webp" alt="">'
@@ -252,4 +252,4 @@ of += '''
 </section>
 ''' + contact_m('Quelques choix, une estimation immédiate, puis votre demande est envoyée.', '')
 page('offres', 'Offres et tarifs : photographie, sites et applications · Studio ES', 'Formules de Studio ES : reportage photo dès 250 €, suivi annuel, mariage, sites internet dès 490 €, en une fois ou en plusieurs fois sans frais, applications. Graphisme sur devis.', 'https://studioes.fr/offres/', of,
-     ld=LD('Offres', 'https://studioes.fr/offres/', 'Photographie, sites internet et applications', [('Événement', 250), ('Suivi photo annuel', 1290), ('Mariage', 1290), ('Site Essentiel', 490), ('Site Vitrine', 990), ('Site sur mesure', 1990), ('Application sur mesure', 190)]))
+     ld=LD('Offres', 'https://studioes.fr/offres/', 'Photographie, sites internet et applications', [('Événement', 250), ('Suivi photo annuel', 1290), ('Mariage', 1290), ('Site Essentiel', 490), ('Site Vitrine', 990), ('Site sur mesure', 1990), ('Application', 490)]))
