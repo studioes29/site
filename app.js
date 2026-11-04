@@ -3,7 +3,7 @@
   const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const tactile = matchMedia('(hover: none)').matches;
-  const NB = ' ', fmt = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, NB);
+  const NB = ' ', fmt = n => { const [e, d] = (Math.round(n * 100) / 100).toFixed(2).split('.'); return e.replace(/\B(?=(\d{3})+(?!\d))/g, NB) + (d === '00' ? '' : ',' + d); };
   const compte = (p, t) => { try { if (window.goatcounter && goatcounter.count) goatcounter.count({ path: p, title: t || p, event: true }); } catch (e) {} };
   const toast = t => { const e = $('#toast'); if (!e) return; e.textContent = t; e.classList.add('on'); clearTimeout(toast.h); toast.h = setTimeout(() => e.classList.remove('on'), 3400); };
   const ico = id => `<svg class="i"><use href="#${id}"/></svg>`;
@@ -57,7 +57,7 @@
   const odo = (el, txt, depuisZero) => {
     if (!/\d/.test(txt)) { el.innerHTML = `<span class="sr">${txt}</span><span class="v" aria-hidden="true">${txt}</span>`; el._ch = null; if (!reduit) el.animate([{ opacity: 0, transform: 'translateY(.2em)' }, { opacity: 1, transform: 'none' }], { duration: 450, easing: 'ease-out' }); return; }
     const ch = [...txt].filter(c => /\d/.test(c)).map(Number), anc = depuisZero ? [] : (el._ch || []);
-    el.innerHTML = `<span class="sr">${txt}</span>` + '<span class="od" aria-hidden="true">' + [...txt].map(c => /\d/.test(c) ? `<span class="dg"><b>${c}</b><span>${BANDE}</span></span>` : '<span class="sp"></span>').join('') + '</span>';
+    el.innerHTML = `<span class="sr">${txt}</span>` + '<span class="od" aria-hidden="true">' + [...txt].map(c => /\d/.test(c) ? `<span class="dg"><b>${c}</b><span>${BANDE}</span></span>` : c === ',' ? '<span class="vg">,</span>' : '<span class="sp"></span>').join('') + '</span>';
     const cols = $$('.dg>span', el), n = cols.length; let fin = 0;
     cols.forEach((c, i) => {
       const d = ch[i], p = anc[anc.length - n + i];
@@ -146,11 +146,12 @@
     const o = $$('.opt .op', c).filter(i => i.getAttribute('aria-pressed') === 'true').map(i => +i.dataset.o);
     const mois = c.dataset.mois === '1', achat = c.dataset.achat === '1';
     let v;
-    if (k === 'site') v = achat || !$('.prix', c).dataset.ab ? +$('.prix', c).dataset.b + (swPh && swPh.checked ? 350 : 0) : +$('.prix', c).dataset.ab;
+    const nf = Number(c.dataset.nf || 0);
+    if (k === 'site') v = nf ? Math.floor(+$('.prix', c).dataset.b * 100 / nf) / 100 : +$('.prix', c).dataset.b + (swPh && swPh.checked ? 350 : 0);
     else if (k === 'app') v = +$('.prix', c).dataset[achat ? 'ac' : 'ab'];
     else if (b && b.dataset.p) v = +(mois && b.dataset.m ? b.dataset.m : b.dataset.p) + $$('.opt .op', c).filter(i => i.getAttribute('aria-pressed') === 'true').reduce((s, i) => s + Number(i.dataset.p), 0);
     else v = null;
-    return { k, f, o, mois, achat, ph: k === 'site' && swPh && swPh.checked, v };
+    return { k, f, o, mois, achat, nf, ph: k === 'site' && swPh && swPh.checked, v };
   };
   const repere = c => { const s = $('.sel', c); if (!s) return; const b = $('[aria-checked="true"]', s); if (!b) return; s.style.setProperty('--y', b.offsetTop + 'px'); s.style.setProperty('--h', b.offsetHeight + 'px'); s.style.setProperty('--x', b.offsetLeft + 'px'); s.style.setProperty('--w', b.offsetWidth + 'px'); const dd = $('[data-dd]', c); if (dd && b.dataset.d) dd.textContent = b.dataset.d; };
   const majCarte = c => {
@@ -158,7 +159,7 @@
     const u = $('[data-u]', c); if (u) u.textContent = E.mois ? '€/mois' : '€/an';
     const bm = $('.bascule[data-mo]', c); if (bm) bm.hidden = E.v == null;
     if (E.k === 'app') { const d = $('.dt', c); d.innerHTML = E.achat ? d.dataset.ac : d.dataset.ab; }
-    if (E.k === 'site') { const d = $('.dt', c), un = $('.px .u', c); if (d.dataset.ab) { d.innerHTML = E.achat ? d.dataset.ac : d.dataset.ab + (E.ph ? ', plus 350&nbsp;€ de reportage à la commande' : ''); if (un) un.textContent = E.achat ? '€' : '€/mois'; } }
+    if (E.k === 'site') { const d = $('.dt', c), un = $('.px .u', c); d.innerHTML = E.nf ? `en ${E.nf} fois sans frais, puis 9&nbsp;€ par mois de suivi${E.ph ? ', plus 350&nbsp;€ de reportage à la commande' : ''}` : 'en une fois (acompte de 30&nbsp;%), puis 9&nbsp;€ par mois de suivi'; if (un) un.textContent = E.nf ? '€/mois' : '€'; }
     repere(c);
   };
   const cartes = $$('[data-of]');
@@ -167,6 +168,8 @@
     $$('.opt .op', c).forEach(i => i.addEventListener('click', () => { i.setAttribute('aria-pressed', String(i.getAttribute('aria-pressed') !== 'true')); majCarte(c); }));
     const bm = $('.bascule[data-mo]', c);
     if (bm) $$('button', bm).forEach(b => b.addEventListener('click', () => { bm.dataset.v = b.dataset.v; $$('button', bm).forEach(x => x.setAttribute('aria-pressed', String(x === b))); c.dataset.mois = b.dataset.v; majCarte(c); }));
+    const bn = $('.bascule[data-nf]', c);
+    if (bn) $$('button', bn).forEach(b => b.addEventListener('click', () => { $$('button', bn).forEach(x => x.setAttribute('aria-pressed', String(x === b))); c.dataset.nf = b.dataset.v; majCarte(c); }));
     const ba = $('.bascule[data-ap]', c);
     if (ba) $$('button', ba).forEach(b => b.addEventListener('click', () => { ba.dataset.v = b.dataset.v; $$('button', ba).forEach(x => x.setAttribute('aria-pressed', String(x === b))); c.dataset.achat = b.dataset.v; majCarte(c); }));
     /* un clic n'importe où sur la carte ouvre le devis, avec ce qui a été choisi */
@@ -345,7 +348,7 @@
     mariage: { l: 'Un mariage', g: 'Photographie', ic: 'ap', date: 1, f: { l: 'Formule', o: [['Cérémonie', 1290, 'Moments clés, 4 à 6 h'], ['Journée', 1890, '8 à 10 h sur place'], ['Journée et album', 2590, 'Album imprimé, séance à deux']] }, o: { l: 'Options', o: [['Aperçu de 20 photos le soir même', 150], ['Une heure de plus', 80]] } },
     evenement: { l: 'Un événement', g: 'Photographie', ic: 'ap', date: 1, f: { l: 'Durée', o: [['Concert', 250, 'Spectacle, 1 h 30 à 2 h'], ['Demi-journée', 350, '4 h sur place'], ['Journée ou festival', 550, '8 h sur place, par jour', 'j']] }, o: { l: 'Options', o: [['Sélection livrée le soir même', 150], ['Une heure de plus', 80]] } },
     annee: { l: 'Un suivi photo annuel', g: 'Photographie', ic: 'ca', f: { l: 'Forfait', o: [['4 demi-journées', [1290, 109], 'soit 323 € l’une'], ['8 demi-journées', [2490, 209], 'soit 311 € l’une'], ['12 demi-journées', [3590, 299], 'soit 299 € l’une'], ['Plus de 12', null, 'sur devis']] }, p: { l: 'Paiement', o: [['Par an', 'en une fois'], ['Par mois', 'sur 12 mois']] } },
-    site: { l: 'Un site internet', g: 'Web', ic: 'ec', f: { l: 'Formule', o: [['Essentiel', [990, 65], 'Une page'], ['Vitrine', [1990, 99], '3 à 5 pages'], ['Sur mesure', [4490, 189], 'Arborescence libre'], ['À définir ensemble', null, 'On en parle']] }, p: { l: 'Paiement', o: [['Au mois', '24 mois, suivi compris, rien à payer avant'], ['En une fois', 'puis 35 € par mois de suivi']] }, o: { l: 'En plus', o: [['Reportage photo du lieu et de l’équipe', 350], ['Réservation ou espace membres', null]] } },
+    site: { l: 'Un site internet', g: 'Web', ic: 'ec', f: { l: 'Formule', o: [['Essentiel', [490, [6, 12]], 'Une page'], ['Vitrine', [990, [6, 12, 24]], '3 à 5 pages'], ['Sur mesure', [1990, [6, 12, 24]], 'Arborescence libre'], ['À définir ensemble', null, 'On en parle']] }, p: { l: 'Paiement, sans frais', o: [['En une fois', 'acompte de 30 %', 0], ['En 6 fois', 'par carte', 6], ['En 12 fois', 'par carte', 12], ['En 24 fois', 'par carte', 24]] }, o: { l: 'En plus', o: [['Reportage photo du lieu et de l’équipe', 350], ['Réservation ou espace membres', null]] } },
     app: { l: 'Une application', g: 'Web', ic: 'pl', f: { l: 'Projet', o: [['Devis en ligne', [190, 85, 1090]], ['Application web', [390, 150, 2790]], ['Avec automatisations', [790, 250, 5490]], ['Une idée à préciser', null, 'On en parle']] }, p: { l: 'Formule', o: [['Abonnement', 'engagement de 18 mois'], ['Achat', 'l’application vous appartient']] } },
     identite: { l: 'Une identité visuelle', g: 'Design graphique', ic: 'gr', f: { l: 'Projet', o: [['Logo et univers', null, 'Logotype, couleurs, typographies'], ['Identité complète', null, 'Charte et déclinaisons'], ['Identité et signalétique', null, 'Enseigne, panneaux, lieux'], ['À définir ensemble', null, 'On en parle']] } },
     campagne: { l: 'Une campagne', g: 'Design graphique', ic: 'ms', date: 1, f: { l: 'Projet', o: [['Événement ou festival', null, 'Affiche et déclinaisons'], ['Saison culturelle', null, 'Direction artistique de saison'], ['Recrutement ou institution', null, 'Message, affichage, réseaux'], ['À définir ensemble', null, 'On en parle']] } },
@@ -357,15 +360,17 @@
     if (!ES.k) return null; const P = PJ[ES.k], f = P.f.o[ES.f]; let a = 0, m = 0, dv = false, per = ''; const L = [f[0]];
     if (ES.k === 'annee') { if (f[1] == null) dv = true; else if (ES.p) { m = f[1][1]; per = 'par mois, sur 12 mois'; } else { a = f[1][0]; per = 'par an'; } if (f[1]) L.push(ES.p ? 'paiement au mois' : 'paiement à l’année'); }
     else if (ES.k === 'app') { if (f[1] == null) dv = true; else if (ES.p) { a = f[1][2]; L.push('à l’achat'); } else { a = f[1][0]; m = f[1][1]; L.push('en abonnement'); } }
-    else if (ES.k === 'site') { if (f[1] == null) dv = true; else if (ES.p) { a = f[1][0]; m = 35; L.push('en une fois'); } else { m = f[1][1]; per = 'par mois pendant 24 mois, suivi compris'; L.push('au mois'); } }
+    else if (ES.k === 'site') { const nb = nfSite(f); if (f[1] == null) dv = true; else if (nb) { m = Math.floor(f[1][0] * 100 / nb) / 100 + 9; per = `par mois pendant ${nb} mois, suivi compris, puis 9 € par mois`; L.push(`en ${nb} fois sans frais`); } else { a = f[1][0]; m = 9; L.push('en une fois'); } }
     else { if (f[1] == null) dv = true; else a = f[1] * (f[3] === 'j' ? ES.j : 1); if (f[3] === 'j') L[0] += `, ${ES.j} jour${ES.j > 1 ? 's' : ''}`; }
     if (P.o) ES.o.forEach(i => { const o = P.o.o[i]; if (o[1] == null) dv = true; else a += o[1]; L.push(o[0]); });
     return { a, m, dv, per, L };
   };
-  const eng = () => ES.k === 'site' ? (ES.p ? ', 12 mois minimum' : ', 24 mois') : ES.k === 'app' && !ES.p ? ', 18 mois minimum' : '';
-  /* site au mois avec reportage : le mois d'abord, le reportage réglé à la commande */
-  const siteMois = r => ES.k === 'site' && !ES.p && r.m && r.a;
-  const txtEst = r => !r ? '' : siteMois(r) ? `dès ${fmt(r.m)} € par mois pendant 24 mois, suivi compris, plus ${fmt(r.a)} € de reportage photo à la commande${r.dv ? ', plus une partie sur devis' : ''}` : (r.a || r.m) ? `dès ${fmt(r.a || r.m)} €${r.a && r.m ? `, puis ${fmt(r.m)} € par mois${eng()}` : r.per ? ' ' + r.per : ''}${r.dv ? ', plus une partie sur devis' : ''}` : 'sur devis';
+  /* site : nombre de mensualités choisi, ramené à une valeur que la formule propose (l'Essentiel s'arrête à 12) */
+  const nfSite = f => { const nb = PJ.site.p.o[ES.p] ? PJ.site.p.o[ES.p][2] : 0; return f && f[1] && f[1][1].includes(nb) ? nb : 0; };
+  const eng = () => ES.k === 'site' ? (nfSite(PJ.site.f.o[ES.f]) ? '' : ' de suivi') : ES.k === 'app' && !ES.p ? ', 18 mois minimum' : '';
+  /* site en plusieurs fois avec reportage : la mensualité d'abord, le reportage réglé à la commande */
+  const siteMois = r => ES.k === 'site' && nfSite(PJ.site.f.o[ES.f]) && r.m && r.a;
+  const txtEst = r => !r ? '' : siteMois(r) ? `dès ${fmt(r.m)} € ${r.per}, plus ${fmt(r.a)} € de reportage photo à la commande${r.dv ? ', plus une partie sur devis' : ''}` : (r.a || r.m) ? `dès ${fmt(r.a || r.m)} €${r.a && r.m ? `, puis ${fmt(r.m)} € par mois${eng()}` : r.per ? ' ' + r.per : ''}${r.dv ? ', plus une partie sur devis' : ''}` : 'sur devis';
 
   /* frise de date du devis */
   const MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
@@ -411,7 +416,7 @@
   const pied = () => {
     const r = calc(), sm = r && siteMois(r), cible = r ? (sm ? r.m : r.a || r.m || null) : null;
     const v = !r ? `<small>Estimation</small><span class="v"><i>Choisissez votre projet</i></span>`
-      : cible ? `<small>Estimation</small><span class="v"><small>dès</small><b class="prix" id="estN"></b><i>€${sm ? ` par mois pendant 24 mois, plus ${fmt(r.a)} € de reportage à la commande` : r.a && r.m ? `, puis ${fmt(r.m)} € par mois${eng()}` : r.per ? ' ' + r.per : ''}${r.dv ? ', plus une partie sur devis' : ''}</i></span>`
+      : cible ? `<small>Estimation</small><span class="v"><small>dès</small><b class="prix" id="estN"></b><i>€${sm ? ` ${r.per}, plus ${fmt(r.a)} € de reportage à la commande` : r.a && r.m ? `, puis ${fmt(r.m)} € par mois${eng()}` : r.per ? ' ' + r.per : ''}${r.dv ? ', plus une partie sur devis' : ''}</i></span>`
       : `<small>Estimation</small><span class="v"><b class="sd">Sur devis</b></span>`;
     const act = ES.e === 0 ? `<button class="bt cl sm" data-cal>Préférer un appel</button>`
       : ES.e === 1 ? `<button class="bt cl sm" data-nav="-1">Retour</button><button class="bt sm" data-nav="1">Continuer <span class="ar">${ico('ar')}</span></button>`
@@ -436,10 +441,10 @@
         <div class="fl-go-a"><a class="bt" href="https://fill.studioes.fr/simulateur/">Estimer mon besoin sur Fill <span class="ar">${ico('ne')}</span></a><a class="bt cl" href="https://fill.studioes.fr/diagnostic/">Faire le diagnostic</a></div></div>`;
     } else if (ES.e === 1) {
       const P = PJ[ES.k];
-      h += `<div class="q"><p>${P.l}</p></div><div class="q"><p>${P.f.l}</p><div class="opts">${P.f.o.map((o, i) => { const pr = o[1] == null ? 'sur devis' : Array.isArray(o[1]) ? (ES.k === 'app' ? (ES.p ? `dès ${fmt(o[1][2])} €` : `dès ${fmt(o[1][0])} €, puis ${o[1][1]} €/mois`) : ES.k === 'site' ? (ES.p ? `dès ${fmt(o[1][0])} €` : `dès ${o[1][1]} € par mois`) : (ES.p ? `dès ${o[1][1]} € par mois` : `dès ${fmt(o[1][0])} € par an`)) : `dès ${fmt(o[1])} €`; return `<button data-f="${i}" aria-pressed="${ES.f === i}">${o[0]}${o[2] ? `<small>${o[2]}</small>` : ''}<em>${pr}</em></button>`; }).join('')}</div></div>`;
+      h += `<div class="q"><p>${P.l}</p></div><div class="q"><p>${P.f.l}</p><div class="opts">${P.f.o.map((o, i) => { const pr = o[1] == null ? 'sur devis' : Array.isArray(o[1]) ? (ES.k === 'app' ? (ES.p ? `dès ${fmt(o[1][2])} €` : `dès ${fmt(o[1][0])} €, puis ${o[1][1]} €/mois`) : ES.k === 'site' ? (nfSite(o) ? `dès ${fmt(Math.floor(o[1][0] * 100 / nfSite(o)) / 100)} € par mois` : `dès ${fmt(o[1][0])} €`) : (ES.p ? `dès ${o[1][1]} € par mois` : `dès ${fmt(o[1][0])} € par an`)) : `dès ${fmt(o[1])} €`; return `<button data-f="${i}" aria-pressed="${ES.f === i}">${o[0]}${o[2] ? `<small>${o[2]}</small>` : ''}<em>${pr}</em></button>`; }).join('')}</div></div>`;
       if (P.date) h += friseH(ES.k);
       const f = P.f.o[ES.f]; if (f[3] === 'j') h += `<div class="q"><p>Nombre de jours</p><div class="opts" style="grid-template-columns:repeat(5,1fr)">${[1, 2, 3, 4, 5].map(j => `<button data-j="${j}" aria-pressed="${ES.j === j}" style="align-items:center">${j}</button>`).join('')}</div></div>`;
-      if (P.p && f[1] != null) h += `<div class="q"><p>${P.p.l}</p><div class="opts">${P.p.o.map((o, i) => `<button data-p="${i}" aria-pressed="${ES.p === i}">${o[0]}<small>${o[1]}</small></button>`).join('')}</div></div>`;
+      if (P.p && f[1] != null) h += `<div class="q"><p>${P.p.l}</p><div class="opts">${P.p.o.map((o, i) => ES.k === 'site' && o[2] && !f[1][1].includes(o[2]) ? '' : `<button data-p="${i}" aria-pressed="${ES.k === 'site' ? (nfSite(f) ? ES.p === i : i === 0) : ES.p === i}">${o[0]}<small>${o[1]}</small></button>`).join('')}</div></div>`;
       if (P.o) h += `<div class="q"><p>${P.o.l} (facultatif)</p><div class="opts">${P.o.o.map((o, i) => `<button data-o="${i}" aria-pressed="${ES.o.includes(i)}">${o[0]}<em>${o[1] == null ? 'sur devis' : '+' + fmt(o[1]) + ' €'}</em></button>`).join('')}</div></div>`;
     } else if (ES.e === 2) {
       const P = PJ[ES.k], r = calc(), c = ES.c, q = s => (s || '').replace(/"/g, '&quot;');
@@ -468,7 +473,7 @@
   const garde = () => { const g = id => { const e = $('#' + id); return e ? e.value.trim() : ''; }; if (ES.e === 2) ES.c = { nom: g('eNom'), mail: g('eMail'), tel: g('eTel'), date: g('eDate'), msg: g('eMsg') }; };
   const ouvreDevis = s => {
     if (ES.e === 3) ES = { e: 0, k: null, f: 0, o: [], p: 0, j: 1, c: {}, d: 5, g: ES.g };
-    if (s && s.k && PJ[s.k]) { ES.k = s.k; ES.f = s.f || 0; ES.o = (s.o || []).slice(); ES.j = 1; ES.p = s.k === 'app' || s.k === 'site' ? (s.achat ? 1 : 0) : (s.mois ? 1 : 0); if (s.ph) ES.o = [0]; ES.e = 1; }
+    if (s && s.k && PJ[s.k]) { ES.k = s.k; ES.f = s.f || 0; ES.o = (s.o || []).slice(); ES.j = 1; ES.p = s.k === 'app' ? (s.achat ? 1 : 0) : s.k === 'site' ? Math.max(0, PJ.site.p.o.findIndex(o => o[2] === (s.nf || 0))) : (s.mois ? 1 : 0); if (s.ph) ES.o = [0]; ES.e = 1; }
     else if (!ES.k) ES.e = 0;
     dernier = null; rendE(); ouvreF('#shE'); compte('devis-ouvert', 'Ouverture du devis');
   };

@@ -1,7 +1,7 @@
 /* Conditions générales de vente de Studio ES : SOURCE UNIQUE.
    Lue par la page https://studioes.fr/conditions/ et par le générateur de devis de dossiers.studioes.fr.
    Toute modification passe ici, avec une nouvelle date de version. */
-window.STUDIO_CGV_VERSION = "2026-11-04";
+window.STUDIO_CGV_VERSION = "2026-11-05";
 window.STUDIO_CGV_URL = "https://studioes.fr/conditions/";
 window.STUDIO_CGV_INTRO = "Les relations entre Studio ES (le prestataire) et le client sont régies par les présentes conditions générales de vente, complétées par le devis et ses conditions particulières. En cas de divergence, les conditions particulières prévalent. L'acceptation du devis implique l'adhésion à ces conditions. Les prestations de Fill, service de communication externalisée, relèvent de leurs propres conditions, publiées sur fill.studioes.fr/conditions.";
 window.STUDIO_CGV = [
@@ -27,9 +27,9 @@ window.STUDIO_CGV = [
     "Le client, en tant qu'organisateur, informe les participants de la présence d'un photographe et recueille leur accord lorsque la loi l'exige. Une personne qui le demande n'est pas photographiée.",
     "En cas d'empêchement grave du prestataire, il propose un photographe de remplacement de niveau équivalent ou rembourse intégralement les sommes versées pour la date concernée."]],
   ["6. Sites internet et applications", [
-    "Le nom de domaine et l'hébergement sont souscrits au nom du client, ou transférés à son nom sur simple demande. Les frais de tiers (domaine, hébergement, services en ligne) restent à sa charge.",
+    "Le nom de domaine est réservé au nom du client, ou transféré à son nom sur simple demande. Tant que le suivi du site court, le domaine et l'hébergement sont compris dans son prix ; les autres frais de tiers (services en ligne) restent à la charge du client.",
     "La mise en ligne intervient après validation du client. La livraison est effective à la mise en ligne ou à la mise à disposition des fichiers.",
-    "La maintenance n'est comprise que si elle figure au devis. Elle couvre les mises à jour, la surveillance du site et les corrections ; les évolutions font l'objet d'un devis."]],
+    "Le suivi d'un site (article 9) couvre l'hébergement, le nom de domaine, la sécurité, les mises à jour techniques et les sauvegardes ; les modifications et évolutions font l'objet d'un devis."]],
   ["7. Propriété intellectuelle", [
     "Le prestataire reste titulaire des droits sur ses créations et photographies jusqu'au paiement intégral.",
     "Après paiement complet, il concède au client le droit de reproduire, représenter et adapter les créations et photographies livrées pour sa propre communication, selon l'usage défini au devis, sans limite de territoire ni de durée. Les fichiers sources d'une identité visuelle sont remis avec elle.",
@@ -40,10 +40,10 @@ window.STUDIO_CGV = [
     "Client privé : acompte de 30 % à la commande, réglé en ligne par carte bancaire, solde à la livraison, payable sous 15 jours. Acheteur public : facture après service fait, déposée sur Chorus Pro, réglée par mandat administratif dans le délai légal.",
     "Pour un client professionnel, tout retard entraîne des pénalités au taux de 1,5 % par mois et une indemnité forfaitaire de 40 € pour frais de recouvrement (articles L441-10 et D441-5 du Code de commerce). Pour un acheteur public, les intérêts moratoires du code de la commande publique s'appliquent."]],
   ["9. Abonnements et suivis", [
-    "Les suivis mensuels (photographie, maintenance de site, application en abonnement) sont conclus pour la durée minimale indiquée au devis, puis se poursuivent de mois en mois.",
+    "Les suivis mensuels (photographie, application en abonnement) sont conclus pour la durée minimale indiquée au devis, puis se poursuivent de mois en mois.",
     "Passé la durée minimale, chaque partie peut y mettre fin par écrit, un e-mail suffit, avec un préavis d'un mois. Ils sont facturés chaque mois à terme échu.",
-    "Projet réglé au mois (site internet ou application au mois, réservé aux clients professionnels et associatifs) : le premier mois est réglé en ligne par carte à la commande, puis chaque mois à la même date, par carte, automatiquement, pendant la durée d'engagement indiquée au devis. L'abonnement comprend la création décrite au devis, l'hébergement, les mises à jour, les sauvegardes et les petites modifications. Il s'arrête de lui-même au terme de l'engagement ; le client devient alors titulaire des droits prévus à l'article 7, et le suivi peut se poursuivre au tarif de maintenance en vigueur.",
-    "Un arrêt demandé par le client avant le terme de l'engagement laisse dues les mensualités restant à courir. En cas d'impayé, le prestataire peut suspendre le service après une relance restée sans effet pendant huit jours."]],
+    "Paiement en plusieurs fois (sites internet, clients professionnels et associatifs) : le prix du devis peut être réglé en 6, 12 ou 24 mensualités, sans frais ni intérêts. La première est réglée en ligne par carte à la commande, les suivantes sont prélevées sur la même carte chaque mois à la même date ; chaque échéance fait l'objet de sa propre facture. Le prix est dû en totalité dès la commande, seul son paiement est échelonné : si les prélèvements s'arrêtent avant la dernière échéance, le solde restant devient exigible, et les droits prévus à l'article 7 ne sont transmis qu'après la dernière échéance.",
+    "Suivi d'un site : hébergement, nom de domaine, sécurité et sauvegardes, au prix indiqué au devis, sans durée minimale ; il est résiliable par écrit, un e-mail suffit, avec un préavis d'un mois. Lorsqu'il est réglé avec des mensualités, il est prélevé avec chacune d'elles, puis seul après la dernière. Les modifications et la production régulière de contenus ne sont pas comprises : elles relèvent d'un devis ou de Fill (fill.studioes.fr)."]],
   ["10. Annulation et report", [
     "Toute annulation par le client après la commande entraîne la facturation du travail réalisé ; l'acompte reste acquis au prestataire.",
     "Pour un événement daté, une annulation à moins de 30 jours de la date entraîne en outre le paiement de 50 % du prix de la prestation. Un report à une date disponible est accepté sans frais une fois.",

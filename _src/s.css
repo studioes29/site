@@ -223,6 +223,7 @@ p.inc svg{margin-top:2px}
 .prix .dg>span{position:absolute;top:0;left:-.3em;right:-.3em;display:flex;flex-direction:column;text-align:center;will-change:transform}
 .prix .dg .c{display:block;height:1.08em}
 .prix .sp{display:inline-block;width:.2em}
+.prix .vg{display:inline-block;width:.28em;text-align:center}
 .prix .v i{display:inline-block;font-style:normal;white-space:pre;animation:entre .7s var(--e) both;animation-delay:calc(var(--k) * 32ms)}
 .prix .v i.e{width:.2em}
 .prix .v.sort{position:absolute;left:0;top:0;pointer-events:none;animation:sort .45s ease forwards}
