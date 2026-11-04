@@ -81,7 +81,9 @@ page('metiers/photographie', 'Photographe de concert, d’événement et de mari
 
 # ---------- Web : trois projets à égalité, la vitrine, puis les offres ----------
 bw = sect('web', B).split('\n')
-offres_web = '\n'.join(bw[4:48])
+# du 5e rang jusqu'à la note de bas de section comprise : la découpe suit le contenu, pas un nombre de lignes fixe
+fin_web = next(i for i, l in enumerate(bw) if '<p class="note rv">' in l)
+offres_web = '\n'.join(bw[4:fin_web + 1])
 VITRINE = [
     ('pierceval', 'Pierceval Tattoo', 'Site, réservation, carte cadeau', '/projets/pierceval-tattoo/',
      'Identité et site conçus ensemble : un fond prune, un rose franc, un lettrage italique qui rappelle l’enseigne.', [
