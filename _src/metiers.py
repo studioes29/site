@@ -138,7 +138,7 @@ wb += '''
 <section class="sec feuille dk wb-o u-violet" id="web" data-dark aria-labelledby="t-of">
   ''' + FG('Sites', 'right:-2vw;bottom:-.4em;--vx:-50px;--vy:-40px;font-size:calc(var(--fg-t) * .85)') + '''
   <div class="w">
-    <div class="sec-t rv"><div><p class="pt"><i>02</i><span>Les offres</span></p><h2 class="d" id="t-of">Sites internet<span class="it">Pour être trouvé et contacté.</span></h2></div><p class="lead">Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris.</p></div>
+    <div class="sec-t rv"><div><p class="pt"><i>02</i><span>Les offres</span></p><h2 class="d" id="t-of">Sites internet<span class="it">Écrits et mis en ligne pour vous.</span></h2></div><p class="lead">Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris.</p></div>
 ''' + offres_web.replace('<div class="sous rv"><h3 class="d">Site internet</h3><p>Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris.</p></div>', '') + '''
   </div>
 </section>
@@ -239,7 +239,7 @@ of += '''
 </section>
 <section class="sec feuille dk wb-o u-violet" id="of-web" data-dark aria-labelledby="t-ow">
   <div class="w">
-    <div class="sec-t rv"><div><p class="pt"><i>02</i><span>Sites internet</span></p><h2 class="d" id="t-ow">Sites internet<span class="it">Pour être trouvé et contacté.</span></h2></div><p class="lead">Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris.</p></div>
+    <div class="sec-t rv"><div><p class="pt"><i>02</i><span>Sites internet</span></p><h2 class="d" id="t-ow">Sites internet<span class="it">Écrits et mis en ligne pour vous.</span></h2></div><p class="lead">Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris.</p></div>
 ''' + offres_web.replace('<div class="sous rv"><h3 class="d">Site internet</h3><p>Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris.</p></div>', '') + '''
   </div>
 </section>

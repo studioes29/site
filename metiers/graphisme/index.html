@@ -23,7 +23,7 @@
 <link rel="preload" href="/f/br.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/f/it.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/f/ur-i.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/s.css?v=39">
+<link rel="stylesheet" href="/s.css?v=40">
 <script>/* GoatCounter : mesure d'audience sans cookie, uniquement sur studioes.fr */if (/(^|\.)studioes\.fr$/.test(location.hostname) && !location.hostname.startsWith('dossiers')) { const g = document.createElement('script'); g.async = true; g.src = 'https://gc.zgo.at/count.js'; g.dataset.goatcounter = 'https://studioes.goatcounter.com/count'; document.head.appendChild(g); }</script>
 </head>
 <body>
@@ -69,13 +69,27 @@
       <a href="/#contact">Contact</a>
     </nav>
     <button type="button" class="bt sm" data-est>Demander un devis <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button>
+    <button type="button" class="brg" data-mnu aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mnu"><span></span><span></span></button>
   </div>
 </header>
+<div class="mnu" id="mnu" hidden>
+  <nav aria-label="Menu">
+    <a href="/">Accueil</a>
+    <a href="/metiers/photographie/">Photographie</a>
+    <a href="/metiers/sites-et-outils/">Web</a>
+    <a aria-current="page" href="/metiers/graphisme/">Graphisme</a>
+    <a href="/realisations/">Réalisations</a>
+    <a href="/offres/">Offres</a>
+    <a href="/#contact">Contact</a>
+    <a href="https://fill.studioes.fr/" class="nv-fill">Fill<small>Votre communication, chaque mois</small></a>
+  </nav>
+  <button type="button" class="bt" data-est>Demander un devis <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button>
+</div>
 
 <nav class="dock" id="dock" aria-label="Navigation rapide">
   <a href="/metiers/photographie/"><svg class="i"><use href="#ap"/></svg><span>Photo</span></a>
   <a href="/metiers/sites-et-outils/"><svg class="i"><use href="#ec"/></svg><span>Web</span></a>
-  <a href="/metiers/graphisme/"><svg class="i"><use href="#gr"/></svg><span>Graphisme</span></a>
+  <a aria-current="page" href="/metiers/graphisme/"><svg class="i"><use href="#gr"/></svg><span>Graphisme</span></a>
   <a href="/realisations/"><svg class="i"><use href="#pl"/></svg><span>Réalisations</span></a>
   <button type="button" class="go" data-est><svg class="i"><use href="#cl"/></svg>Devis</button>
 </nav>
@@ -129,7 +143,7 @@
 <footer class="ft">
   <div class="w">
     <div><a class="lg" href="/" aria-label="Studio ES, accueil"><svg aria-hidden="true"><use href="#logo"/></svg><span>Studio ES</span></a><p>Photographie, web et design graphique, en Bretagne.<br>Il pleut parfois, la lumière reste belle.</p></div>
-    <div><p class="h5">Studio</p><ul><li><a href="/metiers/photographie/">Photographie</a></li><li><a href="/metiers/sites-et-outils/">Sites et applications</a></li><li><a href="/metiers/graphisme/">Design graphique</a></li><li><a href="/realisations/">Réalisations</a></li><li><a href="/offres/">Offres et tarifs</a></li></ul></div>
+    <div><p class="h5">Studio</p><ul><li><a href="/metiers/photographie/">Photographie</a></li><li><a href="/metiers/sites-et-outils/">Sites et applications</a></li><li><a aria-current="page" href="/metiers/graphisme/">Design graphique</a></li><li><a href="/realisations/">Réalisations</a></li><li><a href="/offres/">Offres et tarifs</a></li></ul></div>
     <div><p class="h5">Contact</p><ul><li><a href="mailto:contact@studioes.fr">contact@studioes.fr</a></li><li><a href="tel:+33651222107">06&nbsp;51&nbsp;22&nbsp;21&nbsp;07</a></li><li><button type="button" data-cal>Réserver un appel</button></li></ul></div>
     <div><p class="h5">Suivre</p><ul><li><a href="https://www.instagram.com/ewen.studioes/" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://fill.studioes.fr">Fill, communication externalisée</a></li><li><a href="https://fill.studioes.fr/espace/">Espace client Fill</a></li><li><a href="https://dossiers.studioes.fr/declic/" target="_blank" rel="noopener">Déclic, le jeu</a></li></ul></div>
     <div class="bas"><span>© 2026 Studio ES</span><span><a href="/conditions/">Conditions générales</a> · <button type="button" data-legal>Mentions légales</button></span></div>
@@ -188,7 +202,7 @@
 
 <script src="/reps.js?v=9"></script>
 <script src="/graph.js?v=1"></script>
-<script src="/app.js?v=33"></script>
+<script src="/app.js?v=34"></script>
 <script src="/motion.js?v=21"></script>
 </body>
 </html>

@@ -2186,3 +2186,33 @@ body{color:var(--encre)}
 .sel-qui b{color:var(--ink);font-weight:600}
 .sel-qui img{flex:none;width:52px;height:52px;border-radius:50%;object-fit:cover;object-position:50% 20%;filter:grayscale(1)}
 .nu .nu-b{background:rgba(20,20,20,.74);color:#fff;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+
+/* menu mobile */
+.brg{display:none}
+.mnu{display:none}
+@media (max-width:860px){
+  .brg{display:grid;position:absolute;right:10px;top:50%;transform:translateY(-50%);width:44px;height:44px;place-content:center;gap:6px;border-radius:999px;color:inherit}
+  .brg span{display:block;width:20px;height:1.8px;border-radius:2px;background:currentColor;transition:transform .45s var(--e)}
+  .brg[aria-expanded="true"] span:first-child{transform:translateY(3.9px) rotate(45deg)}
+  .brg[aria-expanded="true"] span:last-child{transform:translateY(-3.9px) rotate(-45deg)}
+  .mnu{position:fixed;inset:0;z-index:39;display:flex;flex-direction:column;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 78px) 24px calc(env(safe-area-inset-bottom,0px) + 28px);background:var(--paper);opacity:0;transition:opacity .35s}
+  .mnu.on{opacity:1}
+  .mnu nav{display:flex;flex-direction:column}
+  .mnu nav a{display:flex;align-items:baseline;gap:12px;padding:9px 0;font-family:var(--d);font-weight:800;font-size:31px;letter-spacing:-.04em;line-height:1.1;opacity:0;transform:translateY(12px);transition:opacity .4s,transform .5s var(--e)}
+  .mnu.on nav a{opacity:1;transform:none}
+  .mnu nav a:nth-child(2){transition-delay:.03s}.mnu nav a:nth-child(3){transition-delay:.06s}.mnu nav a:nth-child(4){transition-delay:.09s}.mnu nav a:nth-child(5){transition-delay:.12s}.mnu nav a:nth-child(6){transition-delay:.15s}.mnu nav a:nth-child(7){transition-delay:.18s}.mnu nav a:nth-child(8){transition-delay:.21s}
+  .mnu nav a[aria-current="page"]{color:var(--bleu)}
+  .mnu nav a[aria-current="page"]::before{content:"";align-self:center;width:8px;height:8px;border-radius:50%;background:currentColor}
+  .mnu nav .nv-fill{margin-top:10px;padding-top:18px;border-top:1px solid rgba(20,20,20,.1);color:var(--fl3);flex-wrap:wrap}
+  .mnu nav .nv-fill small{font-family:var(--f);font-weight:450;font-size:14px;letter-spacing:-.01em;color:rgba(20,20,20,.55)}
+  .mnu .bt{align-self:stretch;justify-content:center}
+  html.mnu-on .hd{color:var(--ink);background:transparent;box-shadow:none}
+  html.mnu-on .hd .ret{visibility:hidden}
+}
+.dock a[aria-current="page"]{background:rgba(20,20,20,.08);font-weight:650}
+.dock.dk a[aria-current="page"]{background:rgba(255,255,255,.14)}
+/* Fill en complément, dans le configurateur */
+#estB .fl-plus a{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 12px;padding:14px 16px;border-radius:16px;background:rgba(112,82,179,.08)}
+#estB .fl-plus b{font-weight:600;font-size:15px}
+#estB .fl-plus span{grid-column:1;font-size:13.5px;color:var(--mu)}
+#estB .fl-plus svg{grid-row:1/3;grid-column:2;color:#7052B3}

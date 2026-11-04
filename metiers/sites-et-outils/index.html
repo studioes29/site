@@ -23,7 +23,7 @@
 <link rel="preload" href="/f/br.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/f/it.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/f/ur-i.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/s.css?v=39">
+<link rel="stylesheet" href="/s.css?v=40">
 <script>/* GoatCounter : mesure d'audience sans cookie, uniquement sur studioes.fr */if (/(^|\.)studioes\.fr$/.test(location.hostname) && !location.hostname.startsWith('dossiers')) { const g = document.createElement('script'); g.async = true; g.src = 'https://gc.zgo.at/count.js'; g.dataset.goatcounter = 'https://studioes.goatcounter.com/count'; document.head.appendChild(g); }</script>
 </head>
 <body>
@@ -69,12 +69,26 @@
       <a href="/#contact">Contact</a>
     </nav>
     <button type="button" class="bt sm" data-est>Demander un devis <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button>
+    <button type="button" class="brg" data-mnu aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mnu"><span></span><span></span></button>
   </div>
 </header>
+<div class="mnu" id="mnu" hidden>
+  <nav aria-label="Menu">
+    <a href="/">Accueil</a>
+    <a href="/metiers/photographie/">Photographie</a>
+    <a aria-current="page" href="/metiers/sites-et-outils/">Web</a>
+    <a href="/metiers/graphisme/">Graphisme</a>
+    <a href="/realisations/">Réalisations</a>
+    <a href="/offres/">Offres</a>
+    <a href="/#contact">Contact</a>
+    <a href="https://fill.studioes.fr/" class="nv-fill">Fill<small>Votre communication, chaque mois</small></a>
+  </nav>
+  <button type="button" class="bt" data-est>Demander un devis <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button>
+</div>
 
 <nav class="dock" id="dock" aria-label="Navigation rapide">
   <a href="/metiers/photographie/"><svg class="i"><use href="#ap"/></svg><span>Photo</span></a>
-  <a href="/metiers/sites-et-outils/"><svg class="i"><use href="#ec"/></svg><span>Web</span></a>
+  <a aria-current="page" href="/metiers/sites-et-outils/"><svg class="i"><use href="#ec"/></svg><span>Web</span></a>
   <a href="/metiers/graphisme/"><svg class="i"><use href="#gr"/></svg><span>Graphisme</span></a>
   <a href="/realisations/"><svg class="i"><use href="#pl"/></svg><span>Réalisations</span></a>
   <button type="button" class="go" data-est><svg class="i"><use href="#cl"/></svg>Devis</button>
@@ -97,7 +111,7 @@
 <section class="sec feuille dk wb-o u-violet" id="web" data-dark aria-labelledby="t-of">
   <span class="fg" style="right:-2vw;bottom:-.4em;--vx:-50px;--vy:-40px;font-size:calc(var(--fg-t) * .85)" aria-hidden="true">Sites</span>
   <div class="w">
-    <div class="sec-t rv"><div><p class="pt"><i>02</i><span>Les offres</span></p><h2 class="d" id="t-of">Sites internet<span class="it">Pour être trouvé et contacté.</span></h2></div><p class="lead">Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris.</p></div>
+    <div class="sec-t rv"><div><p class="pt"><i>02</i><span>Les offres</span></p><h2 class="d" id="t-of">Sites internet<span class="it">Écrits et mis en ligne pour vous.</span></h2></div><p class="lead">Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris.</p></div>
     
     <div class="grp" data-grp>
       <article class="of st rv" data-of data-k="site" data-f="0">
@@ -144,13 +158,13 @@
       <div class="tx"><h4 class="d">Avec de vraies photos</h4><p>Une demi-journée sur place pour photographier votre lieu, votre équipe et vos gestes de métier : votre site montre votre activité réelle, pas des images de banque.</p></div>
       <div class="ch"><b class="pz">+350&nbsp;€</b><label class="sw"><input type="checkbox" id="swPh"><span class="tr" aria-hidden="true"></span><span>Inclure au prix</span></label></div>
     </div>
-    <p class="note rv">Le suivi couvre l’hébergement, le nom de domaine et les sauvegardes, sans engagement. Pour faire vivre le site ensuite, <a href="https://fill.studioes.fr/">Fill</a> prend le relais.</p>
+    <p class="note rv">Le suivi couvre l’hébergement, le nom de domaine et les sauvegardes, sans engagement.</p>
   </div>
 </section>
 <section class="sec feuille ap-f u-brume" id="applications" aria-labelledby="t-ap">
   <span class="fg o" style="right:-3vw;top:-.08em;--vy:-80px;font-size:calc(var(--fg-t) * .55)" aria-hidden="true">Outils</span>
   <div class="w">
-    <div class="sec-t rv"><div><p class="pt"><i>03</i><span>Applications</span></p><h2 class="d" id="t-ap">Applications<span class="it">Un outil pour chaque besoin.</span></h2></div><p class="lead">Des outils sur mesure, sur téléphone comme sur ordinateur, sans passer par un magasin d’applications.</p></div>
+    <div class="sec-t rv"><div><p class="pt"><i>03</i><span>Applications</span></p><h2 class="d" id="t-ap">Applications<span class="it">Un outil pour chaque besoin.</span></h2></div><p class="lead">Des outils sur mesure pour gagner du temps au quotidien, sur ordinateur comme sur téléphone.</p></div>
   </div>
   <div class="rail cas-us rv" id="usages" role="region" aria-label="Exemples d’applications">
     <button type="button" class="us" style="--t:#B9B4FF" aria-pressed="false"><span class="fa"><span class="ico"><svg class="i"><use href="#fo"/></svg></span><b>Toujours les mêmes questions</b><span class="pb">Prix, délais, disponibilités : vous répondez dix fois par jour.</span><span class="tap">Voir la solution</span></span><span class="fb"><b>Toujours les mêmes questions</b><span class="so">Un outil répond à votre place, à toute heure. <em>Formule Outil simple</em></span><span class="tap">Retour</span></span></button>
@@ -225,7 +239,7 @@
 <footer class="ft">
   <div class="w">
     <div><a class="lg" href="/" aria-label="Studio ES, accueil"><svg aria-hidden="true"><use href="#logo"/></svg><span>Studio ES</span></a><p>Photographie, web et design graphique, en Bretagne.<br>Il pleut parfois, la lumière reste belle.</p></div>
-    <div><p class="h5">Studio</p><ul><li><a href="/metiers/photographie/">Photographie</a></li><li><a href="/metiers/sites-et-outils/">Sites et applications</a></li><li><a href="/metiers/graphisme/">Design graphique</a></li><li><a href="/realisations/">Réalisations</a></li><li><a href="/offres/">Offres et tarifs</a></li></ul></div>
+    <div><p class="h5">Studio</p><ul><li><a href="/metiers/photographie/">Photographie</a></li><li><a aria-current="page" href="/metiers/sites-et-outils/">Sites et applications</a></li><li><a href="/metiers/graphisme/">Design graphique</a></li><li><a href="/realisations/">Réalisations</a></li><li><a href="/offres/">Offres et tarifs</a></li></ul></div>
     <div><p class="h5">Contact</p><ul><li><a href="mailto:contact@studioes.fr">contact@studioes.fr</a></li><li><a href="tel:+33651222107">06&nbsp;51&nbsp;22&nbsp;21&nbsp;07</a></li><li><button type="button" data-cal>Réserver un appel</button></li></ul></div>
     <div><p class="h5">Suivre</p><ul><li><a href="https://www.instagram.com/ewen.studioes/" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://fill.studioes.fr">Fill, communication externalisée</a></li><li><a href="https://fill.studioes.fr/espace/">Espace client Fill</a></li><li><a href="https://dossiers.studioes.fr/declic/" target="_blank" rel="noopener">Déclic, le jeu</a></li></ul></div>
     <div class="bas"><span>© 2026 Studio ES</span><span><a href="/conditions/">Conditions générales</a> · <button type="button" data-legal>Mentions légales</button></span></div>
@@ -284,7 +298,7 @@
 
 <script src="/reps.js?v=9"></script>
 <script src="/graph.js?v=1"></script>
-<script src="/app.js?v=33"></script>
+<script src="/app.js?v=34"></script>
 <script src="/motion.js?v=21"></script>
 </body>
 </html>

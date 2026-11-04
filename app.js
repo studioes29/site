@@ -138,6 +138,15 @@
     }
   }
 
+
+  /* menu mobile */
+  const brg = $('[data-mnu]'), mnu = $('#mnu');
+  if (brg && mnu) {
+    const ferme = () => { brg.setAttribute('aria-expanded', 'false'); brg.setAttribute('aria-label', 'Ouvrir le menu'); mnu.classList.remove('on'); document.documentElement.classList.remove('mnu-on'); document.documentElement.style.overflow = ''; if (dock) dock.classList.remove('cache'); setTimeout(() => { if (!mnu.classList.contains('on')) mnu.hidden = true; }, 380); };
+    brg.addEventListener('click', () => { if (mnu.classList.contains('on')) return ferme(); mnu.hidden = false; brg.setAttribute('aria-expanded', 'true'); brg.setAttribute('aria-label', 'Fermer le menu'); document.documentElement.classList.add('mnu-on'); document.documentElement.style.overflow = 'hidden'; if (dock) dock.classList.add('cache'); requestAnimationFrame(() => requestAnimationFrame(() => mnu.classList.add('on'))); });
+    $$('a, [data-est]', mnu).forEach(a => a.addEventListener('click', ferme));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && mnu.classList.contains('on')) ferme(); });
+  }
   /* cartes d'offre */
   const swPh = $('#swPh');
   const etatCarte = c => {
@@ -457,6 +466,7 @@
       if (P.o) h += `<div class="q"><p>${P.o.l} (facultatif)</p><div class="opts">${P.o.o.map((o, i) => `<button data-o="${i}" aria-pressed="${ES.o.includes(i)}">${o[0]}<em>${o[1] == null ? 'sur devis' : '+' + fmt(o[1]) + ' €'}</em></button>`).join('')}</div></div>`;
       /* ce qui se commande sans échange préalable : lien direct vers la page de commande (devis et paiement en ligne) */
       const cmd = lienCommande(); if (cmd) h += `<div class="q cmd"><a class="bt" href="${cmd}">Commander en ligne <span class="ar">${ico('ar')}</span></a><small>Devis immédiat et paiement sécurisé par carte${ES.k === 'site' ? ', en une fois ou en plusieurs' : ''}. Ou continuez pour être recontacté.</small></div>`;
+      if (ES.k === 'site') h += `<div class="q fl-plus"><p>Et pour le faire vivre&nbsp;?</p><a href="https://fill.studioes.fr/" target="_blank" rel="noopener"><b>Actualités, nouvelles pages, visuels</b><span>Fill s’en charge chaque mois, avec un prix fixe.</span>${ico('ne')}</a></div>`;
     } else if (ES.e === 2) {
       const P = PJ[ES.k], r = calc(), c = ES.c, q = s => (s || '').replace(/"/g, '&quot;');
       if (P.date && ES.d != null && !c.date) c.date = moisTxt().replace(/^./, m => m.toUpperCase()) + ', ';
