@@ -105,6 +105,7 @@ HOME = HOME.replace('{SELECTION}', selection)
 # l'animation démarre avant le premier affichage, sauf si le visiteur a demandé moins de mouvement
 HOME = HOME.replace('<section class="hero sx" id="hx" data-dark aria-labelledby="h1">', '<section class="hero sx" id="hx" data-dark aria-labelledby="h1"><script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches){var s=document.currentScript.parentNode;s.classList.add("vol");setTimeout(function(){if(!s.dataset.m)s.classList.remove("vol")},2500)}</script>')
 
+BLACKWEEK = ('', 'offres', 'metiers/photographie')
 HEAD_END = T.index('<main id="haut">'); FOOT = T.index('</main>')
 def page(path, title, desc, canon, main, home=False, ld='', og=''):
     h = T[:HEAD_END] + '<main id="haut">\n' + main + '\n' + T[FOOT:]
@@ -124,6 +125,8 @@ def page(path, title, desc, canon, main, home=False, ld='', og=''):
         h = re.sub(r'<script type="application/ld\+json">.*?</script>', '<script type="application/ld+json">' + ld + '</script>' if ld else '', h, count=1, flags=re.S)
     # la rubrique courante est signalée dans le menu
     if path: h = h.replace('<a href="/%s/">' % path, '<a aria-current="page" href="/%s/">' % path, 1)
+    # bandeau Black Week : seulement sur l'accueil, les offres et la photographie
+    if path in BLACKWEEK: h = h.replace('</body>', '<script src="/blackweek.js?v=6" defer></script>\n</body>', 1)
     d = os.path.join(OUT, path); os.makedirs(d, exist_ok=True)
     open(os.path.join(d, 'index.html'), 'w', encoding='utf8').write(h)
 

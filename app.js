@@ -57,7 +57,7 @@
   const odo = (el, txt, depuisZero) => {
     if (!/\d/.test(txt)) { el.innerHTML = `<span class="sr">${txt}</span><span class="v" aria-hidden="true">${txt}</span>`; el._ch = null; if (!reduit) el.animate([{ opacity: 0, transform: 'translateY(.2em)' }, { opacity: 1, transform: 'none' }], { duration: 450, easing: 'ease-out' }); return; }
     const ch = [...txt].filter(c => /\d/.test(c)).map(Number), anc = depuisZero ? [] : (el._ch || []);
-    el.innerHTML = `<span class="sr">${txt}</span>` + '<span class="od" aria-hidden="true">' + [...txt].map(c => /\d/.test(c) ? `<span class="dg"><span>${BANDE}</span></span>` : '<span class="sp"></span>').join('') + '</span>';
+    el.innerHTML = `<span class="sr">${txt}</span>` + '<span class="od" aria-hidden="true">' + [...txt].map(c => /\d/.test(c) ? `<span class="dg"><b>${c}</b><span>${BANDE}</span></span>` : '<span class="sp"></span>').join('') + '</span>';
     const cols = $$('.dg>span', el), n = cols.length; let fin = 0;
     cols.forEach((c, i) => {
       const d = ch[i], p = anc[anc.length - n + i];

@@ -23,7 +23,7 @@ def croise(titre, texte, lien, lib, img, u='u-lilas'):
 def contact_m(texte, g):
     # le contact se règle sur le métier de la page : le devis s'ouvre directement sur les projets de ce métier
     h = contact_p.replace('data-est><span class="sheen"', 'data-est data-g="%s"><span class="sheen"' % g, 1)
-    return h.replace('<span>Quelques choix, une estimation immédiate, votre demande part en un clic.</span>', '<span>%s</span>' % texte, 1)
+    return h.replace('<span>Quelques choix, une estimation immédiate, puis votre demande est envoyée.</span>', '<span>%s</span>' % texte, 1)
 
 def FG(t, st, cl=''):
     return '<span class="fg%s" style="%s" aria-hidden="true">%s</span>' % (' ' + cl if cl else '', st, t)
@@ -248,6 +248,6 @@ of += '''
     <div class="og rv"><button type="button" class="og-c" data-est data-k="identite"><b class="d">Identité visuelle</b><span>Logo, charte, déclinaisons et signalétique.</span><em>Demander un devis ''' + AR + '''</em></button><button type="button" class="og-c" data-est data-k="campagne"><b class="d">Campagne</b><span>Concept, affiche et déclinaisons.</span><em>Demander un devis ''' + AR + '''</em></button><button type="button" class="og-c" data-est data-k="edition"><b class="d">Édition</b><span>Brochure, programme, magazine.</span><em>Demander un devis ''' + AR + '''</em></button></div>
   </div>
 </section>
-''' + contact_m('Quelques choix, une estimation immédiate, votre demande part en un clic.', '')
+''' + contact_m('Quelques choix, une estimation immédiate, puis votre demande est envoyée.', '')
 page('offres', 'Offres et tarifs : photographie, sites et applications · Studio ES', 'Formules de Studio ES : reportage photo dès 250 €, suivi annuel, mariage, sites internet dès 990 € avec suivi mensuel, applications. Graphisme sur devis.', 'https://studioes.fr/offres/', of,
      ld=LD('Offres', 'https://studioes.fr/offres/', 'Photographie, sites internet et applications', [('Événement', 250), ('Suivi photo annuel', 1290), ('Mariage', 1290), ('Site Essentiel', 990), ('Site Vitrine', 1990), ('Site sur mesure', 4490), ('Application sur mesure', 190)]))
