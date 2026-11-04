@@ -625,6 +625,7 @@ p.inc svg{margin-top:2px}
 @media (hover:hover){.us:not(.autre):hover>.fa{transform:rotateY(-180deg)}.us:not(.autre):hover>.fb{transform:rotateY(0)}.us[aria-pressed="true"]:hover>.fa{transform:rotateY(-180deg)}}
 .us:focus-visible{outline:none}.us:focus-visible>.fa,.us:focus-visible>.fb{outline:2px solid var(--ntx);outline-offset:3px}
 .fb .so::before{content:"La solution";display:block;margin-bottom:6px;font-size:12px;font-weight:600;color:var(--bleu)}
+.us .so em{display:block;margin-top:8px;font-style:normal;font-size:13px;font-weight:600;color:var(--bleu)}
 
 /* rails : toutes les cartes arrivent de la même façon ; les photos se révèlent comme un tirage */
 .rail>*{opacity:0;transform:translateY(22px) scale(.97);transition:opacity .7s var(--e),transform .9s var(--e);transition-delay:calc(min(var(--i,0),6) * 70ms)}

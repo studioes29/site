@@ -158,7 +158,7 @@
     const E = etatCarte(c); prix($('.prix', c), E.v);
     const u = $('[data-u]', c); if (u) u.textContent = E.mois ? '€/mois' : '€/an';
     const bm = $('.bascule[data-mo]', c); if (bm) bm.hidden = E.v == null;
-    if (E.k === 'site' || E.k === 'app') { const d = $('.dt', c), un = $('.px .u', c), sv = c.dataset.sv || 9; d.innerHTML = E.nf ? `en ${E.nf} fois sans frais, puis ${sv}&nbsp;€ par mois de suivi${E.ph ? ', plus 350&nbsp;€ de reportage à la commande' : ''}` : `en une fois (acompte de 30&nbsp;%), puis ${sv}&nbsp;€ par mois de suivi`; if (un) un.textContent = E.nf ? '€/mois' : '€'; }
+    if (E.k === 'site' || E.k === 'app') { const d = $('.dt', c), un = $('.px .u', c), sv = c.dataset.sv || 9; d.innerHTML = E.nf ? `sur ${E.nf} mois sans frais, + ${sv}&nbsp;€ de suivi${E.ph ? '<br>photos : 350&nbsp;€ à la commande' : ''}` : `+ ${sv}&nbsp;€ par mois de suivi`; if (un) un.textContent = E.nf ? '€/mois' : '€'; }
     repere(c);
   };
   const cartes = $$('[data-of]');
