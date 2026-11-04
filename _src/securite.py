@@ -4,9 +4,9 @@ Usage : python3 _src/securite.py [dossier ou fichiers...] (par défaut : tout le
 ou de conditions/index.html ; build.py le lance lui-même sur les pages qu'il génère."""
 import sys, os, re, glob, hashlib, base64
 RACINE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE = ("default-src 'self'; script-src 'self' https://gc.zgo.at https://app.cal.com{h}; style-src 'self' 'unsafe-inline'; "
+BASE = ("default-src 'self'; script-src 'self' https://gc.zgo.at https://app.cal.com https://cdnjs.cloudflare.com https://dossiers.studioes.fr{h}; style-src 'self' 'unsafe-inline'; "
         "img-src 'self' data: https://studioes.goatcounter.com; font-src 'self'; "
-        "connect-src 'self' https://nfnbseonwgmtouxsaajd.supabase.co https://studioes.goatcounter.com https://app.cal.com https://cal.com; "
+        "connect-src 'self' https://nfnbseonwgmtouxsaajd.supabase.co https://dossiers.studioes.fr https://studioes.goatcounter.com https://app.cal.com https://cal.com; "
         "frame-src https://app.cal.com https://cal.com; "
         "form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests")
 REF = '<meta name="referrer" content="strict-origin-when-cross-origin">'

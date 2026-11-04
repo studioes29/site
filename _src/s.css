@@ -2245,3 +2245,16 @@ body{color:var(--encre)}
 .dock.glisse a.sur svg{transform:scale(1.12)}
 .dock a svg{transition:transform .3s var(--sp)}
 .dock a:active,.dock.dk a:active{background:none}
+/* commande dans le configurateur */
+#estB .q.cmd .bt{border:0}
+.cm-r{padding:16px 18px;border-radius:18px;background:var(--chip);box-shadow:inset 0 0 0 1px var(--ln)}
+.cm-r ul{list-style:none;margin:0;padding:0}
+.cm-r li{display:flex;justify-content:space-between;gap:12px;padding:7px 0;font-size:15px;border-bottom:1px solid var(--ln)}
+.cm-r li b{font-weight:600;white-space:nowrap}
+.cm-r p{margin:10px 0 0;font-size:13.5px;color:var(--mu)}
+.cm-qui{display:grid!important;grid-template-columns:1fr 1fr}
+.cm-f{margin-top:14px}
+.cm-ok{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:13.5px;line-height:1.45;color:var(--mu)}
+.cm-ok input{margin-top:3px;width:18px;height:18px;flex:none;accent-color:var(--ink)}
+.cm-n{margin:14px 0 0;font-size:13.5px;line-height:1.5;color:var(--mu)}
+.cm-n a,.cm-ok a{text-decoration:underline}

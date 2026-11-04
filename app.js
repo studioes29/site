@@ -411,14 +411,89 @@
   };
   /* site : nombre de mensualités choisi, ramené à une valeur que la formule propose (l'Essentiel s'arrête à 12) */
   const nfSite = f => { const P = PJ[ES.k], nb = P && P.p && P.p.o[ES.p] ? P.p.o[ES.p][2] : 0; return f && f[1] && Array.isArray(f[1][1]) && f[1][1].includes(nb) ? nb : 0; };
-  const lienCommande = () => {
-    const f = ES.f, P = PJ[ES.k]; if (!P) return '';
-    let p = [];
-    if (ES.k === 'site' && f < 2) { p = [f ? 'site-vitrine' : 'site-essentiel']; if (ES.o.includes(0)) p.push('site-photo'); if (ES.o.includes(1)) return ''; }
+  /* commande en ligne, dans le configurateur : la saisie va jusqu'au paiement, sans changer de site.
+     Prix affichés ici pour l'écran ; le serveur (fonction acompte) les recalcule de son côté à partir des mêmes clés. */
+  const ACOMPTE = 'https://nfnbseonwgmtouxsaajd.supabase.co/functions/v1/acompte';
+  const PRIXC = { 'site-essentiel': 490, 'site-vitrine': 990, 'concert': 250, 'demi': 350, 'site-photo': 350, 'soir': 150, 'heure': 80 };
+  const NOMC = { 'site-essentiel': 'Site Essentiel, une page', 'site-vitrine': 'Site Vitrine, 3 à 5 pages', 'concert': 'Reportage, concert ou spectacle', 'demi': 'Reportage, une demi-journée', 'site-photo': 'Reportage photo pour le site', 'soir': 'Sélection livrée le soir même', 'heure': 'Une heure de plus sur place' };
+  const clesCommande = () => {
+    const f = ES.f; let p = [];
+    if (ES.k === 'site' && f < 2) { if (ES.o.includes(1)) return null; p = [f ? 'site-vitrine' : 'site-essentiel']; if (ES.o.includes(0)) p.push('site-photo'); }
     else if (ES.k === 'evenement' && f < 2) { p = [f ? 'demi' : 'concert']; if (ES.o.includes(0)) p.push('soir'); if (ES.o.includes(1)) p.push('heure'); }
-    else return '';
-    const nb = ES.k === 'site' ? nfSite(P.f.o[f]) : 0;
-    return 'https://dossiers.studioes.fr/commander/?p=' + p.join(',') + (nb ? '&nf=' + nb : '');
+    else return null;
+    return p;
+  };
+  const totCmd = () => {
+    const c = clesCommande(); if (!c) return null;
+    const site = ES.k === 'site', nb = site ? nfSite(PJ.site.f.o[ES.f]) : 0, prin = PRIXC[c[0]], opts = c.slice(1).reduce((s, k) => s + PRIXC[k], 0);
+    const etale = nb ? prin : 0, total = nb ? opts : prin + opts, mens = nb ? Math.floor(etale * 100 / nb) / 100 : 0, sv = site ? 9 : 0;
+    const acompte = Math.round(total * 30) / 100;
+    return { c, site, nb, etale, total, mens, sv, acompte, auj: Math.round((acompte + (nb ? mens + sv : 0)) * 100) / 100 };
+  };
+  const numDevis = () => { const t = new Date(), a = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; let s = ''; for (let k = 0; k < 4; k++) s += a.charAt(Math.floor(Math.random() * a.length)); return String(t.getFullYear()).slice(2) + ('0' + (t.getMonth() + 1)).slice(-2) + ('0' + t.getDate()).slice(-2) + '-' + s; };
+  const ANTICIPE = 'Je demande que la prestation commence avant la fin du délai de rétractation et reconnais que, une fois la prestation pleinement exécutée, je ne pourrai plus me rétracter.';
+  const qe = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+  const champsCmd = part => part
+    ? [['rep', 'Nom et prénom', 'name'], ['adr', 'Adresse', 'street-address'], ['ville', 'Code postal et ville', 'address-level2'], ['mail', 'E-mail', 'email']]
+    : [['struct', 'Structure', 'organization'], ['rep', 'Votre nom', 'name'], ['fonction', 'Votre fonction', 'organization-title'], ['adr', 'Adresse', 'street-address'], ['ville', 'Code postal et ville', 'address-level2'], ['mail', 'E-mail', 'email']];
+  const vueCmd = () => {
+    const T = totCmd(), m = ES.cm, part = !T.nb && m.part;
+    let h = `<div class="cm-r"><ul>${T.c.map(k => `<li><span>${NOMC[k]}</span><b>${fmt(PRIXC[k])}&nbsp;€</b></li>`).join('')}${T.site ? `<li><span>Suivi du site, sans engagement</span><b>${T.sv}&nbsp;€/mois</b></li>` : ''}</ul>
+      <p>${T.nb ? `En ${T.nb} fois sans frais : ${fmt(T.mens + T.sv)}&nbsp;€ par mois, suivi compris${T.total ? `, plus ${fmt(T.acompte)}&nbsp;€ d’acompte pour le reportage` : ''}. Ensuite, le suivi seul : ${T.sv}&nbsp;€ par mois.` : `Acompte de 30&nbsp;% aujourd’hui, le solde à la livraison${T.site ? ', puis 9&nbsp;€ par mois de suivi' : ''}.`}</p></div>`;
+    if (!T.nb) h += `<div class="q"><p>Vous commandez</p><div class="bascule cm-qui" role="group"><button type="button" data-qui="0" aria-pressed="${!part}">Pour une structure</button><button type="button" data-qui="1" aria-pressed="${part}">En tant que particulier</button></div></div>`;
+    h += `<div class="form cm-f">${champsCmd(part).map(f => `<label>${f[1]}<input id="c_${f[0]}" autocomplete="${f[2]}"${f[0] === 'mail' ? ' type="email" inputmode="email"' : ''} value="${qe(m[f[0]])}"></label>`).join('')}</div>`;
+    if (part) h += `<label class="cm-ok"><input type="checkbox" id="c_anticipe"${m.anticipe ? ' checked' : ''}><span>${ANTICIPE} Délai de rétractation de 14 jours : voir les <a href="/conditions/" target="_blank" rel="noopener">conditions</a>.</span></label>`;
+    h += `<p class="cm-n">Le devis se télécharge, puis le paiement sécurisé s’ouvre : vous y acceptez le devis et les <a href="/conditions/" target="_blank" rel="noopener">conditions de vente</a>.${T.nb ? ' Le paiement en plusieurs fois est réservé aux professionnels et aux associations.' : ''}</p>`;
+    return h;
+  };
+  const piedCmd = () => { const T = totCmd(); return `<div class="tot"><small>À régler aujourd’hui</small><span class="v"><b class="prix">${fmt(T.auj)}</b><i>€${T.nb ? `, puis ${fmt(T.mens + T.sv)} € par mois` : ''}</i></span></div><div class="act"><button class="bt cl sm" data-nav="1">Retour</button><button class="bt sm" data-payer>Payer <span class="ar">${ico('ar')}</span></button></div>`; };
+  const gardeCmd = () => { if (ES.e !== 'cmd') return; ['struct', 'rep', 'fonction', 'adr', 'ville', 'mail'].forEach(k => { const i = $('#c_' + k); if (i) ES.cm[k] = i.value.trim(); }); const a = $('#c_anticipe'); if (a) ES.cm.anticipe = a.checked; };
+  let ressources = null;
+  const chargeDevis = () => ressources || (ressources = ['https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js', '/conditions/cgv.js', 'https://dossiers.studioes.fr/assets/devis-fonts.js', 'https://dossiers.studioes.fr/assets/devis.js'].reduce((p, s) => p.then(() => new Promise((ok, ko) => { const x = document.createElement('script'); x.src = s; x.onload = ok; x.onerror = () => s.includes('cgv') ? ok() : ko(new Error(s)); document.head.appendChild(x); })), Promise.resolve()).catch(e => { ressources = null; throw e; }));
+  let CATC = null;
+  const catalogue = () => CATC ? Promise.resolve(CATC) : fetch('https://dossiers.studioes.fr/commander/data.json', { cache: 'no-cache' }).then(r => r.json()).then(j => (CATC = j.configurateur));
+  const payer = async b => {
+    gardeCmd(); const T = totCmd(), m = ES.cm, part = !T.nb && m.part;
+    const manque = champsCmd(part).find(f => !m[f[0]] || (f[0] === 'mail' && !mailOk(m.mail)));
+    $$('.cm-f input').forEach(i => i.removeAttribute('aria-invalid'));
+    if (manque) { const i = $('#c_' + manque[0]); i.setAttribute('aria-invalid', 'true'); i.focus(); erreur(manque[0] === 'mail' && m.mail ? 'Cette adresse e-mail semble incomplète.' : 'Complétez ce champ pour établir le devis.'); return; }
+    if (part && !m.anticipe) { erreur('Cochez la demande de démarrage pour continuer.'); return; }
+    erreur(''); b.disabled = true; b.classList.add('charge'); b.firstChild.textContent = 'Préparation ';
+    const num = ES.num || (ES.num = numDevis());
+    try {
+      const [cf] = await Promise.all([catalogue(), chargeDevis()]);
+      const opts = []; cf.etapes.forEach(e => e.options.forEach(o => { if ((o.cle && T.c.includes(o.cle)) || (o.mois && o.suivi && T.site)) opts.push(o); }));
+      const lignes = opts.map(o => ({ n: o.titreDevis || o.l, l: o.lignes || (o.d ? [o.d] : []), p: o.p || 0, mois: !!o.mois, min: o.min, devis: false, etaler: (!o.mois && T.nb && Array.isArray(o.etaler)) ? o.etaler : null, suivi: !!(o.mois && o.suivi) }));
+      const client = { struct: part ? '' : m.struct, rep: m.rep, fonction: part ? '' : m.fonction, adr: m.adr, ville: m.ville, mail: m.mail };
+      const out = window.studioDevis({ nom: client.struct || client.rep, objet: cf.objet, public: false, particulier: part, remise: null, echeances: T.nb }, lignes, client, num, { date: new Date().toISOString(), nom: client.rep, mode: 'carte', anticipe: part }, cf.regles);
+      const u = URL.createObjectURL(out.blob), a = document.createElement('a'); a.href = u; a.download = out.name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 60000);
+      /* la fiche du client remonte dans Hors-champ, comme depuis un dossier */
+      fetch('https://nfnbseonwgmtouxsaajd.supabase.co/functions/v1/formulaire', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, keepalive: true, body: JSON.stringify({ _subject: 'Devis ' + num + ' : ' + (client.struct || client.rep) + ' (commande en ligne)', _template: 'table', _captcha: 'false', source: 'studioes.fr', dossier: 'commander', devis: num, etat: T.nb ? 'devis accepté, première mensualité en cours' : 'devis accepté, acompte en cours', public: 'non', particulier: part ? 'oui' : 'non', structure: client.struct, nom: client.rep, fonction: client.fonction, adresse: client.adr, ville: client.ville, mail: client.mail, lignes: lignes.map(x => x.n + ' : ' + x.p + (x.mois ? ' €/mois' : ' €')).join(' ; '), total: T.total + ' €', reglement: T.nb ? 'en ' + T.nb + ' fois sans frais : ' + T.mens + ' €/mois pour ' + T.etale + ' €, plus ' + T.sv + ' €/mois de suivi' : 'en une fois', paiement: 'carte', acompte: T.acompte + ' €', date_souhaitee: PJ[ES.k].date && ES.d != null ? moisTxt() : '', fill: ES.fl ? 'intéressé par Fill' : '', demarrage_anticipe: part ? 'oui' : '' }) }).catch(() => {});
+      const corps = { action: 'creer', cles: T.c, dossier: 'commander', devis: num, structure: client.struct || client.rep, nom: client.rep, email: client.mail, total: T.total, particulier: part, demarrage_anticipe: part, retour: location.origin + location.pathname };
+      if (T.nb) Object.assign(corps, { etale: T.etale, echeances: T.nb, suivi: T.sv });
+      const r = await fetch(ACOMPTE, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corps) });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok || j.erreur || !/^https:\/\//.test(j.url || '')) throw new Error(j.erreur || 'Le paiement n’a pas pu être préparé.');
+      compte('commande-paiement', 'Commande : vers le paiement'); b.firstChild.textContent = 'Ouverture du paiement ';
+      setTimeout(() => { location.href = j.url; }, 600);
+    } catch (e) {
+      b.disabled = false; b.classList.remove('charge'); b.firstChild.textContent = 'Réessayer ';
+      erreur(qe(e && e.message && !/^https?:/.test(e.message) ? e.message : 'La connexion a échoué.') + ' Réessayez, ou écrivez à <a href="mailto:contact@studioes.fr">contact@studioes.fr</a> en indiquant le devis n°&nbsp;' + num + '.');
+    }
+  };
+  /* retour de paiement : ?paye=<session> ; le serveur confirme, le configurateur affiche la suite */
+  const vuePaye = () => {
+    const j = ES.py || {};
+    if (j.statut === 'paye') return `<div class="fin2"><span class="ok-i">${ico('ok')}</span><h3 class="d">Commande confirmée.<span class="it">Merci.</span></h3><p class="cm-n">${+j.mensuel > 0 ? `${fmt(+j.montant)}&nbsp;€ reçus pour le devis n°&nbsp;${qe(j.devis)}. Les mensualités suivantes, de ${fmt(+j.mensuel + (+j.suivi || 0))}&nbsp;€, sont prélevées chaque mois.` : `Acompte de ${fmt(+j.acompte)}&nbsp;€ reçu pour le devis n°&nbsp;${qe(j.devis)}. La facture vous parvient sous 24&nbsp;h.`} Un e-mail de confirmation vient de partir. Choisissez un créneau pour caler le démarrage.</p><div class="act2"><button class="bt" data-cal>Choisir un créneau <span class="ar">${ico('ar')}</span></button><button class="bt cl" data-close>Fermer</button></div></div>`;
+    if (j.statut === 'inconnu') return `<div class="fin2"><h3 class="d">Paiement introuvable.</h3><p class="cm-n">Écrivez à <a href="mailto:contact@studioes.fr">contact@studioes.fr</a> : la commande sera vérifiée à la main.</p></div>`;
+    return `<div class="fin2"><h3 class="d">Vérification du paiement…</h3><p class="cm-n">${j.lent ? 'La confirmation prend un peu de temps : vous recevrez un e-mail dès qu’elle arrive.' : 'Un instant.'}</p></div>`;
+  };
+  const retourPaiement = () => {
+    let ses = ''; try { const u = new URL(location.href); ses = u.searchParams.get('paye') || ''; if (ses) { u.searchParams.delete('paye'); history.replaceState(null, '', u.pathname + u.search + u.hash); } } catch (e) {}
+    if (!/^cs_(live|test)_/.test(ses)) return;
+    ES.e = 'paye'; ES.py = {}; rendE(); ouvreF('#shE');
+    let n = 0; const lire = () => fetch(ACOMPTE + '?session=' + encodeURIComponent(ses), { cache: 'no-store' }).then(r => r.json()).then(j => { if (j.statut === 'en_attente' && ++n <= 6) { setTimeout(lire, 2000); return; } ES.py = j.statut === 'en_attente' ? { lent: 1 } : j; rendE(); if (j.statut === 'paye') compte('commande-payee', 'Commande payée'); }).catch(() => { if (++n <= 6) setTimeout(lire, 2000); else { ES.py = { lent: 1 }; rendE(); } });
+    lire();
   };
   const eng = () => ES.k === 'site' || ES.k === 'app' ? (nfSite(PJ[ES.k].f.o[ES.f]) ? '' : ' de suivi') : '';
   /* site en plusieurs fois avec reportage : la mensualité d'abord, le reportage réglé à la commande */
@@ -474,14 +549,17 @@
     const act = ES.e === 0 ? `<button class="bt cl sm" data-cal>Préférer un appel</button>`
       : ES.e === 1 ? `<button class="bt cl sm" data-nav="-1">Retour</button><button class="bt sm" data-nav="1">Continuer <span class="ar">${ico('ar')}</span></button>`
       : `<button class="bt cl sm" data-nav="-1">Retour</button><button class="bt sm" data-envoi>Envoyer la demande <span class="ar">${ico('ar')}</span></button>`;
+    if (ES.e === 'cmd') { estF.innerHTML = piedCmd(); dernier = null; return; }
+    if (ES.e === 'paye') { estF.innerHTML = ''; return; }
     if (ES.e === 'fill') { estF.innerHTML = `<div class="tot"><small>Accompagnement régulier</small><span class="v"><i>Sur fill.studioes.fr</i></span></div><div class="act"><button class="bt cl sm" data-nav="0">Retour</button></div>`; return; }
     estF.innerHTML = ES.e === 3 ? '' : `<div class="tot">${v}</div><div class="act">${act}</div>`;
     const n = $('#estN');
     if (n) { n._ch = dernier; odo(n, fmt(cible), !dernier); dernier = n._ch; } else dernier = null;
   };
   const rendE = () => {
-    $$('#estP i').forEach((x, i) => x.classList.toggle('on', ES.e === 'fill' ? i === 0 : i <= Math.min(ES.e, 2)));
-    const L = $('#estL'); if (L) L.textContent = ES.e === 'fill' ? 'Accompagnement régulier' : ES.e === 3 ? 'Demande envoyée' : `Étape ${ES.e + 1} sur 3 : ${['votre projet', 'les détails', 'vos coordonnées'][ES.e]}`;
+    $$('#estP i').forEach((x, i) => x.classList.toggle('on', ES.e === 'cmd' || ES.e === 'paye' ? true : ES.e === 'fill' ? i === 0 : i <= Math.min(ES.e, 2)));
+    const TT = $('#shET'); if (TT) TT.textContent = ES.e === 'cmd' || ES.e === 'paye' ? 'Commander' : 'Demander un devis';
+    const L = $('#estL'); if (L) L.textContent = ES.e === 'cmd' ? 'Commande en ligne' : ES.e === 'paye' ? 'Paiement' : ES.e === 'fill' ? 'Accompagnement régulier' : ES.e === 3 ? 'Demande envoyée' : `Étape ${ES.e + 1} sur 3 : ${['votre projet', 'les détails', 'vos coordonnées'][ES.e]}`;
     let h = '';
     if (ES.e === 0) {
       const GR = ['Photographie', 'Web', 'Design graphique']; if (ES.g) GR.sort((a, b) => (b === ES.g) - (a === ES.g));
@@ -492,6 +570,8 @@
         <h3 class="d">Ce besoin est pris en charge par Fill.</h3>
         <p>Fill est le service de communication externalisée conçu par Studio ES pour les collectivités et les entreprises : publications, actualités, créations et suivi, avec un prix fixe chaque mois.</p>
         <div class="fl-go-a"><a class="bt" href="https://fill.studioes.fr/simulateur/">Estimer mon besoin sur Fill <span class="ar">${ico('ne')}</span></a><a class="bt cl" href="https://fill.studioes.fr/diagnostic/">Faire le diagnostic</a></div></div>`;
+    } else if (ES.e === 'cmd') { h += vueCmd();
+    } else if (ES.e === 'paye') { h += vuePaye();
     } else if (ES.e === 1) {
       const P = PJ[ES.k];
       h += `<div class="q"><p>${P.l}</p></div><div class="q"><p>${P.f.l}</p><div class="opts">${P.f.o.map((o, i) => { const pr = o[1] == null ? 'sur devis' : Array.isArray(o[1]) ? (ES.k === 'site' || ES.k === 'app' ? (nfSite(o) ? `dès ${fmt(Math.floor(o[1][0] * 100 / nfSite(o)) / 100)} € par mois` : `dès ${fmt(o[1][0])} €`) : (ES.p ? `dès ${o[1][1]} € par mois` : `dès ${fmt(o[1][0])} € par an`)) : `dès ${fmt(o[1])} €`; return `<button data-f="${i}" aria-pressed="${ES.f === i}">${o[0]}${o[2] ? `<small>${o[2]}</small>` : ''}<em>${pr}</em></button>`; }).join('')}</div></div>`;
@@ -500,7 +580,7 @@
       if (P.p && f[1] != null) h += `<div class="q"><p>${P.p.l}</p><div class="opts">${P.p.o.map((o, i) => (ES.k === 'site' || ES.k === 'app') && o[2] && !f[1][1].includes(o[2]) ? '' : `<button data-p="${i}" aria-pressed="${ES.k === 'site' || ES.k === 'app' ? (nfSite(f) ? ES.p === i : i === 0) : ES.p === i}">${o[0]}<small>${o[1]}</small></button>`).join('')}</div></div>`;
       if (P.o) h += `<div class="q"><p>${P.o.l} (facultatif)</p><div class="opts">${P.o.o.map((o, i) => `<button data-o="${i}" aria-pressed="${ES.o.includes(i)}">${o[0]}<em>${o[1] == null ? 'sur devis' : '+' + fmt(o[1]) + ' €'}</em></button>`).join('')}${ES.k === 'site' ? `<button class="op-fill" data-fl aria-pressed="${!!ES.fl}"><span class="fm-m">Fill</span><span class="fl-t">Le faire vivre chaque mois<small>Actualités, nouvelles pages, visuels : un prix fixe chaque mois, sans engagement de durée.</small></span><em>sur abonnement</em></button>` : ''}</div></div>`;
       /* ce qui se commande sans échange préalable : lien direct vers la page de commande (devis et paiement en ligne) */
-      const cmd = lienCommande(); if (cmd) h += `<div class="q cmd"><a class="bt" href="${cmd}">Commander en ligne <span class="ar">${ico('ar')}</span></a><small>Devis immédiat et paiement sécurisé par carte${ES.k === 'site' ? ', en une fois ou en plusieurs' : ''}. Ou continuez pour être recontacté.</small></div>`;
+      if (clesCommande()) h += `<div class="q cmd"><button type="button" class="bt" data-cmd>Commander maintenant <span class="ar">${ico('ar')}</span></button><small>Devis immédiat et paiement sécurisé par carte${ES.k === 'site' ? ', en une fois ou en plusieurs' : ''}. Ou continuez pour être recontacté.</small></div>`;
     } else if (ES.e === 2) {
       const P = PJ[ES.k], r = calc(), c = ES.c, q = s => (s || '').replace(/"/g, '&quot;');
       if (P.date && ES.d != null && !c.date) c.date = moisTxt().replace(/^./, m => m.toUpperCase()) + ', ';
@@ -527,7 +607,7 @@
   const erreur = t => { let e = $('#estErr'); if (!e) { e = document.createElement('p'); e.id = 'estErr'; e.className = 'err'; e.setAttribute('role', 'alert'); const f = $('.form', estB); if (f) f.after(e); else estB.appendChild(e); } e.innerHTML = t; e.hidden = !t; };
   const garde = () => { const g = id => { const e = $('#' + id); return e ? e.value.trim() : ''; }; if (ES.e === 2) ES.c = { nom: g('eNom'), mail: g('eMail'), tel: g('eTel'), date: g('eDate'), msg: g('eMsg') }; };
   const ouvreDevis = s => {
-    if (ES.e === 3) ES = { e: 0, k: null, f: 0, o: [], p: 0, j: 1, c: {}, d: 5, g: ES.g };
+    if (ES.e === 3 || ES.e === 'paye') ES = { e: 0, k: null, f: 0, o: [], p: 0, j: 1, c: {}, d: 5, g: ES.g };
     if (s && s.k && PJ[s.k]) { ES.k = s.k; ES.f = s.f || 0; ES.o = (s.o || []).slice(); ES.j = 1; ES.p = s.k === 'site' || s.k === 'app' ? Math.max(0, PJ[s.k].p.o.findIndex(o => o[2] === (s.nf || 0))) : (s.mois ? 1 : 0); if (s.ph) ES.o = [0]; ES.e = 1; }
     else if (!ES.k) ES.e = 0;
     dernier = null; rendE(); ouvreF('#shE'); compte('devis-ouvert', 'Ouverture du devis');
@@ -539,12 +619,16 @@
       if (d.nd != null) { ES.d = ES.d == null ? 5 : null; friseMaj(); return; }
       if (d.fill != null) { ES.e = 'fill'; rendE(); compte('/devis/fill', 'Devis : redirection vers Fill'); return; }
       if (d.mod != null) { garde(); ES.e = 1; rendE(); return; }
+      if (d.cmd != null) { ES.cm = Object.assign({ part: false, rep: ES.c.nom || '', mail: ES.c.mail || '' }, ES.cm || {}); ES.e = 'cmd'; rendE(); compte('/devis/commande', 'Commande en ligne'); setTimeout(() => { const i = $('.cm-f input'); if (i && !i.value) i.focus({ preventScroll: true }); }, 350); return; }
+      if (d.qui != null) { gardeCmd(); ES.cm.part = d.qui === '1'; rendE(); return; }
       if (d.f != null) ES.f = +d.f; else if (d.p != null) ES.p = +d.p; else if (d.j) ES.j = +d.j; else if (d.o != null) { const i = +d.o; ES.o = ES.o.includes(i) ? ES.o.filter(x => x !== i) : [...ES.o, i]; } else if (d.fl != null) ES.fl = !ES.fl; else return;
       const y = estB.scrollTop; rendE(); estB.scrollTop = y;
     });
     estF.addEventListener('click', async e => {
       const b = e.target.closest('button'); if (!b) return;
       if (b.dataset.nav === '0') { ES.e = 0; rendE(); return; }
+      if (ES.e === 'cmd' && b.dataset.nav) { gardeCmd(); ES.e = 1; rendE(); return; }
+      if (b.dataset.payer != null) { payer(b); return; }
       if (b.dataset.nav) { garde(); ES.e = Math.max(0, ES.e + Number(b.dataset.nav)); rendE(); if (ES.e === 2) setTimeout(() => { const n = $('#eNom'); if (n && !n.value) n.focus({ preventScroll: true }); }, 350); return; }
       if (b.dataset.envoi != null) {
         garde(); const c = ES.c;
@@ -556,6 +640,8 @@
         catch (er) { b.disabled = false; b.classList.remove('charge'); b.firstChild.textContent = 'Réessayer '; erreur('L’envoi n’a pas abouti. Vérifiez votre connexion et réessayez, ou écrivez à <a href="mailto:contact@studioes.fr">contact@studioes.fr</a> : vos choix sont conservés.'); }
       }
     });
+    estB.addEventListener('input', gardeCmd); estB.addEventListener('change', gardeCmd);
+    retourPaiement();
     $$('[data-est]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); ES.g = b.dataset.g || (b.dataset.k && PJ[b.dataset.k] ? PJ[b.dataset.k].g : null); ouvreDevis(b.dataset.k && PJ[b.dataset.k] ? { k: b.dataset.k, f: 0, o: [] } : null); }));
   }
 
