@@ -142,10 +142,44 @@
   /* menu mobile */
   const brg = $('[data-mnu]'), mnu = $('#mnu');
   if (brg && mnu) {
-    const ferme = () => { brg.setAttribute('aria-expanded', 'false'); brg.setAttribute('aria-label', 'Ouvrir le menu'); mnu.classList.remove('on'); document.documentElement.classList.remove('mnu-on'); document.documentElement.style.overflow = ''; if (dock) dock.classList.remove('cache'); setTimeout(() => { if (!mnu.classList.contains('on')) mnu.hidden = true; }, 380); };
-    brg.addEventListener('click', () => { if (mnu.classList.contains('on')) return ferme(); mnu.hidden = false; brg.setAttribute('aria-expanded', 'true'); brg.setAttribute('aria-label', 'Fermer le menu'); document.documentElement.classList.add('mnu-on'); document.documentElement.style.overflow = 'hidden'; if (dock) dock.classList.add('cache'); requestAnimationFrame(() => requestAnimationFrame(() => mnu.classList.add('on'))); });
+    const ferme = () => { brg.setAttribute('aria-expanded', 'false'); brg.setAttribute('aria-label', 'Ouvrir le menu'); mnu.classList.remove('on'); setTimeout(() => { if (!mnu.classList.contains('on')) { mnu.hidden = true; document.documentElement.classList.remove('mnu-on'); document.documentElement.style.overflow = ''; } }, 650); };
+    brg.addEventListener('click', () => {
+      if (mnu.classList.contains('on')) return ferme();
+      const r = brg.getBoundingClientRect(); mnu.style.setProperty('--ox', (r.left + r.width / 2) + 'px'); mnu.style.setProperty('--oy', (r.top + r.height / 2) + 'px');
+      mnu.hidden = false; brg.setAttribute('aria-expanded', 'true'); brg.setAttribute('aria-label', 'Fermer le menu'); document.documentElement.classList.add('mnu-on'); document.documentElement.style.overflow = 'hidden';
+      requestAnimationFrame(() => requestAnimationFrame(() => mnu.classList.add('on')));
+    });
     $$('a, [data-est]', mnu).forEach(a => a.addEventListener('click', ferme));
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && mnu.classList.contains('on')) ferme(); });
+  }
+  /* dock : la lentille se pose sur la rubrique en cours ; on peut la faire glisser d'une rubrique à l'autre */
+  if (dock) {
+    const lens = $('.lens', dock), liens = $$('a', dock);
+    const pose = (a, dx) => { if (!lens || (!a && dx == null)) return; dock.style.setProperty('--lx', (dx != null ? dx : a.offsetLeft) + 'px'); dock.classList.add('a-lens'); };
+    const ici = liens.find(a => a.getAttribute('aria-current') === 'page');
+    if (ici) requestAnimationFrame(() => pose(ici));
+    let x0 = null, glisse = false, vise = null, bloque = false;
+    const sous = x => { const r0 = dock.getBoundingClientRect(); const c = x - r0.left; let m = null, d = 1e9; liens.forEach(a => { const k = Math.abs(a.offsetLeft + a.offsetWidth / 2 - c); if (k < d) { d = k; m = a; } }); return m; };
+    dock.addEventListener('dragstart', e => e.preventDefault());
+    dock.addEventListener('pointerdown', e => { if (!e.target.closest('a')) return; x0 = e.clientX; glisse = false; });
+    dock.addEventListener('pointermove', e => {
+      if (x0 == null) return;
+      if (!glisse && Math.abs(e.clientX - x0) > 6) { glisse = true; dock.classList.add('glisse'); try { dock.setPointerCapture(e.pointerId); } catch (x) {} }
+      if (!glisse) return;
+      const r0 = dock.getBoundingClientRect(), w = liens[0].offsetWidth, mn = liens[0].offsetLeft, mx = liens[liens.length - 1].offsetLeft;
+      pose(null, Math.max(mn, Math.min(mx, e.clientX - r0.left - w / 2)));
+      const a = sous(e.clientX); if (a !== vise) { liens.forEach(l => l.classList.toggle('sur', l === a)); vise = a; if (navigator.vibrate) try { navigator.vibrate(3); } catch (x) {} }
+    });
+    const fin = () => {
+      if (x0 == null) return; x0 = null;
+      if (!glisse) return;
+      dock.classList.remove('glisse'); bloque = true; setTimeout(() => bloque = false, 400);
+      if (vise) { pose(vise); const h = vise.href; if (vise !== ici) setTimeout(() => location.href = h, 220); else liens.forEach(l => l.classList.remove('sur')); }
+      glisse = false;
+    };
+    dock.addEventListener('pointerup', fin); dock.addEventListener('pointercancel', () => { x0 = null; glisse = false; dock.classList.remove('glisse'); if (ici) pose(ici); else dock.classList.remove('a-lens'); liens.forEach(l => l.classList.remove('sur')); });
+    dock.addEventListener('click', e => { if (bloque) { e.preventDefault(); return; } const a = e.target.closest('a'); if (a) pose(a); }, true);
+    window.addEventListener('pageshow', e => { if (e.persisted) { liens.forEach(l => l.classList.remove('sur')); if (ici) pose(ici); else dock.classList.remove('a-lens'); } });
   }
   /* cartes d'offre */
   const swPh = $('#swPh');
@@ -372,6 +406,7 @@
     else if (ES.k === 'site' || ES.k === 'app') { const nb = nfSite(f), sv = f[1] ? (f[1][2] || 9) : 9; if (f[1] == null) dv = true; else if (nb) { m = Math.floor(f[1][0] * 100 / nb) / 100 + sv; per = `par mois pendant ${nb} mois, suivi compris, puis ${sv} € par mois`; L.push(`en ${nb} fois sans frais`); } else { a = f[1][0]; m = sv; L.push('en une fois'); } }
     else { if (f[1] == null) dv = true; else a = f[1] * (f[3] === 'j' ? ES.j : 1); if (f[3] === 'j') L[0] += `, ${ES.j} jour${ES.j > 1 ? 's' : ''}`; }
     if (P.o) ES.o.forEach(i => { const o = P.o.o[i]; if (o[1] == null) dv = true; else a += o[1]; L.push(o[0]); });
+    if (ES.k === 'site' && ES.fl) L.push('le faire vivre avec Fill');
     return { a, m, dv, per, L };
   };
   /* site : nombre de mensualités choisi, ramené à une valeur que la formule propose (l'Essentiel s'arrête à 12) */
@@ -463,10 +498,9 @@
       if (P.date) h += friseH(ES.k);
       const f = P.f.o[ES.f]; if (f[3] === 'j') h += `<div class="q"><p>Nombre de jours</p><div class="opts" style="grid-template-columns:repeat(5,1fr)">${[1, 2, 3, 4, 5].map(j => `<button data-j="${j}" aria-pressed="${ES.j === j}" style="align-items:center">${j}</button>`).join('')}</div></div>`;
       if (P.p && f[1] != null) h += `<div class="q"><p>${P.p.l}</p><div class="opts">${P.p.o.map((o, i) => (ES.k === 'site' || ES.k === 'app') && o[2] && !f[1][1].includes(o[2]) ? '' : `<button data-p="${i}" aria-pressed="${ES.k === 'site' || ES.k === 'app' ? (nfSite(f) ? ES.p === i : i === 0) : ES.p === i}">${o[0]}<small>${o[1]}</small></button>`).join('')}</div></div>`;
-      if (P.o) h += `<div class="q"><p>${P.o.l} (facultatif)</p><div class="opts">${P.o.o.map((o, i) => `<button data-o="${i}" aria-pressed="${ES.o.includes(i)}">${o[0]}<em>${o[1] == null ? 'sur devis' : '+' + fmt(o[1]) + ' €'}</em></button>`).join('')}</div></div>`;
+      if (P.o) h += `<div class="q"><p>${P.o.l} (facultatif)</p><div class="opts">${P.o.o.map((o, i) => `<button data-o="${i}" aria-pressed="${ES.o.includes(i)}">${o[0]}<em>${o[1] == null ? 'sur devis' : '+' + fmt(o[1]) + ' €'}</em></button>`).join('')}${ES.k === 'site' ? `<button class="op-fill" data-fl aria-pressed="${!!ES.fl}"><span class="fm-m">Fill</span><span class="fl-t">Le faire vivre chaque mois<small>Actualités, nouvelles pages, visuels : un prix fixe chaque mois, sans engagement de durée.</small></span><em>sur abonnement</em></button>` : ''}</div></div>`;
       /* ce qui se commande sans échange préalable : lien direct vers la page de commande (devis et paiement en ligne) */
       const cmd = lienCommande(); if (cmd) h += `<div class="q cmd"><a class="bt" href="${cmd}">Commander en ligne <span class="ar">${ico('ar')}</span></a><small>Devis immédiat et paiement sécurisé par carte${ES.k === 'site' ? ', en une fois ou en plusieurs' : ''}. Ou continuez pour être recontacté.</small></div>`;
-      if (ES.k === 'site') h += `<div class="q fl-plus"><p>Et pour le faire vivre&nbsp;?</p><a href="https://fill.studioes.fr/" target="_blank" rel="noopener"><b>Actualités, nouvelles pages, visuels</b><span>Fill s’en charge chaque mois, avec un prix fixe.</span>${ico('ne')}</a></div>`;
     } else if (ES.e === 2) {
       const P = PJ[ES.k], r = calc(), c = ES.c, q = s => (s || '').replace(/"/g, '&quot;');
       if (P.date && ES.d != null && !c.date) c.date = moisTxt().replace(/^./, m => m.toUpperCase()) + ', ';
@@ -501,11 +535,11 @@
   if (estB) {
     estB.addEventListener('click', e => {
       const b = e.target.closest('button'); if (!b) return; const d = b.dataset;
-      if (d.k) { ES.k = d.k; ES.f = 0; ES.o = []; ES.p = 0; ES.j = 1; ES.e = 1; rendE(); compte('/devis/' + d.k, 'Devis : ' + PJ[d.k].l); return; }
+      if (d.k) { ES.k = d.k; ES.f = 0; ES.o = []; ES.fl = false; ES.p = 0; ES.j = 1; ES.e = 1; rendE(); compte('/devis/' + d.k, 'Devis : ' + PJ[d.k].l); return; }
       if (d.nd != null) { ES.d = ES.d == null ? 5 : null; friseMaj(); return; }
       if (d.fill != null) { ES.e = 'fill'; rendE(); compte('/devis/fill', 'Devis : redirection vers Fill'); return; }
       if (d.mod != null) { garde(); ES.e = 1; rendE(); return; }
-      if (d.f != null) ES.f = +d.f; else if (d.p != null) ES.p = +d.p; else if (d.j) ES.j = +d.j; else if (d.o != null) { const i = +d.o; ES.o = ES.o.includes(i) ? ES.o.filter(x => x !== i) : [...ES.o, i]; } else return;
+      if (d.f != null) ES.f = +d.f; else if (d.p != null) ES.p = +d.p; else if (d.j) ES.j = +d.j; else if (d.o != null) { const i = +d.o; ES.o = ES.o.includes(i) ? ES.o.filter(x => x !== i) : [...ES.o, i]; } else if (d.fl != null) ES.fl = !ES.fl; else return;
       const y = estB.scrollTop; rendE(); estB.scrollTop = y;
     });
     estF.addEventListener('click', async e => {

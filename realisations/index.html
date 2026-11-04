@@ -23,7 +23,7 @@
 <link rel="preload" href="/f/br.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/f/it.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/f/ur-i.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/s.css?v=40">
+<link rel="stylesheet" href="/s.css?v=41">
 <script>/* GoatCounter : mesure d'audience sans cookie, uniquement sur studioes.fr */if (/(^|\.)studioes\.fr$/.test(location.hostname) && !location.hostname.startsWith('dossiers')) { const g = document.createElement('script'); g.async = true; g.src = 'https://gc.zgo.at/count.js'; g.dataset.goatcounter = 'https://studioes.goatcounter.com/count'; document.head.appendChild(g); }</script>
 </head>
 <body>
@@ -74,14 +74,14 @@
 </header>
 <div class="mnu" id="mnu" hidden>
   <nav aria-label="Menu">
-    <a href="/">Accueil</a>
-    <a href="/metiers/photographie/">Photographie</a>
-    <a href="/metiers/sites-et-outils/">Web</a>
-    <a href="/metiers/graphisme/">Graphisme</a>
-    <a aria-current="page" href="/realisations/">Réalisations</a>
-    <a href="/offres/">Offres</a>
-    <a href="/#contact">Contact</a>
-    <a href="https://fill.studioes.fr/" class="nv-fill">Fill<small>Votre communication, chaque mois</small></a>
+    <div class="mn-g">
+      <a href="/metiers/photographie/"><span class="mn-im" style="--im:url(/p/t/matmatah-1.webp)"></span><i>01</i><b>Photographie</b></a>
+      <a href="/metiers/sites-et-outils/"><span class="mn-im" style="--im:url(/projets/pierceval-tattoo/img/cover-800.webp)"></span><i>02</i><b>Web</b></a>
+      <a href="/metiers/graphisme/"><span class="mn-im" style="--im:url(/p/t/affiches-2.webp)"></span><i>03</i><b>Graphisme</b></a>
+      <a aria-current="page" href="/realisations/"><span class="mn-im" style="--im:url(/projets/la-soute/img/cover-800.webp)"></span><i>04</i><b>Réalisations</b></a>
+    </div>
+    <div class="mn-l"><a href="/">Accueil</a><a href="/offres/">Offres</a><a href="/#contact">Contact</a></div>
+    <a class="mn-fill" href="https://fill.studioes.fr/"><span class="fm-m">Fill</span><span><b>Votre communication, chaque mois</b><small>Le service de communication externalisée de Studio ES</small></span><svg class="i"><use href="#ne"/></svg></a>
   </nav>
   <button type="button" class="bt" data-est>Demander un devis <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button>
 </div>
@@ -91,6 +91,7 @@
   <a href="/metiers/sites-et-outils/"><svg class="i"><use href="#ec"/></svg><span>Web</span></a>
   <a href="/metiers/graphisme/"><svg class="i"><use href="#gr"/></svg><span>Graphisme</span></a>
   <a aria-current="page" href="/realisations/"><svg class="i"><use href="#pl"/></svg><span>Réalisations</span></a>
+  <span class="lens" aria-hidden="true"></span>
   <button type="button" class="go" data-est><svg class="i"><use href="#cl"/></svg>Devis</button>
 </nav>
 <button type="button" class="haut-bt" data-haut aria-label="Revenir en haut de la page"><svg class="i"><use href="#up"/></svg></button>
@@ -185,7 +186,7 @@
 
 <script src="/reps.js?v=9"></script>
 <script src="/graph.js?v=1"></script>
-<script src="/app.js?v=34"></script>
+<script src="/app.js?v=35"></script>
 <script src="/motion.js?v=21"></script>
 </body>
 </html>
