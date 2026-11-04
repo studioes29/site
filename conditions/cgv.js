@@ -1,7 +1,7 @@
 /* Conditions générales de vente de Studio ES : SOURCE UNIQUE.
    Lue par la page https://studioes.fr/conditions/ et par le générateur de devis de dossiers.studioes.fr.
    Toute modification passe ici, avec une nouvelle date de version. */
-window.STUDIO_CGV_VERSION = "2026-10-30";
+window.STUDIO_CGV_VERSION = "2026-11-04";
 window.STUDIO_CGV_URL = "https://studioes.fr/conditions/";
 window.STUDIO_CGV_INTRO = "Les relations entre Studio ES (le prestataire) et le client sont régies par les présentes conditions générales de vente, complétées par le devis et ses conditions particulières. En cas de divergence, les conditions particulières prévalent. L'acceptation du devis implique l'adhésion à ces conditions. Les prestations de Fill, service de communication externalisée, relèvent de leurs propres conditions, publiées sur fill.studioes.fr/conditions.";
 window.STUDIO_CGV = [
@@ -41,7 +41,9 @@ window.STUDIO_CGV = [
     "Pour un client professionnel, tout retard entraîne des pénalités au taux de 1,5 % par mois et une indemnité forfaitaire de 40 € pour frais de recouvrement (articles L441-10 et D441-5 du Code de commerce). Pour un acheteur public, les intérêts moratoires du code de la commande publique s'appliquent."]],
   ["9. Abonnements et suivis", [
     "Les suivis mensuels (photographie, maintenance de site, application en abonnement) sont conclus pour la durée minimale indiquée au devis, puis se poursuivent de mois en mois.",
-    "Passé la durée minimale, chaque partie peut y mettre fin par écrit, un e-mail suffit, avec un préavis d'un mois. Ils sont facturés chaque mois à terme échu."]],
+    "Passé la durée minimale, chaque partie peut y mettre fin par écrit, un e-mail suffit, avec un préavis d'un mois. Ils sont facturés chaque mois à terme échu.",
+    "Projet réglé au mois (site internet ou application au mois, réservé aux clients professionnels et associatifs) : le premier mois est réglé en ligne par carte à la commande, puis chaque mois à la même date, par carte, automatiquement, pendant la durée d'engagement indiquée au devis. L'abonnement comprend la création décrite au devis, l'hébergement, les mises à jour, les sauvegardes et les petites modifications. Il s'arrête de lui-même au terme de l'engagement ; le client devient alors titulaire des droits prévus à l'article 7, et le suivi peut se poursuivre au tarif de maintenance en vigueur.",
+    "Un arrêt demandé par le client avant le terme de l'engagement laisse dues les mensualités restant à courir. En cas d'impayé, le prestataire peut suspendre le service après une relance restée sans effet pendant huit jours."]],
   ["10. Annulation et report", [
     "Toute annulation par le client après la commande entraîne la facturation du travail réalisé ; l'acompte reste acquis au prestataire.",
     "Pour un événement daté, une annulation à moins de 30 jours de la date entraîne en outre le paiement de 50 % du prix de la prestation. Un report à une date disponible est accepté sans frais une fois.",
