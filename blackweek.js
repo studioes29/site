@@ -17,7 +17,7 @@
 .bw.on{transform:none;opacity:1}
 .bw>*{position:relative}
 .bw-h{display:flex;align-items:center;gap:14px;margin:0 0 14px}
-.bw-pa{flex:none;position:relative;width:64px;height:64px;transform:rotate(-10deg);filter:drop-shadow(0 0 14px rgba(200,215,255,.45)) drop-shadow(0 8px 12px rgba(0,0,0,.5))}
+.bw-pa{flex:none;position:relative;width:64px;height:64px;transform:rotate(-10deg);filter:drop-shadow(0 8px 12px rgba(0,0,0,.5))}
 .bw-k{font:500 16px/1.25 var(--sf,"Urbanist",sans-serif);font-style:italic;color:rgba(244,242,247,.75);margin:0}
 .bw-t{font:800 27px/1.02 var(--d,"Bricolage Grotesque",sans-serif);letter-spacing:-.03em;margin:0 0 10px;padding-right:20px;color:#F4F2F7}
 .bw-p{font-size:15px;line-height:1.45;margin:0 0 16px;color:rgba(244,242,247,.78)}
@@ -26,6 +26,7 @@
 .bw-l{display:inline-flex;align-items:center;min-height:44px;padding:0 6px;color:#F4F2F7;font-weight:600;font-size:15px;text-decoration:underline;text-underline-offset:3px}
 .bw-n{font-size:12px;line-height:1.4;color:rgba(244,242,247,.55);margin:14px 0 0}
 .bw-x{position:absolute;top:14px;right:14px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(255,255,255,.1);color:#F4F2F7;font-size:20px;line-height:1;cursor:pointer}
+.bw-x::after{content:"";position:absolute;inset:-4px}
 @media (width<=600px){.bw{right:16px;bottom:16px;padding:22px 20px 18px}.bw-t{font-size:23px}}
 @media (prefers-reduced-motion:reduce){.bw{transition:none}}`;
   const st = document.createElement('style');

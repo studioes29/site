@@ -70,6 +70,7 @@ svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.8;stroke
   .hd .w{justify-content:center;height:54px}
   .lg span,.nav,.hd .bt{display:none}
   .lg svg{height:30px;width:16px}
+  .lg{position:relative}.lg::after{content:"";position:absolute;inset:-7px -14px}
 }
 
 /* dock mobile et retour en haut */
@@ -93,7 +94,7 @@ svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 /* apparition */
 .rv{opacity:0;transform:translateY(26px);transition:opacity .9s var(--e),transform 1.1s var(--e);transition-delay:calc(var(--i,0) * 70ms)}
 .rv.in{opacity:1;transform:none}
-@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
 /* accueil : une vraie bannière plein cadre, recouverte ensuite par la première feuille */
 .hero{position:relative;padding:0}
@@ -292,7 +293,7 @@ p.inc svg{margin-top:2px}
 .chips::-webkit-scrollbar{display:none}
 .chips button{flex:none;font-size:14px;font-weight:500;padding:9px 16px;border-radius:999px;background:var(--chip);transition:background .3s,color .3s}
 .chips button[aria-pressed="true"]{background:var(--ink);color:#fff}
-.chips button small{font-size:11px;opacity:.6;margin-left:4px;vertical-align:4px}
+.chips button small{font-size:11px;opacity:.6;margin-left:4px;vertical-align:4px;font-variant-numeric:tabular-nums}
 .rail{display:flex;align-items:stretch;gap:clamp(10px,1.1vw,14px);overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;padding:4px var(--side) 6px;scroll-padding-inline:var(--side);cursor:grab;overscroll-behavior-x:contain}
 .rail::-webkit-scrollbar{display:none}
 .rail.drag{cursor:grabbing;scroll-snap-type:none}
@@ -567,7 +568,7 @@ p.inc svg{margin-top:2px}
 .vraies h4{font-size:clamp(19px,1.6vw,22px);letter-spacing:-.04em;line-height:1.1}
 .vraies p{margin-top:5px;font-size:14px;line-height:1.45;color:var(--nmu);max-width:44em}
 .vraies .ch{display:flex;align-items:center;gap:18px}
-.vraies .pz{font-family:var(--d);font-weight:800;font-size:clamp(22px,1.9vw,27px);letter-spacing:-.04em;white-space:nowrap}
+.vraies .pz{font-family:var(--d);font-weight:800;font-size:clamp(22px,1.9vw,27px);letter-spacing:-.04em;white-space:nowrap;font-variant-numeric:tabular-nums}
 .vraies.on{background:linear-gradient(140deg,#2D37D6,#1D2499);box-shadow:none}
 .vraies.on p{color:rgba(255,255,255,.78)}
 @media (max-width:860px){
@@ -670,7 +671,7 @@ p.inc svg{margin-top:2px}
 .cs .im{position:relative;clip-path:none;transition:none}
 .rail.vu .cs .im{clip-path:none}
 .cs .im img{opacity:0;transition:opacity .6s ease,transform 1.4s var(--e)}
-.cs .im::before{content:"";position:absolute;z-index:2;left:0;top:0;height:3px;width:0;background:var(--bleu);border-radius:0 3px 3px 0;background:#fff;box-shadow:0 0 12px rgba(255,255,255,.6)}
+.cs .im::before{content:"";position:absolute;z-index:2;left:0;top:0;height:3px;width:0;background:var(--bleu);border-radius:0 3px 3px 0;background:#fff}
 .cs .im::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%) 0 0/250% 100%;animation:charge 1.2s linear infinite;opacity:1;transition:opacity .4s}
 @keyframes charge{to{background-position:-250% 0}}
 @keyframes barre{0%{width:0;opacity:1}55%{width:72%}85%{width:100%;opacity:1}100%{width:100%;opacity:0}}
@@ -1724,7 +1725,7 @@ body{color:var(--encre)}
 .hd .ret{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;font-size:17px;box-shadow:inset 0 0 0 1px var(--ln);transition:background .3s}
 .hd.dk .ret{box-shadow:inset 0 0 0 1px var(--nln)}
 @media (hover:hover){.hd .ret:hover{background:rgba(127,127,127,.14)}}
-@media (max-width:860px){.hd .ret{position:absolute;left:0;top:50%;margin-top:-18px}}
+@media (max-width:860px){.hd .ret{position:absolute;left:0;top:50%;margin-top:-18px}.hd .ret::after{content:"";position:absolute;inset:-4px}}
 
 /* photographie : têtes d'affiche en mise en page de magazine */
 .tetes{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-auto-rows:clamp(150px,13vw,210px);gap:clamp(8px,1vw,14px);margin-bottom:clamp(56px,6vw,96px)}

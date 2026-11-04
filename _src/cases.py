@@ -140,6 +140,13 @@ def theme(slug):
             'body{background:var(--bg);color:var(--tx)}main .chip,main .mq figure{background:#1E1E1E;color:#EDE7DC}main .bt-g{background:#2a2a2a;color:#EDE7DC}main .fh .k span{background:#262626!important;color:#EDE7DC;box-shadow:inset 0 0 0 1px rgba(237,231,220,.14)}' if dark else '')
 
 def esc(s): return html.escape(s, quote=True)
+def lisible(fond, sombre):
+    """Texte d'une pastille de palette : la couleur sombre de la marque ou le blanc, celle qui contraste le plus avec le fond (au moins 4,5:1 visé)."""
+    def lum(h):
+        v = [int(h[j:j + 2], 16) / 255 for j in (1, 3, 5)]; v = [x / 12.92 if x <= .03928 else ((x + .055) / 1.055) ** 2.4 for x in v]
+        return .2126 * v[0] + .7152 * v[1] + .0722 * v[2]
+    lf = lum(fond); ls = lum(sombre) if re.fullmatch(r'#[0-9A-Fa-f]{6}', sombre) else 0
+    return sombre if (lf + .05) / (ls + .05) >= 1.05 / (lf + .05) else '#fff'
 def nb(s): return s.replace(' :', ' :').replace(' ;', ' ;').replace(' ?', ' ?').replace(' !', ' !').replace('« ', '« ').replace(' »', ' »')
 
 def images(c):
@@ -192,7 +199,7 @@ def page(c):
         g = ''.join('\n    <img data-r%s src="img/%s.webp" width="%d" height="%d" alt="%s" loading="lazy">' % (' class="wide"' if cl else '', n, *sz(n), esc(a)) for n, cl, a in ims)
         sw = ''
         if t == 'Le système':
-            sw = '\n    <div class="sw" role="group" aria-label="Palette">%s</div>' % ''.join('<i style="background:%s;color:%s">%s</i>' % (col, b['dark'] if sum(int(col[j:j + 2], 16) for j in (1, 3, 5)) > 450 else 'rgba(255,255,255,.8)', esc(n)) for n, col in pal)
+            sw = '\n    <div class="sw" role="group" aria-label="Palette">%s</div>' % ''.join('<i style="background:%s;color:%s">%s</i>' % (col, lisible(col, b['dark']), esc(n)) for n, col in pal)
         m += ['<section class="ch" aria-labelledby="c%d">' % i, '  <div class="tx" data-r>', '    <span class="n">%02d</span>' % i,
               '    <h2 class="d" id="c%d">%s <span class="se">%s</span></h2>' % (i, esc(t), esc(se)), '    <p>%s</p>%s' % (esc(nb(tx)), sw), '  </div>',
               '  <div class="gal" tabindex="0" role="region" aria-label="Galerie">%s\n  </div>' % g, '</section>']
