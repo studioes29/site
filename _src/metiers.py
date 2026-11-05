@@ -93,9 +93,10 @@ VITRINE = [
         ('Réalisations', 'Les tatouages classés par style, pour se décider avant même d’appeler.', 'ecran', PV + 'd-real.webp', PV + 'm-real.webp', 'piercevaltattoo.fr')]),
     ('soute', 'La Soute', 'Site de saison et billetterie', '/projets/la-soute/',
      'Le O de Soute devient un hublot : le même signe sert de logo, de cadre photo et de repère sur le site, la brochure et les affiches.', [
-        ('La saison en ligne', 'L’agenda de la saison et les fiches concerts, dans la continuité de la brochure.', 'image', '/projets/la-soute/img/site.webp', '', ''),
-        ('Sur téléphone', 'La programmation lisible d’un coup d’œil, la réservation des places au bout du pouce.', 'duo', '/projets/la-soute/img/soute-8.webp', '/projets/la-soute/img/soute-9.webp', ''),
-        ('Du papier à l’écran', 'La brochure, les affiches et le site partagent le même hublot et les mêmes couleurs.', 'image', '/projets/la-soute/img/cover.webp', '', '')]),
+        ('Accueil', 'La saison en une phrase, le prochain concert et l’accès direct à l’agenda.', 'ecran', '/projets/la-soute/img/' + 'd-accueil.webp', '/projets/la-soute/img/' + 'm-accueil.webp', ''),
+        ('Agenda', 'Toute la saison, filtrée par style et par mois, une ligne par date.', 'ecran', '/projets/la-soute/img/' + 'd-agenda.webp', '/projets/la-soute/img/' + 'm-agenda.webp', ''),
+        ('Billetterie', 'Les places se choisissent par tarif sans quitter la fiche du concert.', 'ecran', '/projets/la-soute/img/' + 'd-billetterie.webp', '/projets/la-soute/img/' + 'm-billetterie.webp', ''),
+        ('Menu', 'Les concerts du mois, les styles et le temps fort, dès le survol du menu.', 'ecran', '/projets/la-soute/img/' + 'd-menu.webp', '/projets/la-soute/img/' + 'm-menu.webp', '')]),
     ('fill', 'Fill', 'Marque, site et simulateur', '/projets/fill/',
      'Un nom qui se lit deux fois : « fil » en plein, le second « l » au trait. Un fond lavande, un violet franc pour l’action.', [
         ('Accueil', 'Une bascule commune ou entreprise change les exemples, les supports et le vocabulaire de toute la page.', 'ecran', '/projets/fill/img/' + 'd-accueil.webp', '/projets/fill/img/' + 'm-accueil.webp', 'fill.studioes.fr'),
@@ -109,10 +110,10 @@ VITRINE = [
         ('Objectifs', 'Ce qu’il reste à mettre de côté chaque mois pour atteindre un objectif à temps.', 'image', '/projets/flouz/img/objectifs.webp', '', '')]),
     ('plateforme', 'Plateforme interne', 'Outil de gestion', '/projets/plateforme-interne/',
      'Une base claire, un vert d’eau pour ce qui attend une action, des cartes qui se lisent d’un coup d’œil.', [
-        ('Accueil', 'Ce qui attend, dans l’ordre : la prochaine action d’abord, puis le reste.', 'image', '/projets/plateforme-interne/img/maintenant.webp', '', ''),
-        ('Prospection', 'Chaque matin, des prospects vérifiés, un message rédigé et ses relances : il ne reste qu’à valider.', 'image', '/projets/plateforme-interne/img/message.webp', '', ''),
-        ('Clients', 'Du premier contact au paiement, chaque relation avance d’étape en étape.', 'image', '/projets/plateforme-interne/img/clients.webp', '', ''),
-        ('Argent', 'Encaissé, attendu, à relancer : relevé automatiquement depuis la banque.', 'image', '/projets/plateforme-interne/img/argent.webp', '', '')]),
+        ('Accueil', 'Ce qui attend, dans l’ordre : la prochaine action d’abord, puis le reste.', 'ecran', '/projets/plateforme-interne/img/' + 'd-maintenant.webp', '/projets/plateforme-interne/img/' + 'm-maintenant.webp', ''),
+        ('Prospection', 'Chaque matin, des prospects vérifiés, un message rédigé et ses relances : il ne reste qu’à valider.', 'ecran', '/projets/plateforme-interne/img/' + 'd-prospection.webp', '/projets/plateforme-interne/img/' + 'm-prospection.webp', ''),
+        ('Clients', 'Du premier contact au paiement, chaque relation avance d’étape en étape.', 'ecran', '/projets/plateforme-interne/img/' + 'd-clients.webp', '/projets/plateforme-interne/img/' + 'm-clients.webp', ''),
+        ('Argent', 'Encaissé, attendu, à relancer : relevé automatiquement depuis la banque.', 'ecran', '/projets/plateforme-interne/img/' + 'd-argent.webp', '/projets/plateforme-interne/img/' + 'm-argent.webp', '')]),
 ]
 def scene_v(t, typ, d, m, url):
     if typ == 'ecran':
