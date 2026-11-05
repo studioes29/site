@@ -252,6 +252,7 @@
     '.ap-chantier .sous{margin:24px 0 0;max-width:42ch;font-size:1.1rem;color:var(--tm)}',
     '.ap-chantier .cta{display:flex;flex-wrap:wrap;gap:10px;margin:30px 0 clamp(40px,7cqi,90px)}.ap-chantier .bt{border-radius:4px;text-transform:uppercase;font-stretch:80%;font-weight:800;letter-spacing:.02em}.ap-chantier .bt-a{background:var(--a);color:var(--on-a)}.ap-chantier .bt-l{box-shadow:inset 0 0 0 2px var(--t)}',
     '.ap-chantier .ph{position:relative;align-self:stretch;min-height:440px;clip-path:polygon(18% 0,100% 0,100% 100%,0 100%);background:var(--f3)}.ap-chantier .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}',
+    '.ap-chantier .hero.nu .w{grid-template-columns:1fr;padding-bottom:clamp(36px,6cqi,80px)}.ap-chantier .hero.nu h1{font-size:clamp(3.4rem,11cqi,9rem)}.ap-chantier .hero.nu .sous{max-width:52ch}',
     '.ap-chantier .ph .vide{position:absolute;inset:0;display:grid;place-items:center;color:var(--a);font-size:clamp(7rem,22cqi,14rem)}',
     '.ap-chantier .chiffres{display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--a);border-bottom:2px solid var(--a)}.ap-chantier .chiffres div{padding:20px clamp(14px,2cqi,24px);border-left:1px solid color-mix(in oklab,var(--t) 14%,transparent)}.ap-chantier .chiffres div:first-child{border-left:0}',
     '.ap-chantier .chiffres b{display:block;font-size:clamp(2rem,4.6cqi,3.4rem)}.ap-chantier .chiffres span{font-size:.86rem;color:var(--tm)}',
@@ -477,8 +478,8 @@
         T.sous ? h('p', 'sous', T.sous) : null,
         h('div', 'cta', [h('a', 'bt bt-a', [ctx.cta, h('span', 'arr', '→')], { href: S.tel ? 'tel:' + S.tel : '#demande' }), h('a', 'bt bt-l', 'Décrire mon besoin', { href: '#demande' })])
       ]),
-      h('div', 'ph', ph(0) ? img(ph(0)) : h('div', 'vide cd', initiales(nom)))
-    ]), { id: 'haut' }));
+      ph(0) ? h('div', 'ph', img(ph(0))) : null
+    ]), { id: 'haut', class: ph(0) ? 'hero' : 'hero nu' }));
     var ch = [];
     if (ctx.note) ch.push([noteFr(ctx.note) + '/5', 'note Google']);
     if (ctx.nbAvis) ch.push([String(ctx.nbAvis), 'avis publiés']);
