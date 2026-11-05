@@ -137,13 +137,13 @@ wb_droite = ('<div class="mh-trio" aria-hidden="true">'
              '<span class="tr-b"><img src="/projets/la-soute/img/soute-8.webp" alt="" width="480" height="1039"></span>'
              '<span class="tr-c"><img src="/projets/flouz/img/budget.webp" alt="" width="1200" height="1600"></span></div>')
 wb_act = '<div class="mh-ac"><button type="button" class="bt" data-est data-k="site">Démarrer mon site %s</button><a class="ln" href="#vitrine">Voir les réalisations</a></div>' % AR
-wb = entete('Web', 'Web', 'Sites et applications sur mesure.', 'Un site de réservation, le site d’une salle de concert, une application de budget : des projets différents, conçus avec la même exigence de clarté, pour les TPE, les lieux culturels et les collectivités de Bretagne.' + ZONE_WB,
+wb = entete('Web', 'Web', 'Sites et applications sur mesure.', 'Sites internet, outils en ligne et applications : chaque projet part d’un besoin précis et se conçoit avec la même exigence de clarté, pour les entreprises, les lieux culturels et les collectivités.' + ZONE_WB,
             ' u-nuit mh-wb-s', FG('Web', 'right:-3vw;top:-.36em;font-size:calc(var(--fg-t) * 1.25)'), wb_droite, wb_act, True)
 wb += '''
 <section class="sec feuille vi-f u-lilas" id="vitrine" aria-labelledby="t-vi">
   ''' + FG('Écrans', 'left:-2vw;bottom:-.34em;--vy:-80px;font-size:calc(var(--fg-t) * .8)') + '''
   <div class="w">
-    <div class="sec-t rv"><div><p class="pt"><i>01</i><span>Réalisations</span></p><h2 class="d" id="t-vi">Réalisations web<span class="it">Cinq projets, cinq usages.</span></h2></div><p class="lead">Choisissez un projet, puis une fonctionnalité : l’écran correspondant s’affiche.</p></div>
+    <div class="sec-t rv"><div><p class="pt"><i>01</i><span>Réalisations</span></p><h2 class="d" id="t-vi">Réalisations web<span class="it">Un projet, un usage.</span></h2></div><p class="lead">Choisissez un projet, puis une fonctionnalité : l’écran correspondant s’affiche.</p></div>
     <div class="vi rv">''' + vitrine() + '''</div>
   </div>
 </section>
