@@ -561,6 +561,7 @@
       const j = await r.json().catch(() => ({}));
       if (!r.ok || j.erreur || !/^https:\/\//.test(j.url || '')) throw new Error(j.erreur || 'Le paiement n’a pas pu être préparé.');
       compte('commande-paiement', 'Commande : vers le paiement'); b.firstChild.textContent = 'Ouverture du paiement ';
+      try { sessionStorage.setItem('es:paiement', JSON.stringify({ t: Date.now(), ES })); } catch (e) {}
       setTimeout(() => { location.href = j.url; }, 600);
     } catch (e) {
       b.disabled = false; b.classList.remove('charge'); b.firstChild.textContent = 'Réessayer ';
@@ -576,7 +577,13 @@
   };
   const retourPaiement = () => {
     let ses = ''; try { const u = new URL(location.href); ses = u.searchParams.get('paye') || ''; if (ses) { u.searchParams.delete('paye'); history.replaceState(null, '', u.pathname + u.search + u.hash); } } catch (e) {}
-    if (!/^cs_(live|test)_/.test(ses)) return;
+    if (!/^cs_(live|test)_/.test(ses)) {
+      /* retour de Stripe sans paiement (bouton retour, page fermée) : la commande reprend où elle en était */
+      let g = null; try { g = JSON.parse(sessionStorage.getItem('es:paiement') || 'null'); sessionStorage.removeItem('es:paiement'); } catch (e) {}
+      if (g && g.ES && Date.now() - g.t < 6 * 3600e3) { ES = g.ES; rendE(); ouvreF('#shE'); setTimeout(() => { erreur('Paiement non abouti : votre commande est gardée. Vous pouvez reprendre le paiement, ou écrire à <a href="mailto:contact@studioes.fr">contact@studioes.fr</a>.'); const e = $('#estErr'); if (e) e.scrollIntoView({ block: 'center' }); }, 400); }
+      return;
+    }
+    try { sessionStorage.removeItem('es:paiement'); } catch (e) {}
     ES.e = 'paye'; ES.py = {}; rendE(); ouvreF('#shE');
     let n = 0; const lire = () => fetch(ACOMPTE + '?session=' + encodeURIComponent(ses), { cache: 'no-store' }).then(r => r.json()).then(j => { if (j.statut === 'en_attente' && ++n <= 6) { setTimeout(lire, 2000); return; } ES.py = j.statut === 'en_attente' ? { lent: 1 } : j; rendE(); if (j.statut === 'paye') compte('commande-payee', 'Commande payée'); }).catch(() => { if (++n <= 6) setTimeout(lire, 2000); else { ES.py = { lent: 1 }; rendE(); } });
     lire();
@@ -703,11 +710,11 @@
       if (d.sw != null) { jette(d.sw === '1' ? 1 : 0); return; }
       if (d.pick != null) { const S = ES.sw, i = +d.pick; S.sel = S.sel.includes(i) ? S.sel.filter(x => x !== i) : [...S.sel, i].sort(); b.setAttribute('aria-pressed', String(S.sel.includes(i))); pied(); return; }
       if (d.swr === 'refaire') { ES.sw = { i: 0, r: {} }; rendE(); return; }
-      if (d.swr === 'parler') { ES.k = 'site'; ES.f = 3; ES.o = []; ES.p = 0; ES.multi = null; ES.e = 2; ES.mode = 'dem'; ES.cm = Object.assign({ part: false }, ES.cm || {}); rendE(); return; }
+      if (d.swr === 'parler') { ES.k = 'site'; ES.f = 3; ES.o = []; ES.p = 0; ES.multi = null; ES.e = 2; ES.mode = 'dem'; ES.cm = Object.assign({ part: ES.k === 'mariage' }, ES.cm || {}); rendE(); return; }
       if (d.nd != null) { ES.d = ES.d == null ? 5 : null; friseMaj(); return; }
       if (d.fill != null) { ES.e = 'fill'; rendE(); compte('/devis/fill', 'Devis : redirection vers Fill'); return; }
       if (d.mod != null) { garde(); if (ES.multi) { ES.e = 'swipe'; ES.multi = null; } else ES.e = 1; rendE(); return; }
-      if (d.mode) { garde(); gardeCmd(); ES.mode = d.mode; ES.cm = ES.cm || { part: false }; if (d.mode === 'cmd') { ES.cm.rep = ES.cm.rep || ES.c.nom || ''; ES.cm.mail = ES.cm.mail || ES.c.mail || ''; } else { ES.c.nom = ES.c.nom || ES.cm.rep || ''; ES.c.mail = ES.c.mail || ES.cm.mail || ''; } const y = estB.scrollTop; rendE(); estB.scrollTop = y; compte('/devis/' + d.mode, d.mode === 'cmd' ? 'Commande en ligne' : 'Demande'); return; }
+      if (d.mode) { garde(); gardeCmd(); ES.mode = d.mode; ES.cm = ES.cm || { part: ES.k === 'mariage' }; if (d.mode === 'cmd') { ES.cm.rep = ES.cm.rep || ES.c.nom || ''; ES.cm.mail = ES.cm.mail || ES.c.mail || ''; } else { ES.c.nom = ES.c.nom || ES.cm.rep || ''; ES.c.mail = ES.c.mail || ES.cm.mail || ''; } const y = estB.scrollTop; rendE(); estB.scrollTop = y; compte('/devis/' + d.mode, d.mode === 'cmd' ? 'Commande en ligne' : 'Demande'); return; }
       if (d.qui != null) { gardeCmd(); ES.cm.part = d.qui === '1'; rendE(); return; }
       if (d.f != null) ES.f = +d.f; else if (d.p != null) ES.p = +d.p; else if (d.j) ES.j = +d.j; else if (d.o != null) { const i = +d.o; ES.o = ES.o.includes(i) ? ES.o.filter(x => x !== i) : [...ES.o, i]; } else if (d.fl != null) ES.fl = !ES.fl; else return;
       const y = estB.scrollTop; rendE(); estB.scrollTop = y;
@@ -720,12 +727,12 @@
         ES.k = ch[0].k; ES.f = ch[0].f; ES.o = []; ES.fl = false; ES.j = 1; ES.p = 0;
         ES.multi = ch.length > 1 ? ch.map(R => nomReco(R) + ' (' + prixTxt(R.k, R.f).replace(/<small>.*$/, '').replace(/&nbsp;/g, ' ') + ')') : null;
         if (oui) ES.c.msg = (ES.multi ? 'Formules choisies : ' + ES.multi.join(', ') + '. ' : '') + 'Situations qui me correspondent : ' + oui;
-        if (ch.length > 1) { ES.e = 2; ES.mode = 'dem'; ES.cm = Object.assign({ part: false }, ES.cm || {}); compte('/devis/trouver-plusieurs', 'Trouver : plusieurs formules'); }
+        if (ch.length > 1) { ES.e = 2; ES.mode = 'dem'; ES.cm = Object.assign({ part: ES.k === 'mariage' }, ES.cm || {}); compte('/devis/trouver-plusieurs', 'Trouver : plusieurs formules'); }
         else { ES.e = 1; compte('/devis/trouver-choisir', 'Trouver : formule choisie'); }
         rendE(); return; }
       if (b.dataset.nav === '0') { ES.e = 0; rendE(); return; }
       if (b.dataset.payer != null) { payer(b); return; }
-      if (b.dataset.nav) { garde(); gardeCmd(); ES.e = Math.max(0, ES.e + Number(b.dataset.nav)); if (ES.e === 2) ES.cm = Object.assign({ part: false }, ES.cm || {}); rendE(); if (ES.e === 2) setTimeout(() => { const n = $('#eNom'); if (n && !n.value) n.focus({ preventScroll: true }); }, 350); return; }
+      if (b.dataset.nav) { garde(); gardeCmd(); ES.e = Math.max(0, ES.e + Number(b.dataset.nav)); if (ES.e === 2) ES.cm = Object.assign({ part: ES.k === 'mariage' }, ES.cm || {}); rendE(); if (ES.e === 2) setTimeout(() => { const n = $('#eNom'); if (n && !n.value) n.focus({ preventScroll: true }); }, 350); return; }
       if (b.dataset.envoi != null) {
         garde(); const c = ES.c;
         const faute = (id, t) => { const f = $('#' + id); f.setAttribute('aria-invalid', 'true'); f.addEventListener('input', () => f.removeAttribute('aria-invalid'), { once: true }); erreur(t); f.focus(); };
