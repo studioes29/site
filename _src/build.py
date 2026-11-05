@@ -116,11 +116,8 @@ def page(path, title, desc, canon, main, home=False, ld='', og=''):
     h = re.sub(r'(<meta property="og:description" content=")[^"]*', lambda m: m.group(1) + desc, h)
     if og: h = h.replace('content="https://studioes.fr/og.jpg"', 'content="https://studioes.fr/' + og + '"')
     h = h.replace('<meta name="robots" content="noindex">', '<meta name="robots" content="%s">' % ROBOTS)
-    if home:
-        # la photographie de la bannière part en premier, au bon format
-        h = h.replace('<link rel="preload" href="/f/br.woff2"', '<link rel="preload" as="image" href="/h/scene-1536.webp" fetchpriority="high">\n<link rel="preload" href="/f/br.woff2"', 1)
+    h = h.replace('<a class="evite" href="#selection">', '<a class="evite" href="#h1">')
     if not home:
-        h = h.replace('<a class="evite" href="#selection">', '<a class="evite" href="#h1">')
         h = re.sub(r'<script type="application/ld\+json">.*?</script>', '<script type="application/ld+json">' + ld + '</script>' if ld else '', h, count=1, flags=re.S)
     # la rubrique courante est signalée dans le menu
     if path: h = h.replace('<a href="/%s/">' % path, '<a aria-current="page" href="/%s/">' % path)
