@@ -83,3 +83,8 @@
 
 .ae-c.vu .ae-pas{display:none}
 @media (max-width:860px){.ae-pas li{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+.ae-c{scroll-margin-top:84px}
+@media (max-width:860px){.ae-c{min-height:470px}}
+/* e-mail : le bouton suit le champ, la mention RGPD passe dessous (sur téléphone, le bouton reste au-dessus du dock) */
+#ae-f4 .bt{order:1}#ae-f4 .ae-rgpd{order:2;margin-top:4px}
+@media (max-width:860px){.ae-prog{padding:12px 14px;margin-bottom:16px}.ae-prog p{font-size:13.5px}.ae-e .ae-s{margin-bottom:16px}.ae-c{padding:20px 18px 24px}.ae-f .bt{justify-self:stretch;justify-content:center}.ae-rgpd{font-size:12px}}

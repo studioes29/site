@@ -154,7 +154,7 @@ wb += '''
     <div class="sec-t rv"><div><p class="pt"><i>02</i><span>Les offres</span></p><h2 class="d" id="t-of">Sites internet<span class="it">Écrits et mis en ligne pour vous.</span></h2></div><p class="lead">Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris.</p></div>
 ''' + offres_web.replace('<div class="sous rv"><h3 class="d">Site internet</h3><p>Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris. <button type="button" class="trv" data-est data-swipe>Je ne sais pas ce qu’il me faut</button></p></div>', '<div class="sous rv"><p><button type="button" class="trv" data-est data-swipe>Je ne sais pas ce qu’il me faut</button></p></div>') + '''
     <div class="ae rv" id="apercu" aria-labelledby="t-ae">
-      <link rel="stylesheet" href="/apercu.css?v=7">
+      <link rel="stylesheet" href="/apercu.css?v=9">
       <div class="ae-g">
         <p class="pt"><i>Essai</i><span>Votre site en aperçu</span></p>
         <h3 class="d" id="t-ae">Votre site,<span class="it">avant même d’en parler.</span></h3>
@@ -199,7 +199,7 @@ wb += '''
           <div class="ae-nav"><div class="bb"><i></i><i></i><i></i><em></em></div><iframe title="Aperçu de votre site" loading="lazy"></iframe></div>
         </div>
       </div>
-      <script src="/apercu.js?v=7" defer></script>
+      <script src="/apercu.js?v=9" defer></script>
     </div>
   </div>
 </section>

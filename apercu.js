@@ -21,6 +21,9 @@
   function aller(n) {
     etapes.forEach(function (e, i) { e.classList.toggle('on', i === n); });
     pas.forEach(function (p, i) { p.classList.toggle('on', i === Math.min(n, 3)); p.classList.toggle('ok', i < Math.min(n, 4)); });
+    // à chaque étape, la carte revient en haut de l'écran : sa hauteur change, et sur téléphone la rubrique suivante glisserait par-dessus
+    var c = $('.ae-c'), t = c.getBoundingClientRect().top;
+    if (n && (t < 60 || t > innerHeight * .4)) c.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
     var f = etapes[n] && etapes[n].querySelector('input:not([type=file]):not([tabindex="-1"]),button');
     if (f && n && innerWidth > 860) setTimeout(function () { f.focus({ preventScroll: true }); }, 320);
   }
