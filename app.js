@@ -445,7 +445,7 @@
   };
   const prixTxt = (k, f) => { const o = PJ[k].f.o[f], p = o[1][0], n = Math.max(...o[1][1]), des = (k === 'app' && f === 2) || (k === 'site' && f === 2) ? 'dès ' : ''; return `${des}${fmt(p)}&nbsp;€<small>ou ${des}${fmt(Math.floor(p * 100 / n) / 100)}&nbsp;€ par mois en ${n} fois sans frais</small>`; };
   const nomReco = R => (R.k === 'site' ? 'Site ' : '') + PJ[R.k].f.o[R.f][0];
-  const carteSw = (c, i, r) => `<div class="sw-c${r === 0 ? ' haut' : ''}" data-i="${i}" style="--t:${c.c};--r:${r}" aria-hidden="${r !== 0}"><div class="pt-c"><span>${String(i + 1).padStart(2, '0')}</span></div><div class="pt-l"><b>Studio ES</b><small>Situation ${String(i + 1).padStart(2, '0')}-${String(SW.length).padStart(2, '0')}</small><p>${c.t}</p></div><b class="st oui">C’est moi</b><b class="st non">Pas moi</b></div>`;
+  const carteSw = (c, i, r) => `<div class="sw-c${r === 0 ? ' haut' : ''}" data-i="${i}" style="--t:${c.c};--r:${r}" aria-hidden="${r !== 0}"><div class="pt-c"><span>${String(i + 1).padStart(2, '0')}</span></div><div class="pt-l"><p>${c.t}</p></div><b class="st oui">C’est moi</b><b class="st non">Pas moi</b></div>`;
   const vueSwipe = () => {
     const S = ES.sw;
     if (S.i < SW.length) return `<div class="sw">
@@ -456,7 +456,7 @@
     if (!L.length) return `<div class="sw-r"><h3 class="d">Rien ne presse.<span class="it">Votre présence en ligne tient la route.</span></h3><p>Si un projet se précise, décrivez-le : une réponse arrive sous 48&nbsp;h.</p><div class="sw-ra"><button type="button" class="bt" data-swr="parler">En parler <span class="ar">${ico('ar')}</span></button><button type="button" class="bt cl" data-swr="refaire">Recommencer</button></div></div>`;
     if (!S.sel) S.sel = L.map((x, i) => i);
     return `<div class="sw-r"><p class="sw-k">${L.length > 1 ? 'Deux réponses, qui se complètent. Gardez celles qui vous intéressent.' : 'Notre recommandation'}</p><div class="sw-l">${L.map((R, i) => { const o = PJ[R.k].f.o[R.f], on = S.sel.includes(i);
-      return `<button type="button" class="sw-o" data-pick="${i}" aria-pressed="${on}" style="--t:${R.t};--i:${i}"><span class="sw-ob"><span class="ck">${ico('ok')}</span></span><span class="sw-ot"><small>${R.k === 'site' ? 'Site internet' : 'Application'}</small><b class="d">${nomReco(R)}</b><span class="sw-od">${o[2]}</span><span class="sw-op">${prixTxt(R.k, R.f)}</span><span class="sw-ow">Parce que ${R.w.map(k => SW.find(c => c.k === k).w).join(', ').replace(/, ([^,]*)$/, ' et $1')}.</span></span></button>`; }).join('')}</div>
+      return `<button type="button" class="sw-o" data-pick="${i}" aria-pressed="${on}" style="--i:${i}"><span class="ck">${ico('ok')}</span><span class="sw-ot"><small>${R.k === 'site' ? 'Site internet' : 'Application'}</small><b class="d">${nomReco(R)}</b><span class="sw-od">${o[2]}</span><span class="sw-op">${prixTxt(R.k, R.f)}</span><span class="sw-ow">${(t => (/^[aeiouyéèh]/i.test(t) ? 'Parce qu’' : 'Parce que ') + t)(R.w.map(k => SW.find(c => c.k === k).w).join(', ').replace(/, ([^,]*)$/, ' et $1'))}.</span></span></button>`; }).join('')}</div>
       <button type="button" class="sw-re" data-swr="refaire">Recommencer</button></div>`;
   };
   /* geste : la carte suit le doigt, s'incline, et part au-delà d'un seuil (ou d'un geste vif) */
@@ -466,7 +466,7 @@
     const pose = () => { raf = 0; c.style.transform = `translate3d(${dx}px,${Math.abs(dx) * .06}px,0) rotate(${dx / 18}deg)`; c.style.setProperty('--o', Math.min(1, Math.abs(dx) / 90).toFixed(2)); c.dataset.s = dx > 0 ? 'oui' : 'non'; };
     c.addEventListener('pointerdown', e => { actif = true; x0 = e.clientX; y0 = e.clientY; dx = 0; t0 = performance.now(); c.setPointerCapture(e.pointerId); c.classList.add('tient'); });
     c.addEventListener('pointermove', e => { if (!actif) return; dx = e.clientX - x0; if (!raf) raf = requestAnimationFrame(pose); });
-    const fin = () => { if (!actif) return; actif = false; c.classList.remove('tient'); const v = Math.abs(dx) / Math.max(1, performance.now() - t0); if (Math.abs(dx) > 90 || (Math.abs(dx) > 30 && v > .5)) jette(dx > 0 ? 1 : 0); else { c.style.transform = ''; c.style.setProperty('--o', 0); } };
+    const fin = () => { if (!actif) return; actif = false; c.classList.remove('tient'); const v = Math.abs(dx) / Math.max(1, performance.now() - t0); if (Math.abs(dx) > 70 || (Math.abs(dx) > 24 && v > .35)) jette(dx > 0 ? 1 : 0); else { c.style.transform = ''; c.style.setProperty('--o', 0); } };
     c.addEventListener('pointerup', fin); c.addEventListener('pointercancel', fin);
   };
   let jetEnCours = false;
@@ -479,7 +479,7 @@
     const suiv = $(`.sw-c[data-i="${S.i + 1}"]`, estB); if (suiv) { suiv.classList.add('haut'); suiv.style.setProperty('--r', 0); suiv.setAttribute('aria-hidden', 'false'); }
     $$('.sw-c', estB).forEach(x => { const i = +x.dataset.i; if (i > S.i + 1) x.style.setProperty('--r', i - S.i - 1); });
     const pile = $('.sw-pile', estB), n3 = S.i + 3; if (pile && SW[n3]) pile.insertAdjacentHTML('afterbegin', carteSw(SW[n3], n3, 2));
-    setTimeout(() => { jetEnCours = false; S.i++; if (S.i >= SW.length) { S.sel = null; rendE(); compte('/devis/trouver-fini', 'Trouver : résultat'); } else { c.remove(); majEtape(); swipeLie(); } }, 300);
+    setTimeout(() => { jetEnCours = false; S.i++; if (S.i >= SW.length) { S.sel = null; rendE(); compte('/devis/trouver-fini', 'Trouver : résultat'); } else { c.remove(); majEtape(); swipeLie(); } }, 190);
   };
   const majEtape = () => { const L = $('#estL'); if (L && ES.e === 'swipe') L.textContent = ES.sw.i < SW.length ? `Situation ${ES.sw.i + 1} sur ${SW.length}` : 'Votre recommandation'; };
   addEventListener('keydown', e => { if (ES.e !== 'swipe' || !ES.sw || ES.sw.i >= SW.length || $('#shE').hidden) return; if (e.key === 'ArrowRight') { e.preventDefault(); jette(1); } else if (e.key === 'ArrowLeft') { e.preventDefault(); jette(0); } });
