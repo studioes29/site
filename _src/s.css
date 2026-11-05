@@ -1167,6 +1167,7 @@ body{color:var(--encre)}
 .wb-ec{border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 50px 90px -40px rgba(8,6,30,.8),0 0 0 1px rgba(255,255,255,.08)}
 .wb-bar{display:flex;align-items:center;gap:5px;height:28px;padding:0 11px;background:#F2F0EA}
 .wb-bar i{width:8px;height:8px;border-radius:50%;background:rgba(32,32,32,.18)}
+.wb-bar em:empty{width:30%;height:16px}
 .wb-bar em{font-style:normal;font-size:11px;color:rgba(32,32,32,.6);margin:0 auto;padding:2px 14px;border-radius:999px;background:#fff;transform:translateX(-14px)}
 .wb-pg{position:relative;aspect-ratio:16/10;overflow:hidden;background:#2B1330}
 .wb-pg img{position:absolute;left:0;top:0;width:100%;height:auto;animation:defile 14s cubic-bezier(.65,0,.35,1) infinite alternate;animation-play-state:paused}
@@ -1796,8 +1797,8 @@ body{color:var(--encre)}
 .vs-img{border-radius:16px;overflow:hidden;background:#E9E7F4;box-shadow:0 30px 60px -30px rgba(28,24,64,.45)}
 .vs-img img{width:100%;height:100%;object-fit:cover}
 /* maquettes de téléphone au format portrait : la carte entière, centrée, sans recadrage */
-#vp-flouz .vs-img,#vp-plateforme .vs-img{display:flex;justify-content:center;background:none;box-shadow:none;border-radius:0;overflow:visible}
-#vp-flouz .vs-img img,#vp-plateforme .vs-img img{width:auto;height:100%;max-width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:16px;box-shadow:0 30px 60px -30px rgba(28,24,64,.45)}
+#vp-flouz .vs-img{display:flex;justify-content:center;background:none;box-shadow:none;border-radius:0;overflow:visible}
+#vp-flouz .vs-img img img{width:auto;height:100%;max-width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:16px;box-shadow:0 30px 60px -30px rgba(28,24,64,.45)}
 @media (max-width:860px){.vs{aspect-ratio:4/3.4}}
 
 /* nuancier : couleurs présentées comme des puces Pantone */

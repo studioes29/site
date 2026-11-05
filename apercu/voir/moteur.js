@@ -488,8 +488,8 @@
     out.push(h('div', 'w', h('div', 'chiffres', ch.slice(0, 4).map(function (c) { return h('div', null, [h('b', 'cd', c[0]), h('span', null, c[1])]); }))));
     // la demande en trois questions : rien ne part, la page prépare le message
     var choix = { quoi: '', quand: '' };
-    var recap = h('p', 'recap', 'Choisissez, le message se prépare.');
-    function maj() { recap.textContent = ''; if (!choix.quoi && !choix.quand) { recap.textContent = 'Choisissez, le message se prépare.'; return; } recap.appendChild(h('b', null, 'Votre demande : ')); recap.appendChild(document.createTextNode([choix.quoi, choix.quand].filter(Boolean).join(', ') + '. ' + (S.tel ? 'Appelez le ' + (S.telAffiche || S.tel) + ' ou écrivez-nous.' : 'Écrivez-nous.'))); }
+    var recap = h('p', 'recap', '');
+    function maj() { recap.textContent = ''; if (!choix.quoi && !choix.quand) {  return; } recap.appendChild(h('b', null, 'Votre demande : ')); recap.appendChild(document.createTextNode([choix.quoi, choix.quand].filter(Boolean).join(', ') + '. ' + (S.tel ? 'Appelez le ' + (S.telAffiche || S.tel) + ' ou écrivez-nous.' : 'Écrivez-nous.'))); }
     function chips(lst, cle) { var z = h('div', 'chips'); lst.forEach(function (x) { var b = h('button', null, x, { type: 'button', 'aria-pressed': 'false' }); b.addEventListener('click', function () { choix[cle] = choix[cle] === x ? '' : x; z.querySelectorAll('button').forEach(function (y) { y.setAttribute('aria-pressed', String(y.textContent === choix[cle])); }); maj(); }); z.appendChild(b); }); return z; }
     var quoi = ctx.services.map(function (sv) { return ((/['’]$/.test(sv.titre) ? sv.titre : sv.titre + ' ') + sv.it).replace(/^(Le|La|Les|Nos|Notre|Votre|Vos)\s+/i, ''); }).concat(['Autre demande']).map(function (t) { return t.charAt(0).toUpperCase() + t.slice(1); });
     out.push(h('section', 'bd clair', h('div', 'w demande', [

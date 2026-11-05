@@ -56,7 +56,7 @@ ph += '''
 <section class="sec feuille dk ph-f u-foret" id="reportages" data-dark aria-labelledby="t-tr">
   ''' + FG('Reportage', 'right:-2vw;top:-.36em;--vy:-80px;font-size:calc(var(--fg-t) * .72)') + '''
   <div class="w">
-    <div class="sec-t rv"><div><p class="pt"><i>01</i><span>Portfolio</span></p><h2 class="d" id="t-tr">Reportages<span class="it">Une sélection d’images, puis tous les reportages.</span></h2></div><p class="lead">Concerts, festivals, institutions, entreprises : quelques images choisies, puis l’ensemble des reportages à parcourir. Chaque reportage s’ouvre en grand.</p></div>
+    <div class="sec-t rv"><div><p class="pt"><i>01</i><span>Portfolio</span></p><h2 class="d" id="t-tr">Reportages<span class="it">Une sélection d’images, puis tous les reportages.</span></h2></div><p class="lead">Concerts, festivals, institutions, entreprises.</p></div>
     <div class="tetes">''' + tetes + '''</div>
 ''' + travaux.replace('<h3 class="d">Reportages récents</h3>', '<h3 class="d">Tous les reportages</h3>').replace('id="travaux"', 'id="photographie"') + '''
 </section>
@@ -93,9 +93,10 @@ VITRINE = [
         ('Réalisations', 'Les tatouages classés par style, pour se décider avant même d’appeler.', 'ecran', PV + 'd-real.webp', PV + 'm-real.webp', 'piercevaltattoo.fr')]),
     ('soute', 'La Soute', 'Site de saison et billetterie', '/projets/la-soute/',
      'Le O de Soute devient un hublot : le même signe sert de logo, de cadre photo et de repère sur le site, la brochure et les affiches.', [
-        ('La saison en ligne', 'L’agenda de la saison et les fiches concerts, dans la continuité de la brochure.', 'image', '/projets/la-soute/img/site.webp', '', ''),
-        ('Sur téléphone', 'La programmation lisible d’un coup d’œil, la réservation des places au bout du pouce.', 'duo', '/projets/la-soute/img/soute-8.webp', '/projets/la-soute/img/soute-9.webp', ''),
-        ('Du papier à l’écran', 'La brochure, les affiches et le site partagent le même hublot et les mêmes couleurs.', 'image', '/projets/la-soute/img/cover.webp', '', '')]),
+        ('Accueil', 'La saison en une phrase, le prochain concert et l’accès direct à l’agenda.', 'ecran', '/projets/la-soute/img/' + 'd-accueil.webp', '/projets/la-soute/img/' + 'm-accueil.webp', ''),
+        ('Agenda', 'Toute la saison, filtrée par style et par mois, une ligne par date.', 'ecran', '/projets/la-soute/img/' + 'd-agenda.webp', '/projets/la-soute/img/' + 'm-agenda.webp', ''),
+        ('Billetterie', 'Les places se choisissent par tarif sans quitter la fiche du concert.', 'ecran', '/projets/la-soute/img/' + 'd-billetterie.webp', '/projets/la-soute/img/' + 'm-billetterie.webp', ''),
+        ('Menu', 'Les concerts du mois, les styles et le temps fort, dès le survol du menu.', 'ecran', '/projets/la-soute/img/' + 'd-menu.webp', '/projets/la-soute/img/' + 'm-menu.webp', '')]),
     ('fill', 'Fill', 'Marque, site et simulateur', '/projets/fill/',
      'Un nom qui se lit deux fois : « fil » en plein, le second « l » au trait. Un fond lavande, un violet franc pour l’action.', [
         ('Accueil', 'Une bascule commune ou entreprise change les exemples, les supports et le vocabulaire de toute la page.', 'ecran', '/projets/fill/img/' + 'd-accueil.webp', '/projets/fill/img/' + 'm-accueil.webp', 'fill.studioes.fr'),
@@ -109,10 +110,10 @@ VITRINE = [
         ('Objectifs', 'Ce qu’il reste à mettre de côté chaque mois pour atteindre un objectif à temps.', 'image', '/projets/flouz/img/objectifs.webp', '', '')]),
     ('plateforme', 'Plateforme interne', 'Outil de gestion', '/projets/plateforme-interne/',
      'Une base claire, un vert d’eau pour ce qui attend une action, des cartes qui se lisent d’un coup d’œil.', [
-        ('Accueil', 'Ce qui attend, dans l’ordre : la prochaine action d’abord, puis le reste.', 'image', '/projets/plateforme-interne/img/maintenant.webp', '', ''),
-        ('Prospection', 'Chaque matin, des prospects vérifiés, un message rédigé et ses relances : il ne reste qu’à valider.', 'image', '/projets/plateforme-interne/img/message.webp', '', ''),
-        ('Clients', 'Du premier contact au paiement, chaque relation avance d’étape en étape.', 'image', '/projets/plateforme-interne/img/clients.webp', '', ''),
-        ('Argent', 'Encaissé, attendu, à relancer : relevé automatiquement depuis la banque.', 'image', '/projets/plateforme-interne/img/argent.webp', '', '')]),
+        ('Accueil', 'Ce qui attend, dans l’ordre : la prochaine action d’abord, puis le reste.', 'ecran', '/projets/plateforme-interne/img/' + 'd-maintenant.webp', '/projets/plateforme-interne/img/' + 'm-maintenant.webp', ''),
+        ('Prospection', 'Chaque matin, des prospects vérifiés, un message rédigé et ses relances : il ne reste qu’à valider.', 'ecran', '/projets/plateforme-interne/img/' + 'd-prospection.webp', '/projets/plateforme-interne/img/' + 'm-prospection.webp', ''),
+        ('Clients', 'Du premier contact au paiement, chaque relation avance d’étape en étape.', 'ecran', '/projets/plateforme-interne/img/' + 'd-clients.webp', '/projets/plateforme-interne/img/' + 'm-clients.webp', ''),
+        ('Argent', 'Encaissé, attendu, à relancer : relevé automatiquement depuis la banque.', 'ecran', '/projets/plateforme-interne/img/' + 'd-argent.webp', '/projets/plateforme-interne/img/' + 'm-argent.webp', '')]),
 ]
 def scene_v(t, typ, d, m, url):
     if typ == 'ecran':
@@ -143,7 +144,7 @@ wb += '''
 <section class="sec feuille vi-f u-lilas" id="vitrine" aria-labelledby="t-vi">
   ''' + FG('Écrans', 'left:-2vw;bottom:-.34em;--vy:-80px;font-size:calc(var(--fg-t) * .8)') + '''
   <div class="w">
-    <div class="sec-t rv"><div><p class="pt"><i>01</i><span>Réalisations</span></p><h2 class="d" id="t-vi">Réalisations web<span class="it">Un projet, un usage.</span></h2></div><p class="lead">Choisissez un projet, puis une fonctionnalité : l’écran correspondant s’affiche.</p></div>
+    <div class="sec-t rv"><div><p class="pt"><i>01</i><span>Réalisations</span></p><h2 class="d" id="t-vi">Réalisations web<span class="it">Un projet, un usage.</span></h2></div></div>
     <div class="vi rv">''' + vitrine() + '''</div>
   </div>
 </section>
@@ -163,7 +164,6 @@ wb += '''
       <div class="ae-c" aria-live="polite">
         <div class="ae-e on">
           <h4>Votre établissement</h4>
-          <p class="ae-s">Le nom et la ville suffisent pour retrouver votre fiche Google.</p>
           <form class="ae-f" id="ae-f1" novalidate>
             <div class="r2"><label>Nom de l’entreprise ou de l’association<input type="text" name="nom" autocomplete="organization" required></label><label>Ville<input type="text" name="ville" autocomplete="address-level2" required></label></div>
             <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
@@ -172,15 +172,14 @@ wb += '''
         </div>
         <div class="ae-e">
           <h4>Votre fiche Google</h4>
-          <p class="ae-s">Touchez la vôtre.</p>
           <div class="ae-res" id="ae-res"></div>
           <button type="button" class="ae-ret" data-ret="0">Modifier la recherche</button>
         </div>
         <div class="ae-e">
           <h4>Votre logo<span class="it">pour <span id="ae-nom"></span></span></h4>
-          <p class="ae-s">Si vous en avez un, ajoutez-le : les couleurs du site en découleront. Sinon, nous choisissons celles qui conviennent à votre activité.</p>
+          <p class="ae-s">Facultatif : les couleurs du site en découleront.</p>
           <form class="ae-f" id="ae-f3" novalidate>
-            <div class="ae-logo"><label>Ajouter votre logo<input type="file" id="ae-logo" accept="image/png,image/jpeg,image/webp,image/svg+xml"></label><span id="ae-logo-v" hidden><img alt="Votre logo"><button type="button" id="ae-logo-x">Retirer</button></span><span class="ae-s" style="margin:0">facultatif</span></div>
+            <div class="ae-logo"><label>Ajouter votre logo<input type="file" id="ae-logo" accept="image/png,image/jpeg,image/webp,image/svg+xml"></label><span id="ae-logo-v" hidden><img alt="Votre logo"><button type="button" id="ae-logo-x">Retirer</button></span></div>
             <button class="bt" type="submit">Préparer mon aperçu ''' + AR + '''</button>
           </form>
           <button type="button" class="ae-ret" data-ret="1">Changer de fiche</button>

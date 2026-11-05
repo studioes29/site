@@ -450,8 +450,7 @@
     const S = ES.sw;
     if (S.i < SW.length) return `<div class="sw">
       <div class="sw-pile">${SW.map((c, i) => i < S.i || i > S.i + 2 ? '' : carteSw(c, i, i - S.i)).reverse().join('')}</div>
-      <div class="sw-b"><button type="button" class="sw-x" data-sw="0" aria-label="Pas moi">${ico('x')}<span>Pas moi</span></button><button type="button" class="sw-x ok" data-sw="1" aria-label="C’est moi">${ico('ok')}<span>C’est moi</span></button></div>
-      <p class="sw-a">Glissez la carte${matchMedia('(hover:hover)').matches ? ', ou utilisez les flèches du clavier' : ''}.</p></div>`;
+      <div class="sw-b"><button type="button" class="sw-x" data-sw="0" aria-label="Pas moi">${ico('x')}<span>Pas moi</span></button><button type="button" class="sw-x ok" data-sw="1" aria-label="C’est moi">${ico('ok')}<span>C’est moi</span></button></div></div>`;
     const L = recos();
     if (!L.length) return `<div class="sw-r"><h3 class="d">Rien ne presse.<span class="it">Votre présence en ligne tient la route.</span></h3><p>Si un projet se précise, décrivez-le : une réponse arrive sous 48&nbsp;h.</p><div class="sw-ra"><button type="button" class="bt" data-swr="parler">En parler <span class="ar">${ico('ar')}</span></button><button type="button" class="bt cl" data-swr="refaire">Recommencer</button></div></div>`;
     if (!S.sel) S.sel = L.map((x, i) => i);
