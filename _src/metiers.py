@@ -56,7 +56,7 @@ ph += '''
 <section class="sec feuille dk ph-f u-foret" id="reportages" data-dark aria-labelledby="t-tr">
   ''' + FG('Reportage', 'right:-2vw;top:-.36em;--vy:-80px;font-size:calc(var(--fg-t) * .72)') + '''
   <div class="w">
-    <div class="sec-t rv"><div><p class="pt"><i>01</i><span>Portfolio</span></p><h2 class="d" id="t-tr">Reportages<span class="it">Une sélection d’images, puis tous les reportages.</span></h2></div><p class="lead">Concerts, festivals, institutions, entreprises : quelques images choisies, puis l’ensemble des reportages à parcourir. Chaque reportage s’ouvre en grand.</p></div>
+    <div class="sec-t rv"><div><p class="pt"><i>01</i><span>Portfolio</span></p><h2 class="d" id="t-tr">Reportages<span class="it">Une sélection d’images, puis tous les reportages.</span></h2></div><p class="lead">Concerts, festivals, institutions, entreprises.</p></div>
     <div class="tetes">''' + tetes + '''</div>
 ''' + travaux.replace('<h3 class="d">Reportages récents</h3>', '<h3 class="d">Tous les reportages</h3>').replace('id="travaux"', 'id="photographie"') + '''
 </section>
@@ -143,7 +143,7 @@ wb += '''
 <section class="sec feuille vi-f u-lilas" id="vitrine" aria-labelledby="t-vi">
   ''' + FG('Écrans', 'left:-2vw;bottom:-.34em;--vy:-80px;font-size:calc(var(--fg-t) * .8)') + '''
   <div class="w">
-    <div class="sec-t rv"><div><p class="pt"><i>01</i><span>Réalisations</span></p><h2 class="d" id="t-vi">Réalisations web<span class="it">Un projet, un usage.</span></h2></div><p class="lead">Choisissez un projet, puis une fonctionnalité : l’écran correspondant s’affiche.</p></div>
+    <div class="sec-t rv"><div><p class="pt"><i>01</i><span>Réalisations</span></p><h2 class="d" id="t-vi">Réalisations web<span class="it">Un projet, un usage.</span></h2></div></div>
     <div class="vi rv">''' + vitrine() + '''</div>
   </div>
 </section>
@@ -173,13 +173,12 @@ wb += '''
         </div>
         <div class="ae-e">
           <h4>Votre fiche Google</h4>
-          <p class="ae-s">Touchez la vôtre.</p>
           <div class="ae-res" id="ae-res"></div>
           <button type="button" class="ae-ret" data-ret="0">Modifier la recherche</button>
         </div>
         <div class="ae-e">
           <h4>Vos couleurs<span class="it">pour <span id="ae-nom"></span></span></h4>
-          <p class="ae-s">La mise en page s’adapte à votre activité : choisissez les couleurs, et ajoutez votre logo si vous en avez un.</p>
+          <p class="ae-s">La mise en page s’adapte à votre activité.</p>
           <form class="ae-f" id="ae-f3" novalidate>
             <div class="ae-pal" id="ae-pal" role="group" aria-label="Couleurs"></div>
             <div class="ae-logo"><label>Ajouter votre logo<input type="file" id="ae-logo" accept="image/png,image/jpeg,image/webp,image/svg+xml"></label><span id="ae-logo-v" hidden><img alt="Votre logo"><button type="button" id="ae-logo-x">Retirer</button></span><span class="ae-s" style="margin:0">facultatif</span></div>
