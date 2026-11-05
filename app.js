@@ -412,18 +412,17 @@
   /* site : nombre de mensualités choisi, ramené à une valeur que la formule propose (l'Essentiel s'arrête à 12) */
   const nfSite = f => { const P = PJ[ES.k], nb = P && P.p && P.p.o[ES.p] ? P.p.o[ES.p][2] : 0; return f && f[1] && Array.isArray(f[1][1]) && f[1][1].includes(nb) ? nb : 0; };
   const formDemande = () => {
-    let h = '';
     const P = PJ[ES.k], r = calc(), c = ES.c, q = s => (s || '').replace(/"/g, '&quot;');
-      if (P.date && ES.d != null && !c.date) c.date = moisTxt().replace(/^./, m => m.toUpperCase()) + ', ';
-      h += `<div class="recap"><button type="button" class="rc-mod" data-mod>Modifier</button><b>${P.l}</b>${r.L.concat(P.date && ES.d != null ? [moisTxt()] : []).join(' · ')}<br>Estimation : ${txtEst(r)}</div><div class="form" style="margin-top:16px">
+    if (P.date && ES.d != null && !c.date) c.date = moisTxt().replace(/^./, m => m.toUpperCase()) + ', ';
+    const recap = ES.multi ? `<div class="recap"><button type="button" class="rc-mod" data-mod>Modifier</button><b>Votre sélection</b>${ES.multi.join('<br>')}</div>` : `<div class="recap"><button type="button" class="rc-mod" data-mod>Modifier</button><b>${P.l}</b>${r.L.concat(P.date && ES.d != null ? [moisTxt()] : []).join(' · ')}<br>Estimation : ${txtEst(r)}</div>`;
+    return recap + `<div class="form" style="margin-top:16px">
         <label>Nom, structure<input id="eNom" autocomplete="name" value="${q(c.nom)}"></label>
         <label>E-mail<input id="eMail" type="email" autocomplete="email" value="${q(c.mail)}"></label>
         <label>Téléphone, si vous préférez être rappelé<input id="eTel" type="tel" autocomplete="tel" value="${q(c.tel)}"></label>
         ${P.date || ES.k === 'annee' ? `<label>${ES.k === 'annee' ? 'Vos temps forts de l’année, même approximatifs' : 'Date et lieu, même approximatifs'}<input id="eDate" value="${q(c.date)}"></label>` : ''}
         <label>Précisions<textarea id="eMsg" placeholder="Facultatif">${c.msg || ''}</textarea></label></div>`;
-    return h;
   };
-  const modeCmd = () => ES.e === 2 && !!clesCommande() && ES.mode !== 'dem';
+  const modeCmd = () => ES.e === 2 && !!clesCommande() && !ES.multi && ES.mode !== 'dem';
   const choixFin = () => `<div class="q fin-c"><p>Comment voulez-vous avancer&nbsp;?</p><div class="fc" role="radiogroup">
     <button type="button" role="radio" data-mode="cmd" aria-checked="${ES.mode !== 'dem'}"><span class="rd"></span><b>Commander maintenant</b><small>Devis immédiat, paiement sécurisé par carte, le projet démarre.</small></button>
     <button type="button" role="radio" data-mode="dem" aria-checked="${ES.mode === 'dem'}"><span class="rd"></span><b>En parler d’abord</b><small>Une réponse sous 48&nbsp;h, sans engagement.</small></button></div></div>`;
@@ -436,28 +435,28 @@
     { k: 'resa', t: 'Inscriptions, réservations ou plannings se gèrent encore à la main.', c: '#A9CCFF', ic: 'ca', w: 'une partie de votre organisation se fait encore à la main' },
     { k: 'clients', t: 'Mes clients voudraient suivre leur demande ou payer en ligne.', c: '#D7E8A4', ic: 'cu', w: 'vos clients veulent suivre leur demande en ligne' }
   ];
-  const verdict = () => {
-    const Y = ES.sw.r, oui = k => Y[k] === 1, site = oui('trouve') || oui('vieux') || oui('multi');
-    const app = oui('clients') ? 2 : oui('resa') ? 1 : oui('questions') ? 0 : -1;
-    const fs = oui('multi') ? 1 : 0, ws = ['trouve', 'vieux', 'multi'].filter(oui), wa = ['questions', 'resa', 'clients'].filter(oui);
-    if (app === 2 || (app >= 0 && !site)) return { k: 'app', f: app, w: wa, et: site ? { k: 'site', f: fs } : null };
-    if (site) return { k: 'site', f: fs, w: ws, et: app >= 0 ? { k: 'app', f: app } : null, wa };
-    return null;
+  /* une recommandation par besoin : un site si l'une des trois premières cartes parle, une application si l'une des trois dernières parle */
+  const recos = () => {
+    const Y = ES.sw.r, oui = k => Y[k] === 1, L = [];
+    const ws = ['trouve', 'vieux', 'multi'].filter(oui), wa = ['questions', 'resa', 'clients'].filter(oui);
+    if (ws.length) L.push({ k: 'site', f: oui('multi') ? 1 : 0, w: ws, t: SW.find(c => c.k === ws[0]).c });
+    if (wa.length) { const f = oui('clients') ? 2 : oui('resa') ? 1 : 0; L.push({ k: 'app', f, w: wa, t: SW.find(c => c.k === wa[wa.length - 1]).c }); }
+    return L;
   };
-  const prixTxt = (k, f) => { const o = PJ[k].f.o[f], p = o[1][0], n = Math.max(...o[1][1]); return `${fmt(p)}&nbsp;€<small>ou ${fmt(Math.floor(p * 100 / n) / 100)}&nbsp;€ par mois en ${n} fois sans frais</small>`; };
+  const prixTxt = (k, f) => { const o = PJ[k].f.o[f], p = o[1][0], n = Math.max(...o[1][1]), des = (k === 'app' && f === 2) || (k === 'site' && f === 2) ? 'dès ' : ''; return `${des}${fmt(p)}&nbsp;€<small>ou ${des}${fmt(Math.floor(p * 100 / n) / 100)}&nbsp;€ par mois en ${n} fois sans frais</small>`; };
+  const nomReco = R => (R.k === 'site' ? 'Site ' : '') + PJ[R.k].f.o[R.f][0];
+  const carteSw = (c, i, r) => `<div class="sw-c${r === 0 ? ' haut' : ''}" data-i="${i}" style="--t:${c.c};--r:${r}" aria-hidden="${r !== 0}"><div class="pt-c"><span>${String(i + 1).padStart(2, '0')}</span></div><div class="pt-l"><b>Studio ES</b><small>Situation ${String(i + 1).padStart(2, '0')}-${String(SW.length).padStart(2, '0')}</small><p>${c.t}</p></div><b class="st oui">C’est moi</b><b class="st non">Pas moi</b></div>`;
   const vueSwipe = () => {
     const S = ES.sw;
-    if (S.i < SW.length) return `<div class="sw" style="--n:${SW.length}">
-      <div class="sw-pile">${SW.map((c, i) => i < S.i ? '' : `<div class="sw-c${i === S.i ? ' haut' : ''}" data-i="${i}" style="--t:${c.c};--r:${i - S.i}" aria-hidden="${i !== S.i}"><span class="ico">${ico(c.ic)}</span><p>${c.t}</p><b class="st oui">C’est moi</b><b class="st non">Pas moi</b></div>`).reverse().join('')}</div>
+    if (S.i < SW.length) return `<div class="sw">
+      <div class="sw-pile">${SW.map((c, i) => i < S.i || i > S.i + 2 ? '' : carteSw(c, i, i - S.i)).reverse().join('')}</div>
       <div class="sw-b"><button type="button" class="sw-x" data-sw="0" aria-label="Pas moi">${ico('x')}<span>Pas moi</span></button><button type="button" class="sw-x ok" data-sw="1" aria-label="C’est moi">${ico('ok')}<span>C’est moi</span></button></div>
-      <p class="sw-a">Glissez la carte, ou utilisez les boutons${matchMedia('(hover:hover)').matches ? ' et les flèches du clavier' : ''}.</p></div>`;
-    const V = verdict();
-    if (!V) return `<div class="sw-r"><h3 class="d">Rien ne presse.<span class="it">Votre présence en ligne tient la route.</span></h3><p>Si un projet se précise, décrivez-le : une réponse arrive sous 48&nbsp;h.</p><div class="sw-ra"><button type="button" class="bt" data-swr="parler">En parler <span class="ar">${ico('ar')}</span></button><button type="button" class="bt cl" data-swr="refaire">Recommencer</button></div></div>`;
-    const o = PJ[V.k].f.o[V.f], nom = (V.k === 'site' ? 'Site ' : '') + o[0];
-    const pq = V.w.length ? 'Parce que ' + V.w.map(k => SW.find(c => c.k === k).w).join(', ').replace(/, ([^,]*)$/, ' et $1') + '.' : '';
-    const et = V.et ? `<p class="sw-et">Et ensuite, ${V.et.k === 'app' ? `pour ce qui se fait à la main : la formule ${PJ.app.f.o[V.et.f][0]}` : `pour être trouvé : un site ${PJ.site.f.o[V.et.f][0]}`}, à voir ensemble.</p>` : '';
-    return `<div class="sw-r"><p class="sw-k">Notre recommandation</p><h3 class="d">${nom}</h3><p class="sw-d">${o[2]}</p><p class="sw-p">${prixTxt(V.k, V.f)}</p><p class="sw-w">${pq}</p>${et}
-      <div class="sw-ra"><button type="button" class="bt" data-swr="voir">Choisir cette formule <span class="ar">${ico('ar')}</span></button><button type="button" class="bt cl" data-swr="parler">En parler d’abord</button></div>
+      <p class="sw-a">Glissez la carte${matchMedia('(hover:hover)').matches ? ', ou utilisez les flèches du clavier' : ''}.</p></div>`;
+    const L = recos();
+    if (!L.length) return `<div class="sw-r"><h3 class="d">Rien ne presse.<span class="it">Votre présence en ligne tient la route.</span></h3><p>Si un projet se précise, décrivez-le : une réponse arrive sous 48&nbsp;h.</p><div class="sw-ra"><button type="button" class="bt" data-swr="parler">En parler <span class="ar">${ico('ar')}</span></button><button type="button" class="bt cl" data-swr="refaire">Recommencer</button></div></div>`;
+    if (!S.sel) S.sel = L.map((x, i) => i);
+    return `<div class="sw-r"><p class="sw-k">${L.length > 1 ? 'Deux réponses, qui se complètent. Gardez celles qui vous intéressent.' : 'Notre recommandation'}</p><div class="sw-l">${L.map((R, i) => { const o = PJ[R.k].f.o[R.f], on = S.sel.includes(i);
+      return `<button type="button" class="sw-o" data-pick="${i}" aria-pressed="${on}" style="--t:${R.t};--i:${i}"><span class="sw-ob"><span class="ck">${ico('ok')}</span></span><span class="sw-ot"><small>${R.k === 'site' ? 'Site internet' : 'Application'}</small><b class="d">${nomReco(R)}</b><span class="sw-od">${o[2]}</span><span class="sw-op">${prixTxt(R.k, R.f)}</span><span class="sw-ow">Parce que ${R.w.map(k => SW.find(c => c.k === k).w).join(', ').replace(/, ([^,]*)$/, ' et $1')}.</span></span></button>`; }).join('')}</div>
       <button type="button" class="sw-re" data-swr="refaire">Recommencer</button></div>`;
   };
   /* geste : la carte suit le doigt, s'incline, et part au-delà d'un seuil (ou d'un geste vif) */
@@ -479,7 +478,8 @@
     if (navigator.vibrate) try { navigator.vibrate(6); } catch (x) {}
     const suiv = $(`.sw-c[data-i="${S.i + 1}"]`, estB); if (suiv) { suiv.classList.add('haut'); suiv.style.setProperty('--r', 0); suiv.setAttribute('aria-hidden', 'false'); }
     $$('.sw-c', estB).forEach(x => { const i = +x.dataset.i; if (i > S.i + 1) x.style.setProperty('--r', i - S.i - 1); });
-    setTimeout(() => { jetEnCours = false; S.i++; if (S.i >= SW.length) { rendE(); compte('/devis/trouver-fini', 'Trouver : résultat'); } else { c.remove(); majEtape(); swipeLie(); } }, 320);
+    const pile = $('.sw-pile', estB), n3 = S.i + 3; if (pile && SW[n3]) pile.insertAdjacentHTML('afterbegin', carteSw(SW[n3], n3, 2));
+    setTimeout(() => { jetEnCours = false; S.i++; if (S.i >= SW.length) { S.sel = null; rendE(); compte('/devis/trouver-fini', 'Trouver : résultat'); } else { c.remove(); majEtape(); swipeLie(); } }, 300);
   };
   const majEtape = () => { const L = $('#estL'); if (L && ES.e === 'swipe') L.textContent = ES.sw.i < SW.length ? `Situation ${ES.sw.i + 1} sur ${SW.length}` : 'Votre recommandation'; };
   addEventListener('keydown', e => { if (ES.e !== 'swipe' || !ES.sw || ES.sw.i >= SW.length || $('#shE').hidden) return; if (e.key === 'ArrowRight') { e.preventDefault(); jette(1); } else if (e.key === 'ArrowLeft') { e.preventDefault(); jette(0); } });
@@ -629,14 +629,15 @@
   const moisTxt = () => ES.d == null ? '' : MOIS[moisDe(ES.d).m] + ' ' + moisDe(ES.d).a;
   let dernier = null;
   const pied = () => {
-    const r = calc(), sm = r && siteMois(r), cible = r ? (sm ? r.m : r.a || r.m || null) : null;
-    const v = !r ? `<small>Estimation</small><span class="v"><i>Choisissez votre projet</i></span>`
+    const r = calc(), sm = r && siteMois(r), cible = r && !ES.multi ? (sm ? r.m : r.a || r.m || null) : null;
+    const v = ES.multi && ES.e === 2 ? `<small>Votre sélection</small><span class="v"><i>${ES.multi.length} formules, chiffrées ensemble</i></span>` : !r ? `<small>Estimation</small><span class="v"><i>Choisissez votre projet</i></span>`
       : cible ? `<small>Estimation</small><span class="v"><small>dès</small><b class="prix" id="estN"></b><i>€${sm ? ` ${r.per}, plus ${fmt(r.a)} € de reportage à la commande` : r.a && r.m ? `, puis ${fmt(r.m)} € par mois${eng()}` : r.per ? ' ' + r.per : ''}${r.dv ? ', plus une partie sur devis' : ''}</i></span>`
       : `<small>Estimation</small><span class="v"><b class="sd">Sur devis</b></span>`;
     const act = ES.e === 0 ? `<button class="bt cl sm" data-cal>Préférer un appel</button>`
       : ES.e === 1 ? `<button class="bt cl sm" data-nav="-1">Retour</button><button class="bt sm" data-nav="1">Continuer <span class="ar">${ico('ar')}</span></button>`
       : `<button class="bt cl sm" data-nav="-1">Retour</button><button class="bt sm" data-envoi>Envoyer la demande <span class="ar">${ico('ar')}</span></button>`;
-    if (ES.e === 'swipe') { estF.innerHTML = `<div class="tot"><small>${ES.sw.i < SW.length ? 'Répondez sans réfléchir' : 'Recommandation'}</small></div><div class="act"><button class="bt cl sm" data-nav="0">Retour</button></div>`; dernier = null; return; }
+    if (ES.e === 'swipe') { const fini = ES.sw.i >= SW.length, n = fini && ES.sw.sel ? ES.sw.sel.length : 0, L = fini ? recos() : [];
+      estF.innerHTML = `<div class="act"><button class="bt cl sm" data-nav="0">Retour</button></div>${L.length ? `<div class="act"><button class="bt sm" data-swgo${n ? '' : ' disabled'}>${n > 1 ? 'Envoyer ma demande' : n ? 'Continuer' : 'Choisissez une formule'} <span class="ar">${ico('ar')}</span></button></div>` : ''}`; dernier = null; return; }
     if (modeCmd()) { estF.innerHTML = piedCmd(); dernier = null; return; }
     if (ES.e === 'paye') { estF.innerHTML = ''; return; }
     if (ES.e === 'fill') { estF.innerHTML = `<div class="tot"><small>Accompagnement régulier</small><span class="v"><i>Sur fill.studioes.fr</i></span></div><div class="act"><button class="bt cl sm" data-nav="0">Retour</button></div>`; return; }
@@ -647,7 +648,7 @@
   const rendE = () => {
     $$('#estP i').forEach((x, i) => x.classList.toggle('on', ES.e === 'swipe' ? i === 0 : ES.e === 'paye' ? true : ES.e === 'fill' ? i === 0 : i <= Math.min(ES.e, 2)));
     const TT = $('#shET'); if (TT) TT.textContent = ES.e === 'swipe' ? 'Ce qu’il vous faut' : modeCmd() || ES.e === 'paye' ? 'Commander' : 'Demander un devis';
-    const L = $('#estL'); if (L) L.textContent = ES.e === 'paye' ? 'Paiement' : ES.e === 'fill' ? 'Accompagnement régulier' : ES.e === 3 ? 'Demande envoyée' : `Étape ${ES.e + 1} sur 3 : ${['votre projet', 'les détails', clesCommande() ? 'commander ou en parler' : 'vos coordonnées'][ES.e]}`;
+    const L = $('#estL'); if (L) L.textContent = ES.e === 'paye' ? 'Paiement' : ES.e === 'fill' ? 'Accompagnement régulier' : ES.e === 3 ? 'Demande envoyée' : `Étape ${ES.e + 1} sur 3 : ${['votre projet', 'les détails', clesCommande() && !ES.multi ? 'commander ou en parler' : 'vos coordonnées'][ES.e]}`;
     let h = '';
     if (ES.e === 'swipe') { h += vueSwipe();
     } else if (ES.e === 0) {
@@ -667,7 +668,7 @@
       const f = P.f.o[ES.f]; if (f[3] === 'j') h += `<div class="q"><p>Nombre de jours</p><div class="opts" style="grid-template-columns:repeat(5,1fr)">${[1, 2, 3, 4, 5].map(j => `<button data-j="${j}" aria-pressed="${ES.j === j}" style="align-items:center">${j}</button>`).join('')}</div></div>`;
       if (P.p && f[1] != null) h += `<div class="q"><p>${P.p.l}</p><div class="opts">${P.p.o.map((o, i) => (ES.k === 'site' || ES.k === 'app') && o[2] && !f[1][1].includes(o[2]) ? '' : `<button data-p="${i}" aria-pressed="${ES.k === 'site' || ES.k === 'app' ? (nfSite(f) ? ES.p === i : i === 0) : ES.p === i}">${o[0]}<small>${o[1]}</small></button>`).join('')}</div></div>`;
       if (P.o) h += `<div class="q"><p>${P.o.l} (facultatif)</p><div class="opts">${P.o.o.map((o, i) => `<button data-o="${i}" aria-pressed="${ES.o.includes(i)}">${o[0]}<em>${o[1] == null ? 'sur devis' : '+' + fmt(o[1]) + ' €'}</em></button>`).join('')}${ES.k === 'site' ? `<button class="op-fill" data-fl aria-pressed="${!!ES.fl}"><span class="fm-m"><svg role="img" aria-label="Fill"><use href="#fill"/></svg></span><span class="fl-t">Le faire vivre chaque mois<small>Actualités, nouvelles pages, visuels : un prix fixe chaque mois, sans engagement de durée.</small></span><em>sur abonnement</em></button>` : ''}</div></div>`;
-    } else if (ES.e === 2 && clesCommande()) {
+    } else if (ES.e === 2 && clesCommande() && !ES.multi) {
       h += choixFin();
       if (modeCmd()) h += vueCmd(); else h += formDemande();
     } else if (ES.e === 2) {
@@ -698,20 +699,15 @@
   if (estB) {
     estB.addEventListener('click', e => {
       const b = e.target.closest('button'); if (!b) return; const d = b.dataset;
-      if (d.k) { ES.k = d.k; ES.f = 0; ES.o = []; ES.fl = false; ES.p = 0; ES.j = 1; ES.e = 1; rendE(); compte('/devis/' + d.k, 'Devis : ' + PJ[d.k].l); return; }
+      if (d.k) { ES.k = d.k; ES.f = 0; ES.o = []; ES.fl = false; ES.multi = null; ES.p = 0; ES.j = 1; ES.e = 1; rendE(); compte('/devis/' + d.k, 'Devis : ' + PJ[d.k].l); return; }
       if (d.swipe != null) { ES.sw = { i: 0, r: {} }; ES.e = 'swipe'; rendE(); compte('/devis/trouver', 'Trouver ce qu’il me faut'); return; }
       if (d.sw != null) { jette(d.sw === '1' ? 1 : 0); return; }
-      if (d.swr) { const V = verdict();
-        if (d.swr === 'refaire') { ES.sw = { i: 0, r: {} }; rendE(); return; }
-        const oui = SW.filter(c => ES.sw.r[c.k] === 1).map(c => '« ' + c.t + ' »').join(' ');
-        if (V) { ES.k = V.k; ES.f = V.f; ES.o = []; ES.fl = false; ES.j = 1; ES.p = 0; } else { ES.k = 'site'; ES.f = 3; ES.o = []; ES.p = 0; }
-        if (oui) ES.c.msg = 'Situations qui me correspondent : ' + oui;
-        if (d.swr === 'voir') { ES.e = 1; rendE(); compte('/devis/trouver-choisir', 'Trouver : formule choisie'); }
-        else { ES.e = 2; ES.mode = 'dem'; ES.cm = Object.assign({ part: false }, ES.cm || {}); rendE(); compte('/devis/trouver-parler', 'Trouver : en parler'); }
-        return; }
+      if (d.pick != null) { const S = ES.sw, i = +d.pick; S.sel = S.sel.includes(i) ? S.sel.filter(x => x !== i) : [...S.sel, i].sort(); b.setAttribute('aria-pressed', String(S.sel.includes(i))); pied(); return; }
+      if (d.swr === 'refaire') { ES.sw = { i: 0, r: {} }; rendE(); return; }
+      if (d.swr === 'parler') { ES.k = 'site'; ES.f = 3; ES.o = []; ES.p = 0; ES.multi = null; ES.e = 2; ES.mode = 'dem'; ES.cm = Object.assign({ part: false }, ES.cm || {}); rendE(); return; }
       if (d.nd != null) { ES.d = ES.d == null ? 5 : null; friseMaj(); return; }
       if (d.fill != null) { ES.e = 'fill'; rendE(); compte('/devis/fill', 'Devis : redirection vers Fill'); return; }
-      if (d.mod != null) { garde(); ES.e = 1; rendE(); return; }
+      if (d.mod != null) { garde(); if (ES.multi) { ES.e = 'swipe'; ES.multi = null; } else ES.e = 1; rendE(); return; }
       if (d.mode) { garde(); gardeCmd(); ES.mode = d.mode; ES.cm = ES.cm || { part: false }; if (d.mode === 'cmd') { ES.cm.rep = ES.cm.rep || ES.c.nom || ''; ES.cm.mail = ES.cm.mail || ES.c.mail || ''; } else { ES.c.nom = ES.c.nom || ES.cm.rep || ''; ES.c.mail = ES.c.mail || ES.cm.mail || ''; } const y = estB.scrollTop; rendE(); estB.scrollTop = y; compte('/devis/' + d.mode, d.mode === 'cmd' ? 'Commande en ligne' : 'Demande'); return; }
       if (d.qui != null) { gardeCmd(); ES.cm.part = d.qui === '1'; rendE(); return; }
       if (d.f != null) ES.f = +d.f; else if (d.p != null) ES.p = +d.p; else if (d.j) ES.j = +d.j; else if (d.o != null) { const i = +d.o; ES.o = ES.o.includes(i) ? ES.o.filter(x => x !== i) : [...ES.o, i]; } else if (d.fl != null) ES.fl = !ES.fl; else return;
@@ -719,6 +715,15 @@
     });
     estF.addEventListener('click', async e => {
       const b = e.target.closest('button'); if (!b) return;
+      if (b.dataset.swgo != null) {
+        const L = recos(), ch = (ES.sw.sel || []).map(i => L[i]).filter(Boolean); if (!ch.length) return;
+        const oui = SW.filter(c => ES.sw.r[c.k] === 1).map(c => '« ' + c.t + ' »').join(' ');
+        ES.k = ch[0].k; ES.f = ch[0].f; ES.o = []; ES.fl = false; ES.j = 1; ES.p = 0;
+        ES.multi = ch.length > 1 ? ch.map(R => nomReco(R) + ' (' + prixTxt(R.k, R.f).replace(/<small>.*$/, '').replace(/&nbsp;/g, ' ') + ')') : null;
+        if (oui) ES.c.msg = (ES.multi ? 'Formules choisies : ' + ES.multi.join(', ') + '. ' : '') + 'Situations qui me correspondent : ' + oui;
+        if (ch.length > 1) { ES.e = 2; ES.mode = 'dem'; ES.cm = Object.assign({ part: false }, ES.cm || {}); compte('/devis/trouver-plusieurs', 'Trouver : plusieurs formules'); }
+        else { ES.e = 1; compte('/devis/trouver-choisir', 'Trouver : formule choisie'); }
+        rendE(); return; }
       if (b.dataset.nav === '0') { ES.e = 0; rendE(); return; }
       if (b.dataset.payer != null) { payer(b); return; }
       if (b.dataset.nav) { garde(); gardeCmd(); ES.e = Math.max(0, ES.e + Number(b.dataset.nav)); if (ES.e === 2) ES.cm = Object.assign({ part: false }, ES.cm || {}); rendE(); if (ES.e === 2) setTimeout(() => { const n = $('#eNom'); if (n && !n.value) n.focus({ preventScroll: true }); }, 350); return; }
@@ -728,7 +733,7 @@
         if (!c.nom) { faute('eNom', 'Indiquez votre nom ou celui de votre structure.'); return; }
         if (!mailOk(c.mail)) { faute('eMail', 'Cette adresse e-mail semble incomplète.'); return; }
         erreur(''); const P = PJ[ES.k], r = calc(); b.disabled = true; b.classList.add('charge'); b.firstChild.textContent = 'Envoi en cours ';
-        try { await envoie({ _subject: 'Demande de devis : ' + P.l.toLowerCase(), Projet: P.l, 'Détail': r.L.join(', '), Estimation: txtEst(r), Nom: c.nom, Email: c.mail, 'Téléphone': c.tel, 'Date et lieu': c.date || '', Message: c.msg || '' }); ES.e = 3; if (!reduit) { const fl = document.createElement('div'); fl.className = 'flash'; document.body.appendChild(fl); setTimeout(() => fl.remove(), 600); } rendE(); compte('devis-envoye', 'Demande de devis envoyée'); }
+        try { await envoie({ _subject: 'Demande de devis : ' + (ES.multi ? 'plusieurs formules web' : P.l.toLowerCase()), Projet: ES.multi ? 'Plusieurs formules' : P.l, 'Détail': ES.multi ? ES.multi.join(', ') : r.L.join(', '), Estimation: ES.multi ? '' : txtEst(r), Nom: c.nom, Email: c.mail, 'Téléphone': c.tel, 'Date et lieu': c.date || '', Message: c.msg || '' }); ES.e = 3; if (!reduit) { const fl = document.createElement('div'); fl.className = 'flash'; document.body.appendChild(fl); setTimeout(() => fl.remove(), 600); } rendE(); compte('devis-envoye', 'Demande de devis envoyée'); }
         catch (er) { b.disabled = false; b.classList.remove('charge'); b.firstChild.textContent = 'Réessayer '; erreur('L’envoi n’a pas abouti. Vérifiez votre connexion et réessayez, ou écrivez à <a href="mailto:contact@studioes.fr">contact@studioes.fr</a> : vos choix sont conservés.'); }
       }
     });
