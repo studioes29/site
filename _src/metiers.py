@@ -205,7 +205,7 @@ wb += '''
 </section>
 ''' + sect('applications', B) + '\n' + croise('Photographie<span class="it">Le studio photographie aussi vos événements.</span>', 'Concerts, festivals, cérémonies, vie d’une entreprise, mariages : un reportage discret, puis une sélection resserrée et retouchée.', '/metiers/photographie/', 'Découvrir la photographie', '/p/t/matmatah-1.webp', 'u-menthe') + '\n' + \
     contact_m('Site ou application : quelques choix, une estimation immédiate.', 'Web')
-page('metiers/sites-et-outils', 'Sites internet et applications en Bretagne · Studio ES', 'Sites, réservation en ligne et applications sur mesure pour les TPE, lieux culturels et collectivités de Bretagne : Pierceval Tattoo, La Soute. Dès 990 €.', 'https://studioes.fr/metiers/sites-et-outils/', wb, og='og-web.jpg',
+page('metiers/sites-et-outils', 'Sites internet et applications en Bretagne · Studio ES', 'Sites, réservation en ligne et applications sur mesure pour les TPE, lieux culturels et collectivités de Bretagne : Pierceval Tattoo, La Soute. Dès 490 €.', 'https://studioes.fr/metiers/sites-et-outils/', wb, og='og-web.jpg',
      ld=LD('Web', 'https://studioes.fr/metiers/sites-et-outils/', 'Création de sites internet et d’applications web', [('Site Essentiel', 490), ('Site Vitrine', 990), ('Site sur mesure', 1990), ('Application', 490)]))
 
 # ---------- Design graphique : trois familles, l'ensemble puis le détail ----------
