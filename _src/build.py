@@ -41,7 +41,7 @@ TR = [
     ('Matmatah', '#r=matmatah', '/p/matmatah-10.jpg', 'photo', 'Concert'),
     ('La Soute', '/projets/la-soute/', '/projets/la-soute/img/cover-800.webp', 'web graph photo', 'Identité, saison culturelle et site'),
     ('Les Petites Folies', '#r=pub-petites-folies', '/p/t/pub-petites-folies-1.webp', 'photo', 'Festival'),
-    ('MJC La Marelle', '/projets/mjc-la-marelle/', '/projets/mjc-la-marelle/img/cover-800.webp', 'graph web', 'Brochure de saison et site'),
+    ('MJC La Marelle', '/projets/mjc-la-marelle/', '/projets/mjc-la-marelle/img/cover-800.webp', 'graph', 'Brochure de saison'),
     ('Campagnes', '#r=campagnes', '/p/t/saisons-ellipse-8.webp', 'graph', 'Saisons culturelles, recrutement, prévention'),
     ('L’Ellipse', '/projets/saisons-ellipse/', '/projets/saisons-ellipse/img/cover-800.webp', 'graph', 'Campagne, saison culturelle'),
     ('Campagnes de recrutement', '/projets/campagnes-de-recrutement/', '/projets/campagnes-de-recrutement/img/cover-800.webp', 'graph', 'Campagne, recrutement'),
