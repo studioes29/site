@@ -1,6 +1,7 @@
 /* Module « Votre site en aperçu » (rubrique des offres web).
-   1. nom, activité, ville  2. fiche Google  3. couleurs et logo  4. e-mail pendant la préparation  5. l'aperçu dans la page.
-   La préparation démarre quand tout ce qu'il faut est connu (fiche, couleurs, logo) ; la barre avance pendant la saisie de l'e-mail.
+   1. nom et ville  2. fiche Google  3. logo facultatif  4. e-mail pendant la préparation  5. l'aperçu dans la page.
+   Les couleurs ne se choisissent pas : elles viennent du logo s'il est fourni, sinon de l'activité (côté serveur).
+   La préparation démarre quand tout ce qu'il faut est connu (fiche, logo) ; la barre avance pendant la saisie de l'e-mail.
    L'aperçu reste verrouillé côté serveur tant que l'e-mail n'est pas donné. */
 (function () {
   'use strict';
@@ -10,21 +11,6 @@
   var $ = function (s) { return R.querySelector(s); };
   var etapes = R.querySelectorAll('.ae-e'), pas = R.querySelectorAll('.ae-pas li');
   var st = { session: '', place: null, prep: null, id: '', pal: null, logo: null, debut: 0 };
-
-  /* mêmes familles de couleurs que la fonction */
-  var P = function (nom, fond, accent, clair) { return { nom: nom, fond: fond, accent: accent, clair: clair }; };
-  var FAM = [
-    [/restau|bistro|brasserie|cr[eê]p|pizz|caf[eé]|\bbar\b|traiteur|boulang|p[aâ]tiss|cuisine|snack|burger|glac|food|cave|vin|[ée]picerie|chocolat|fromag|boucher|poissonn/i,
-      [P('Bordeaux', '#1f0f10', '#f0875a', '#f2eadf'), P('Olive', '#161a10', '#d9c35c', '#eee9da'), P('Nuit', '#101521', '#f2a65a', '#efe9e0')]],
-    [/coiff|beaut|esth[eé]t|ongl|spa\b|massage|bien-[eê]tre|barb|tatou|pierc|maquill|institut|soin/i,
-      [P('Aubergine', '#1c0f1f', '#e68dca', '#ece6df'), P('Poudre', '#24181b', '#efb3a8', '#f4ece8'), P('Sauge', '#142019', '#b6d6b1', '#edf0e8')]],
-    [/garage|m[eé]can|auto|carross|plomb|[ée]lectric|menuis|charpent|ma[cç]on|couvr|peint|carrel|serrur|chauff|b[aâ]timent|paysag|jardin|artisan|[eé]b[eé]nist|r[eé]nov|terrass/i,
-      [P('Anthracite', '#141518', '#f2c14e', '#ecebe6'), P('Bleu nuit', '#0f1726', '#7fb0ff', '#e9edf2'), P('Rouille', '#1b1411', '#e07a4f', '#efe7dd')]],
-    [/kin[eé]|ost[eé]o|infirm|m[eé]dec|dentist|psych|sophro|pharma|sant[eé]|v[eé]t[eé]rin|di[eé]t|orthophon|podo|naturo|th[eé]rap|cabinet|avocat|notaire|comptab|conseil|assurance|immobili/i,
-      [P('Marine', '#0f1a24', '#8cc7c2', '#eef1ef'), P('Ardoise', '#161a1f', '#b6a6ff', '#eceae6'), P('Forêt', '#102018', '#9fd8a8', '#ebeee6')]]
-  ];
-  var DEF = [P('Aubergine', '#1c0f1f', '#e68dca', '#ece6df'), P('Forêt', '#102018', '#9fd8a8', '#ebeee6'), P('Nuit', '#101521', '#f2a65a', '#efe9e0')];
-  function palettes(a) { for (var i = 0; i < FAM.length; i++) if (FAM[i][0].test(a)) return FAM[i][1]; return DEF; }
 
   function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
   function uid() { return (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2)); }
@@ -44,13 +30,12 @@
   var f1 = $('#ae-f1');
   f1.addEventListener('submit', function (ev) {
     ev.preventDefault();
-    var nom = f1.nom.value.trim(), act = f1.activite.value.trim(), ville = f1.ville.value.trim();
-    if (nom.length < 2 || ville.length < 2) { erreur(f1, 'Indiquez le nom de l’établissement et sa ville.'); return; }
+    var nom = f1.nom.value.trim(), ville = f1.ville.value.trim();
+    if (nom.length < 2 || ville.length < 2) { erreur(f1, 'Indiquez le nom et la ville.'); return; }
     erreur(f1, '');
     var b = f1.querySelector('.bt'); b.disabled = true;
     st.session = uid();
-    appel({ action: 'chercher', q: nom + ' ' + ville, session: st.session })
-      .then(function (j) { return j.resultats && j.resultats.length ? j : appel({ action: 'chercher', q: nom + ' ' + act + ' ' + ville, session: st.session }); })
+    appel({ action: 'chercher', nom: nom, ville: ville, session: st.session })
       .then(function (j) { liste(j.resultats || []); aller(1); })
       .catch(function (e) { erreur(f1, e.message); })
       .then(function () { b.disabled = false; });
@@ -58,7 +43,7 @@
   function liste(res) {
     var z = $('#ae-res'); z.textContent = '';
     if (!res.length) {
-      z.appendChild(el('p', 'ae-vide', 'Aucune fiche Google ne correspond. Vérifiez le nom et la ville, ou écrivez-nous : l’aperçu peut aussi se préparer sans fiche.'));
+      z.appendChild(el('p', 'ae-vide', 'Aucune fiche Google ne correspond. Vérifiez l’orthographe du nom et de la ville, ou écrivez-nous : l’aperçu peut aussi se préparer sans fiche.'));
       return;
     }
     res.forEach(function (r) {
@@ -77,26 +62,15 @@
   function choisir(r) {
     st.place = r; st.id = '';
     $('#ae-nom').textContent = r.nom;
-    var act = f1.activite.value.trim();
-    var pals = palettes(act + ' ' + r.nom);
-    st.pal = pals[0];
-    var z = $('#ae-pal'); z.textContent = '';
-    pals.forEach(function (p, i) {
-      var b = el('button'); b.type = 'button'; b.setAttribute('aria-pressed', i ? 'false' : 'true');
-      var sw = el('span', 'ae-sw'); [p.fond, p.accent, p.clair].forEach(function (c) { var x = el('i'); x.style.background = c; sw.appendChild(x); });
-      b.appendChild(sw); b.appendChild(document.createTextNode(p.nom));
-      b.addEventListener('click', function () { st.pal = p; z.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); });
-      z.appendChild(b);
-    });
     erreur(f3, '');
     aller(2);
   }
-  /* couleurs et logo choisis : la préparation part, l'e-mail se saisit pendant ce temps */
+  /* logo donné ou non : la préparation part, l'e-mail se saisit pendant ce temps */
   f3.addEventListener('submit', function (ev) {
     ev.preventDefault();
     st.debut = Date.now(); st.id = ''; erreur(f4, '');
     progres(0);
-    st.prep = appel({ action: 'preparer', place: st.place.id, session: st.session, nom: f1.nom.value.trim(), activite: f1.activite.value.trim(), ville: f1.ville.value.trim(), palette: st.pal, logo: st.logo, _honey: f1._honey.value })
+    st.prep = appel({ action: 'preparer', place: st.place.id, session: st.session, nom: f1.nom.value.trim(), ville: f1.ville.value.trim(), palette: st.pal, logo: st.logo, _honey: f1._honey.value })
       .then(function (j) { st.id = j.id; progres(1); return j; });
     st.prep.catch(function (e) { progres(-1); erreur(f4, e.message); });
     aller(3);
@@ -121,7 +95,7 @@
   var fl = $('#ae-logo');
   fl.addEventListener('change', function () {
     var f = fl.files && fl.files[0]; if (!f) return;
-    var fin = function (d) { st.logo = d; var v = $('#ae-logo-v'); v.hidden = false; v.querySelector('img').src = d; };
+    var fin = function (d) { st.logo = d; var v = $('#ae-logo-v'); v.hidden = false; v.querySelector('img').src = d; couleursLogo(d); };
     if (f.size > 8e6) { erreur(f3, 'Ce fichier est trop lourd (8 Mo au plus).'); return; }
     var lr = new FileReader();
     lr.onload = function () {
@@ -137,7 +111,39 @@
     };
     lr.readAsDataURL(f);
   });
-  $('#ae-logo-x').addEventListener('click', function () { st.logo = null; fl.value = ''; $('#ae-logo-v').hidden = true; });
+  $('#ae-logo-x').addEventListener('click', function () { st.logo = null; st.pal = null; fl.value = ''; $('#ae-logo-v').hidden = true; });
+
+  /* couleurs tirées du logo : teinte dominante (hors blancs, noirs et gris) ; logo sans couleur : choix laissé au serveur */
+  function hsl(h, s, l) {
+    var k = function (n) { return (n + h / 30) % 12; }, a = s * Math.min(l, 1 - l);
+    var f = function (n) { return Math.round(255 * (l - a * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1)))); };
+    return '#' + [f(0), f(8), f(4)].map(function (x) { return x.toString(16).padStart(2, '0'); }).join('');
+  }
+  function couleursLogo(src) {
+    st.pal = null;
+    var im = new Image();
+    im.onload = function () {
+      var c = document.createElement('canvas'); c.width = c.height = 64;
+      var x = c.getContext('2d'); x.drawImage(im, 0, 0, 64, 64);
+      var d; try { d = x.getImageData(0, 0, 64, 64).data; } catch (e) { return; }
+      var seaux = {}, total = 0;
+      for (var i = 0; i < d.length; i += 4) {
+        if (d[i + 3] < 160) continue;
+        var r = d[i] / 255, g = d[i + 1] / 255, b = d[i + 2] / 255, mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, dl = mx - mn;
+        if (dl < .08) continue;
+        var s = dl / (1 - Math.abs(2 * l - 1));
+        if (s < .25 || l < .12 || l > .92) continue;
+        var h = mx === r ? ((g - b) / dl + 6) % 6 : mx === g ? (b - r) / dl + 2 : (r - g) / dl + 4; h *= 60;
+        var k = Math.floor(h / 15), o = seaux[k] || (seaux[k] = { n: 0, h: 0, s: 0, l: 0 });
+        o.n += s; o.h += h * s; o.s += s * s; o.l += l * s; total++;
+      }
+      if (total < 30) return;
+      var m = null; for (var q in seaux) if (!m || seaux[q].n > m.n) m = seaux[q];
+      var H = m.h / m.n, S = m.s / m.n, L = m.l / m.n;
+      st.pal = { fond: hsl(H, Math.min(.38, S * .5), .09), accent: hsl(H, Math.max(.45, Math.min(.85, S)), Math.max(.58, Math.min(.72, L))), clair: hsl(H, .22, .93) };
+    };
+    im.src = src;
+  }
 
   /* ---------- 3. l'e-mail débloque l'aperçu ---------- */
   f4.addEventListener('submit', function (ev) {
