@@ -1795,7 +1795,9 @@ body{color:var(--encre)}
 .vs-pap img{width:100%;height:100%;object-fit:cover;object-position:50% 0}
 .vs-img{border-radius:16px;overflow:hidden;background:#E9E7F4;box-shadow:0 30px 60px -30px rgba(28,24,64,.45)}
 .vs-img img{width:100%;height:100%;object-fit:cover}
-#vp-flouz .vs-img img{object-position:50% 40%}
+/* maquettes de téléphone au format portrait : la carte entière, centrée, sans recadrage */
+#vp-flouz .vs-img,#vp-plateforme .vs-img{display:flex;justify-content:center;background:none;box-shadow:none;border-radius:0;overflow:visible}
+#vp-flouz .vs-img img,#vp-plateforme .vs-img img{width:auto;height:100%;max-width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:16px;box-shadow:0 30px 60px -30px rgba(28,24,64,.45)}
 @media (max-width:860px){.vs{aspect-ratio:4/3.4}}
 
 /* nuancier : couleurs présentées comme des puces Pantone */
