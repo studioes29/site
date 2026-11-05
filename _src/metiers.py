@@ -51,7 +51,7 @@ audela = ''.join(ad(*x) for x in AUDELA)
 ph_droite = '<figure class="mh-ph" aria-hidden="true"><img class="a" src="/p/helena-3.jpg" alt="" fetchpriority="high" width="825" height="1100"><img class="b" src="/p/t/voeux-ph-2.webp" alt=""><img class="c" src="/projets/fl-auto/img/photo-2.webp" alt=""></figure>'
 ph_act = '<div class="mh-ac"><button type="button" class="bt" data-est data-k="evenement">Demander un devis %s</button><a class="ln" href="#reportages">Voir les reportages</a></div>' % AR
 ph = entete('Photographie', 'Photographie', 'Vos moments forts, sur le vif.', 'Concerts, festivals, cérémonies, vie d’une entreprise, mariages : un reportage discret en Bretagne, sans poses ni mise en scène, puis une sélection resserrée et retouchée, prête à servir.' + ZONE_PH,
-            ' u-noir mh-ph-s', FG('Photo', 'left:-1vw;bottom:-.44em;font-size:calc(var(--fg-t) * 1.1)'), ph_droite, ph_act, True)
+            ' u-noir mh-ph-s', FG('Photo', 'right:-2vw;font-size:calc(var(--fg-t) * 1.1)'), '', ph_act, True)
 ph += '''
 <section class="sec feuille dk ph-f u-foret" id="reportages" data-dark aria-labelledby="t-tr">
   ''' + FG('Reportage', 'right:-2vw;top:-.36em;--vy:-80px;font-size:calc(var(--fg-t) * .72)') + '''
@@ -139,7 +139,7 @@ wb_droite = ('<div class="mh-trio" aria-hidden="true">'
              '<span class="tr-c"><img src="/projets/flouz/img/budget.webp" alt="" width="1200" height="1600"></span></div>')
 wb_act = '<div class="mh-ac"><button type="button" class="bt" data-est data-k="site">Démarrer mon site %s</button><a class="ln" href="#vitrine">Voir les réalisations</a></div>' % AR
 wb = entete('Web', 'Web', 'Sites et applications sur mesure.', 'Sites internet, outils en ligne et applications : chaque projet part d’un besoin précis et se conçoit avec la même exigence de clarté, pour les entreprises, les lieux culturels et les collectivités.' + ZONE_WB,
-            ' u-nuit mh-wb-s', FG('Web', 'right:-3vw;top:-.36em;font-size:calc(var(--fg-t) * 1.25)'), wb_droite, wb_act, True)
+            ' u-nuit mh-wb-s', FG('Web', 'right:-3vw;font-size:calc(var(--fg-t) * 1.25)'), '', wb_act, True)
 wb += '''
 <section class="sec feuille vi-f u-lilas" id="vitrine" aria-labelledby="t-vi">
   ''' + FG('Écrans', 'left:-2vw;bottom:-.34em;--vy:-80px;font-size:calc(var(--fg-t) * .8)') + '''
@@ -213,7 +213,7 @@ gr_droite = ('<div class="mh-gr" aria-hidden="true"><img class="a" src="/projets
              '<img class="c" src="/projets/christopher-poupon/img/m-cartes.webp" alt=""></div>')
 gr_act = '<div class="mh-ac"><button type="button" class="bt" data-est data-g="Design graphique">Parler de mon projet %s</button><a class="ln" href="#identites">Voir les projets</a></div>' % AR
 gr = entete('Design graphique', 'Graphisme', 'Identités, campagnes, éditions.', 'Une direction artistique qui tient sur tous les supports : l’identité d’un lieu ou d’une marque, la campagne d’une saison, la brochure qu’on garde. Chaque projet est chiffré sur devis.',
-            ' u-rose mh-gr-s', FG('Design', 'left:-1vw;bottom:-.42em;font-size:calc(var(--fg-t) * 1.05)'), gr_droite, gr_act)
+            ' u-rose mh-gr-s', FG('Design', 'right:-2vw;font-size:calc(var(--fg-t) * 1.05)'), '', gr_act)
 
 # ---------- cartes nuancier : une carte par projet, vers son étude de cas (ou sa galerie) ----------
 # (nom, lien, vignette, couleur, ligne, nature)
