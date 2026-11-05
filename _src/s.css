@@ -2336,12 +2336,12 @@ body{color:var(--encre)}
 .ac-x .mh-ac{margin-top:18px}
 .ac-x .lead{margin:0}
 /* la sélection photo : six images fortes, nettes, sans légende */
-.ac-gal{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(2,clamp(220px,25vw,400px));grid-template-areas:"a b c c" "a d e f";gap:clamp(8px,.9vw,14px);margin-top:clamp(8px,1vw,16px)}
+.ac-gal{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(2,clamp(220px,25vw,400px));grid-template-areas:"a b c d" "a e f g";gap:clamp(8px,.9vw,14px);margin-top:clamp(8px,1vw,16px)}
 .ga{position:relative;display:block;overflow:hidden;padding:0;border:0;border-radius:6px;background:#1b1b1b;cursor:zoom-in}
 .ga img{display:block;width:100%;height:100%;object-fit:cover;transition:transform 1.1s var(--e)}
 @media (hover:hover){.ga:hover img{transform:scale(1.035)}}
-.ga-a{grid-area:a}.ga-b{grid-area:b}.ga-c{grid-area:c}.ga-d{grid-area:d}.ga-e{grid-area:e}.ga-f{grid-area:f}
-@media (max-width:860px){.ac-gal{grid-template-columns:1fr 1fr;grid-template-rows:62vw 46vw 46vw 46vw;grid-template-areas:"a b" "a d" "c c" "e f"}}
+.ga-a{grid-area:a}.ga-b{grid-area:b}.ga-c{grid-area:c}.ga-d{grid-area:d}.ga-e{grid-area:e}.ga-f{grid-area:f}.ga-g{grid-area:g}
+@media (max-width:860px){.ac-gal{grid-template-columns:1fr 1fr;grid-template-rows:64vw 46vw 46vw 46vw;grid-template-areas:"a b" "a c" "d e" "f g"}}
 /* le web : trois sites, nets, dans leur fenêtre */
 .ac-ecr{position:relative;container-type:inline-size;display:grid;grid-template-columns:1.55fr 1fr;grid-template-rows:auto auto;gap:clamp(14px,1.6vw,26px) clamp(16px,2vw,32px);margin-top:clamp(8px,1vw,16px)}
 .ae{display:grid;gap:12px;text-decoration:none;color:inherit}
@@ -2414,3 +2414,21 @@ body{color:var(--encre)}
   .hv-b{display:block}.hv-b .mh-ac{margin-top:18px}
 }
 @media (prefers-reduced-motion:reduce){.hv.vj .hc{opacity:1}}
+
+/* bouton contour, lisible sur tous les fonds */
+.bt.ct{background:transparent;color:var(--tx,currentColor);box-shadow:inset 0 0 0 1.5px currentColor}
+.bt.ct .ar{display:none}
+@media (hover:hover){.bt.ct:hover{background:color-mix(in srgb,currentColor 9%,transparent)}}
+.hv-t .bt.ct{background:transparent;color:#F0EEE9;box-shadow:inset 0 0 0 1.5px rgba(240,238,233,.75)}
+/* web de l'accueil : La Soute et Pierceval se relaient dans la même fenêtre */
+.ac-sw{position:relative;display:grid;container-type:inline-size;margin-top:clamp(8px,1vw,16px)}
+.sw-s{grid-area:1/1;position:relative;display:grid;gap:14px;text-decoration:none;color:inherit;animation:sw 12s var(--e) infinite}
+.sw-2{animation-delay:-6s}
+.sw-s .ae-w{width:84cqw}
+.sw-s .ae-tel{left:auto;right:2cqw;top:13cqw;width:15cqw}
+@keyframes sw{0%{opacity:0;transform:translateY(14px);pointer-events:none}6%,46%{opacity:1;transform:none;pointer-events:auto}52%,100%{opacity:0;transform:translateY(-8px);pointer-events:none}}
+@media (hover:hover){.ac-sw:hover .sw-s{animation-play-state:paused}}
+@media (max-width:860px){.sw-s .ae-w{width:88cqw}.sw-s .ae-tel{right:0;top:22cqw;width:24cqw}}
+@media (prefers-reduced-motion:reduce){.sw-s{animation:none}.sw-2{display:none}}
+
+.bt.ct{display:inline-flex;width:auto;flex:0 0 auto;justify-self:start;padding:0 1.35em}
