@@ -430,21 +430,32 @@
   /* commande en ligne, dans le configurateur : la saisie va jusqu'au paiement, sans changer de site.
      Prix affichés ici pour l'écran ; le serveur (fonction acompte) les recalcule de son côté à partir des mêmes clés. */
   const ACOMPTE = 'https://nfnbseonwgmtouxsaajd.supabase.co/functions/v1/acompte';
-  const PRIXC = { 'site-essentiel': 490, 'site-vitrine': 990, 'concert': 250, 'demi': 350, 'site-photo': 350, 'soir': 150, 'heure': 80 };
-  const NOMC = { 'site-essentiel': 'Site Essentiel, une page', 'site-vitrine': 'Site Vitrine, 3 à 5 pages', 'concert': 'Reportage, concert ou spectacle', 'demi': 'Reportage, une demi-journée', 'site-photo': 'Reportage photo pour le site', 'soir': 'Sélection livrée le soir même', 'heure': 'Une heure de plus sur place' };
+  /* catalogue public (mêmes clés et mêmes prix que la fonction acompte, qui fait foi) */
+  const CATC_ = {
+    'site-essentiel': { p: 490, t: 'site', sv: 9, n: 'Site Essentiel, une page' }, 'site-vitrine': { p: 990, t: 'site', sv: 9, n: 'Site Vitrine, 3 à 5 pages' },
+    'app-outil': { p: 490, t: 'app', sv: 9, n: 'Application, formule Outil simple', s: 'Suivi de l’outil' }, 'app-application': { p: 990, t: 'app', sv: 19, n: 'Application, formule Application', s: 'Suivi de l’application' },
+    'concert': { p: 250, t: 'photo', n: 'Reportage, concert ou spectacle' }, 'demi': { p: 350, t: 'photo', n: 'Reportage, une demi-journée' }, 'journee': { p: 550, t: 'photo', n: 'Reportage, une journée' },
+    'mariage-ceremonie': { p: 1290, t: 'mariage', n: 'Mariage, cérémonie' }, 'mariage-journee': { p: 1890, t: 'mariage', n: 'Mariage, la journée' }, 'mariage-album': { p: 2590, t: 'mariage', n: 'Mariage, la journée et l’album' },
+    'annee-4': { p: 1290, m: 109, t: 'annee', n: 'Suivi photo annuel, 4 demi-journées' }, 'annee-8': { p: 2490, m: 209, t: 'annee', n: 'Suivi photo annuel, 8 demi-journées' }, 'annee-12': { p: 3590, m: 299, t: 'annee', n: 'Suivi photo annuel, 12 demi-journées' },
+    'site-photo': { p: 350, n: 'Reportage photo pour le site' }, 'soir': { p: 150, n: 'Sélection livrée le soir même' }, 'heure': { p: 80, n: 'Une heure de plus sur place' }
+  };
+  /* ce qui se commande en ligne : tout ce qui a un prix fixe ; les formules « dès » et « à définir » passent par un échange */
   const clesCommande = () => {
-    const f = ES.f; let p = [];
-    if (ES.k === 'site' && f < 2) { if (ES.o.includes(1)) return null; p = [f ? 'site-vitrine' : 'site-essentiel']; if (ES.o.includes(0)) p.push('site-photo'); }
-    else if (ES.k === 'evenement' && f < 2) { p = [f ? 'demi' : 'concert']; if (ES.o.includes(0)) p.push('soir'); if (ES.o.includes(1)) p.push('heure'); }
-    else return null;
+    const f = ES.f, o = ES.o; let p = null;
+    if (ES.k === 'site' && f < 2 && !o.includes(1)) { p = [f ? 'site-vitrine' : 'site-essentiel']; if (o.includes(0)) p.push('site-photo'); }
+    else if (ES.k === 'app' && f < 2) p = [f ? 'app-application' : 'app-outil'];
+    else if (ES.k === 'evenement') { p = [['concert', 'demi', 'journee'][f] + (f === 2 && ES.j > 1 ? '*' + ES.j : '')]; if (o.includes(0)) p.push('soir'); if (o.includes(1)) p.push('heure'); }
+    else if (ES.k === 'mariage') { p = [['mariage-ceremonie', 'mariage-journee', 'mariage-album'][f]]; if (o.includes(0)) p.push('soir'); if (o.includes(1)) p.push('heure'); }
+    else if (ES.k === 'annee' && f < 3) p = [['annee-4', 'annee-8', 'annee-12'][f]];
     return p;
   };
   const totCmd = () => {
     const c = clesCommande(); if (!c) return null;
-    const site = ES.k === 'site', nb = site ? nfSite(PJ.site.f.o[ES.f]) : 0, prin = PRIXC[c[0]], opts = c.slice(1).reduce((s, k) => s + PRIXC[k], 0);
-    const etale = nb ? prin : 0, total = nb ? opts : prin + opts, mens = nb ? Math.floor(etale * 100 / nb) / 100 : 0, sv = site ? 9 : 0;
+    const [k0, qq] = c[0].split('*'), A = CATC_[k0], q = Number(qq || 1), opts = c.slice(1).reduce((s, k) => s + CATC_[k].p, 0);
+    const annuel = A.t === 'annee', nb = annuel ? (ES.p === 1 ? 12 : 0) : (A.t === 'site' || A.t === 'app') ? nfSite(PJ[ES.k].f.o[ES.f]) : 0;
+    const etale = nb ? (annuel ? A.m * 12 : A.p) : 0, total = nb ? opts : A.p * q + opts, mens = nb ? (annuel ? A.m : Math.floor(etale * 100 / nb) / 100) : 0, sv = A.sv || 0;
     const acompte = Math.round(total * 30) / 100;
-    return { c, site, nb, etale, total, mens, sv, acompte, auj: Math.round((acompte + (nb ? mens + sv : 0)) * 100) / 100 };
+    return { c, A, k0, q, nb, annuel, etale, total, mens, sv, acompte, auj: Math.round((acompte + (nb ? mens + sv : 0)) * 100) / 100 };
   };
   const numDevis = () => { const t = new Date(), a = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; let s = ''; for (let k = 0; k < 4; k++) s += a.charAt(Math.floor(Math.random() * a.length)); return String(t.getFullYear()).slice(2) + ('0' + (t.getMonth() + 1)).slice(-2) + ('0' + t.getDate()).slice(-2) + '-' + s; };
   const ANTICIPE = 'Je demande que la prestation commence avant la fin du délai de rétractation et reconnais que, une fois la prestation pleinement exécutée, je ne pourrai plus me rétracter.';
@@ -454,15 +465,19 @@
     : [['struct', 'Structure', 'organization'], ['rep', 'Votre nom', 'name'], ['fonction', 'Votre fonction', 'organization-title'], ['adr', 'Adresse', 'street-address'], ['ville', 'Code postal et ville', 'address-level2'], ['mail', 'E-mail', 'email']];
   const vueCmd = () => {
     const T = totCmd(), m = ES.cm, part = !T.nb && m.part;
-    let h = `<div class="cm-r"><ul>${T.c.map(k => `<li><span>${NOMC[k]}</span><b>${fmt(PRIXC[k])}&nbsp;€</b></li>`).join('')}${T.site ? `<li><span>Suivi du site, sans engagement</span><b>${T.sv}&nbsp;€/mois</b></li>` : ''}</ul>
-      <p>${T.nb ? `En ${T.nb} fois sans frais : ${fmt(T.mens + T.sv)}&nbsp;€ par mois, suivi compris${T.total ? `, plus ${fmt(T.acompte)}&nbsp;€ d’acompte pour le reportage` : ''}. Ensuite, le suivi seul : ${T.sv}&nbsp;€ par mois.` : `Acompte de 30&nbsp;% aujourd’hui, le solde à la livraison${T.site ? ', puis 9&nbsp;€ par mois de suivi' : ''}.`}</p></div>`;
-    if (!T.nb) h += `<div class="q"><p>Vous commandez</p><div class="bascule cm-qui" role="group"><button type="button" data-qui="0" aria-pressed="${!part}">Pour une structure</button><button type="button" data-qui="1" aria-pressed="${part}">En tant que particulier</button></div></div>`;
+    const lg = T.c.map(x => { const [k, q] = x.split('*'), A = CATC_[k], n = Number(q || 1); return `<li><span>${A.n}${n > 1 ? `, ${n} jours` : ''}</span><b>${T.annuel && T.nb ? fmt(A.m) + '&nbsp;€/mois' : fmt(A.p * n) + '&nbsp;€'}</b></li>`; }).join('');
+    const sl = T.sv ? `<li><span>${T.A.s || 'Suivi du site'}, sans engagement</span><b>${T.sv}&nbsp;€/mois</b></li>` : '';
+    const txt = T.annuel && T.nb ? `12 mensualités de ${fmt(T.mens)}&nbsp;€, la première aujourd’hui, sans acompte.`
+      : T.nb ? `En ${T.nb} fois sans frais : ${fmt(T.mens + T.sv)}&nbsp;€ par mois, suivi compris${T.total ? `, plus ${fmt(T.acompte)}&nbsp;€ d’acompte pour le reportage` : ''}. Ensuite, le suivi seul : ${T.sv}&nbsp;€ par mois.`
+      : `Acompte de 30&nbsp;% aujourd’hui, le solde ${T.A.t === 'photo' || T.A.t === 'mariage' ? 'après le reportage' : T.annuel ? 'au fil de l’année' : 'à la livraison'}${T.sv ? `, puis ${T.sv}&nbsp;€ par mois de suivi` : ''}.${T.A.t === 'photo' || T.A.t === 'mariage' ? ' La date est confirmée sous 24&nbsp;h ; si elle n’est pas libre, l’acompte est remboursé.' : ''}`;
+    let h = `<div class="cm-r"><ul>${lg}${sl}</ul><p>${txt}</p></div>`;
+    if (!T.nb) h += `<div class="q"><p>Vous commandez</p><div class="bascule cm-qui" role="group" data-v="${part ? 1 : 0}"><button type="button" data-qui="0" aria-pressed="${!part}">Pour une structure</button><button type="button" data-qui="1" aria-pressed="${part}">En tant que particulier</button></div></div>`;
     h += `<div class="form cm-f">${champsCmd(part).map(f => `<label>${f[1]}<input id="c_${f[0]}" autocomplete="${f[2]}"${f[0] === 'mail' ? ' type="email" inputmode="email"' : ''} value="${qe(m[f[0]])}"></label>`).join('')}</div>`;
     if (part) h += `<label class="cm-ok"><input type="checkbox" id="c_anticipe"${m.anticipe ? ' checked' : ''}><span>${ANTICIPE} Délai de rétractation de 14 jours : voir les <a href="/conditions/" target="_blank" rel="noopener">conditions</a>.</span></label>`;
     h += `<p class="cm-n">Le devis se télécharge, puis le paiement sécurisé s’ouvre : vous y acceptez le devis et les <a href="/conditions/" target="_blank" rel="noopener">conditions de vente</a>.${T.nb ? ' Le paiement en plusieurs fois est réservé aux professionnels et aux associations.' : ''}</p>`;
     return h;
   };
-  const piedCmd = () => { const T = totCmd(); return `<div class="tot"><small>À régler aujourd’hui</small><span class="v"><b class="prix">${fmt(T.auj)}</b><i>€${T.nb ? `, puis ${fmt(T.mens + T.sv)} € par mois` : ''}</i></span></div><div class="act"><button class="bt cl sm" data-nav="-1">Retour</button><button class="bt sm" data-payer>Payer <span class="ar">${ico('ar')}</span></button></div>`; };
+  const piedCmd = () => { const T = totCmd(); return `<div class="tot"><small>À régler aujourd’hui</small><span class="v"><b class="prix">${fmt(T.auj)}</b><i>€${T.nb ? `, puis ${fmt(T.mens + T.sv)} € par mois` : T.sv ? `, puis ${T.sv} € par mois` : ''}</i></span></div><div class="act"><button class="bt cl sm" data-nav="-1">Retour</button><button class="bt sm" data-payer>Payer <span class="ar">${ico('ar')}</span></button></div>`; };
   const gardeCmd = () => { if (!modeCmd()) return; ['struct', 'rep', 'fonction', 'adr', 'ville', 'mail'].forEach(k => { const i = $('#c_' + k); if (i) ES.cm[k] = i.value.trim(); }); const a = $('#c_anticipe'); if (a) ES.cm.anticipe = a.checked; };
   let ressources = null;
   const chargeDevis = () => ressources || (ressources = ['https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js', '/conditions/cgv.js', 'https://dossiers.studioes.fr/assets/devis-fonts.js', 'https://dossiers.studioes.fr/assets/devis.js'].reduce((p, s) => p.then(() => new Promise((ok, ko) => { const x = document.createElement('script'); x.src = s; x.onload = ok; x.onerror = () => s.includes('cgv') ? ok() : ko(new Error(s)); document.head.appendChild(x); })), Promise.resolve()).catch(e => { ressources = null; throw e; }));
@@ -478,13 +493,13 @@
     const num = ES.num || (ES.num = numDevis());
     try {
       const [cf] = await Promise.all([catalogue(), chargeDevis()]);
-      const opts = []; cf.etapes.forEach(e => e.options.forEach(o => { if ((o.cle && T.c.includes(o.cle)) || (o.mois && o.suivi && T.site)) opts.push(o); }));
-      const lignes = opts.map(o => ({ n: o.titreDevis || o.l, l: o.lignes || (o.d ? [o.d] : []), p: o.p || 0, mois: !!o.mois, min: o.min, devis: false, etaler: (!o.mois && T.nb && Array.isArray(o.etaler)) ? o.etaler : null, suivi: !!(o.mois && o.suivi) }));
+      const cles = T.c.map(x => x.split('*')[0]), opts = [], suiviNom = T.A.s || 'Suivi du site'; cf.etapes.forEach(e => e.options.forEach(o => { if ((o.cle && cles.includes(o.cle)) || (o.mois && o.suivi && T.sv && (o.titreDevis || o.l) === suiviNom)) opts.push(o); }));
+      const lignes = opts.map(o => { const prin = o.cle === T.k0; return { n: (o.titreDevis || o.l) + (prin && T.q > 1 ? `, ${T.q} jours` : '') + (prin && T.annuel && T.nb ? ', réglé en 12 mensualités' : ''), l: o.lignes || (o.d ? [o.d] : []), p: prin ? (T.annuel && T.nb ? T.etale : o.p * T.q) : (o.p || 0), mois: !!o.mois, min: o.min, devis: false, etaler: prin && T.nb ? [T.nb] : null, suivi: !!(o.mois && o.suivi) }; });
       const client = { struct: part ? '' : m.struct, rep: m.rep, fonction: part ? '' : m.fonction, adr: m.adr, ville: m.ville, mail: m.mail };
       const out = window.studioDevis({ nom: client.struct || client.rep, objet: cf.objet, public: false, particulier: part, remise: null, echeances: T.nb }, lignes, client, num, { date: new Date().toISOString(), nom: client.rep, mode: 'carte', anticipe: part }, cf.regles);
       const u = URL.createObjectURL(out.blob), a = document.createElement('a'); a.href = u; a.download = out.name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 60000);
       /* la fiche du client remonte dans Hors-champ, comme depuis un dossier */
-      fetch('https://nfnbseonwgmtouxsaajd.supabase.co/functions/v1/formulaire', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, keepalive: true, body: JSON.stringify({ _subject: 'Devis ' + num + ' : ' + (client.struct || client.rep) + ' (commande en ligne)', _template: 'table', _captcha: 'false', source: 'studioes.fr', dossier: 'commander', devis: num, etat: T.nb ? 'devis accepté, première mensualité en cours' : 'devis accepté, acompte en cours', public: 'non', particulier: part ? 'oui' : 'non', structure: client.struct, nom: client.rep, fonction: client.fonction, adresse: client.adr, ville: client.ville, mail: client.mail, lignes: lignes.map(x => x.n + ' : ' + x.p + (x.mois ? ' €/mois' : ' €')).join(' ; '), total: T.total + ' €', reglement: T.nb ? 'en ' + T.nb + ' fois sans frais : ' + T.mens + ' €/mois pour ' + T.etale + ' €, plus ' + T.sv + ' €/mois de suivi' : 'en une fois', paiement: 'carte', acompte: T.acompte + ' €', date_souhaitee: PJ[ES.k].date && ES.d != null ? moisTxt() : '', fill: ES.fl ? 'intéressé par Fill' : '', demarrage_anticipe: part ? 'oui' : '' }) }).catch(() => {});
+      fetch('https://nfnbseonwgmtouxsaajd.supabase.co/functions/v1/formulaire', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, keepalive: true, body: JSON.stringify({ _subject: 'Devis ' + num + ' : ' + (client.struct || client.rep) + ' (commande en ligne)', _template: 'table', _captcha: 'false', source: 'studioes.fr', dossier: 'commander', devis: num, etat: T.nb ? 'devis accepté, première mensualité en cours' : 'devis accepté, acompte en cours', public: 'non', particulier: part ? 'oui' : 'non', structure: client.struct, nom: client.rep, fonction: client.fonction, adresse: client.adr, ville: client.ville, mail: client.mail, lignes: lignes.map(x => x.n + ' : ' + x.p + (x.mois ? ' €/mois' : ' €')).join(' ; '), total: T.total + ' €', reglement: T.nb ? 'en ' + T.nb + ' fois sans frais : ' + T.mens + ' €/mois pour ' + T.etale + ' €, plus ' + T.sv + ' €/mois de suivi' : 'en une fois', paiement: 'carte', acompte: T.acompte + ' €', date_souhaitee: PJ[ES.k].date && ES.d != null ? moisTxt() : '', jours: T.q > 1 ? String(T.q) : '', fill: ES.fl ? 'intéressé par Fill' : '', demarrage_anticipe: part ? 'oui' : '' }) }).catch(() => {});
       const corps = { action: 'creer', cles: T.c, dossier: 'commander', devis: num, structure: client.struct || client.rep, nom: client.rep, email: client.mail, total: T.total, particulier: part, demarrage_anticipe: part, retour: location.origin + location.pathname };
       if (T.nb) Object.assign(corps, { etale: T.etale, echeances: T.nb, suivi: T.sv });
       const r = await fetch(ACOMPTE, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corps) });
