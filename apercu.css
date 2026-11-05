@@ -70,7 +70,7 @@
 .ae-v .tete{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:end;justify-content:space-between}
 .ae-v .tete h4 .it{display:block;margin:6px 0 0}
 .ae-v .act{display:flex;flex-wrap:wrap;gap:10px}
-.ae-v .ln{display:inline-flex;align-items:center;min-height:48px;padding:0 1.2em;border-radius:999px;box-shadow:inset 0 0 0 1px var(--ln);font-size:15px}
+.ae-v .ln{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 1.2em;border-radius:999px;box-shadow:inset 0 0 0 1px rgba(20,20,20,.18);font-size:15px;color:var(--ink);opacity:1;text-decoration:none}
 .ae-nav{border-radius:22px;overflow:hidden;background:#1a1a1a;box-shadow:0 30px 70px -40px rgba(20,20,20,.55)}
 .ae-nav .bb{display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;background:#2a2926;color:rgba(255,255,255,.6);font-size:12.5px}
 .ae-nav .bb i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.18)}
