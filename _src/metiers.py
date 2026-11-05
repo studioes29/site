@@ -96,11 +96,23 @@ VITRINE = [
         ('La saison en ligne', 'L’agenda de la saison et les fiches concerts, dans la continuité de la brochure.', 'image', '/projets/la-soute/img/site.webp', '', ''),
         ('Sur téléphone', 'La programmation lisible d’un coup d’œil, la réservation des places au bout du pouce.', 'duo', '/projets/la-soute/img/soute-8.webp', '/projets/la-soute/img/soute-9.webp', ''),
         ('Du papier à l’écran', 'La brochure, les affiches et le site partagent le même hublot et les mêmes couleurs.', 'image', '/projets/la-soute/img/cover.webp', '', '')]),
+    ('fill', 'Fill', 'Marque, site et simulateur', '/projets/fill/',
+     'Un nom qui se lit deux fois : « fil » en plein, le second « l » au trait. Un fond lavande, un violet franc pour l’action.', [
+        ('Accueil', 'Une bascule commune ou entreprise change les exemples, les supports et le vocabulaire de toute la page.', 'ecran', '/projets/fill/img/' + 'd-accueil.webp', '/projets/fill/img/' + 'm-accueil.webp', 'fill.studioes.fr'),
+        ('Simulateur', 'Quatre questions ou une composition libre : une formule recommandée, justifiée unité par unité.', 'ecran', '/projets/fill/img/' + 'd-simulateur.webp', '/projets/fill/img/' + 'm-simulateur.webp', 'fill.studioes.fr'),
+        ('Fonctionnement', 'Comment une demande arrive, qui la traite et en combien de temps, écrit d’avance.', 'ecran', '/projets/fill/img/' + 'd-fonctionnement.webp', '/projets/fill/img/' + 'm-fonctionnement.webp', 'fill.studioes.fr'),
+        ('Calendrier', 'Les temps forts de la saison, pour anticiper les campagnes.', 'ecran', '/projets/fill/img/' + 'd-calendrier.webp', '/projets/fill/img/' + 'm-calendrier.webp', 'fill.studioes.fr')]),
     ('flouz', 'flouz.', 'Application de budget', '/projets/flouz/',
      'Une interface sombre, un seul violet pour l’essentiel : le solde, les budgets, les alertes.', [
         ('Tableau de bord', 'Le solde, le mois en cours et les dépenses épinglées sur un seul écran.', 'image', '/projets/flouz/img/tableau.webp', '', ''),
         ('Budgets', 'Chaque catégorie a sa jauge ; l’application prévient avant le dépassement.', 'image', '/projets/flouz/img/budget.webp', '', ''),
         ('Objectifs', 'Ce qu’il reste à mettre de côté chaque mois pour atteindre un objectif à temps.', 'image', '/projets/flouz/img/objectifs.webp', '', '')]),
+    ('plateforme', 'Plateforme interne', 'Outil de gestion', '/projets/plateforme-interne/',
+     'Une base claire, un vert d’eau pour ce qui attend une action, des cartes qui se lisent d’un coup d’œil.', [
+        ('Accueil', 'Ce qui attend, dans l’ordre : la prochaine action d’abord, puis le reste.', 'image', '/projets/plateforme-interne/img/maintenant.webp', '', ''),
+        ('Prospection', 'Chaque matin, des prospects vérifiés, un message rédigé et ses relances : il ne reste qu’à valider.', 'image', '/projets/plateforme-interne/img/message.webp', '', ''),
+        ('Clients', 'Du premier contact au paiement, chaque relation avance d’étape en étape.', 'image', '/projets/plateforme-interne/img/clients.webp', '', ''),
+        ('Argent', 'Encaissé, attendu, à relancer : relevé automatiquement depuis la banque.', 'image', '/projets/plateforme-interne/img/argent.webp', '', '')]),
 ]
 def scene_v(t, typ, d, m, url):
     if typ == 'ecran':
@@ -131,7 +143,7 @@ wb += '''
 <section class="sec feuille vi-f u-lilas" id="vitrine" aria-labelledby="t-vi">
   ''' + FG('Écrans', 'left:-2vw;bottom:-.34em;--vy:-80px;font-size:calc(var(--fg-t) * .8)') + '''
   <div class="w">
-    <div class="sec-t rv"><div><p class="pt"><i>01</i><span>Réalisations</span></p><h2 class="d" id="t-vi">Réalisations web<span class="it">Trois projets, trois usages.</span></h2></div><p class="lead">Choisissez un projet, puis une fonctionnalité : l’écran correspondant s’affiche.</p></div>
+    <div class="sec-t rv"><div><p class="pt"><i>01</i><span>Réalisations</span></p><h2 class="d" id="t-vi">Réalisations web<span class="it">Cinq projets, cinq usages.</span></h2></div><p class="lead">Choisissez un projet, puis une fonctionnalité : l’écran correspondant s’affiche.</p></div>
     <div class="vi rv">''' + vitrine() + '''</div>
   </div>
 </section>
