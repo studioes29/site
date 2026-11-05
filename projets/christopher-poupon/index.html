@@ -356,7 +356,18 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
 @view-transition{navigation:auto}
 @media (max-width:860px){.top .logo{position:relative}.top .logo::after{content:"";position:absolute;inset:-7px -14px}.top .ret::after{content:"";position:absolute;inset:-3px}}
 </style>
-<style>.ferme{position:fixed;z-index:59;top:80px;right:var(--side,24px);display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:var(--s1);color:var(--tx);box-shadow:inset 0 0 0 1.5px var(--tx),0 10px 30px -12px rgba(20,20,18,.35);text-decoration:none;transition:transform .3s}.ferme:hover{transform:rotate(90deg)}.ferme svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none}@media (max-width:860px){.ferme{display:none}}</style></head>
+<style>.ferme{position:fixed;z-index:59;top:80px;right:var(--side,24px);display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:var(--s1);color:var(--tx);box-shadow:inset 0 0 0 1.5px var(--tx),0 10px 30px -12px rgba(20,20,18,.35);text-decoration:none;transition:transform .3s}.ferme:hover{transform:rotate(90deg)}.ferme svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none}@media (max-width:860px){.ferme{display:none}}</style><style id="ftg-css">.ftg{padding:56px 0 calc(env(safe-area-inset-bottom,0px) + 56px);border-top:1px solid var(--ln,rgba(20,20,18,.1));color:var(--tx,#141412)}
+.ftg-w{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:28px;width:min(1240px,100% - 2 * var(--g,24px));margin-inline:auto}
+.ftg a{color:inherit;text-decoration:none}.ftg a:hover{text-decoration:underline;text-underline-offset:3px}
+.ftg-lg{display:inline-flex;align-items:center;gap:10px;font-family:var(--d,"Bricolage Grotesque",sans-serif);font-weight:800;font-size:18px;letter-spacing:-.04em}
+.ftg-lg svg{width:14px;height:26px}
+.ftg p{margin:10px 0 0;max-width:22em;font-size:14.5px;color:var(--mu,rgba(20,20,18,.64))}
+.ftg .ftg-h{margin:0 0 10px;font-size:13px;font-weight:600;color:var(--fa,var(--mu,rgba(20,20,18,.64)))}
+.ftg ul{list-style:none;margin:0;padding:0}.ftg li{margin:6px 0;font-size:14.5px}
+.ftg-bas{grid-column:1/-1;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;padding-top:22px;border-top:1px solid var(--ln,rgba(20,20,18,.1));font-size:13.5px;color:var(--mu,rgba(20,20,18,.64))}
+@media (max-width:860px){.ftg-w{grid-template-columns:1fr 1fr}.ftg-w>div:first-child{grid-column:1/-1}}
+</style>
+</head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
   <symbol id="logo" viewBox="101 57 98 186"><path fill="currentColor" d="M103.01,59.34h93.97s0,181.31,0,181.31h-93.97V59.34ZM195.66,60.67h-91.32v178.6s.17.18.18.18h91.14V60.67Z"/><polygon fill="currentColor" points="179.42 76.92 179.42 158.43 136.95 158.43 136.95 174.56 179.42 174.56 179.42 223.32 120.58 223.32 120.58 207.07 163.05 207.07 163.05 190.93 120.58 190.93 120.58 142.05 163.05 142.05 163.05 125.92 120.7 125.92 120.58 109.55 163.05 109.55 163.05 93.3 120.58 93.3 120.58 76.92 179.42 76.92"/></symbol>
@@ -449,9 +460,14 @@ ul.liv.lr li{width:clamp(230px,24vw,290px)}
 </section>
 </main>
 
-<footer class="ft w">
-  <span>© 2026 Studio ES, Ewen Soupault</span>
-  <span><a href="/">Accueil</a> · <a href="/realisations/">Réalisations</a> · <a href="https://www.instagram.com/ewen.studioes" target="_blank" rel="noopener">Instagram</a> · <a href="https://fill.studioes.fr" data-goatcounter-click="fill">Fill, communication externalisée</a> · <a href="https://fill.studioes.fr/espace/" data-goatcounter-click="espace-fill">Espace client Fill</a> · <a href="/conditions/">Conditions générales</a> · <a href="/#mentions">Mentions légales</a></span>
+<footer class="ftg">
+  <div class="ftg-w">
+    <div><a class="ftg-lg" href="/" aria-label="Studio ES, accueil"><svg viewBox="101 57 98 186" aria-hidden="true"><path fill="currentColor" d="M103.01,59.34h93.97s0,181.31,0,181.31h-93.97V59.34ZM195.66,60.67h-91.32v178.6s.17.18.18.18h91.14V60.67Z"/><polygon fill="currentColor" points="179.42 76.92 179.42 158.43 136.95 158.43 136.95 174.56 179.42 174.56 179.42 223.32 120.58 223.32 120.58 207.07 163.05 207.07 163.05 190.93 120.58 190.93 120.58 142.05 163.05 142.05 163.05 125.92 120.7 125.92 120.58 109.55 163.05 109.55 163.05 93.3 120.58 93.3 120.58 76.92 179.42 76.92"/></svg><span>Studio ES</span></a><p>Photographie, web et design graphique, en Bretagne.</p></div>
+    <div><p class="ftg-h">Studio</p><ul><li><a href="/metiers/photographie/">Photographie</a></li><li><a href="/metiers/sites-et-outils/">Sites et applications</a></li><li><a href="/metiers/graphisme/">Design graphique</a></li><li><a href="/realisations/">Réalisations</a></li><li><a href="/offres/">Offres et tarifs</a></li></ul></div>
+    <div><p class="ftg-h">Contact</p><ul><li><a href="mailto:contact@studioes.fr">contact@studioes.fr</a></li><li><a href="tel:+33651222107">06&nbsp;51&nbsp;22&nbsp;21&nbsp;07</a></li><li><a href="/#cal">Réserver un appel</a></li></ul></div>
+    <div><p class="ftg-h">Suivre</p><ul><li><a href="https://www.instagram.com/ewen.studioes/" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://fill.studioes.fr">Fill, communication externalisée</a></li><li><a href="https://fill.studioes.fr/espace/">Espace client Fill</a></li><li><a href="https://dossiers.studioes.fr/declic/" target="_blank" rel="noopener">Déclic, le jeu</a></li></ul></div>
+    <div class="ftg-bas"><span>© 2026 Studio ES</span><span><a href="/conditions/">Conditions générales</a> · <a href="/#mentions">Mentions légales</a></span></div>
+  </div>
 </footer>
 
 <script>
