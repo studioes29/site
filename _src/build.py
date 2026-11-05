@@ -17,7 +17,6 @@ def ar(): return '<span class="ar"><svg class="i"><use href="#ar"/></svg></span>
 GRAPH = [
     ('identites', 'Identités visuelles', 'ident', ['fl-auto-id-2', 'pierceval-1', 'maison-ble-1', 'laureen-1', 'poupon-1', 'oceane-1', 'molan-move-1', 'viconte-1']),
     ('signaletique', 'Signalétique', 'ident', ['carenage-1', 'jardin-1', 'jardin-3', 'totem-1', 'totem-2', 'creche-sig-1', 'creche-sig-4', 'creche-sig-6']),
-    ('campagnes', 'Campagnes', 'camp', ['saisons-ellipse-8', 'saisons-ellipse-9', 'recrutement-1', 'recrutement-2', 'recrutement-3', 'budget-1', 'budget-2', 'zero-plastique-2', 'don-2', 'ete-sportif-1', 'fdm-1', 'fdm-5', 'voeux-1', 'boucherie-2', 'ads-1']),
     ('affiches', 'Affiches', 'camp', ['affiches-2', 'affiches-4', 'affiches-6', 'affiches-8', 'affiches-10', 'affiches-12', 'affiches-14', 'affiches-15', 'affiches-16']),
     ('editions', 'Éditions', 'edit', ['marelle-1', 'marelle-2', 'marelle-3', 'marelle-4', 'marelle-5', 'editions-1', 'editions-4', 'editions-5', 'editions-6', 'editions-7', 'saisons-ellipse-67', 'fdm-4', 'fdm-2']),
 ]
@@ -42,7 +41,6 @@ TR = [
     ('La Soute', '/projets/la-soute/', '/projets/la-soute/img/cover-800.webp', 'web graph photo', 'Identité, saison culturelle et site'),
     ('Les Petites Folies', '#r=pub-petites-folies', '/p/t/pub-petites-folies-1.webp', 'photo', 'Festival'),
     ('MJC La Marelle', '/projets/mjc-la-marelle/', '/projets/mjc-la-marelle/img/cover-800.webp', 'graph', 'Brochure de saison'),
-    ('Campagnes', '#r=campagnes', '/p/t/saisons-ellipse-8.webp', 'graph', 'Saisons culturelles, recrutement, prévention'),
     ('L’Ellipse', '/projets/saisons-ellipse/', '/projets/saisons-ellipse/img/cover-800.webp', 'graph', 'Campagne, saison culturelle'),
     ('Campagnes de recrutement', '/projets/campagnes-de-recrutement/', '/projets/campagnes-de-recrutement/img/cover-800.webp', 'graph', 'Campagne, recrutement'),
     ('Budget participatif', '/projets/budget-participatif/', '/projets/budget-participatif/img/cover-800.webp', 'graph', 'Campagne, participation citoyenne'),
@@ -90,7 +88,7 @@ def tuile(t, cls='', n=0):
             '<span class="nu-l"><b>%s</b><span>%s</span><small>%s</small></span></a>') % (
         T[0], ' nu-x' if len(T) > 1 else '', cls, href, ' data-r="%s"' % g if g else '', tags, img, titre, ligne[0].lower() + ligne[1:], w, h, badge, titre, ligne, lab)
 
-SEL = ['Genezio', 'Pierceval Tattoo', 'Les Petites Folies', 'La Soute', 'FL Auto', 'Campagnes', 'Inauguration', 'MJC La Marelle']
+SEL = ['Genezio', 'Pierceval Tattoo', 'Les Petites Folies', 'La Soute', 'FL Auto', 'Campagnes de recrutement', 'Inauguration', 'MJC La Marelle']
 # la première carte reçoit la photographie de la bannière : au défilement, la scène se rétracte exactement à sa place
 SCENE = ('Genezio', '#r=genezio', '/h/scene-900.webp', 'photo', 'Concert')
 carte = tuile(SCENE, ' nu-scene')
