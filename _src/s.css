@@ -2432,3 +2432,45 @@ body{color:var(--encre)}
 @media (prefers-reduced-motion:reduce){.sw-s{animation:none}.sw-2{display:none}}
 
 .bt.ct{display:inline-flex;width:auto;flex:0 0 auto;justify-self:start;padding:0 1.35em}
+
+/* ===== l'atelier 3D ===== */
+.at{background:#ECE7DD;color:#1E1E1E}
+.at[data-moment=nuit]{background:#15171C;color:#F0EEE9}
+.at:before{opacity:.05;mix-blend-mode:multiply}
+.at[data-moment=nuit]:before{mix-blend-mode:screen}
+.at-c{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity 1.2s var(--e)}
+.at.at-pret .at-c{opacity:1}
+.at .hv-t{pointer-events:none;padding-bottom:clamp(26px,3.4vw,52px);transition:opacity .5s,transform .6s var(--e)}
+.at .hv-n{font-size:clamp(56px,8.5vw,150px)}
+.at .hv-t h1 .it{color:inherit;opacity:.72;font-size:clamp(20px,2vw,30px)}
+.at .hv-t h1,.at .hv-b .lead{text-shadow:none}
+.at.at-zoom .hv-t h1{opacity:0;transform:translateY(10px);transition:opacity .4s,transform .5s var(--e)}
+.at-nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:clamp(16px,1.8vw,24px);pointer-events:auto}
+.at-nav button{min-height:42px;padding:0 18px;border:0;border-radius:999px;background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:inset 0 0 0 1px rgba(30,30,30,.12);font:600 14.5px/1 var(--t,inherit);color:#1E1E1E;cursor:pointer;transition:background .3s,color .3s,transform .3s var(--sp)}
+.at-nav button[aria-pressed=true]{background:#1E1E1E;color:#F7F4EC}
+@media (hover:hover){.at-nav button:hover{background:#fff}.at-nav button[aria-pressed=true]:hover{background:#1E1E1E}}
+.at[data-moment=nuit] .at-nav button{background:rgba(255,255,255,.1);color:#F0EEE9;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+.at[data-moment=nuit] .at-nav button[aria-pressed=true]{background:#F0EEE9;color:#15171C}
+.at-eti{position:absolute;left:0;top:0;z-index:4;padding:7px 12px;border-radius:999px;background:#1E1E1E;color:#F7F4EC;font-size:13px;font-weight:600;white-space:nowrap;pointer-events:none;opacity:0;transform:translate3d(-99px,-99px,0);transition:opacity .2s}
+.at-eti.on{opacity:1}
+.at-pan{position:absolute;z-index:5;top:calc(env(safe-area-inset-top,0px) + 84px);right:clamp(14px,2.4vw,40px);bottom:clamp(14px,2.4vw,40px);width:min(380px,calc(100% - 28px));overflow:auto;padding:26px 24px 22px;border-radius:26px;background:rgba(251,248,241,.86);-webkit-backdrop-filter:blur(22px) saturate(1.2);backdrop-filter:blur(22px) saturate(1.2);box-shadow:0 30px 80px -30px rgba(0,0,0,.4),inset 0 0 0 1px rgba(255,255,255,.6);color:#1E1E1E;opacity:0;transform:translateX(24px);transition:opacity .4s,transform .5s var(--e)}
+.at-pan.on{opacity:1;transform:none}
+.at-x{position:absolute;top:14px;right:14px;width:40px;height:40px;border:0;border-radius:50%;background:rgba(30,30,30,.06);display:grid;place-items:center;cursor:pointer}
+.at-x svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.at-k{margin:0 40px 8px 0;font-size:14px;color:#5E5A53}
+.at-z h2{font-size:clamp(34px,3.4vw,48px);letter-spacing:-.05em;line-height:.95;margin:0 0 18px}
+.at-ls{display:grid;gap:6px}
+.at-l{display:grid;gap:2px;width:100%;padding:12px 14px;border:0;border-radius:16px;background:#fff;text-align:left;text-decoration:none;color:inherit;font:inherit;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.05);transition:transform .3s var(--e),box-shadow .3s}
+@media (hover:hover){.at-l:hover{transform:translateX(3px);box-shadow:0 10px 24px -14px rgba(0,0,0,.3)}}
+.at-l b{font-family:var(--d);font-weight:750;font-size:17px;letter-spacing:-.02em}
+.at-l span{font-size:13.5px;color:#6B665E}
+.at-ac{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.at-ac .bt{background:#1E1E1E;color:#F7F4EC}
+.at-ac .bt.ct{background:transparent;color:#1E1E1E}
+.at-sans .at-c{display:none}
+@media (max-width:860px){
+  .at-pan{top:auto;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 96px);width:auto;max-height:58%;transform:translateY(24px)}
+  .at .hv-t{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 100px)}
+  .at-nav{gap:6px}.at-nav button{min-height:38px;padding:0 14px;font-size:13.5px}
+  .at.at-zoom .hv-t{opacity:0}
+}
