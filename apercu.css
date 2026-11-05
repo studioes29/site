@@ -70,7 +70,7 @@
 .ae-v .tete{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:end;justify-content:space-between}
 .ae-v .tete h4 .it{display:block;margin:6px 0 0}
 .ae-v .act{display:flex;flex-wrap:wrap;gap:10px}
-.ae-v .ln{display:inline-flex;align-items:center;min-height:48px;padding:0 1.2em;border-radius:999px;box-shadow:inset 0 0 0 1px var(--ln);font-size:15px}
+.ae-v .ln{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 1.2em;border-radius:999px;box-shadow:inset 0 0 0 1px rgba(20,20,20,.18);font-size:15px;color:var(--ink);opacity:1;text-decoration:none}
 .ae-nav{border-radius:22px;overflow:hidden;background:#1a1a1a;box-shadow:0 30px 70px -40px rgba(20,20,20,.55)}
 .ae-nav .bb{display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;background:#2a2926;color:rgba(255,255,255,.6);font-size:12.5px}
 .ae-nav .bb i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.18)}
@@ -84,7 +84,7 @@
 .ae-c.vu .ae-pas{display:none}
 @media (max-width:860px){.ae-pas li{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
 .ae-c{scroll-margin-top:84px}
-@media (max-width:860px){.ae-c{min-height:470px}}
+
 /* e-mail : le bouton suit le champ, la mention RGPD passe dessous (sur téléphone, le bouton reste au-dessus du dock) */
 #ae-f4 .bt{order:1}#ae-f4 .ae-rgpd{order:2;margin-top:4px}
 @media (max-width:860px){.ae-prog{padding:12px 14px;margin-bottom:16px}.ae-prog p{font-size:13.5px}.ae-e .ae-s{margin-bottom:16px}.ae-c{padding:20px 18px 24px}.ae-f .bt{justify-self:stretch;justify-content:center}.ae-rgpd{font-size:12px}}

@@ -26,8 +26,8 @@
     ret.addEventListener('click', e => { try { if (document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1) { e.preventDefault(); history.back(); } } catch (x) {} }); }
   /* en-tête, dock et retour en haut : verre dépoli, version nuit au-dessus des rubriques sombres */
   const hd = $('#hd'), dock = $('#dock'), hautBt = $('.haut-bt'), sombres = $$('[data-dark]'), feuilles = $$('.feuille');
-  /* empilement : chaque rubrique se fige à sa fin, la suivante glisse par-dessus */
-  const pile = [...document.querySelectorAll('main > .hero, main > .hv, main > .mh, main > .feuille')];
+  /* empilement : chaque rubrique se fige à sa fin, la suivante glisse par-dessus (sauf .libre : rubrique dont la hauteur change en cours d'usage, comme celle du module d'aperçu) */
+  const pile = [...document.querySelectorAll('main > .hero, main > .hv, main > .mh, main > .feuille:not(.libre)')];
   /* la hauteur de chaque rubrique est mesurée seulement quand elle change vraiment, le haut de figeage est calculé en CSS sur la petite hauteur d'écran : rien ne saute quand la barre du navigateur mobile apparaît */
   const fige = () => pile.forEach(el => { el.classList.add('empile'); const h = el.offsetHeight; if (Math.abs((el._h || 0) - h) > 2) { el._h = h; el.style.setProperty('--h', h + 'px'); } });
   fige(); if (window.ResizeObserver) { const ro = new ResizeObserver(() => fige()); pile.forEach(el => ro.observe(el)); }

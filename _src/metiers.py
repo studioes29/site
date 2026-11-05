@@ -54,7 +54,7 @@ ph = entete('Photographie', 'Photographie', 'Vos moments forts, sur le vif.', 'C
             ' u-noir mh-ph-s', FG('Photo', 'right:-2vw;font-size:calc(var(--fg-t) * 1.1)'), '', ph_act, True)
 ph += '''
 <section class="sec feuille ph-f u-papier" id="reportages" aria-labelledby="t-tr">
-  ''' + FG('Reportage', 'right:-2vw;top:-.36em;--vy:-80px;font-size:calc(var(--fg-t) * .72)') + '''
+  ''' + FG('Reportage', 'right:-2vw;bottom:-.3em;--vy:-80px;font-size:calc(var(--fg-t) * .72)') + '''
   <div class="w">
     <div class="sec-t rv"><div><p class="pt"><i>01</i><span>Portfolio</span></p><h2 class="d" id="t-tr">Reportages<span class="it">Une sélection d’images, puis tous les reportages.</span></h2></div><p class="lead">Concerts, festivals, institutions, entreprises.</p></div>
     <div class="tetes">''' + tetes + '''</div>
@@ -148,13 +148,13 @@ wb += '''
     <div class="vi rv">''' + vitrine() + '''</div>
   </div>
 </section>
-<section class="sec feuille dk wb-o u-violet" id="web" data-dark aria-labelledby="t-of">
+<section class="sec feuille libre dk wb-o u-violet" id="web" data-dark aria-labelledby="t-of">
   ''' + FG('Sites', 'right:-2vw;bottom:-.4em;--vx:-50px;--vy:-40px;font-size:calc(var(--fg-t) * .85)') + '''
   <div class="w">
     <div class="sec-t rv"><div><p class="pt"><i>02</i><span>Les offres</span></p><h2 class="d" id="t-of">Sites internet<span class="it">Écrits et mis en ligne pour vous.</span></h2></div><p class="lead">Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris.</p></div>
 ''' + offres_web.replace('<div class="sous rv"><h3 class="d">Site internet</h3><p>Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris. <button type="button" class="trv" data-est data-swipe>Je ne sais pas ce qu’il me faut</button></p></div>', '<div class="sous rv"><p><button type="button" class="trv" data-est data-swipe>Je ne sais pas ce qu’il me faut</button></p></div>') + '''
     <div class="ae rv" id="apercu" aria-labelledby="t-ae">
-      <link rel="stylesheet" href="/apercu.css?v=9">
+      <link rel="stylesheet" href="/apercu.css?v=11">
       <div class="ae-g">
         <p class="pt"><i>Essai</i><span>Votre site en aperçu</span></p>
         <h3 class="d" id="t-ae">Votre site,<span class="it">avant même d’en parler.</span></h3>
@@ -261,7 +261,7 @@ def tete(n, id, titre, it, texte, k):
             '<div class="ds-ac"><button type="button" class="bt" data-est data-k="%s">Parler de mon projet %s</button></div></div></div>') % (n, titre, id, titre, it, texte, k, AR)
 gr += """
 <section class="sec feuille gr-f gr-identites u-papier" id="identites" aria-labelledby="t-identites">
-  """ + FG('Identité', 'right:-2vw;top:-.36em;--vy:-80px;font-size:calc(var(--fg-t) * .72)') + """
+  """ + FG('Identité', 'right:-2vw;bottom:-.3em;--vy:-80px;font-size:calc(var(--fg-t) * .72)') + """
   <div class="w">
     """ + tete('01', 'identites', 'Identités visuelles', 'Un système complet, pas seulement un logo.', 'Logotype, couleurs, typographies et règles de déclinaison : de quoi rester reconnaissable sur l’enseigne, le site, les papiers et les réseaux. Chaque carte ouvre l’étude de cas du projet.', 'identite') + """
     """ + nuancier(IDS, 'Identités visuelles') + """
