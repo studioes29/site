@@ -1,6 +1,7 @@
-/* Module « Votre site en aperçu » (page Web).
-   1. nom, activité, ville  2. fiche Google  3. couleurs, logo, e-mail pendant que l'aperçu se prépare  4. l'aperçu dans la page.
-   La préparation démarre dès le choix de la fiche ; l'aperçu reste verrouillé côté serveur tant que l'e-mail n'est pas donné. */
+/* Module « Votre site en aperçu » (rubrique des offres web).
+   1. nom, activité, ville  2. fiche Google  3. couleurs et logo  4. e-mail pendant la préparation  5. l'aperçu dans la page.
+   La préparation démarre quand tout ce qu'il faut est connu (fiche, couleurs, logo) ; la barre avance pendant la saisie de l'e-mail.
+   L'aperçu reste verrouillé côté serveur tant que l'e-mail n'est pas donné. */
 (function () {
   'use strict';
   var R = document.getElementById('apercu');
@@ -33,7 +34,7 @@
   }
   function aller(n) {
     etapes.forEach(function (e, i) { e.classList.toggle('on', i === n); });
-    pas.forEach(function (p, i) { p.classList.toggle('on', i === Math.min(n, 2)); p.classList.toggle('ok', i < Math.min(n, 3)); });
+    pas.forEach(function (p, i) { p.classList.toggle('on', i === Math.min(n, 3)); p.classList.toggle('ok', i < Math.min(n, 4)); });
     var f = etapes[n] && etapes[n].querySelector('input:not([type=file]):not([tabindex="-1"]),button');
     if (f && n && innerWidth > 860) setTimeout(function () { f.focus({ preventScroll: true }); }, 320);
   }
@@ -69,12 +70,12 @@
       z.appendChild(b);
     });
   }
-  $('#ae-ret').addEventListener('click', function () { aller(0); });
+  R.querySelectorAll('[data-ret]').forEach(function (b) { b.addEventListener('click', function () { aller(+b.dataset.ret); }); });
 
   /* ---------- 2. la fiche choisie : la préparation démarre ---------- */
-  var f3 = $('#ae-f3');
+  var f3 = $('#ae-f3'), f4 = $('#ae-f4');
   function choisir(r) {
-    st.place = r; st.id = ''; st.debut = Date.now();
+    st.place = r; st.id = '';
     $('#ae-nom').textContent = r.nom;
     var act = f1.activite.value.trim();
     var pals = palettes(act + ' ' + r.nom);
@@ -88,12 +89,18 @@
       z.appendChild(b);
     });
     erreur(f3, '');
-    progres(0);
-    st.prep = appel({ action: 'preparer', place: r.id, session: st.session, nom: f1.nom.value.trim(), activite: act, ville: f1.ville.value.trim(), _honey: f1._honey.value })
-      .then(function (j) { st.id = j.id; progres(1); return j; });
-    st.prep.catch(function (e) { progres(-1); erreur(f3, e.message); });
     aller(2);
   }
+  /* couleurs et logo choisis : la préparation part, l'e-mail se saisit pendant ce temps */
+  f3.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    st.debut = Date.now(); st.id = ''; erreur(f4, '');
+    progres(0);
+    st.prep = appel({ action: 'preparer', place: st.place.id, session: st.session, nom: f1.nom.value.trim(), activite: f1.activite.value.trim(), ville: f1.ville.value.trim(), palette: st.pal, logo: st.logo, _honey: f1._honey.value })
+      .then(function (j) { st.id = j.id; progres(1); return j; });
+    st.prep.catch(function (e) { progres(-1); erreur(f4, e.message); });
+    aller(3);
+  });
   var ETAPES = ['Lecture de votre fiche Google', 'Récupération de vos photos', 'Rédaction des textes', 'Mise en page'];
   var minuteur;
   function progres(fin) {
@@ -133,16 +140,16 @@
   $('#ae-logo-x').addEventListener('click', function () { st.logo = null; fl.value = ''; $('#ae-logo-v').hidden = true; });
 
   /* ---------- 3. l'e-mail débloque l'aperçu ---------- */
-  f3.addEventListener('submit', function (ev) {
+  f4.addEventListener('submit', function (ev) {
     ev.preventDefault();
-    var email = f3.email.value.trim();
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email)) { erreur(f3, 'Vérifiez votre adresse e-mail.'); f3.email.focus(); return; }
-    erreur(f3, '');
-    var b = f3.querySelector('.bt'); b.disabled = true; b.firstChild.textContent = 'Encore un instant… ';
+    var email = f4.email.value.trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email)) { erreur(f4, 'Vérifiez votre adresse e-mail.'); f4.email.focus(); return; }
+    erreur(f4, '');
+    var b = f4.querySelector('.bt'); b.disabled = true; b.firstChild.textContent = 'Encore un instant… ';
     st.prep.then(function () {
-      return appel({ action: 'debloquer', id: st.id, email: email, palette: st.pal, logo: st.logo });
+      return appel({ action: 'debloquer', id: st.id, email: email });
     }).then(function (j) { afficher(j.url, email); })
-      .catch(function (e) { erreur(f3, e.message); })
+      .catch(function (e) { erreur(f4, e.message); })
       .then(function () { b.disabled = false; b.firstChild.textContent = 'Voir mon aperçu '; });
   });
 
@@ -153,8 +160,8 @@
     v.querySelector('.bb em').textContent = (st.place && st.place.nom ? st.place.nom.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '') : 'votre-site') + '.fr';
     v.querySelector('[data-ouvrir]').href = url;
     $('#ae-mail').textContent = email;
-    R.querySelector('.ae').classList.add('vu'); c.classList.add('vu');
-    aller(3);
+    R.classList.add('vu'); c.classList.add('vu');
+    aller(4);
     if (window.goatcounter && goatcounter.count) try { goatcounter.count({ path: 'apercu-genere', event: true }); } catch (e) { /* mesure facultative */ }
     R.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
