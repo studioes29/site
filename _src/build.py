@@ -54,7 +54,7 @@ TR = [
     ('Inauguration', '#r=inauguration', '/p/t/inaug-digue-7.webp', 'photo', 'Événementiel et institutions'),
     ('FL Auto', '/projets/fl-auto/', '/projets/fl-auto/img/cover-800.webp', 'graph photo', 'Identité, signalétique et reportage'),
     ('flouz.', '/projets/flouz/', '/projets/flouz/img/cover-800.webp', 'web graph', 'Application de budget'),
-    ('Plateforme interne', '/projets/plateforme-interne/', '/projets/plateforme-interne/img/cover-800.webp', 'web', 'Outil de gestion d’un studio'),
+    ('Plateforme interne', '/projets/plateforme-interne/', '/projets/plateforme-interne/img/cover-800.webp', 'web', 'Outil de gestion d’un cabinet de conseil'),
     ('Fill', '/projets/fill/', '/projets/fill/img/cover-800.webp', 'web graph', 'Marque, site et simulateur'),
     ('Philippe Katerine', '#r=philippe-katerine', '/p/t/philippe-katerine-2.webp', 'photo', 'Concert'),
     ('Identités visuelles', '#r=identites', '/p/t/maison-ble-1.webp', 'graph', 'Logotypes, univers et déclinaisons'),
