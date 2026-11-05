@@ -154,20 +154,11 @@ wb += '''
     <div class="sec-t rv"><div><p class="pt"><i>02</i><span>Les offres</span></p><h2 class="d" id="t-of">Sites internet<span class="it">Écrits et mis en ligne pour vous.</span></h2></div><p class="lead">Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris.</p></div>
 ''' + offres_web.replace('<div class="sous rv"><h3 class="d">Site internet</h3><p>Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris. <button type="button" class="trv" data-est data-swipe>Je ne sais pas ce qu’il me faut</button></p></div>', '<div class="sous rv"><p><button type="button" class="trv" data-est data-swipe>Je ne sais pas ce qu’il me faut</button></p></div>') + '''
     <div class="ae rv" id="apercu" aria-labelledby="t-ae">
-      <link rel="stylesheet" href="/apercu.css?v=6">
+      <link rel="stylesheet" href="/apercu.css?v=7">
       <div class="ae-g">
         <p class="pt"><i>Essai</i><span>Votre site en aperçu</span></p>
         <h3 class="d" id="t-ae">Votre site,<span class="it">avant même d’en parler.</span></h3>
         <p class="lead">À partir de votre fiche Google : vos horaires, vos avis et vos photos, mis en page comme un vrai site de la formule Essentiel, dans un style propre à votre activité.</p>
-        <div class="ae-mq" id="ae-mq" data-etat="0" aria-hidden="true">
-          <div class="bb"><i></i><i></i><i></i><em id="ae-url">votre-site.fr</em></div>
-          <div class="scr">
-            <div class="mn"><span class="lg" id="ae-mq-lg"></span><span class="nm" id="ae-mq-nm"></span><span class="li"><i></i><i></i><i></i></span><span class="cta"></span></div>
-            <div class="hr"><p class="kk" id="ae-mq-lieu"></p><p class="t1" id="ae-mq-t1"><i></i></p><p class="t2"><i></i></p><span class="pl"></span></div>
-            <div class="tu"><i></i><i></i><i></i></div>
-            <span class="gg" id="ae-mq-gg">Fiche Google</span>
-          </div>
-        </div>
       </div>
       <div class="ae-c" aria-live="polite">
         <ol class="ae-pas" aria-label="Étapes"><li class="on">Établissement</li><li>Fiche Google</li><li>Logo</li><li>E-mail</li></ol>
@@ -208,7 +199,7 @@ wb += '''
           <div class="ae-nav"><div class="bb"><i></i><i></i><i></i><em></em></div><iframe title="Aperçu de votre site" loading="lazy"></iframe></div>
         </div>
       </div>
-      <script src="/apercu.js?v=6" defer></script>
+      <script src="/apercu.js?v=7" defer></script>
     </div>
   </div>
 </section>

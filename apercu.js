@@ -24,32 +24,10 @@
     var f = etapes[n] && etapes[n].querySelector('input:not([type=file]):not([tabindex="-1"]),button');
     if (f && n && innerWidth > 860) setTimeout(function () { f.focus({ preventScroll: true }); }, 320);
   }
-  /* ---------- maquette : le site se construit au fil des réponses ---------- */
-  var MQ = $('#ae-mq');
-  function slug(t) { return (t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/['’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 32); }
-  function maquette(o) {
-    if (!MQ) return;
-    if ('etat' in o) MQ.dataset.etat = o.etat;
-    if ('nom' in o) {
-      var n = (o.nom || '').trim(), t1 = $('#ae-mq-t1');
-      $('#ae-url').textContent = (slug(n) || 'votre-site') + '.fr';
-      $('#ae-mq-nm').textContent = n;
-      t1.textContent = '';
-      if (!n) t1.appendChild(el('i'));
-      else n.split('').forEach(function (c, i) { var sp = el('span', null, c === ' ' ? '\u00a0' : c); if (o.anim) sp.style.animationDelay = (i * 18) + 'ms'; else sp.style.animation = 'none'; t1.appendChild(sp); });
-      var lg = $('#ae-mq-lg'); if (!lg.querySelector('img')) lg.textContent = n ? n.charAt(0).toUpperCase() : '';
-    }
-    if ('lieu' in o) $('#ae-mq-lieu').textContent = o.lieu || '';
-    if ('logo' in o) { var g = $('#ae-mq-lg'); g.textContent = ''; if (o.logo) { var im = el('img'); im.src = o.logo; im.alt = ''; g.appendChild(im); } else g.textContent = (f1.nom.value.trim().charAt(0) || '').toUpperCase(); }
-    if ('pal' in o) { var p = o.pal || { fond: '#141414', accent: '#F0EEE9', clair: '#F0EEE9' }; MQ.style.setProperty('--mf', p.fond); MQ.style.setProperty('--ma', p.accent); MQ.style.setProperty('--mc', p.clair); }
-    if ('prep' in o) { MQ.classList.toggle('prep', o.prep === 1); MQ.classList.toggle('pret', o.prep === 2); }
-  }
   function erreur(zone, t) { var z = zone.querySelector('.ae-err'); if (!z) { z = el('p', 'ae-err'); zone.appendChild(z); } z.textContent = t; z.hidden = !t; }
 
   /* ---------- 1. recherche de la fiche ---------- */
   var f1 = $('#ae-f1');
-  var tape; f1.nom.addEventListener('input', function () { clearTimeout(tape); tape = setTimeout(function () { maquette({ nom: f1.nom.value }); }, 60); });
-  f1.ville.addEventListener('input', function () { maquette({ lieu: f1.ville.value.trim() }); });
   f1.addEventListener('submit', function (ev) {
     ev.preventDefault();
     var nom = f1.nom.value.trim(), ville = f1.ville.value.trim();
@@ -58,7 +36,7 @@
     var b = f1.querySelector('.bt'); b.disabled = true;
     st.session = uid();
     appel({ action: 'chercher', nom: nom, ville: ville, session: st.session })
-      .then(function (j) { liste(j.resultats || []); aller(1); maquette({ etat: 1 }); })
+      .then(function (j) { liste(j.resultats || []); aller(1); })
       .catch(function (e) { erreur(f1, e.message); })
       .then(function () { b.disabled = false; });
   });
@@ -84,7 +62,6 @@
   function choisir(r) {
     st.place = r; st.id = '';
     $('#ae-nom').textContent = r.nom;
-    maquette({ nom: r.nom, anim: true, lieu: (r.lieu || '').replace(/,\s*France$/i, '').split(',').slice(-1)[0].replace(/^\s*\d{5}\s*/, '').trim(), etat: 2 });
     erreur(f3, '');
     aller(2);
   }
@@ -94,9 +71,8 @@
     st.debut = Date.now(); st.id = ''; erreur(f4, '');
     progres(0);
     st.prep = appel({ action: 'preparer', place: st.place.id, session: st.session, nom: f1.nom.value.trim(), ville: f1.ville.value.trim(), palette: st.pal, logo: st.logo, _honey: f1._honey.value })
-      .then(function (j) { st.id = j.id; progres(1); maquette({ prep: 2 }); return j; });
-    st.prep.catch(function (e) { progres(-1); maquette({ prep: 0 }); erreur(f4, e.message); });
-    maquette({ prep: 1, etat: 4 });
+      .then(function (j) { st.id = j.id; progres(1); return j; });
+    st.prep.catch(function (e) { progres(-1); erreur(f4, e.message); });
     aller(3);
   });
   var ETAPES = ['Lecture de votre fiche Google', 'Récupération de vos photos', 'Rédaction des textes', 'Mise en page'];
@@ -119,7 +95,7 @@
   var fl = $('#ae-logo');
   fl.addEventListener('change', function () {
     var f = fl.files && fl.files[0]; if (!f) return;
-    var fin = function (d) { st.logo = d; var v = $('#ae-logo-v'); v.hidden = false; v.querySelector('img').src = d; maquette({ logo: d, etat: 3 }); couleursLogo(d); };
+    var fin = function (d) { st.logo = d; var v = $('#ae-logo-v'); v.hidden = false; v.querySelector('img').src = d; couleursLogo(d); };
     if (f.size > 8e6) { erreur(f3, 'Ce fichier est trop lourd (8 Mo au plus).'); return; }
     var lr = new FileReader();
     lr.onload = function () {
@@ -135,7 +111,7 @@
     };
     lr.readAsDataURL(f);
   });
-  $('#ae-logo-x').addEventListener('click', function () { st.logo = null; st.pal = null; fl.value = ''; $('#ae-logo-v').hidden = true; maquette({ logo: null, pal: null }); });
+  $('#ae-logo-x').addEventListener('click', function () { st.logo = null; st.pal = null; fl.value = ''; $('#ae-logo-v').hidden = true; });
 
   /* couleurs tirées du logo : teinte dominante (hors blancs, noirs et gris) ; logo sans couleur : choix laissé au serveur */
   function hsl(h, s, l) {
@@ -165,7 +141,7 @@
       var m = null; for (var q in seaux) if (!m || seaux[q].n > m.n) m = seaux[q];
       var H = m.h / m.n, S = m.s / m.n, L = m.l / m.n;
       st.pal = { fond: hsl(H, Math.min(.38, S * .5), .09), accent: hsl(H, Math.max(.45, Math.min(.85, S)), Math.max(.58, Math.min(.72, L))), clair: hsl(H, .22, .93) };
-      maquette({ pal: st.pal });
+     
     };
     im.src = src;
   }
