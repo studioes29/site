@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com 'self'; img-src 'self' data: blob: https://nfnbseonwgmtouxsaajd.supabase.co https://*.googleusercontent.com; connect-src 'self' https://nfnbseonwgmtouxsaajd.supabase.co; form-action 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Aperçu de site · Studio ES</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Aperçu de site Studio ES : la page est construite par moteur.js à partir des données de la fonction « apercu » (?a=identifiant).
+     La direction (atelier, table, chantier, cabinet, vitrine) dépend de l'activité ; ?demo affiche un aperçu fictif. -->
+<style>
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:#F0EEE9;color:#141414;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+.etat{min-height:100svh;display:grid;place-items:center;text-align:center;padding:24px}
+.etat h1{margin:0;font-size:clamp(2rem,6vw,3.2rem);letter-spacing:-.04em;line-height:1}
+.etat p{margin:18px auto 26px;max-width:40ch;color:#65615A}
+.etat a{display:inline-flex;background:#141414;color:#F0EEE9;text-decoration:none;padding:14px 22px;border-radius:999px;font-weight:600}
+.etat .pt{width:10px;height:10px;border-radius:50%;background:#141414;margin:0 auto 22px;animation:p 1.2s ease-in-out infinite}
+@keyframes p{50%{opacity:.25;transform:scale(.6)}}
+</style>
+</head>
+<body>
+<div id="site"><div class="etat"><div><div class="pt"></div><p>Chargement de l'aperçu…</p></div></div></div>
+<script src="moteur.js?v=1"></script>
+<script src="v.js?v=2"></script>
+</body>
+</html>

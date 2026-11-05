@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at https://app.cal.com https://cdnjs.cloudflare.com https://dossiers.studioes.fr 'sha256-NIH3hAUg/TtuiUPcqOfeVwSiLSdpR2wE8VcqsYL1t4Y='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://studioes.goatcounter.com; font-src 'self'; connect-src 'self' https://nfnbseonwgmtouxsaajd.supabase.co https://dossiers.studioes.fr https://studioes.goatcounter.com https://app.cal.com https://cal.com; frame-src https://app.cal.com https://cal.com; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin">
+<meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://gc.zgo.at https://app.cal.com https://cdnjs.cloudflare.com https://dossiers.studioes.fr 'sha256-NIH3hAUg/TtuiUPcqOfeVwSiLSdpR2wE8VcqsYL1t4Y='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://studioes.goatcounter.com; font-src 'self'; connect-src 'self' https://nfnbseonwgmtouxsaajd.supabase.co https://dossiers.studioes.fr https://studioes.goatcounter.com https://app.cal.com https://cal.com; frame-src 'self' https://app.cal.com https://cal.com; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Sites internet et applications en Bretagne · Studio ES</title>
 <meta name="description" content="Sites, réservation en ligne et applications sur mesure pour les TPE, lieux culturels et collectivités de Bretagne : Pierceval Tattoo, La Soute. Dès 990 €.">
@@ -163,6 +163,58 @@
       <div class="ch"><b class="pz">+350&nbsp;€</b><label class="sw"><input type="checkbox" id="swPh"><span class="tr" aria-hidden="true"></span><span>Inclure au prix</span></label></div>
     </div>
     <p class="note rv">Le suivi couvre l’hébergement, le nom de domaine et les sauvegardes, sans engagement.</p>
+    <div class="ae rv" id="apercu" aria-labelledby="t-ae">
+      <link rel="stylesheet" href="/apercu.css?v=3">
+      <div class="ae-g">
+        <p class="pt"><i>Essai</i><span>Votre site en aperçu</span></p>
+        <h3 class="d" id="t-ae">Votre site,<span class="it">avant même d’en parler.</span></h3>
+        <p class="lead">À partir de votre fiche Google : vos horaires, vos avis et vos photos, mis en page comme un vrai site de la formule Essentiel, dans un style propre à votre activité.</p>
+        <ol class="ae-pas" aria-label="Étapes"><li class="on">Votre établissement</li><li>Votre fiche Google</li><li>Vos couleurs</li><li>Votre e-mail</li></ol>
+      </div>
+      <div class="ae-c" aria-live="polite">
+        <div class="ae-e on">
+          <h4>Votre établissement</h4>
+          <p class="ae-s">Trois informations suffisent pour retrouver votre fiche.</p>
+          <form class="ae-f" id="ae-f1" novalidate>
+            <label>Nom de l’établissement<input type="text" name="nom" autocomplete="organization" required></label>
+            <div class="r2"><label>Activité<input type="text" name="activite" placeholder="Boulangerie, garage, coiffure…"></label><label>Ville<input type="text" name="ville" autocomplete="address-level2" required></label></div>
+            <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+            <button class="bt" type="submit">Trouver ma fiche <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button>
+          </form>
+        </div>
+        <div class="ae-e">
+          <h4>Votre fiche Google</h4>
+          <p class="ae-s">Touchez la vôtre.</p>
+          <div class="ae-res" id="ae-res"></div>
+          <button type="button" class="ae-ret" data-ret="0">Modifier la recherche</button>
+        </div>
+        <div class="ae-e">
+          <h4>Vos couleurs<span class="it">pour <span id="ae-nom"></span></span></h4>
+          <p class="ae-s">La mise en page s’adapte à votre activité : choisissez les couleurs, et ajoutez votre logo si vous en avez un.</p>
+          <form class="ae-f" id="ae-f3" novalidate>
+            <div class="ae-pal" id="ae-pal" role="group" aria-label="Couleurs"></div>
+            <div class="ae-logo"><label>Ajouter votre logo<input type="file" id="ae-logo" accept="image/png,image/jpeg,image/webp,image/svg+xml"></label><span id="ae-logo-v" hidden><img alt="Votre logo"><button type="button" id="ae-logo-x">Retirer</button></span><span class="ae-s" style="margin:0">facultatif</span></div>
+            <button class="bt" type="submit">Préparer mon aperçu <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button>
+          </form>
+          <button type="button" class="ae-ret" data-ret="1">Changer de fiche</button>
+        </div>
+        <div class="ae-e">
+          <div class="ae-prog" id="ae-prog"><p><b>Lecture de votre fiche Google…</b><span>0 %</span></p><div class="bar"><i></i></div></div>
+          <h4>Votre e-mail<span class="it">pendant la préparation</span></h4>
+          <form class="ae-f" id="ae-f4" novalidate>
+            <label>L’aperçu s’affiche ici et vous est aussi envoyé par e-mail<input type="email" name="email" autocomplete="email" inputmode="email" required></label>
+            <p class="ae-rgpd">Studio ES utilise cette adresse pour vous envoyer l’aperçu et vous recontacter à son sujet, rien d’autre. Un seul aperçu par adresse, visible 30 jours. Désinscription en un clic depuis chaque message, détails dans les <a href="/conditions/#donnees-personnelles-et-confidentialite">conditions</a>.</p>
+            <button class="bt" type="submit">Voir mon aperçu <span class="ar"><svg class="i"><use href="#ar"/></svg></span></button>
+          </form>
+        </div>
+        <div class="ae-e ae-v" id="ae-v">
+          <div class="tete"><h4>Votre site, en aperçu<span class="it">Une copie part aussi à <span id="ae-mail"></span>.</span></h4>
+            <div class="act"><a class="bt" href="#web">Le commander, 490 € <span class="ar"><svg class="i"><use href="#ar"/></svg></span></a><a class="ln" data-ouvrir href="#" target="_blank" rel="noopener">Ouvrir en plein écran</a></div></div>
+          <div class="ae-nav"><div class="bb"><i></i><i></i><i></i><em></em></div><iframe title="Aperçu de votre site" loading="lazy"></iframe></div>
+        </div>
+      </div>
+      <script src="/apercu.js?v=3" defer></script>
+    </div>
   </div>
 </section>
 <section class="sec feuille ap-f u-brume" id="applications" aria-labelledby="t-ap">

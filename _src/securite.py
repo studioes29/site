@@ -7,14 +7,15 @@ RACINE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE = ("default-src 'self'; script-src 'self' https://gc.zgo.at https://app.cal.com https://cdnjs.cloudflare.com https://dossiers.studioes.fr{h}; style-src 'self' 'unsafe-inline'; "
         "img-src 'self' data: https://studioes.goatcounter.com; font-src 'self'; "
         "connect-src 'self' https://nfnbseonwgmtouxsaajd.supabase.co https://dossiers.studioes.fr https://studioes.goatcounter.com https://app.cal.com https://cal.com; "
-        "frame-src https://app.cal.com https://cal.com; "
+        "frame-src 'self' https://app.cal.com https://cal.com; "
         "form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests")
 REF = '<meta name="referrer" content="strict-origin-when-cross-origin">'
 def pages(args):
     for a in args or [RACINE]:
         if os.path.isdir(a):
             for f in glob.glob(os.path.join(a, '**/*.html'), recursive=True):
-                if '/_src/' not in f and '/.git/' not in f and not f.endswith('page.tpl.html'): yield f
+                # les aperçus de site ont leur propre politique (polices Google, photos stockées sur Supabase)
+                if '/_src/' not in f and '/.git/' not in f and '/apercu/voir/' not in f and not f.endswith('page.tpl.html'): yield f
         else: yield a
 n = 0
 for f in pages(sys.argv[1:]):

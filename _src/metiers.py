@@ -152,6 +152,58 @@ wb += '''
   <div class="w">
     <div class="sec-t rv"><div><p class="pt"><i>02</i><span>Les offres</span></p><h2 class="d" id="t-of">Sites internet<span class="it">Écrits et mis en ligne pour vous.</span></h2></div><p class="lead">Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris.</p></div>
 ''' + offres_web.replace('<div class="sous rv"><h3 class="d">Site internet</h3><p>Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris. <button type="button" class="trv" data-est data-swipe>Je ne sais pas ce qu’il me faut</button></p></div>', '<div class="sous rv"><p><button type="button" class="trv" data-est data-swipe>Je ne sais pas ce qu’il me faut</button></p></div>') + '''
+    <div class="ae rv" id="apercu" aria-labelledby="t-ae">
+      <link rel="stylesheet" href="/apercu.css?v=3">
+      <div class="ae-g">
+        <p class="pt"><i>Essai</i><span>Votre site en aperçu</span></p>
+        <h3 class="d" id="t-ae">Votre site,<span class="it">avant même d’en parler.</span></h3>
+        <p class="lead">À partir de votre fiche Google : vos horaires, vos avis et vos photos, mis en page comme un vrai site de la formule Essentiel, dans un style propre à votre activité.</p>
+        <ol class="ae-pas" aria-label="Étapes"><li class="on">Votre établissement</li><li>Votre fiche Google</li><li>Vos couleurs</li><li>Votre e-mail</li></ol>
+      </div>
+      <div class="ae-c" aria-live="polite">
+        <div class="ae-e on">
+          <h4>Votre établissement</h4>
+          <p class="ae-s">Trois informations suffisent pour retrouver votre fiche.</p>
+          <form class="ae-f" id="ae-f1" novalidate>
+            <label>Nom de l’établissement<input type="text" name="nom" autocomplete="organization" required></label>
+            <div class="r2"><label>Activité<input type="text" name="activite" placeholder="Boulangerie, garage, coiffure…"></label><label>Ville<input type="text" name="ville" autocomplete="address-level2" required></label></div>
+            <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+            <button class="bt" type="submit">Trouver ma fiche ''' + AR + '''</button>
+          </form>
+        </div>
+        <div class="ae-e">
+          <h4>Votre fiche Google</h4>
+          <p class="ae-s">Touchez la vôtre.</p>
+          <div class="ae-res" id="ae-res"></div>
+          <button type="button" class="ae-ret" data-ret="0">Modifier la recherche</button>
+        </div>
+        <div class="ae-e">
+          <h4>Vos couleurs<span class="it">pour <span id="ae-nom"></span></span></h4>
+          <p class="ae-s">La mise en page s’adapte à votre activité : choisissez les couleurs, et ajoutez votre logo si vous en avez un.</p>
+          <form class="ae-f" id="ae-f3" novalidate>
+            <div class="ae-pal" id="ae-pal" role="group" aria-label="Couleurs"></div>
+            <div class="ae-logo"><label>Ajouter votre logo<input type="file" id="ae-logo" accept="image/png,image/jpeg,image/webp,image/svg+xml"></label><span id="ae-logo-v" hidden><img alt="Votre logo"><button type="button" id="ae-logo-x">Retirer</button></span><span class="ae-s" style="margin:0">facultatif</span></div>
+            <button class="bt" type="submit">Préparer mon aperçu ''' + AR + '''</button>
+          </form>
+          <button type="button" class="ae-ret" data-ret="1">Changer de fiche</button>
+        </div>
+        <div class="ae-e">
+          <div class="ae-prog" id="ae-prog"><p><b>Lecture de votre fiche Google…</b><span>0 %</span></p><div class="bar"><i></i></div></div>
+          <h4>Votre e-mail<span class="it">pendant la préparation</span></h4>
+          <form class="ae-f" id="ae-f4" novalidate>
+            <label>L’aperçu s’affiche ici et vous est aussi envoyé par e-mail<input type="email" name="email" autocomplete="email" inputmode="email" required></label>
+            <p class="ae-rgpd">Studio ES utilise cette adresse pour vous envoyer l’aperçu et vous recontacter à son sujet, rien d’autre. Un seul aperçu par adresse, visible 30 jours. Désinscription en un clic depuis chaque message, détails dans les <a href="/conditions/#donnees-personnelles-et-confidentialite">conditions</a>.</p>
+            <button class="bt" type="submit">Voir mon aperçu ''' + AR + '''</button>
+          </form>
+        </div>
+        <div class="ae-e ae-v" id="ae-v">
+          <div class="tete"><h4>Votre site, en aperçu<span class="it">Une copie part aussi à <span id="ae-mail"></span>.</span></h4>
+            <div class="act"><a class="bt" href="#web">Le commander, 490 € ''' + AR + '''</a><a class="ln" data-ouvrir href="#" target="_blank" rel="noopener">Ouvrir en plein écran</a></div></div>
+          <div class="ae-nav"><div class="bb"><i></i><i></i><i></i><em></em></div><iframe title="Aperçu de votre site" loading="lazy"></iframe></div>
+        </div>
+      </div>
+      <script src="/apercu.js?v=3" defer></script>
+    </div>
   </div>
 </section>
 ''' + sect('applications', B) + '\n' + croise('Photographie<span class="it">Le studio photographie aussi vos événements.</span>', 'Concerts, festivals, cérémonies, vie d’une entreprise, mariages : un reportage discret, puis une sélection resserrée et retouchée.', '/metiers/photographie/', 'Découvrir la photographie', '/p/t/matmatah-1.webp', 'u-foret dk') + '\n' + \
