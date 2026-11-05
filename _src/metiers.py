@@ -87,10 +87,10 @@ offres_web = '\n'.join(bw[4:fin_web + 1])
 VITRINE = [
     ('pierceval', 'Pierceval Tattoo', 'Site, réservation, carte cadeau', '/projets/pierceval-tattoo/',
      'Identité et site conçus ensemble : un fond prune, un rose franc, un lettrage italique qui rappelle l’enseigne.', [
-        ('Accueil', 'Les deux métiers dès l’ouverture, et la prise de rendez-vous à portée de pouce.', 'ecran', PV + 'd-hero.webp', PV + 'm-hero.webp', 'piercevaltattoo.fr'),
-        ('Réservation', 'Deux parcours, tatouage ou piercing : la demande arrive complète, avec le projet et les disponibilités.', 'ecran', PV + 'd-rdv-type.webp', PV + 'm-rdv-type.webp', 'piercevaltattoo.fr'),
-        ('Carte cadeau', 'Montant, message et destinataire choisis en ligne ; la carte arrive en PDF, prête à offrir.', 'ecran', PV + 'd-cadeau-ok.webp', PV + 'm-cadeau.webp', 'piercevaltattoo.fr'),
-        ('Réalisations', 'Les tatouages classés par style, pour se décider avant même d’appeler.', 'ecran', PV + 'd-real.webp', PV + 'm-real.webp', 'piercevaltattoo.fr')]),
+        ('Accueil', 'Les deux métiers dès l’ouverture, et la prise de rendez-vous à portée de pouce.', 'ecran', PV + 'd-hero.webp', PV + 't-hero.webp', 'piercevaltattoo.fr'),
+        ('Réservation', 'Deux parcours, tatouage ou piercing : la demande arrive complète, avec le projet et les disponibilités.', 'ecran', PV + 'd-rdv-type.webp', PV + 't-rdv-type.webp', 'piercevaltattoo.fr'),
+        ('Carte cadeau', 'Montant, message et destinataire choisis en ligne ; la carte arrive en PDF, prête à offrir.', 'ecran', PV + 'd-cadeau-ok.webp', PV + 't-cadeau.webp', 'piercevaltattoo.fr'),
+        ('Réalisations', 'Les tatouages classés par style, pour se décider avant même d’appeler.', 'ecran', PV + 'd-real.webp', PV + 't-real.webp', 'piercevaltattoo.fr')]),
     ('soute', 'La Soute', 'Site de saison et billetterie', '/projets/la-soute/',
      'Le O de Soute devient un hublot : le même signe sert de logo, de cadre photo et de repère sur le site, la brochure et les affiches.', [
         ('Accueil', 'La saison en une phrase, le prochain concert et l’accès direct à l’agenda.', 'ecran', '/projets/la-soute/img/' + 'd-accueil.webp', '/projets/la-soute/img/' + 'm-accueil.webp', ''),
@@ -99,10 +99,10 @@ VITRINE = [
         ('Menu', 'Les concerts du mois, les styles et le temps fort, dès le survol du menu.', 'ecran', '/projets/la-soute/img/' + 'd-menu.webp', '/projets/la-soute/img/' + 'm-menu.webp', '')]),
     ('fill', 'Fill', 'Marque, site et simulateur', '/projets/fill/',
      'Un nom qui se lit deux fois : « fil » en plein, le second « l » au trait. Un fond lavande, un violet franc pour l’action.', [
-        ('Accueil', 'Une bascule commune ou entreprise change les exemples, les supports et le vocabulaire de toute la page.', 'ecran', '/projets/fill/img/' + 'd-accueil.webp', '/projets/fill/img/' + 'm-accueil.webp', 'fill.studioes.fr'),
-        ('Simulateur', 'Quatre questions ou une composition libre : une formule recommandée, justifiée unité par unité.', 'ecran', '/projets/fill/img/' + 'd-simulateur.webp', '/projets/fill/img/' + 'm-simulateur.webp', 'fill.studioes.fr'),
-        ('Fonctionnement', 'Comment une demande arrive, qui la traite et en combien de temps, écrit d’avance.', 'ecran', '/projets/fill/img/' + 'd-fonctionnement.webp', '/projets/fill/img/' + 'm-fonctionnement.webp', 'fill.studioes.fr'),
-        ('Calendrier', 'Les temps forts de la saison, pour anticiper les campagnes.', 'ecran', '/projets/fill/img/' + 'd-calendrier.webp', '/projets/fill/img/' + 'm-calendrier.webp', 'fill.studioes.fr')]),
+        ('Accueil', 'Une bascule commune ou entreprise change les exemples, les supports et le vocabulaire de toute la page.', 'ecran', '/projets/fill/img/' + 'd-accueil.webp', '/projets/fill/img/' + 't-accueil.webp', 'fill.studioes.fr'),
+        ('Simulateur', 'Quatre questions ou une composition libre : une formule recommandée, justifiée unité par unité.', 'ecran', '/projets/fill/img/' + 'd-simulateur.webp', '/projets/fill/img/' + 't-simulateur.webp', 'fill.studioes.fr'),
+        ('Fonctionnement', 'Comment une demande arrive, qui la traite et en combien de temps, écrit d’avance.', 'ecran', '/projets/fill/img/' + 'd-fonctionnement.webp', '/projets/fill/img/' + 't-fonctionnement.webp', 'fill.studioes.fr'),
+        ('Calendrier', 'Les temps forts de la saison, pour anticiper les campagnes.', 'ecran', '/projets/fill/img/' + 'd-calendrier.webp', '/projets/fill/img/' + 't-calendrier.webp', 'fill.studioes.fr')]),
     ('flouz', 'flouz.', 'Application de budget', '/projets/flouz/',
      'Une interface sombre, un seul violet pour l’essentiel : le solde, les budgets, les alertes.', [
         ('Tableau de bord', 'Le solde, le mois en cours et les dépenses épinglées sur un seul écran.', 'image', '/projets/flouz/img/tableau.webp', '', ''),
@@ -110,10 +110,10 @@ VITRINE = [
         ('Objectifs', 'Ce qu’il reste à mettre de côté chaque mois pour atteindre un objectif à temps.', 'image', '/projets/flouz/img/objectifs.webp', '', '')]),
     ('plateforme', 'Plateforme interne', 'Outil de gestion', '/projets/plateforme-interne/',
      'Une base claire, un vert d’eau pour ce qui attend une action, des cartes qui se lisent d’un coup d’œil.', [
-        ('Accueil', 'Ce qui attend, dans l’ordre : la prochaine action d’abord, puis le reste.', 'ecran', '/projets/plateforme-interne/img/' + 'd-maintenant.webp', '/projets/plateforme-interne/img/' + 'm-maintenant.webp', ''),
-        ('Prospection', 'Chaque matin, des prospects vérifiés, un message rédigé et ses relances : il ne reste qu’à valider.', 'ecran', '/projets/plateforme-interne/img/' + 'd-prospection.webp', '/projets/plateforme-interne/img/' + 'm-prospection.webp', ''),
-        ('Clients', 'Du premier contact au paiement, chaque relation avance d’étape en étape.', 'ecran', '/projets/plateforme-interne/img/' + 'd-clients.webp', '/projets/plateforme-interne/img/' + 'm-clients.webp', ''),
-        ('Argent', 'Encaissé, attendu, à relancer : relevé automatiquement depuis la banque.', 'ecran', '/projets/plateforme-interne/img/' + 'd-argent.webp', '/projets/plateforme-interne/img/' + 'm-argent.webp', '')]),
+        ('Accueil', 'Ce qui attend, dans l’ordre : la prochaine action d’abord, puis le reste.', 'ecran', '/projets/plateforme-interne/img/' + 'd-maintenant.webp', '/projets/plateforme-interne/img/' + 't-maintenant.webp', ''),
+        ('Prospection', 'Chaque matin, des prospects vérifiés, un message rédigé et ses relances : il ne reste qu’à valider.', 'ecran', '/projets/plateforme-interne/img/' + 'd-prospection.webp', '/projets/plateforme-interne/img/' + 't-prospection.webp', ''),
+        ('Clients', 'Du premier contact au paiement, chaque relation avance d’étape en étape.', 'ecran', '/projets/plateforme-interne/img/' + 'd-clients.webp', '/projets/plateforme-interne/img/' + 't-clients.webp', ''),
+        ('Argent', 'Encaissé, attendu, à relancer : relevé automatiquement depuis la banque.', 'ecran', '/projets/plateforme-interne/img/' + 'd-argent.webp', '/projets/plateforme-interne/img/' + 't-argent.webp', '')]),
 ]
 def scene_v(t, typ, d, m, url):
     if typ == 'ecran':

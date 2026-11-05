@@ -1325,8 +1325,9 @@ body{color:var(--encre)}
 .vs-ec{border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 40px 80px -40px rgba(28,24,64,.6),0 0 0 1px rgba(28,24,64,.08)}
 .vs-pg{position:relative;aspect-ratio:16/10;overflow:hidden;background:#eee}
 .vs-pg img{width:100%;height:100%;object-fit:cover;object-position:50% 0}
-.vs-tel{position:absolute;right:0;bottom:0;width:24%;aspect-ratio:600/1298;border-radius:20px;overflow:hidden;border:5px solid #15122E;background:#15122E;box-shadow:0 30px 60px -20px rgba(28,24,64,.6)}
-.vs-tel img{width:100%;height:100%;object-fit:cover;object-position:50% 0}
+.vs-tel{position:absolute;right:0;bottom:0;width:24%;aspect-ratio:600/1298;border-radius:15%/6.9%;background:#121212;box-shadow:inset 0 0 0 1.5px #3a3a3a,0 30px 60px -20px rgba(28,24,64,.6)}
+.vs-tel:after{content:"";position:absolute;left:50%;top:2.9%;width:29%;height:3.1%;transform:translateX(-50%);border-radius:999px;background:#000}
+.vs-tel img{position:absolute;left:3.6%;right:3.6%;top:1.66%;bottom:1.66%;display:block;width:92.8%;height:96.68%;object-fit:cover;object-position:50% 0;border-radius:11.5%/5.3%}
 .vp-s.sans-tel{padding:0}
 .vp-s.sans-tel .vs-tel{display:none}
 .vs-app{border-radius:16px;overflow:hidden;aspect-ratio:4/3;background:#E9E7F4}
