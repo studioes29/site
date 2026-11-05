@@ -139,7 +139,7 @@ wb += '''
   ''' + FG('Sites', 'right:-2vw;bottom:-.4em;--vx:-50px;--vy:-40px;font-size:calc(var(--fg-t) * .85)') + '''
   <div class="w">
     <div class="sec-t rv"><div><p class="pt"><i>02</i><span>Les offres</span></p><h2 class="d" id="t-of">Sites internet<span class="it">Écrits et mis en ligne pour vous.</span></h2></div><p class="lead">Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris.</p></div>
-''' + offres_web.replace('<div class="sous rv"><h3 class="d">Site internet</h3><p>Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris.</p></div>', '') + '''
+''' + offres_web.replace('<div class="sous rv"><h3 class="d">Site internet</h3><p>Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris. <button type="button" class="trv" data-est data-swipe>Je ne sais pas ce qu’il me faut</button></p></div>', '<div class="sous rv"><p><button type="button" class="trv" data-est data-swipe>Je ne sais pas ce qu’il me faut</button></p></div>') + '''
   </div>
 </section>
 ''' + sect('applications', B) + '\n' + croise('Photographie<span class="it">Le studio photographie aussi vos événements.</span>', 'Concerts, festivals, cérémonies, vie d’une entreprise, mariages : un reportage discret, puis une sélection resserrée et retouchée.', '/metiers/photographie/', 'Découvrir la photographie', '/p/t/matmatah-1.webp', 'u-foret dk') + '\n' + \
@@ -240,7 +240,7 @@ of += '''
 <section class="sec feuille dk wb-o u-violet" id="of-web" data-dark aria-labelledby="t-ow">
   <div class="w">
     <div class="sec-t rv"><div><p class="pt"><i>02</i><span>Sites internet</span></p><h2 class="d" id="t-ow">Sites internet<span class="it">Écrits et mis en ligne pour vous.</span></h2></div><p class="lead">Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris.</p></div>
-''' + offres_web.replace('<div class="sous rv"><h3 class="d">Site internet</h3><p>Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris.</p></div>', '') + '''
+''' + offres_web.replace('<div class="sous rv"><h3 class="d">Site internet</h3><p>Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris. <button type="button" class="trv" data-est data-swipe>Je ne sais pas ce qu’il me faut</button></p></div>', '<div class="sous rv"><p><button type="button" class="trv" data-est data-swipe>Je ne sais pas ce qu’il me faut</button></p></div>') + '''
   </div>
 </section>
 ''' + sect('applications', B) + '''

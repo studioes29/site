@@ -427,6 +427,62 @@
   const choixFin = () => `<div class="q fin-c"><p>Comment voulez-vous avancer&nbsp;?</p><div class="fc" role="radiogroup">
     <button type="button" role="radio" data-mode="cmd" aria-checked="${ES.mode !== 'dem'}"><span class="rd"></span><b>Commander maintenant</b><small>Devis immédiat, paiement sécurisé par carte, le projet démarre.</small></button>
     <button type="button" role="radio" data-mode="dem" aria-checked="${ES.mode === 'dem'}"><span class="rd"></span><b>En parler d’abord</b><small>Une réponse sous 48&nbsp;h, sans engagement.</small></button></div></div>`;
+  /* « Trouver ce qu'il me faut » : six situations en cartes ; on glisse à droite (c'est moi) ou à gauche (pas moi), puis une seule recommandation */
+  const SW = [
+    { k: 'trouve', t: 'Peu de gens me trouvent sur internet.', c: '#B9B4FF', ic: 'ec', w: 'vous voulez être trouvé en ligne' },
+    { k: 'vieux', t: 'J’ai déjà un site, mais il a vieilli.', c: '#F6B8C4', ic: 's3', w: 'votre site actuel a vieilli' },
+    { k: 'multi', t: 'Je propose plusieurs services ou plusieurs métiers.', c: '#9FDCC3', ic: 'sx', w: 'vous avez plusieurs services à présenter' },
+    { k: 'questions', t: 'On me pose toujours les mêmes questions.', c: '#F5D199', ic: 'ms', w: 'on vous pose toujours les mêmes questions' },
+    { k: 'resa', t: 'Inscriptions, réservations ou plannings se gèrent encore à la main.', c: '#A9CCFF', ic: 'ca', w: 'une partie de votre organisation se fait encore à la main' },
+    { k: 'clients', t: 'Mes clients voudraient suivre leur demande ou payer en ligne.', c: '#D7E8A4', ic: 'cu', w: 'vos clients veulent suivre leur demande en ligne' }
+  ];
+  const verdict = () => {
+    const Y = ES.sw.r, oui = k => Y[k] === 1, site = oui('trouve') || oui('vieux') || oui('multi');
+    const app = oui('clients') ? 2 : oui('resa') ? 1 : oui('questions') ? 0 : -1;
+    const fs = oui('multi') ? 1 : 0, ws = ['trouve', 'vieux', 'multi'].filter(oui), wa = ['questions', 'resa', 'clients'].filter(oui);
+    if (app === 2 || (app >= 0 && !site)) return { k: 'app', f: app, w: wa, et: site ? { k: 'site', f: fs } : null };
+    if (site) return { k: 'site', f: fs, w: ws, et: app >= 0 ? { k: 'app', f: app } : null, wa };
+    return null;
+  };
+  const prixTxt = (k, f) => { const o = PJ[k].f.o[f], p = o[1][0], n = Math.max(...o[1][1]); return `${fmt(p)}&nbsp;€<small>ou ${fmt(Math.floor(p * 100 / n) / 100)}&nbsp;€ par mois en ${n} fois sans frais</small>`; };
+  const vueSwipe = () => {
+    const S = ES.sw;
+    if (S.i < SW.length) return `<div class="sw" style="--n:${SW.length}">
+      <div class="sw-pile">${SW.map((c, i) => i < S.i ? '' : `<div class="sw-c${i === S.i ? ' haut' : ''}" data-i="${i}" style="--t:${c.c};--r:${i - S.i}" aria-hidden="${i !== S.i}"><span class="ico">${ico(c.ic)}</span><p>${c.t}</p><b class="st oui">C’est moi</b><b class="st non">Pas moi</b></div>`).reverse().join('')}</div>
+      <div class="sw-b"><button type="button" class="sw-x" data-sw="0" aria-label="Pas moi">${ico('x')}<span>Pas moi</span></button><button type="button" class="sw-x ok" data-sw="1" aria-label="C’est moi">${ico('ok')}<span>C’est moi</span></button></div>
+      <p class="sw-a">Glissez la carte, ou utilisez les boutons${matchMedia('(hover:hover)').matches ? ' et les flèches du clavier' : ''}.</p></div>`;
+    const V = verdict();
+    if (!V) return `<div class="sw-r"><h3 class="d">Rien ne presse.<span class="it">Votre présence en ligne tient la route.</span></h3><p>Si un projet se précise, décrivez-le : une réponse arrive sous 48&nbsp;h.</p><div class="sw-ra"><button type="button" class="bt" data-swr="parler">En parler <span class="ar">${ico('ar')}</span></button><button type="button" class="bt cl" data-swr="refaire">Recommencer</button></div></div>`;
+    const o = PJ[V.k].f.o[V.f], nom = (V.k === 'site' ? 'Site ' : '') + o[0];
+    const pq = V.w.length ? 'Parce que ' + V.w.map(k => SW.find(c => c.k === k).w).join(', ').replace(/, ([^,]*)$/, ' et $1') + '.' : '';
+    const et = V.et ? `<p class="sw-et">Et ensuite, ${V.et.k === 'app' ? `pour ce qui se fait à la main : la formule ${PJ.app.f.o[V.et.f][0]}` : `pour être trouvé : un site ${PJ.site.f.o[V.et.f][0]}`}, à voir ensemble.</p>` : '';
+    return `<div class="sw-r"><p class="sw-k">Notre recommandation</p><h3 class="d">${nom}</h3><p class="sw-d">${o[2]}</p><p class="sw-p">${prixTxt(V.k, V.f)}</p><p class="sw-w">${pq}</p>${et}
+      <div class="sw-ra"><button type="button" class="bt" data-swr="voir">Choisir cette formule <span class="ar">${ico('ar')}</span></button><button type="button" class="bt cl" data-swr="parler">En parler d’abord</button></div>
+      <button type="button" class="sw-re" data-swr="refaire">Recommencer</button></div>`;
+  };
+  /* geste : la carte suit le doigt, s'incline, et part au-delà d'un seuil (ou d'un geste vif) */
+  const swipeLie = () => {
+    const c = $('.sw-c.haut', estB); if (!c) return;
+    let x0 = 0, y0 = 0, dx = 0, t0 = 0, actif = false, raf = 0;
+    const pose = () => { raf = 0; c.style.transform = `translate3d(${dx}px,${Math.abs(dx) * .06}px,0) rotate(${dx / 18}deg)`; c.style.setProperty('--o', Math.min(1, Math.abs(dx) / 90).toFixed(2)); c.dataset.s = dx > 0 ? 'oui' : 'non'; };
+    c.addEventListener('pointerdown', e => { actif = true; x0 = e.clientX; y0 = e.clientY; dx = 0; t0 = performance.now(); c.setPointerCapture(e.pointerId); c.classList.add('tient'); });
+    c.addEventListener('pointermove', e => { if (!actif) return; dx = e.clientX - x0; if (!raf) raf = requestAnimationFrame(pose); });
+    const fin = () => { if (!actif) return; actif = false; c.classList.remove('tient'); const v = Math.abs(dx) / Math.max(1, performance.now() - t0); if (Math.abs(dx) > 90 || (Math.abs(dx) > 30 && v > .5)) jette(dx > 0 ? 1 : 0); else { c.style.transform = ''; c.style.setProperty('--o', 0); } };
+    c.addEventListener('pointerup', fin); c.addEventListener('pointercancel', fin);
+  };
+  let jetEnCours = false;
+  const jette = oui => {
+    const c = $('.sw-c.haut', estB); if (!c || jetEnCours) return; jetEnCours = true;
+    const S = ES.sw; S.r[SW[S.i].k] = oui;
+    c.dataset.s = oui ? 'oui' : 'non'; c.style.setProperty('--o', 1); c.classList.add('part');
+    c.style.transform = `translate3d(${(oui ? 1 : -1) * (innerWidth + 200)}px,40px,0) rotate(${oui ? 24 : -24}deg)`;
+    if (navigator.vibrate) try { navigator.vibrate(6); } catch (x) {}
+    const suiv = $(`.sw-c[data-i="${S.i + 1}"]`, estB); if (suiv) { suiv.classList.add('haut'); suiv.style.setProperty('--r', 0); suiv.setAttribute('aria-hidden', 'false'); }
+    $$('.sw-c', estB).forEach(x => { const i = +x.dataset.i; if (i > S.i + 1) x.style.setProperty('--r', i - S.i - 1); });
+    setTimeout(() => { jetEnCours = false; S.i++; if (S.i >= SW.length) { rendE(); compte('/devis/trouver-fini', 'Trouver : résultat'); } else { c.remove(); majEtape(); swipeLie(); } }, 320);
+  };
+  const majEtape = () => { const L = $('#estL'); if (L && ES.e === 'swipe') L.textContent = ES.sw.i < SW.length ? `Situation ${ES.sw.i + 1} sur ${SW.length}` : 'Votre recommandation'; };
+  addEventListener('keydown', e => { if (ES.e !== 'swipe' || !ES.sw || ES.sw.i >= SW.length || $('#shE').hidden) return; if (e.key === 'ArrowRight') { e.preventDefault(); jette(1); } else if (e.key === 'ArrowLeft') { e.preventDefault(); jette(0); } });
   /* commande en ligne, dans le configurateur : la saisie va jusqu'au paiement, sans changer de site.
      Prix affichés ici pour l'écran ; le serveur (fonction acompte) les recalcule de son côté à partir des mêmes clés. */
   const ACOMPTE = 'https://nfnbseonwgmtouxsaajd.supabase.co/functions/v1/acompte';
@@ -580,6 +636,7 @@
     const act = ES.e === 0 ? `<button class="bt cl sm" data-cal>Préférer un appel</button>`
       : ES.e === 1 ? `<button class="bt cl sm" data-nav="-1">Retour</button><button class="bt sm" data-nav="1">Continuer <span class="ar">${ico('ar')}</span></button>`
       : `<button class="bt cl sm" data-nav="-1">Retour</button><button class="bt sm" data-envoi>Envoyer la demande <span class="ar">${ico('ar')}</span></button>`;
+    if (ES.e === 'swipe') { estF.innerHTML = `<div class="tot"><small>${ES.sw.i < SW.length ? 'Répondez sans réfléchir' : 'Recommandation'}</small></div><div class="act"><button class="bt cl sm" data-nav="0">Retour</button></div>`; dernier = null; return; }
     if (modeCmd()) { estF.innerHTML = piedCmd(); dernier = null; return; }
     if (ES.e === 'paye') { estF.innerHTML = ''; return; }
     if (ES.e === 'fill') { estF.innerHTML = `<div class="tot"><small>Accompagnement régulier</small><span class="v"><i>Sur fill.studioes.fr</i></span></div><div class="act"><button class="bt cl sm" data-nav="0">Retour</button></div>`; return; }
@@ -588,13 +645,14 @@
     if (n) { n._ch = dernier; odo(n, fmt(cible), !dernier); dernier = n._ch; } else dernier = null;
   };
   const rendE = () => {
-    $$('#estP i').forEach((x, i) => x.classList.toggle('on', ES.e === 'paye' ? true : ES.e === 'fill' ? i === 0 : i <= Math.min(ES.e, 2)));
-    const TT = $('#shET'); if (TT) TT.textContent = modeCmd() || ES.e === 'paye' ? 'Commander' : 'Demander un devis';
+    $$('#estP i').forEach((x, i) => x.classList.toggle('on', ES.e === 'swipe' ? i === 0 : ES.e === 'paye' ? true : ES.e === 'fill' ? i === 0 : i <= Math.min(ES.e, 2)));
+    const TT = $('#shET'); if (TT) TT.textContent = ES.e === 'swipe' ? 'Ce qu’il vous faut' : modeCmd() || ES.e === 'paye' ? 'Commander' : 'Demander un devis';
     const L = $('#estL'); if (L) L.textContent = ES.e === 'paye' ? 'Paiement' : ES.e === 'fill' ? 'Accompagnement régulier' : ES.e === 3 ? 'Demande envoyée' : `Étape ${ES.e + 1} sur 3 : ${['votre projet', 'les détails', clesCommande() ? 'commander ou en parler' : 'vos coordonnées'][ES.e]}`;
     let h = '';
-    if (ES.e === 0) {
+    if (ES.e === 'swipe') { h += vueSwipe();
+    } else if (ES.e === 0) {
       const GR = ['Photographie', 'Web', 'Design graphique']; if (ES.g) GR.sort((a, b) => (b === ES.g) - (a === ES.g));
-      GR.forEach(g => { h += `<div class="q${ES.g && g !== ES.g ? ' q-aut' : ES.g ? ' q-ici' : ''}"><p>${ES.g && g !== ES.g ? 'Ou bien, ' + g.toLowerCase() : g}</p><div class="opts ch">${Object.entries(PJ).filter(([, P]) => P.g === g).map(([k, P]) => `<button data-k="${k}" aria-pressed="${ES.k === k}">${ico(P.ic)}<span>${P.l}</span></button>`).join('')}</div></div>`; });
+      GR.forEach(g => { h += `<div class="q${ES.g && g !== ES.g ? ' q-aut' : ES.g ? ' q-ici' : ''}"><p>${ES.g && g !== ES.g ? 'Ou bien, ' + g.toLowerCase() : g}</p><div class="opts ch">${Object.entries(PJ).filter(([, P]) => P.g === g).map(([k, P]) => `<button data-k="${k}" aria-pressed="${ES.k === k}">${ico(P.ic)}<span>${P.l}</span></button>`).join('')}${g === 'Web' ? `<button data-swipe class="op-sw">${ico('cl')}<span>Je ne sais pas encore<small>Six situations, la bonne formule</small></span></button>` : ''}</div></div>`; });
       h += `<div class="q q-fill"><p>Un accompagnement régulier</p><div class="opts ch"><button data-fill>${ico('cu')}<span>Une communication suivie chaque mois<small>Publications, actualités, créations</small></span></button></div></div>`;
     } else if (ES.e === 'fill') {
       h += `<div class="fl-go"><svg class="fl-lgo" viewBox="0 0 1376 720" role="img" aria-label="Fill"><g fill="#1A1A1A"><path d="M100 700V262C100 158 168 90 274 90H300V214H282C246 214 224 236 224 274V700Z"/><rect x="18" y="330" width="282" height="104" rx="8"/><rect x="360" y="330" width="124" height="370" rx="8"/><circle cx="422" cy="178" r="72"/></g><g fill="none" stroke-width="96" stroke-linecap="round" stroke-linejoin="round"><path stroke="#7052B3" d="M560 655C590 540 672 260 732 144C762 74 854 59 860 120C866 234 800 400 660 570C630 620 640 668 710 664C750 662 763 640 788 600"/><path stroke="#FF8A6B" d="M788 600C818 540 900 260 960 144C990 74 1082 59 1088 120C1094 234 1028 400 888 570C858 620 868 668 938 664C1038 660 1088 615 1188 612C1258 610 1288 600 1318 575"/></g></svg>
@@ -625,7 +683,7 @@
         <ol class="suite">${etapes.map((e, k) => `<li class="${k ? '' : 'on'}" style="--k:${k}"><b>${e[0]}</b><span>${e[1]}</span></li>`).join('')}</ol>
         <div class="act2"><button class="bt" data-cal>Réserver un appel <span class="ar">${ico('ar')}</span></button><button class="bt cl" data-close>Fermer</button></div></div>`; }
     }
-    estB.innerHTML = h; estB.scrollTop = 0; pied(); friseLie();
+    estB.innerHTML = h; estB.scrollTop = 0; pied(); friseLie(); if (ES.e === 'swipe') { majEtape(); swipeLie(); }
     $$('[data-close]', estB).forEach(b => b.addEventListener('click', fermeF));
   };
   const erreur = t => { let e = $('#estErr'); if (!e) { e = document.createElement('p'); e.id = 'estErr'; e.className = 'err'; e.setAttribute('role', 'alert'); const f = $('.form', estB); if (f) f.after(e); else estB.appendChild(e); } e.innerHTML = t; e.hidden = !t; };
@@ -633,6 +691,7 @@
   const ouvreDevis = s => {
     if (ES.e === 3 || ES.e === 'paye') ES = { e: 0, k: null, f: 0, o: [], p: 0, j: 1, c: {}, d: 5, g: ES.g };
     if (s && s.k && PJ[s.k]) { ES.k = s.k; ES.f = s.f || 0; ES.o = (s.o || []).slice(); ES.j = 1; ES.p = s.k === 'site' || s.k === 'app' ? Math.max(0, PJ[s.k].p.o.findIndex(o => o[2] === (s.nf || 0))) : (s.mois ? 1 : 0); if (s.ph) ES.o = [0]; ES.e = 1; }
+    else if (s && s.swipe) { ES.sw = { i: 0, r: {} }; ES.e = 'swipe'; }
     else if (!ES.k) ES.e = 0;
     dernier = null; rendE(); ouvreF('#shE'); compte('devis-ouvert', 'Ouverture du devis');
   };
@@ -640,6 +699,16 @@
     estB.addEventListener('click', e => {
       const b = e.target.closest('button'); if (!b) return; const d = b.dataset;
       if (d.k) { ES.k = d.k; ES.f = 0; ES.o = []; ES.fl = false; ES.p = 0; ES.j = 1; ES.e = 1; rendE(); compte('/devis/' + d.k, 'Devis : ' + PJ[d.k].l); return; }
+      if (d.swipe != null) { ES.sw = { i: 0, r: {} }; ES.e = 'swipe'; rendE(); compte('/devis/trouver', 'Trouver ce qu’il me faut'); return; }
+      if (d.sw != null) { jette(d.sw === '1' ? 1 : 0); return; }
+      if (d.swr) { const V = verdict();
+        if (d.swr === 'refaire') { ES.sw = { i: 0, r: {} }; rendE(); return; }
+        const oui = SW.filter(c => ES.sw.r[c.k] === 1).map(c => '« ' + c.t + ' »').join(' ');
+        if (V) { ES.k = V.k; ES.f = V.f; ES.o = []; ES.fl = false; ES.j = 1; ES.p = 0; } else { ES.k = 'site'; ES.f = 3; ES.o = []; ES.p = 0; }
+        if (oui) ES.c.msg = 'Situations qui me correspondent : ' + oui;
+        if (d.swr === 'voir') { ES.e = 1; rendE(); compte('/devis/trouver-choisir', 'Trouver : formule choisie'); }
+        else { ES.e = 2; ES.mode = 'dem'; ES.cm = Object.assign({ part: false }, ES.cm || {}); rendE(); compte('/devis/trouver-parler', 'Trouver : en parler'); }
+        return; }
       if (d.nd != null) { ES.d = ES.d == null ? 5 : null; friseMaj(); return; }
       if (d.fill != null) { ES.e = 'fill'; rendE(); compte('/devis/fill', 'Devis : redirection vers Fill'); return; }
       if (d.mod != null) { garde(); ES.e = 1; rendE(); return; }
@@ -665,7 +734,7 @@
     });
     estB.addEventListener('input', gardeCmd); estB.addEventListener('change', gardeCmd);
     retourPaiement();
-    $$('[data-est]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); ES.g = b.dataset.g || (b.dataset.k && PJ[b.dataset.k] ? PJ[b.dataset.k].g : null); ouvreDevis(b.dataset.k && PJ[b.dataset.k] ? { k: b.dataset.k, f: 0, o: [] } : null); }));
+    $$('[data-est]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); ES.g = b.dataset.g || (b.dataset.k && PJ[b.dataset.k] ? PJ[b.dataset.k].g : null); ouvreDevis(b.dataset.swipe != null ? { swipe: 1 } : b.dataset.k && PJ[b.dataset.k] ? { k: b.dataset.k, f: 0, o: [] } : null); }));
   }
 
   /* message libre */
