@@ -155,26 +155,26 @@
   /* dock : la lentille se pose sur la rubrique en cours ; on peut la faire glisser d'une rubrique à l'autre */
   if (dock) {
     const lens = $('.lens', dock), liens = $$('a', dock);
-    const pose = (a, dx) => { if (!lens || (!a && dx == null)) return; dock.style.setProperty('--lx', (dx != null ? dx : a.offsetLeft) + 'px'); dock.classList.add('a-lens'); };
+    const pose = (a, dx, w) => { if (!lens || (!a && dx == null)) return; dock.style.setProperty('--lx', (dx != null ? dx : a.offsetLeft) + 'px'); dock.style.setProperty('--lw', (w || (a ? a.offsetWidth : 56)) + 'px'); dock.classList.add('a-lens'); };
     const ici = liens.find(a => a.getAttribute('aria-current') === 'page');
     if (ici) requestAnimationFrame(() => pose(ici));
     let x0 = null, glisse = false, vise = null, bloque = false;
     const sous = x => { const r0 = dock.getBoundingClientRect(); const c = x - r0.left; let m = null, d = 1e9; liens.forEach(a => { const k = Math.abs(a.offsetLeft + a.offsetWidth / 2 - c); if (k < d) { d = k; m = a; } }); return m; };
-    dock.addEventListener('dragstart', e => e.preventDefault());
+    dock.addEventListener('dragstart', e => e.preventDefault()); dock.addEventListener('contextmenu', e => e.preventDefault());
     dock.addEventListener('pointerdown', e => { if (!e.target.closest('a')) return; x0 = e.clientX; glisse = false; });
     dock.addEventListener('pointermove', e => {
       if (x0 == null) return;
       if (!glisse && Math.abs(e.clientX - x0) > 6) { glisse = true; dock.classList.add('glisse'); try { dock.setPointerCapture(e.pointerId); } catch (x) {} }
       if (!glisse) return;
-      const r0 = dock.getBoundingClientRect(), w = liens[0].offsetWidth, mn = liens[0].offsetLeft, mx = liens[liens.length - 1].offsetLeft;
-      pose(null, Math.max(mn, Math.min(mx, e.clientX - r0.left - w / 2)));
-      const a = sous(e.clientX); if (a !== vise) { liens.forEach(l => l.classList.toggle('sur', l === a)); vise = a; if (navigator.vibrate) try { navigator.vibrate(3); } catch (x) {} }
+      const r0 = dock.getBoundingClientRect(), c = e.clientX - r0.left, a = sous(e.clientX), w = a.offsetWidth, mn = liens[0].offsetLeft, dern = liens[liens.length - 1], mx = dern.offsetLeft + dern.offsetWidth - w;
+      pose(null, Math.max(mn, Math.min(mx, c - w / 2)), w);
+      if (a !== vise) { liens.forEach(l => l.classList.toggle('sur', l === a)); vise = a; if (navigator.vibrate) try { navigator.vibrate(3); } catch (x) {} }
     });
     const fin = () => {
       if (x0 == null) return; x0 = null;
       if (!glisse) return;
       dock.classList.remove('glisse'); bloque = true; setTimeout(() => bloque = false, 400);
-      if (vise) { pose(vise); const h = vise.href; if (vise !== ici) setTimeout(() => location.href = h, 220); else liens.forEach(l => l.classList.remove('sur')); }
+      if (vise) { pose(vise); const h = vise.href; if (vise !== ici) setTimeout(() => location.href = h, 120); else liens.forEach(l => l.classList.remove('sur')); }
       glisse = false;
     };
     dock.addEventListener('pointerup', fin); dock.addEventListener('pointercancel', () => { x0 = null; glisse = false; dock.classList.remove('glisse'); if (ici) pose(ici); else dock.classList.remove('a-lens'); liens.forEach(l => l.classList.remove('sur')); });
@@ -392,8 +392,8 @@
     mariage: { l: 'Un mariage', g: 'Photographie', ic: 'ap', date: 1, f: { l: 'Formule', o: [['Cérémonie', 1290, 'Moments clés, 4 à 6 h'], ['Journée', 1890, '8 à 10 h sur place'], ['Journée et album', 2590, 'Album imprimé, séance à deux']] }, o: { l: 'Options', o: [['Aperçu de 20 photos le soir même', 150], ['Une heure de plus', 80]] } },
     evenement: { l: 'Un événement', g: 'Photographie', ic: 'ap', date: 1, f: { l: 'Durée', o: [['Concert', 250, 'Spectacle, 1 h 30 à 2 h'], ['Demi-journée', 350, '4 h sur place'], ['Journée ou festival', 550, '8 h sur place, par jour', 'j']] }, o: { l: 'Options', o: [['Sélection livrée le soir même', 150], ['Une heure de plus', 80]] } },
     annee: { l: 'Un suivi photo annuel', g: 'Photographie', ic: 'ca', f: { l: 'Forfait', o: [['4 demi-journées', [1290, 109], 'soit 323 € l’une'], ['8 demi-journées', [2490, 209], 'soit 311 € l’une'], ['12 demi-journées', [3590, 299], 'soit 299 € l’une'], ['Plus de 12', null, 'sur devis']] }, p: { l: 'Paiement', o: [['Par an', 'en une fois'], ['Par mois', 'sur 12 mois']] } },
-    site: { l: 'Un site internet', g: 'Web', ic: 'ec', f: { l: 'Formule', o: [['Essentiel', [490, [6, 12]], 'Une page'], ['Vitrine', [990, [6, 12, 24]], '3 à 5 pages'], ['Sur mesure', [1990, [6, 12, 24]], 'Arborescence libre'], ['À définir ensemble', null, 'On en parle']] }, p: { l: 'Paiement, sans frais', o: [['En une fois', 'acompte de 30 %', 0], ['En 6 fois', 'par carte', 6], ['En 12 fois', 'par carte', 12], ['En 24 fois', 'par carte', 24]] }, o: { l: 'En plus', o: [['Reportage photo du lieu et de l’équipe', 350], ['Réservation ou espace membres', null]] } },
-    app: { l: 'Une application', g: 'Web', ic: 'pl', f: { l: 'Formule', o: [['Outil simple', [490, [6, 12], 9], 'Un jeu, une estimation, un quiz'], ['Application', [990, [6, 12, 24], 19], 'Comptes et données'], ['Plateforme', [1990, [6, 12, 24], 39], 'Toute une activité'], ['Une idée à préciser', null, 'On en parle']] }, p: { l: 'Paiement, sans frais', o: [['En une fois', 'acompte de 30 %', 0], ['En 6 fois', 'par carte', 6], ['En 12 fois', 'par carte', 12], ['En 24 fois', 'par carte', 24]] } },
+    site: { l: 'Un site internet', g: 'Web', ic: 'ec', f: { l: 'Formule', o: [['Essentiel', [490, [6, 12]], 'Une page'], ['Vitrine', [990, [6, 12, 24]], '3 à 5 pages'], ['Sur mesure', [1990, [6, 12, 24]], 'Autant de pages qu’il faut'], ['À définir ensemble', null, 'On en parle']] }, p: { l: 'Paiement, sans frais', o: [['En une fois', 'acompte de 30 %', 0], ['En 6 fois', 'par carte', 6], ['En 12 fois', 'par carte', 12], ['En 24 fois', 'par carte', 24]] }, o: { l: 'En plus', o: [['Reportage photo du lieu et de l’équipe', 350], ['Une fonction sur mesure', null]] } },
+    app: { l: 'Une application', g: 'Web', ic: 'pl', f: { l: 'Formule', o: [['Outil simple', [490, [6, 12], 9], 'Une seule fonction, sans compte'], ['Application', [990, [6, 12, 24], 19], 'Des comptes, des données gardées'], ['Plateforme', [1990, [6, 12, 24], 39], 'Toute une activité en ligne'], ['Une idée à préciser', null, 'On en parle']] }, p: { l: 'Paiement, sans frais', o: [['En une fois', 'acompte de 30 %', 0], ['En 6 fois', 'par carte', 6], ['En 12 fois', 'par carte', 12], ['En 24 fois', 'par carte', 24]] } },
     identite: { l: 'Une identité visuelle', g: 'Design graphique', ic: 'gr', f: { l: 'Projet', o: [['Logo et univers', null, 'Logotype, couleurs, typographies'], ['Identité complète', null, 'Charte et déclinaisons'], ['Identité et signalétique', null, 'Enseigne, panneaux, lieux'], ['À définir ensemble', null, 'On en parle']] } },
     campagne: { l: 'Une campagne', g: 'Design graphique', ic: 'ms', date: 1, f: { l: 'Projet', o: [['Événement ou festival', null, 'Affiche et déclinaisons'], ['Saison culturelle', null, 'Direction artistique de saison'], ['Recrutement ou institution', null, 'Message, affichage, réseaux'], ['À définir ensemble', null, 'On en parle']] } },
     edition: { l: 'Une édition', g: 'Design graphique', ic: 's3', date: 1, f: { l: 'Support', o: [['Brochure ou programme', null, '8 à 40 pages'], ['Magazine ou catalogue', null, 'Numéros réguliers'], ['Dépliant ou plaquette', null, 'Recto verso, plis'], ['À définir ensemble', null, 'On en parle']] } },
@@ -411,6 +411,22 @@
   };
   /* site : nombre de mensualités choisi, ramené à une valeur que la formule propose (l'Essentiel s'arrête à 12) */
   const nfSite = f => { const P = PJ[ES.k], nb = P && P.p && P.p.o[ES.p] ? P.p.o[ES.p][2] : 0; return f && f[1] && Array.isArray(f[1][1]) && f[1][1].includes(nb) ? nb : 0; };
+  const formDemande = () => {
+    let h = '';
+    const P = PJ[ES.k], r = calc(), c = ES.c, q = s => (s || '').replace(/"/g, '&quot;');
+      if (P.date && ES.d != null && !c.date) c.date = moisTxt().replace(/^./, m => m.toUpperCase()) + ', ';
+      h += `<div class="recap"><button type="button" class="rc-mod" data-mod>Modifier</button><b>${P.l}</b>${r.L.concat(P.date && ES.d != null ? [moisTxt()] : []).join(' · ')}<br>Estimation : ${txtEst(r)}</div><div class="form" style="margin-top:16px">
+        <label>Nom, structure<input id="eNom" autocomplete="name" value="${q(c.nom)}"></label>
+        <label>E-mail<input id="eMail" type="email" autocomplete="email" value="${q(c.mail)}"></label>
+        <label>Téléphone, si vous préférez être rappelé<input id="eTel" type="tel" autocomplete="tel" value="${q(c.tel)}"></label>
+        ${P.date || ES.k === 'annee' ? `<label>${ES.k === 'annee' ? 'Vos temps forts de l’année, même approximatifs' : 'Date et lieu, même approximatifs'}<input id="eDate" value="${q(c.date)}"></label>` : ''}
+        <label>Précisions<textarea id="eMsg" placeholder="Facultatif">${c.msg || ''}</textarea></label></div>`;
+    return h;
+  };
+  const modeCmd = () => ES.e === 2 && !!clesCommande() && ES.mode !== 'dem';
+  const choixFin = () => `<div class="q fin-c"><p>Comment voulez-vous avancer&nbsp;?</p><div class="fc" role="radiogroup">
+    <button type="button" role="radio" data-mode="cmd" aria-checked="${ES.mode !== 'dem'}"><span class="rd"></span><b>Commander maintenant</b><small>Devis immédiat, paiement sécurisé par carte, le projet démarre.</small></button>
+    <button type="button" role="radio" data-mode="dem" aria-checked="${ES.mode === 'dem'}"><span class="rd"></span><b>En parler d’abord</b><small>Une réponse sous 48&nbsp;h, sans engagement.</small></button></div></div>`;
   /* commande en ligne, dans le configurateur : la saisie va jusqu'au paiement, sans changer de site.
      Prix affichés ici pour l'écran ; le serveur (fonction acompte) les recalcule de son côté à partir des mêmes clés. */
   const ACOMPTE = 'https://nfnbseonwgmtouxsaajd.supabase.co/functions/v1/acompte';
@@ -446,8 +462,8 @@
     h += `<p class="cm-n">Le devis se télécharge, puis le paiement sécurisé s’ouvre : vous y acceptez le devis et les <a href="/conditions/" target="_blank" rel="noopener">conditions de vente</a>.${T.nb ? ' Le paiement en plusieurs fois est réservé aux professionnels et aux associations.' : ''}</p>`;
     return h;
   };
-  const piedCmd = () => { const T = totCmd(); return `<div class="tot"><small>À régler aujourd’hui</small><span class="v"><b class="prix">${fmt(T.auj)}</b><i>€${T.nb ? `, puis ${fmt(T.mens + T.sv)} € par mois` : ''}</i></span></div><div class="act"><button class="bt cl sm" data-nav="1">Retour</button><button class="bt sm" data-payer>Payer <span class="ar">${ico('ar')}</span></button></div>`; };
-  const gardeCmd = () => { if (ES.e !== 'cmd') return; ['struct', 'rep', 'fonction', 'adr', 'ville', 'mail'].forEach(k => { const i = $('#c_' + k); if (i) ES.cm[k] = i.value.trim(); }); const a = $('#c_anticipe'); if (a) ES.cm.anticipe = a.checked; };
+  const piedCmd = () => { const T = totCmd(); return `<div class="tot"><small>À régler aujourd’hui</small><span class="v"><b class="prix">${fmt(T.auj)}</b><i>€${T.nb ? `, puis ${fmt(T.mens + T.sv)} € par mois` : ''}</i></span></div><div class="act"><button class="bt cl sm" data-nav="-1">Retour</button><button class="bt sm" data-payer>Payer <span class="ar">${ico('ar')}</span></button></div>`; };
+  const gardeCmd = () => { if (!modeCmd()) return; ['struct', 'rep', 'fonction', 'adr', 'ville', 'mail'].forEach(k => { const i = $('#c_' + k); if (i) ES.cm[k] = i.value.trim(); }); const a = $('#c_anticipe'); if (a) ES.cm.anticipe = a.checked; };
   let ressources = null;
   const chargeDevis = () => ressources || (ressources = ['https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js', '/conditions/cgv.js', 'https://dossiers.studioes.fr/assets/devis-fonts.js', 'https://dossiers.studioes.fr/assets/devis.js'].reduce((p, s) => p.then(() => new Promise((ok, ko) => { const x = document.createElement('script'); x.src = s; x.onload = ok; x.onerror = () => s.includes('cgv') ? ok() : ko(new Error(s)); document.head.appendChild(x); })), Promise.resolve()).catch(e => { ressources = null; throw e; }));
   let CATC = null;
@@ -549,7 +565,7 @@
     const act = ES.e === 0 ? `<button class="bt cl sm" data-cal>Préférer un appel</button>`
       : ES.e === 1 ? `<button class="bt cl sm" data-nav="-1">Retour</button><button class="bt sm" data-nav="1">Continuer <span class="ar">${ico('ar')}</span></button>`
       : `<button class="bt cl sm" data-nav="-1">Retour</button><button class="bt sm" data-envoi>Envoyer la demande <span class="ar">${ico('ar')}</span></button>`;
-    if (ES.e === 'cmd') { estF.innerHTML = piedCmd(); dernier = null; return; }
+    if (modeCmd()) { estF.innerHTML = piedCmd(); dernier = null; return; }
     if (ES.e === 'paye') { estF.innerHTML = ''; return; }
     if (ES.e === 'fill') { estF.innerHTML = `<div class="tot"><small>Accompagnement régulier</small><span class="v"><i>Sur fill.studioes.fr</i></span></div><div class="act"><button class="bt cl sm" data-nav="0">Retour</button></div>`; return; }
     estF.innerHTML = ES.e === 3 ? '' : `<div class="tot">${v}</div><div class="act">${act}</div>`;
@@ -557,9 +573,9 @@
     if (n) { n._ch = dernier; odo(n, fmt(cible), !dernier); dernier = n._ch; } else dernier = null;
   };
   const rendE = () => {
-    $$('#estP i').forEach((x, i) => x.classList.toggle('on', ES.e === 'cmd' || ES.e === 'paye' ? true : ES.e === 'fill' ? i === 0 : i <= Math.min(ES.e, 2)));
-    const TT = $('#shET'); if (TT) TT.textContent = ES.e === 'cmd' || ES.e === 'paye' ? 'Commander' : 'Demander un devis';
-    const L = $('#estL'); if (L) L.textContent = ES.e === 'cmd' ? 'Commande en ligne' : ES.e === 'paye' ? 'Paiement' : ES.e === 'fill' ? 'Accompagnement régulier' : ES.e === 3 ? 'Demande envoyée' : `Étape ${ES.e + 1} sur 3 : ${['votre projet', 'les détails', 'vos coordonnées'][ES.e]}`;
+    $$('#estP i').forEach((x, i) => x.classList.toggle('on', ES.e === 'paye' ? true : ES.e === 'fill' ? i === 0 : i <= Math.min(ES.e, 2)));
+    const TT = $('#shET'); if (TT) TT.textContent = modeCmd() || ES.e === 'paye' ? 'Commander' : 'Demander un devis';
+    const L = $('#estL'); if (L) L.textContent = ES.e === 'paye' ? 'Paiement' : ES.e === 'fill' ? 'Accompagnement régulier' : ES.e === 3 ? 'Demande envoyée' : `Étape ${ES.e + 1} sur 3 : ${['votre projet', 'les détails', clesCommande() ? 'commander ou en parler' : 'vos coordonnées'][ES.e]}`;
     let h = '';
     if (ES.e === 0) {
       const GR = ['Photographie', 'Web', 'Design graphique']; if (ES.g) GR.sort((a, b) => (b === ES.g) - (a === ES.g));
@@ -570,7 +586,6 @@
         <h3 class="d">Ce besoin est pris en charge par Fill.</h3>
         <p>Fill est le service de communication externalisée conçu par Studio ES pour les collectivités et les entreprises : publications, actualités, créations et suivi, avec un prix fixe chaque mois.</p>
         <div class="fl-go-a"><a class="bt" href="https://fill.studioes.fr/simulateur/">Estimer mon besoin sur Fill <span class="ar">${ico('ne')}</span></a><a class="bt cl" href="https://fill.studioes.fr/diagnostic/">Faire le diagnostic</a></div></div>`;
-    } else if (ES.e === 'cmd') { h += vueCmd();
     } else if (ES.e === 'paye') { h += vuePaye();
     } else if (ES.e === 1) {
       const P = PJ[ES.k];
@@ -578,18 +593,12 @@
       if (P.date) h += friseH(ES.k);
       const f = P.f.o[ES.f]; if (f[3] === 'j') h += `<div class="q"><p>Nombre de jours</p><div class="opts" style="grid-template-columns:repeat(5,1fr)">${[1, 2, 3, 4, 5].map(j => `<button data-j="${j}" aria-pressed="${ES.j === j}" style="align-items:center">${j}</button>`).join('')}</div></div>`;
       if (P.p && f[1] != null) h += `<div class="q"><p>${P.p.l}</p><div class="opts">${P.p.o.map((o, i) => (ES.k === 'site' || ES.k === 'app') && o[2] && !f[1][1].includes(o[2]) ? '' : `<button data-p="${i}" aria-pressed="${ES.k === 'site' || ES.k === 'app' ? (nfSite(f) ? ES.p === i : i === 0) : ES.p === i}">${o[0]}<small>${o[1]}</small></button>`).join('')}</div></div>`;
-      if (P.o) h += `<div class="q"><p>${P.o.l} (facultatif)</p><div class="opts">${P.o.o.map((o, i) => `<button data-o="${i}" aria-pressed="${ES.o.includes(i)}">${o[0]}<em>${o[1] == null ? 'sur devis' : '+' + fmt(o[1]) + ' €'}</em></button>`).join('')}${ES.k === 'site' ? `<button class="op-fill" data-fl aria-pressed="${!!ES.fl}"><span class="fm-m">Fill</span><span class="fl-t">Le faire vivre chaque mois<small>Actualités, nouvelles pages, visuels : un prix fixe chaque mois, sans engagement de durée.</small></span><em>sur abonnement</em></button>` : ''}</div></div>`;
-      /* ce qui se commande sans échange préalable : lien direct vers la page de commande (devis et paiement en ligne) */
-      if (clesCommande()) h += `<div class="q cmd"><button type="button" class="bt" data-cmd>Commander maintenant <span class="ar">${ico('ar')}</span></button><small>Devis immédiat et paiement sécurisé par carte${ES.k === 'site' ? ', en une fois ou en plusieurs' : ''}. Ou continuez pour être recontacté.</small></div>`;
+      if (P.o) h += `<div class="q"><p>${P.o.l} (facultatif)</p><div class="opts">${P.o.o.map((o, i) => `<button data-o="${i}" aria-pressed="${ES.o.includes(i)}">${o[0]}<em>${o[1] == null ? 'sur devis' : '+' + fmt(o[1]) + ' €'}</em></button>`).join('')}${ES.k === 'site' ? `<button class="op-fill" data-fl aria-pressed="${!!ES.fl}"><span class="fm-m"><svg role="img" aria-label="Fill"><use href="#fill"/></svg></span><span class="fl-t">Le faire vivre chaque mois<small>Actualités, nouvelles pages, visuels : un prix fixe chaque mois, sans engagement de durée.</small></span><em>sur abonnement</em></button>` : ''}</div></div>`;
+    } else if (ES.e === 2 && clesCommande()) {
+      h += choixFin();
+      if (modeCmd()) h += vueCmd(); else h += formDemande();
     } else if (ES.e === 2) {
-      const P = PJ[ES.k], r = calc(), c = ES.c, q = s => (s || '').replace(/"/g, '&quot;');
-      if (P.date && ES.d != null && !c.date) c.date = moisTxt().replace(/^./, m => m.toUpperCase()) + ', ';
-      h += `<div class="recap"><button type="button" class="rc-mod" data-mod>Modifier</button><b>${P.l}</b>${r.L.concat(P.date && ES.d != null ? [moisTxt()] : []).join(' · ')}<br>Estimation : ${txtEst(r)}</div><div class="form" style="margin-top:16px">
-        <label>Nom, structure<input id="eNom" autocomplete="name" value="${q(c.nom)}"></label>
-        <label>E-mail<input id="eMail" type="email" autocomplete="email" value="${q(c.mail)}"></label>
-        <label>Téléphone, si vous préférez être rappelé<input id="eTel" type="tel" autocomplete="tel" value="${q(c.tel)}"></label>
-        ${P.date || ES.k === 'annee' ? `<label>${ES.k === 'annee' ? 'Vos temps forts de l’année, même approximatifs' : 'Date et lieu, même approximatifs'}<input id="eDate" value="${q(c.date)}"></label>` : ''}
-        <label>Précisions<textarea id="eMsg" placeholder="Facultatif">${c.msg || ''}</textarea></label></div>`;
+      h += formDemande();
     } else {
       { const P = PJ[ES.k], r = calc(), mo = P.date ? moisTxt() : '', prem = (ES.c.nom || '').split(/[\s,]/)[0];
       const etapes = [
@@ -605,7 +614,7 @@
     $$('[data-close]', estB).forEach(b => b.addEventListener('click', fermeF));
   };
   const erreur = t => { let e = $('#estErr'); if (!e) { e = document.createElement('p'); e.id = 'estErr'; e.className = 'err'; e.setAttribute('role', 'alert'); const f = $('.form', estB); if (f) f.after(e); else estB.appendChild(e); } e.innerHTML = t; e.hidden = !t; };
-  const garde = () => { const g = id => { const e = $('#' + id); return e ? e.value.trim() : ''; }; if (ES.e === 2) ES.c = { nom: g('eNom'), mail: g('eMail'), tel: g('eTel'), date: g('eDate'), msg: g('eMsg') }; };
+  const garde = () => { const g = id => { const e = $('#' + id); return e ? e.value.trim() : ''; }; if (ES.e === 2 && $('#eNom')) ES.c = { nom: g('eNom'), mail: g('eMail'), tel: g('eTel'), date: g('eDate'), msg: g('eMsg') }; };
   const ouvreDevis = s => {
     if (ES.e === 3 || ES.e === 'paye') ES = { e: 0, k: null, f: 0, o: [], p: 0, j: 1, c: {}, d: 5, g: ES.g };
     if (s && s.k && PJ[s.k]) { ES.k = s.k; ES.f = s.f || 0; ES.o = (s.o || []).slice(); ES.j = 1; ES.p = s.k === 'site' || s.k === 'app' ? Math.max(0, PJ[s.k].p.o.findIndex(o => o[2] === (s.nf || 0))) : (s.mois ? 1 : 0); if (s.ph) ES.o = [0]; ES.e = 1; }
@@ -619,7 +628,7 @@
       if (d.nd != null) { ES.d = ES.d == null ? 5 : null; friseMaj(); return; }
       if (d.fill != null) { ES.e = 'fill'; rendE(); compte('/devis/fill', 'Devis : redirection vers Fill'); return; }
       if (d.mod != null) { garde(); ES.e = 1; rendE(); return; }
-      if (d.cmd != null) { ES.cm = Object.assign({ part: false, rep: ES.c.nom || '', mail: ES.c.mail || '' }, ES.cm || {}); ES.e = 'cmd'; rendE(); compte('/devis/commande', 'Commande en ligne'); setTimeout(() => { const i = $('.cm-f input'); if (i && !i.value) i.focus({ preventScroll: true }); }, 350); return; }
+      if (d.mode) { garde(); gardeCmd(); ES.mode = d.mode; ES.cm = ES.cm || { part: false }; if (d.mode === 'cmd') { ES.cm.rep = ES.cm.rep || ES.c.nom || ''; ES.cm.mail = ES.cm.mail || ES.c.mail || ''; } else { ES.c.nom = ES.c.nom || ES.cm.rep || ''; ES.c.mail = ES.c.mail || ES.cm.mail || ''; } const y = estB.scrollTop; rendE(); estB.scrollTop = y; compte('/devis/' + d.mode, d.mode === 'cmd' ? 'Commande en ligne' : 'Demande'); return; }
       if (d.qui != null) { gardeCmd(); ES.cm.part = d.qui === '1'; rendE(); return; }
       if (d.f != null) ES.f = +d.f; else if (d.p != null) ES.p = +d.p; else if (d.j) ES.j = +d.j; else if (d.o != null) { const i = +d.o; ES.o = ES.o.includes(i) ? ES.o.filter(x => x !== i) : [...ES.o, i]; } else if (d.fl != null) ES.fl = !ES.fl; else return;
       const y = estB.scrollTop; rendE(); estB.scrollTop = y;
@@ -627,9 +636,8 @@
     estF.addEventListener('click', async e => {
       const b = e.target.closest('button'); if (!b) return;
       if (b.dataset.nav === '0') { ES.e = 0; rendE(); return; }
-      if (ES.e === 'cmd' && b.dataset.nav) { gardeCmd(); ES.e = 1; rendE(); return; }
       if (b.dataset.payer != null) { payer(b); return; }
-      if (b.dataset.nav) { garde(); ES.e = Math.max(0, ES.e + Number(b.dataset.nav)); rendE(); if (ES.e === 2) setTimeout(() => { const n = $('#eNom'); if (n && !n.value) n.focus({ preventScroll: true }); }, 350); return; }
+      if (b.dataset.nav) { garde(); gardeCmd(); ES.e = Math.max(0, ES.e + Number(b.dataset.nav)); if (ES.e === 2) ES.cm = Object.assign({ part: false }, ES.cm || {}); rendE(); if (ES.e === 2) setTimeout(() => { const n = $('#eNom'); if (n && !n.value) n.focus({ preventScroll: true }); }, 350); return; }
       if (b.dataset.envoi != null) {
         garde(); const c = ES.c;
         const faute = (id, t) => { const f = $('#' + id); f.setAttribute('aria-invalid', 'true'); f.addEventListener('input', () => f.removeAttribute('aria-invalid'), { once: true }); erreur(t); f.focus(); };
