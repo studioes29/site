@@ -49,18 +49,18 @@ def ad(r, t, l, im):
     return o + '<span class="ad-i"><img src="%s" alt="" loading="lazy"></span><span class="ad-l"><b class="d">%s</b><span>%s</span></span>' % (im, t, l) + f
 audela = ''.join(ad(*x) for x in AUDELA)
 ph_droite = '<figure class="mh-ph" aria-hidden="true"><img class="a" src="/p/helena-3.jpg" alt="" fetchpriority="high" width="825" height="1100"><img class="b" src="/p/t/voeux-ph-2.webp" alt=""><img class="c" src="/projets/fl-auto/img/photo-2.webp" alt=""></figure>'
-ph_act = '<div class="mh-ac"><button type="button" class="bt" data-est data-k="evenement">Demander un devis %s</button><a class="ln" href="#reportages">Voir les reportages</a></div>' % AR
+ph_act = '<div class="mh-ac"><button type="button" class="bt" data-est data-k="evenement">Demander un devis %s</button><a class="bt ct" href="#reportages">Voir les reportages</a></div>' % AR
 ph = entete('Photographie', 'Photographie', 'Vos moments forts, sur le vif.', 'Concerts, festivals, cérémonies, vie d’une entreprise, mariages : un reportage discret en Bretagne, sans poses ni mise en scène, puis une sélection resserrée et retouchée, prête à servir.' + ZONE_PH,
-            ' u-noir mh-ph-s', FG('Photo', 'left:-1vw;bottom:-.44em;font-size:calc(var(--fg-t) * 1.1)'), ph_droite, ph_act, True)
+            ' u-noir mh-ph-s', FG('Photo', 'right:-2vw;font-size:calc(var(--fg-t) * 1.1)'), '', ph_act, True)
 ph += '''
-<section class="sec feuille dk ph-f u-foret" id="reportages" data-dark aria-labelledby="t-tr">
+<section class="sec feuille ph-f u-papier" id="reportages" aria-labelledby="t-tr">
   ''' + FG('Reportage', 'right:-2vw;top:-.36em;--vy:-80px;font-size:calc(var(--fg-t) * .72)') + '''
   <div class="w">
     <div class="sec-t rv"><div><p class="pt"><i>01</i><span>Portfolio</span></p><h2 class="d" id="t-tr">Reportages<span class="it">Une sélection d’images, puis tous les reportages.</span></h2></div><p class="lead">Concerts, festivals, institutions, entreprises.</p></div>
     <div class="tetes">''' + tetes + '''</div>
 ''' + travaux.replace('<h3 class="d">Reportages récents</h3>', '<h3 class="d">Tous les reportages</h3>').replace('id="travaux"', 'id="photographie"') + '''
 </section>
-<section class="sec feuille ad-f u-papier" id="au-dela" aria-labelledby="t-ad">
+<section class="sec feuille dk ad-f u-foret" data-dark id="au-dela" aria-labelledby="t-ad">
   ''' + FG('Sur le vif', 'left:-2vw;bottom:-.3em;--vy:-60px;font-family:var(--sf);font-style:italic;font-weight:300;font-size:calc(var(--fg-t) * .62)') + '''
   <div class="w">
     <div class="sec-t rv"><div><p class="pt"><i>02</i><span>Au-delà de la scène</span></p><h2 class="d" id="t-ad">Au-delà de la scène<span class="it">Événements, entreprises, mariages.</span></h2></div><p class="lead">La même discrétion pour une inauguration, un atelier ou une journée de mariage.</p></div>
@@ -74,7 +74,7 @@ ph += '''
 ''' + offres_ph + '''
   </div>
 </section>
-''' + croise('Web et digital<span class="it">Le studio conçoit aussi des sites et des applications.</span>', 'Un site clair et bien référencé, ou une application qui fait gagner du temps. Et quand il faut de belles photos pour l’habiller, elles sont déjà là.', '/metiers/sites-et-outils/', 'Découvrir le web', '/projets/pierceval-tattoo/img/cover-800.webp', 'u-violet dk') + '\n' + \
+''' + croise('Web et digital<span class="it">Le studio conçoit aussi des sites et des applications.</span>', 'Un site clair et bien référencé, ou une application qui fait gagner du temps. Et quand il faut de belles photos pour l’habiller, elles sont déjà là.', '/metiers/sites-et-outils/', 'Découvrir le web', '/projets/pierceval-tattoo/img/cover-800.webp', 'u-lilas') + '\n' + \
     contact_m('Événement, suivi annuel ou mariage : quelques choix, une estimation immédiate.', 'Photographie')
 page('metiers/photographie', 'Photographe de concert, d’événement et de mariage en Bretagne · Studio ES', 'Reportages photo en Bretagne : concerts et festivals (Philippe Katerine, Gaël Faye, Matmatah), événements, entreprises, portraits et mariages. Dès 250 €.', 'https://studioes.fr/metiers/photographie/', ph, og='og-photo.jpg',
      ld=LD('Photographie', 'https://studioes.fr/metiers/photographie/', 'Reportage photo d’événement, de concert et de mariage', [('Événement', 250), ('Suivi photo annuel', 1290), ('Mariage', 1290)]))
@@ -137,9 +137,9 @@ wb_droite = ('<div class="mh-trio" aria-hidden="true">'
              '<span class="tr-a"><span class="wb-bar"><i></i><i></i><i></i><em>piercevaltattoo.fr</em></span><span class="tr-pg"><img src="/h/hx-site.webp" alt="" width="1200" height="1499"></span></span>'
              '<span class="tr-b"><img src="/projets/la-soute/img/soute-8.webp" alt="" width="480" height="1039"></span>'
              '<span class="tr-c"><img src="/projets/flouz/img/budget.webp" alt="" width="1200" height="1600"></span></div>')
-wb_act = '<div class="mh-ac"><button type="button" class="bt" data-est data-k="site">Démarrer mon site %s</button><a class="ln" href="#vitrine">Voir les réalisations</a></div>' % AR
+wb_act = '<div class="mh-ac"><button type="button" class="bt" data-est data-k="site">Démarrer mon site %s</button><a class="bt ct" href="#vitrine">Voir les réalisations</a></div>' % AR
 wb = entete('Web', 'Web', 'Sites et applications sur mesure.', 'Sites internet, outils en ligne et applications : chaque projet part d’un besoin précis et se conçoit avec la même exigence de clarté, pour les entreprises, les lieux culturels et les collectivités.' + ZONE_WB,
-            ' u-nuit mh-wb-s', FG('Web', 'right:-3vw;top:-.36em;font-size:calc(var(--fg-t) * 1.25)'), wb_droite, wb_act, True)
+            ' u-nuit mh-wb-s', FG('Web', 'right:-3vw;font-size:calc(var(--fg-t) * 1.25)'), '', wb_act, True)
 wb += '''
 <section class="sec feuille vi-f u-lilas" id="vitrine" aria-labelledby="t-vi">
   ''' + FG('Écrans', 'left:-2vw;bottom:-.34em;--vy:-80px;font-size:calc(var(--fg-t) * .8)') + '''
@@ -195,7 +195,7 @@ wb += '''
         </div>
         <div class="ae-e ae-v" id="ae-v">
           <div class="tete"><h4>Votre site, en aperçu<span class="it">Une copie part aussi à <span id="ae-mail"></span>.</span></h4>
-            <div class="act"><a class="bt" href="#web">Le commander, 490 € ''' + AR + '''</a><a class="ln" data-ouvrir href="#" target="_blank" rel="noopener">Ouvrir en plein écran</a></div></div>
+            <div class="act"><a class="bt" href="#web">Le commander, 490 € ''' + AR + '''</a><a class="bt ct" data-ouvrir href="#" target="_blank" rel="noopener">Ouvrir en plein écran</a></div></div>
           <div class="ae-nav"><div class="bb"><i></i><i></i><i></i><em></em></div><iframe title="Aperçu de votre site" loading="lazy"></iframe></div>
         </div>
       </div>
@@ -203,7 +203,7 @@ wb += '''
     </div>
   </div>
 </section>
-''' + sect('applications', B) + '\n' + croise('Photographie<span class="it">Le studio photographie aussi vos événements.</span>', 'Concerts, festivals, cérémonies, vie d’une entreprise, mariages : un reportage discret, puis une sélection resserrée et retouchée.', '/metiers/photographie/', 'Découvrir la photographie', '/p/t/matmatah-1.webp', 'u-foret dk') + '\n' + \
+''' + sect('applications', B) + '\n' + croise('Photographie<span class="it">Le studio photographie aussi vos événements.</span>', 'Concerts, festivals, cérémonies, vie d’une entreprise, mariages : un reportage discret, puis une sélection resserrée et retouchée.', '/metiers/photographie/', 'Découvrir la photographie', '/p/t/matmatah-1.webp', 'u-menthe') + '\n' + \
     contact_m('Site ou application : quelques choix, une estimation immédiate.', 'Web')
 page('metiers/sites-et-outils', 'Sites internet et applications en Bretagne · Studio ES', 'Sites, réservation en ligne et applications sur mesure pour les TPE, lieux culturels et collectivités de Bretagne : Pierceval Tattoo, La Soute. Dès 990 €.', 'https://studioes.fr/metiers/sites-et-outils/', wb, og='og-web.jpg',
      ld=LD('Web', 'https://studioes.fr/metiers/sites-et-outils/', 'Création de sites internet et d’applications web', [('Site Essentiel', 490), ('Site Vitrine', 990), ('Site sur mesure', 1990), ('Application', 490)]))
@@ -211,9 +211,9 @@ page('metiers/sites-et-outils', 'Sites internet et applications en Bretagne · S
 # ---------- Design graphique : trois familles, l'ensemble puis le détail ----------
 gr_droite = ('<div class="mh-gr" aria-hidden="true"><img class="a" src="/projets/la-soute/img/affiche.webp" alt=""><img class="b" src="/projets/mjc-la-marelle/img/p1.webp" alt="">'
              '<img class="c" src="/projets/christopher-poupon/img/m-cartes.webp" alt=""></div>')
-gr_act = '<div class="mh-ac"><button type="button" class="bt" data-est data-g="Design graphique">Parler de mon projet %s</button><a class="ln" href="#identites">Voir les projets</a></div>' % AR
+gr_act = '<div class="mh-ac"><button type="button" class="bt" data-est data-g="Design graphique">Parler de mon projet %s</button><a class="bt ct" href="#identites">Voir les projets</a></div>' % AR
 gr = entete('Design graphique', 'Graphisme', 'Identités, campagnes, éditions.', 'Une direction artistique qui tient sur tous les supports : l’identité d’un lieu ou d’une marque, la campagne d’une saison, la brochure qu’on garde. Chaque projet est chiffré sur devis.',
-            ' u-rose mh-gr-s', FG('Design', 'left:-1vw;bottom:-.42em;font-size:calc(var(--fg-t) * 1.05)'), gr_droite, gr_act)
+            ' u-rose mh-gr-s', FG('Design', 'right:-2vw;font-size:calc(var(--fg-t) * 1.05)'), '', gr_act)
 
 # ---------- cartes nuancier : une carte par projet, vers son étude de cas (ou sa galerie) ----------
 # (nom, lien, vignette, couleur, ligne, nature)
@@ -282,7 +282,7 @@ gr += """
   </div>
 </section>
 <section class="sec feuille fl-f fl-c" aria-label="Fill">
-  <div class="w fl-ct rv"><p>Pour une production régulière plutôt qu’un projet ponctuel, Studio ES a conçu <b>Fill</b>, un service de communication externalisée pour les communes et les entreprises.</p><div class="ds-ac"><a class="bt" href="https://fill.studioes.fr">Découvrir Fill <span class="ar"><svg class="i"><use href="#ne"/></svg></span></a><a class="bt cl" href="https://fill.studioes.fr/espace/">Espace client Fill <span class="ar"><svg class="i"><use href="#ne"/></svg></span></a><a class="ln" href="/projets/fill/">La conception de Fill</a></div></div>
+  <div class="w fl-ct rv"><p>Pour une production régulière plutôt qu’un projet ponctuel, Studio ES a conçu <b>Fill</b>, un service de communication externalisée pour les communes et les entreprises.</p><div class="ds-ac"><a class="bt" href="https://fill.studioes.fr">Découvrir Fill <span class="ar"><svg class="i"><use href="#ne"/></svg></span></a><a class="bt cl" href="https://fill.studioes.fr/espace/">Espace client Fill <span class="ar"><svg class="i"><use href="#ne"/></svg></span></a><a class="bt ct" href="/projets/fill/">La conception de Fill</a></div></div>
 </section>
 """ + contact_m('Identité, campagne ou édition : décrivez le projet, le devis suit.', 'Design graphique')
 page('metiers/graphisme', 'Design graphique en Bretagne : identités, campagnes, éditions · Studio ES', 'Identités visuelles, campagnes, éditions et signalétique pour les entreprises, lieux culturels et collectivités de Bretagne, présentés en études de cas. Sur devis.', 'https://studioes.fr/metiers/graphisme/', gr,
@@ -290,7 +290,7 @@ page('metiers/graphisme', 'Design graphique en Bretagne : identités, campagnes,
 
 # ---------- Offres : toutes les formules au même endroit ----------
 of = entete('Offres', 'Offres', '', 'Photographie, sites et applications : les formules et leurs options, avec le prix de départ, les abonnements et les durées d’engagement. Le design graphique est chiffré sur devis.', ' u-noir mh-of',
-            FG('Offres', 'right:-2vw;bottom:-.42em;font-size:calc(var(--fg-t) * .95)'), '', '<div class="mh-ac of-nav"><a class="bt" href="#of-photo">Photographie ' + AR + '</a><a class="bt" href="#of-web">Sites ' + AR + '</a><a class="bt" href="#applications">Applications ' + AR + '</a><a class="ln" href="#of-graph">Design graphique</a></div>', True)
+            FG('Offres', 'right:-2vw;bottom:-.42em;font-size:calc(var(--fg-t) * .95)'), '', '<div class="mh-ac of-nav"><a class="bt" href="#of-photo">Photographie ' + AR + '</a><a class="bt" href="#of-web">Sites ' + AR + '</a><a class="bt" href="#applications">Applications ' + AR + '</a><a class="bt ct" href="#of-graph">Design graphique</a></div>', True)
 of += '''
 <section class="sec feuille fo-f u-menthe" id="of-photo" aria-labelledby="t-op">
   <div class="w">
