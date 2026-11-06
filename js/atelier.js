@@ -7,7 +7,7 @@ import { Bureau } from '/js/atelier/bureau.js?v=1';
   const C = H.querySelector('.at-c'), eti = H.querySelector('.at-eti'), pan = H.querySelector('.at-pan');
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const MOB = matchMedia('(max-width: 860px)').matches, V = MOB ? 'p' : 'l';
-  const R = '/js/atelier/r/';
+  const R = '/js/atelier/r/', LENT = +(new URLSearchParams(location.search).get('lent') || 1);
 
   /* ---------- l'heure du visiteur ---------- */
   const now = new Date(), hr = now.getHours() + now.getMinutes() / 60;
@@ -85,7 +85,7 @@ import { Bureau } from '/js/atelier/bureau.js?v=1';
     /* ---------- shaders ---------- */
     const VS = 'attribute vec2 p;varying vec2 u;void main(){u=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}';
     const FS = `precision highp float;varying vec2 u;
-uniform sampler2D tA,tB,tM,tD,tS,tP,tC,tK,tF,tG;uniform vec4 uW;uniform mat3 uFs,uFp,uFl,uGs,uGp,uGl;uniform vec4 uR,uDR,uRC,uKR,uAP;uniform vec2 uPar,uTx,uTea;uniform float uMix,uHov,uT,uFl,uNe,uPl,uSt,uDu,uB,uK,uCM,uKF,uKOn,uCZ;
+uniform sampler2D tA,tB,tM,tD,tS,tP,tC,tK,tF,tG;uniform vec4 uW;uniform mat3 uFs,uFp,uFq,uGs,uGp,uGq;uniform vec4 uR,uDR,uRC,uKR,uAP;uniform vec2 uPar,uTx,uTea;uniform float uHovA,uMix,uHov,uT,uFl,uNe,uPl,uSt,uDu,uB,uK,uCM,uKF,uKOn,uCZ;
 uniform mat3 uHs,uHp,uHl,uHs2,uHp2;
 float zid(vec2 q){return floor(texture2D(tM,q).r*255./20.+.5);}
 float h21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
@@ -115,10 +115,10 @@ void main(){
   if(z==9.)c*=uNe;
   if(uSt>0.){vec2 l=(q-uTea)/vec2(.022,.07);l.y=-l.y;if(l.y>0.&&l.y<1.4&&abs(l.x)<1.2){float n=fbm(vec2(l.x*2.2+sin(l.y*3.-uT*.8)*.6,l.y*2.-uT*.55));float m=smoothstep(.45,.85,n)*(1.-smoothstep(.2,1.4,l.y))*smoothstep(1.2,.2,abs(l.x))*smoothstep(0.,.15,l.y);c+=vec3(.95)*m*.22*uSt;}}
   if(uDu>0.&&q.x>uDR.x&&q.x<uDR.z&&q.y>uDR.y&&q.y<uDR.w){vec2 g=(q+vec2(uT*.004,-uT*.0025))*vec2(160.,90.);vec2 i=floor(g);vec2 o=vec2(h21(i),h21(i+7.3))*.8+.1;float b=smoothstep(.06,0.,length(fract(g)-o))*step(.86,h21(i+3.1))*(.5+.5*sin(uT*1.5+h21(i)*40.));c+=vec3(1.,.95,.85)*b*.3*uDu;}
-  float zh=z>10.5?2.:z;if(uHov>0.&&uW.x>.99&&zh==uHov){vec2 t=uTx*1.5;float e=0.;for(int j=0;j<4;j++){vec2 o=j==0?vec2(t.x,0.):j==1?vec2(-t.x,0.):j==2?vec2(0.,t.y):vec2(0.,-t.y);float n=zid(q+o);n=n>10.5?2.:n;e+=step(.5,abs(n-zh));}c=c*1.06+.02+vec3(1.)*min(e,1.)*.22;}
+  float zh=z>10.5?2.:z;if(uHov>0.&&uW.x>.99&&uHovA>.001&&zh==uHov){vec2 t=uTx*1.5;float e=0.;for(int j=0;j<4;j++){vec2 o=j==0?vec2(t.x,0.):j==1?vec2(-t.x,0.):j==2?vec2(0.,t.y):vec2(0.,-t.y);float n=zid(q+o);n=n>10.5?2.:n;e+=step(.5,abs(n-zh));}c=c*(1.+.045*uHovA)+.012*uHovA+vec3(1.)*min(e,1.)*.13*uHovA;}
   if(uW.x<1.){vec2 q2=uRC.xy+u*uRC.zw;vec3 o=c*uW.x;
-    if(uW.y>0.)o+=grade(ecr(texture2D(tF,q2).rgb,q2,uFs,uFp,uFl))*uW.y;
-    if(uW.z>0.)o+=grade(ecr(texture2D(tG,q2).rgb,q2,uGs,uGp,uGl))*uW.z;
+    if(uW.y>0.)o+=grade(ecr(texture2D(tF,q2).rgb,q2,uFs,uFp,uFq))*uW.y;
+    if(uW.z>0.)o+=grade(ecr(texture2D(tG,q2).rgb,q2,uGs,uGp,uGq))*uW.z;
     if(uW.w>0.){vec3 cc=texture2D(tC,q2).rgb;
     if(uCZ==1.){vec2 s2=hom(uHs2,q2);if(dans(s2))cc=mix(cc,texture2D(tS,s2).rgb*uB+cc*.04,bord(s2,vec2(400.,225.)));}
     if(uCZ==2.){vec2 s2=hom(uHp2,q2);if(dans(s2))cc=mix(cc,tel(s2)*uB*.95+cc*.05,bord(s2,vec2(70.,140.)));}
@@ -217,13 +217,13 @@ void main(){
       if (!e) { e = TFp.filter(o => o.k !== id + garde).sort((a, b) => a.u - b.u)[0]; gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, e.t); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, volIm[id].v[k - 1]); e.k = id + k; }
       e.u = performance.now(); gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, e.t);
       const c = hCache[id + k] || (hCache[id + k] = ['mon_screen', 'ph_scr', 'lap_scr'].map(n => { const P = VOLS[id][k][n]; return P.some(p => p[2] <= .02) ? NUL : homo(P); }));
-      const L = unit === 8 ? ['uFs', 'uFp', 'uFl'] : ['uGs', 'uGp', 'uGl']; L.forEach((n, i) => gl.uniformMatrix3fv(U(n), false, c[i]));
+      const L = unit === 8 ? ['uFs', 'uFp', 'uFq'] : ['uGs', 'uGp', 'uGq']; L.forEach((n, i) => gl.uniformMatrix3fv(U(n), false, c[i]));
     };
     const lisse = (x) => x * x * (3 - 2 * x), lerpR = (a, b, e) => a.map((v, i) => v + (b[i] - v) * e);
     const rectBase = () => rect(1, base.x + glisse, base.y);
     const volU = (t) => { if (!vol) return 0; const p = Math.min(1, Math.max(0, (t - vol.t0) / vol.d)); return vol.u0 + (vol.u1 - vol.u0) * p; };
     const decolle = (id, u0, u1, fin) => {
-      const D = u1 > u0 ? 1500 : 1250;
+      const D = (u1 > u0 ? 1500 : 1250) * LENT;
       vol = { id, u0, u1, t0: performance.now(), d: Math.max(1, Math.abs(u1 - u0) / NV * D), fin };
       cmT = null; cm = 0; tw = null;
     };
@@ -248,7 +248,8 @@ void main(){
       /* retour : on refait le chemin à l'envers, depuis là où se trouve la caméra */
       if (vol || (cz && cm > .01 && volIm[cz] && volIm[cz].v)) {
         const z = vol ? vol.id : cz, u = vol ? volU(performance.now()) : NV;
-        decolle(z, u, 0, () => { cz = null; vol = null; part(); });
+        H.classList.add('at-vol');
+        decolle(z, u, 0, () => { H.classList.remove('at-vol'); cz = null; vol = null; part(); });
         return;
       }
       if (cm > .01) { fondu(0, 320); setTimeout(() => { if (j === jeton) { cz = null; if (!id) bouge(1, base.x + glisse, base.y); else part(); } }, 320); return; }
@@ -264,7 +265,7 @@ void main(){
     if (!MOB && M.chat) charge(R + 'l-chat-' + moment + '.webp').then(im => { kIm = im; maj(7, T.K, im); gl.uniform4fv(U('uKR'), M.chat.rect); }).catch(() => {});
 
     /* ---------- interactions ---------- */
-    let tx = 0, ty = 0, mx = 0, my = 0, survol = 0, flT = -9e9, plT = -9e9, teT = -9e9, neT = -9e9, mixT = -1, chargeB = null, imgB = null, enVue = true;
+    let hovZ = 0, hovA = 0, tx = 0, ty = 0, mx = 0, my = 0, survol = 0, flT = -9e9, plT = -9e9, teT = -9e9, neT = -9e9, mixT = -1, chargeB = null, imgB = null, enVue = true;
     const versImage = (e) => { const r = C.getBoundingClientRect(), R0 = rect(ec, cx, cy); return [R0[0] + (e.clientX - r.left) / r.width * R0[2], R0[1] + (e.clientY - r.top) / r.height * R0[3]]; };
     const ecranSous = (e) => {
       if (vol) return null;
@@ -272,7 +273,7 @@ void main(){
       if (ouverte === 'web' && cm < .01) return surEcran(...versImage(e));
       return null;
     };
-    const actif = (z) => { const n = ZNOM[z]; if (!n) return 0; if ((n === 'neon' || n === 'lampe') && moment !== 'nuit' && moment !== 'soir') return 0; if (n === 'lampe' && MOB) return 0; return z; };
+    const actif = (z) => { const n = ZNOM[z]; if (!n) return 0; if ((n === 'neon' || n === 'lampe') && moment !== 'nuit' && moment !== 'soir') return 0; if (n === 'lampe' && MOB) return 0; if (n === 'chat') return 0; return z; };
     let dragX = null, dragged = false;
     C.addEventListener('pointerdown', e => { dragX = e.clientX; dragged = false; });
     addEventListener('pointerup', () => { dragX = null; });
@@ -349,7 +350,10 @@ void main(){
       gl.uniform4fv(U('uR'), rect(ec, cx, cy));
       const pf = RM || ouverte === 'web' ? 0 : (ouverte ? .4 : 1); gl.uniform2f(U('uPar'), -mx * pf, -my * pf);
       gl.uniform1f(U('uT'), el);
-      gl.uniform1f(U('uHov'), survol || 0);
+      { const kh = 1 - Math.exp(-dt * 11); let cible = survol ? 1 : 0;
+        if (survol && survol !== hovZ) { if (hovA < .04) hovZ = survol; else cible = 0; }
+        hovA += (cible - hovA) * kh; if (!survol && hovA < .004) hovZ = 0;
+        gl.uniform1f(U('uHov'), hovZ); gl.uniform1f(U('uHovA'), hovA * hovA * (3 - 2 * hovA)); }
       const fa = (t - flT) / 1000; gl.uniform1f(U('uFl'), fa < .45 ? Math.pow(1 - fa / .45, 2) * .75 : 0);
       const pa = (t - plT) / 1000; gl.uniform1f(U('uPl'), (survol === 7 ? .6 : 0) + (pa < 2 ? (1 - pa / 2) * 2.5 : 0) + .15);
       const ta = (t - teT) / 1000; gl.uniform1f(U('uSt'), Math.max(moment === 'matin' || moment === 'jour' ? .8 : 0, ta < 6 ? 1.3 * (1 - ta / 6) : 0));

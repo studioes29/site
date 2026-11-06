@@ -2474,11 +2474,13 @@ body{color:var(--encre)}
 /* ===== l'atelier 3D ===== */
 .at{background:#ECE7DD var(--at-img) center/cover no-repeat;color:#1E1E1E}
 .at[data-moment=nuit]{background-color:#15171C;color:#F0EEE9}
-.at:after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(85% 62% at 0% 100%,rgba(240,236,228,.88),rgba(240,236,228,.5) 45%,rgba(240,236,228,0) 75%);transition:opacity .5s}
-.at[data-moment=nuit]:after,.at[data-moment=soir]:after{background:radial-gradient(85% 62% at 0% 100%,rgba(16,17,21,.85),rgba(16,17,21,.45) 45%,rgba(16,17,21,0) 75%)}
+.at:after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(58% 46% at 0% 100%,rgba(236,231,221,.62),rgba(236,231,221,.3) 50%,rgba(236,231,221,0) 82%);transition:opacity .9s var(--e)}
+.at[data-moment=nuit]:after,.at[data-moment=soir]:after{background:radial-gradient(58% 46% at 0% 100%,rgba(16,17,21,.7),rgba(16,17,21,.32) 50%,rgba(16,17,21,0) 82%)}
 .at[data-moment=soir]{color:#F0EEE9}
-.at.at-zoom:after{background:linear-gradient(rgba(240,236,228,.82),rgba(240,236,228,.4) 70px,rgba(240,236,228,0) 150px)}
-.at[data-moment=nuit].at-zoom:after,.at[data-moment=soir].at-zoom:after{background:linear-gradient(rgba(16,17,21,.8),rgba(16,17,21,.35) 70px,rgba(16,17,21,0) 150px)}
+.at-vo{position:absolute;inset:0 0 auto;height:160px;z-index:1;pointer-events:none;opacity:0;transition:opacity .9s var(--e);background:linear-gradient(rgba(240,236,228,.8),rgba(240,236,228,.38) 70px,rgba(240,236,228,0))}
+.at[data-moment=nuit] .at-vo,.at[data-moment=soir] .at-vo{background:linear-gradient(rgba(16,17,21,.78),rgba(16,17,21,.34) 70px,rgba(16,17,21,0))}
+.at.at-zoom:after{opacity:0}
+.at.at-zoom .at-vo{opacity:1}
 .at:before{opacity:.05;mix-blend-mode:multiply}
 .at[data-moment=nuit]:before{mix-blend-mode:screen}
 .at-c{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .8s var(--e);touch-action:pan-y}
@@ -2488,6 +2490,8 @@ body{color:var(--encre)}
 .at .hv-t h1 .it{color:inherit;opacity:.72;font-size:clamp(20px,2vw,30px)}
 .at .hv-t h1,.at .hv-b .lead{text-shadow:none}
 .at.at-zoom .hv-t h1{opacity:0;transform:translateY(10px);transition:opacity .4s,transform .5s var(--e)}
+.at.at-vol .hv-t h1{opacity:0;transform:translateY(10px);transition:opacity .25s,transform .3s var(--e)}
+.at.at-vol:after{opacity:0}
 .at-nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:clamp(16px,1.8vw,24px);pointer-events:auto}
 .at-nav button{min-height:42px;padding:0 18px;border:0;border-radius:999px;background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:inset 0 0 0 1px rgba(30,30,30,.12);font:600 14.5px/1 var(--t,inherit);color:#1E1E1E;cursor:pointer;transition:background .3s,color .3s,transform .3s var(--sp)}
 .at-nav button[aria-pressed=true]{background:#1E1E1E;color:#F7F4EC}
