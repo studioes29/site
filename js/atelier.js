@@ -32,7 +32,7 @@ import { Bureau } from '/js/atelier/bureau.js?v=1';
   };
   pan.querySelectorAll('[data-ferme]').forEach(b => b.addEventListener('click', ferme));
   H.querySelectorAll('[data-at]').forEach(b => b.addEventListener('click', () => {
-    if (ouverte === b.dataset.at) ferme(); else { if (vue && b.dataset.at === 'photo') vue.flash(); ouvre(b.dataset.at); }
+    if (ouverte === b.dataset.at) ferme(); else { ouvre(b.dataset.at); }
   }));
   addEventListener('keydown', e => { if (e.key === 'Escape' && ouverte) ferme(); });
 
@@ -104,7 +104,7 @@ void main(){
   float z=zid(q);
   if(z==7.)q.x+=sin(uT*2.1+q.y*60.)*.0007*uPl;
   vec3 c=mix(texture2D(tA,q).rgb,texture2D(tB,q).rgb,uMix);
-  if(uKOn>.5){vec2 kl=(q-uKR.xy)/uKR.zw;if(dans(kl)){vec2 cell=vec2(mod(uKF,6.),floor(uKF/6.));vec2 kq=(cell+clamp(kl,.004,.996))/vec2(6.,4.);float fe=smoothstep(0.,.14,min(min(kl.x,1.-kl.x),min(kl.y,1.-kl.y)));c=mix(c,texture2D(tK,kq).rgb,fe*uKOn);}}
+  if(uKOn>.5){vec2 kl=(q-uKR.xy)/uKR.zw;if(dans(kl)){float f0=floor(uKF),f1=mod(f0+1.,48.),fb=uKF-f0;vec2 kc=clamp(kl,.004,.996);vec2 k0=(vec2(mod(f0,8.),floor(f0/8.))+kc)/vec2(8.,6.),k1=(vec2(mod(f1,8.),floor(f1/8.))+kc)/vec2(8.,6.);float fe=smoothstep(0.,.14,min(min(kl.x,1.-kl.x),min(kl.y,1.-kl.y)));c=mix(c,mix(texture2D(tK,k0).rgb,texture2D(tK,k1).rgb,fb),fe*uKOn);}}
   vec2 s=hom(uHs,q);
   if(dans(s)&&z>10.5){vec3 e=texture2D(tS,s).rgb;c=mix(c,e*uB+c*.04,bord(s,vec2(400.,225.)));}
   vec2 p2=hom(uHp,q);
@@ -115,7 +115,7 @@ void main(){
   if(z==9.)c*=uNe;
   if(uSt>0.){vec2 l=(q-uTea)/vec2(.022,.07);l.y=-l.y;if(l.y>0.&&l.y<1.4&&abs(l.x)<1.2){float n=fbm(vec2(l.x*2.2+sin(l.y*3.-uT*.8)*.6,l.y*2.-uT*.55));float m=smoothstep(.45,.85,n)*(1.-smoothstep(.2,1.4,l.y))*smoothstep(1.2,.2,abs(l.x))*smoothstep(0.,.15,l.y);c+=vec3(.95)*m*.22*uSt;}}
   if(uDu>0.&&q.x>uDR.x&&q.x<uDR.z&&q.y>uDR.y&&q.y<uDR.w){vec2 g=(q+vec2(uT*.004,-uT*.0025))*vec2(160.,90.);vec2 i=floor(g);vec2 o=vec2(h21(i),h21(i+7.3))*.8+.1;float b=smoothstep(.06,0.,length(fract(g)-o))*step(.86,h21(i+3.1))*(.5+.5*sin(uT*1.5+h21(i)*40.));c+=vec3(1.,.95,.85)*b*.3*uDu;}
-  float zh=z>10.5?2.:z;if(uHov>0.&&uW.x>.99&&uHovA>.001&&zh==uHov){vec2 t=uTx*1.5;float e=0.;for(int j=0;j<4;j++){vec2 o=j==0?vec2(t.x,0.):j==1?vec2(-t.x,0.):j==2?vec2(0.,t.y):vec2(0.,-t.y);float n=zid(q+o);n=n>10.5?2.:n;e+=step(.5,abs(n-zh));}c=c*(1.+.045*uHovA)+.012*uHovA+vec3(1.)*min(e,1.)*.13*uHovA;}
+  float zh=z>10.5?2.:z;if(uHov>0.&&uW.x>.99&&uHovA>.001&&zh==uHov){c=c*(1.+.035*uHovA)+.008*uHovA;}
   if(uW.x<1.){vec2 q2=uRC.xy+u*uRC.zw;vec3 o=c*uW.x;
     if(uW.y>0.)o+=grade(ecr(texture2D(tF,q2).rgb,q2,uFs,uFp,uFq))*uW.y;
     if(uW.z>0.)o+=grade(ecr(texture2D(tG,q2).rgb,q2,uGs,uGp,uGq))*uW.z;
@@ -172,6 +172,7 @@ void main(){
 
     /* ---------- cadrage ---------- */
     const IA = imA.width / imA.height, base = { x: (M.cadre || [.5, .5])[0], y: (M.cadre || [.5, .5])[1] };
+    if (MOB && M.cibles && M.cibles.web) base.x = (M.cibles.web[0] + M.cibles.web[2]) / 2; /* mobile : de face, centré sur l'écran */
     let W = 1, Hh = 1, ech = 1, ec = 1, cx = base.x, cy = base.y, tcx = base.x, tcy = base.y, glisse = 0;
     const rect = (s, x, y) => {
       const ca = W / Hh; let w = 1, h = 1; if (ca > IA) h = IA / ca; else w = ca / IA;
@@ -274,14 +275,18 @@ void main(){
       return null;
     };
     const actif = (z) => { const n = ZNOM[z]; if (!n) return 0; if ((n === 'neon' || n === 'lampe') && moment !== 'nuit' && moment !== 'soir') return 0; if (n === 'lampe' && MOB) return 0; if (n === 'chat') return 0; return z; };
-    let dragX = null, dragged = false;
-    C.addEventListener('pointerdown', e => { dragX = e.clientX; dragged = false; });
+    /* mobile : on parcourt la pièce au doigt, avec un peu d'inertie au lâcher */
+    let dragX = null, dragged = false, dragT = 0, vx = 0;
+    const borneG = (g) => { const w = rect(1, .5, .5)[2]; return Math.max(w / 2 - base.x, Math.min(1 - w / 2 - base.x, g)); };
+    C.addEventListener('pointerdown', e => { dragX = e.clientX; dragT = performance.now(); dragged = false; vx = 0; });
     addEventListener('pointerup', () => { dragX = null; });
+    addEventListener('pointercancel', () => { dragX = null; });
     C.addEventListener('pointermove', e => {
       const r = C.getBoundingClientRect(); tx = ((e.clientX - r.left) / r.width) * 2 - 1; ty = ((e.clientY - r.top) / r.height) * 2 - 1;
       if (MOB && dragX !== null && !ouverte) {
-        const dx = e.clientX - dragX; if (Math.abs(dx) > 4) dragged = true; dragX = e.clientX;
-        const r0 = rect(1, .5, .5); glisse = Math.max(-.5, Math.min(.5, glisse - dx / W * r0[2])); tcx = base.x + glisse;
+        const dx = e.clientX - dragX, tn = performance.now(), dd = -dx / W * rect(1, .5, .5)[2]; if (Math.abs(dx) > 4) dragged = true; dragX = e.clientX;
+        const g2 = borneG(glisse + dd); vx = vx * .6 + ((g2 - glisse) / Math.max(.008, (tn - dragT) / 1000)) * .4; dragT = tn;
+        glisse = g2; cx = tcx = base.x + glisse;
       }
       if (e.pointerType !== 'mouse') return;
       const pi = versImage(e), se = ecranSous(e);
@@ -300,7 +305,6 @@ void main(){
       if (cm > .5) { ferme(); return; }
       const z0 = zoneA(...pi), z = actif(z0 === 11 ? 2 : z0), n = ZNOM[z], t = performance.now();
       if (!n) { if (ouverte) ferme(); return; }
-      if (n === 'photo') flT = t;
       if (ZID[n] <= 5) { ouvre(n); return; }
       if (n === 'lampe') basculeLampe();
       if (n === 'plante') plT = t;
@@ -340,7 +344,8 @@ void main(){
     function image(t) {
       if (!enVue) return;
       const el = (t - t0) / 1000, dt = Math.min(.1, Math.max(.001, (t - (tp || t)) / 1000)); tp = t; const k = RM ? 1 : 1 - Math.exp(-dt * 3.6), k2 = 1 - Math.exp(-dt * 3);
-      const ax = MOB ? Math.sin(el * .35) * .4 : tx, ay = MOB ? Math.cos(el * .27) * .25 : ty;
+      const ax = MOB ? Math.sin(el * .35) * .22 : tx, ay = MOB ? Math.cos(el * .27) * .14 : ty;
+      if (MOB && dragX === null && !ouverte && Math.abs(vx) > 1e-4) { const g2 = borneG(glisse + vx * dt); if (g2 === glisse) vx = 0; glisse = g2; vx *= Math.exp(-dt * 4.5); cx = tcx = base.x + glisse; }
       mx += (ax - mx) * k2; my += (ay - my) * k2;
       if (tw) {
         const p = Math.min(1, (t - tw.t0) / tw.d), e = p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
@@ -358,7 +363,7 @@ void main(){
       const pa = (t - plT) / 1000; gl.uniform1f(U('uPl'), (survol === 7 ? .6 : 0) + (pa < 2 ? (1 - pa / 2) * 2.5 : 0) + .15);
       const ta = (t - teT) / 1000; gl.uniform1f(U('uSt'), Math.max(moment === 'matin' || moment === 'jour' ? .8 : 0, ta < 6 ? 1.3 * (1 - ta / 6) : 0));
       const na = (t - neT) / 1000; let ne = 1;
-      if (na < 1.6) ne = (Math.sin(na * 47) > .2 || na > 1.2) ? 1 : .25; else if (Math.sin(el * 13) > .997) ne = .5;
+      if (na < 1.6 && (moment === 'soir' || moment === 'nuit')) ne = (Math.sin(na * 47) > .2 || na > 1.2) ? 1 : .25;
       gl.uniform1f(U('uNe'), ne);
       if (bureau.sale) maj(4, T.S, bureau.dessine());
       if (mixT >= 0) {
@@ -377,7 +382,7 @@ void main(){
       } else {
         gl.uniform4f(U('uW'), 1 - cm, 0, 0, cm); if (cm > 0) gl.uniform4fv(U('uRC'), rectClose(t));
       }
-      if (kIm && lampe === lampe0 && mixT < 0 && !RM) { const per = 6.5, tt = el % per; gl.uniform1f(U('uKF'), tt < 2 ? Math.min(23, Math.floor(tt * 12)) : 0); gl.uniform1f(U('uKOn'), 1); } else gl.uniform1f(U('uKOn'), 0);
+      if (kIm && lampe === lampe0 && mixT < 0 && !RM) { gl.uniform1f(U('uKF'), (el * 6) % 48); gl.uniform1f(U('uKOn'), 1); } else gl.uniform1f(U('uKOn'), 0);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       requestAnimationFrame(image);
     }
