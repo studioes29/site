@@ -1,7 +1,7 @@
 /* Conditions générales de vente de Studio ES : SOURCE UNIQUE.
    Lue par la page https://studioes.fr/conditions/ et par le générateur de devis de dossiers.studioes.fr.
    Toute modification passe ici, avec une nouvelle date de version. */
-window.STUDIO_CGV_VERSION = "2026-11-05";
+window.STUDIO_CGV_VERSION = "2026-11-06";
 window.STUDIO_CGV_URL = "https://studioes.fr/conditions/";
 window.STUDIO_CGV_INTRO = "Les relations entre Studio ES (le prestataire) et le client sont régies par les présentes conditions générales de vente, complétées par le devis et ses conditions particulières. En cas de divergence, les conditions particulières prévalent. L'acceptation du devis implique l'adhésion à ces conditions. Les prestations de Fill, service de communication externalisée, relèvent de leurs propres conditions, publiées sur fill.studioes.fr/conditions.";
 window.STUDIO_CGV = [
@@ -37,8 +37,8 @@ window.STUDIO_CGV = [
     "Les photographies portent le crédit « Studio ES » lorsque le support le permet. Toute revente ou cession à un tiers demande un accord écrit."]],
   ["8. Prix, facturation et paiement", [
     "Les prix sont ceux du devis accepté. TVA non applicable, article 293 B du CGI, tant que le prestataire relève de la franchise en base ; si elle devient applicable, elle s'ajoute aux prix indiqués à compter de la date fixée par la loi.",
-    "Client privé : acompte de 30 % à la commande, réglé en ligne par carte bancaire, solde à la livraison, payable sous 15 jours. Acheteur public : facture après service fait, déposée sur Chorus Pro, réglée par mandat administratif dans le délai légal.",
-    "Pour un client professionnel, tout retard entraîne des pénalités au taux de 1,5 % par mois et une indemnité forfaitaire de 40 € pour frais de recouvrement (articles L441-10 et D441-5 du Code de commerce). Pour un acheteur public, les intérêts moratoires du code de la commande publique s'appliquent."]],
+    "Client privé : acompte de 30 % à la commande, réglé en ligne par carte bancaire, solde à la livraison, payable sous 15 jours (pour un mariage, solde avant le jour J). Acheteur public : facture après service fait, déposée sur Chorus Pro, réglée par mandat administratif dans le délai légal.",
+    "Pour un client professionnel, tout retard entraîne des pénalités au taux d'intérêt de la Banque centrale européenne majoré de 10 points et une indemnité forfaitaire de 40 € pour frais de recouvrement (articles L441-10 et D441-5 du Code de commerce). Pour un acheteur public, les intérêts moratoires du code de la commande publique s'appliquent."]],
   ["9. Abonnements et suivis", [
     "Les suivis mensuels de photographie sont conclus pour la durée minimale indiquée au devis, puis se poursuivent de mois en mois.",
     "Passé la durée minimale, chaque partie peut y mettre fin par écrit, un e-mail suffit, avec un préavis d'un mois. Ils sont facturés chaque mois à terme échu.",
