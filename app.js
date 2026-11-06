@@ -532,7 +532,7 @@
     h += `<p class="cm-n">Le devis se télécharge, puis le paiement sécurisé s’ouvre : vous y acceptez le devis et les <a href="/conditions/" target="_blank" rel="noopener">conditions de vente</a>.${T.nb ? ' Le paiement en plusieurs fois est réservé aux professionnels et aux associations.' : ''}</p>`;
     return h;
   };
-  const piedCmd = () => { const T = totCmd(); return `<div class="tot"><small>À régler aujourd’hui</small><span class="v"><b class="prix">${fmt(T.auj)}</b><i>€${T.nb ? `, puis ${fmt(T.mens + T.sv)} € par mois` : T.sv ? `, puis ${T.sv} € par mois` : ''}</i></span></div><div class="act"><button class="bt cl sm" data-nav="-1">Retour</button><button class="bt sm" data-payer>Payer <span class="ar">${ico('ar')}</span></button></div>`; };
+  const piedCmd = () => { const T = totCmd(); return `<div class="tot"><small>À régler aujourd’hui</small><span class="v"><b class="prix">${fmt(T.auj)}</b><i>€${T.nb ? `, puis ${fmt(T.mens + T.sv)} € par mois` : T.sv ? `, puis ${T.sv} € par mois` : ''}</i></span></div><div class="act"><button class="bt cl sm" data-nav="-1">Retour</button><button class="bt sm" data-payer>Payer <span class="ar">${ico('ar')}</span></button></div><p class="cm-n rappel">Si le paiement n’aboutit pas, vous recevrez un seul e-mail pour reprendre votre commande.</p>`; };
   const gardeCmd = () => { if (!modeCmd()) return; ['struct', 'rep', 'fonction', 'adr', 'ville', 'mail'].forEach(k => { const i = $('#c_' + k); if (i) ES.cm[k] = i.value.trim(); }); const a = $('#c_anticipe'); if (a) ES.cm.anticipe = a.checked; };
   let ressources = null;
   const chargeDevis = () => ressources || (ressources = ['https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js', '/conditions/cgv.js', 'https://dossiers.studioes.fr/assets/devis-fonts.js', 'https://dossiers.studioes.fr/assets/devis.js'].reduce((p, s) => p.then(() => new Promise((ok, ko) => { const x = document.createElement('script'); x.src = s; if (s.includes('/jspdf/')) { x.integrity = 'sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA=='; x.crossOrigin = 'anonymous'; x.referrerPolicy = 'no-referrer'; } x.onload = ok; x.onerror = () => s.includes('cgv') ? ok() : ko(new Error(s)); document.head.appendChild(x); })), Promise.resolve()).catch(e => { ressources = null; throw e; }));
@@ -555,7 +555,7 @@
       const u = URL.createObjectURL(out.blob), a = document.createElement('a'); a.href = u; a.download = out.name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 60000);
       /* la fiche du client remonte dans Hors-champ, comme depuis un dossier */
       fetch('https://nfnbseonwgmtouxsaajd.supabase.co/functions/v1/formulaire', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, keepalive: true, body: JSON.stringify({ _subject: 'Devis ' + num + ' : ' + (client.struct || client.rep) + ' (commande en ligne)', _template: 'table', _captcha: 'false', source: 'studioes.fr', dossier: 'commander', devis: num, etat: T.nb ? 'devis accepté, première mensualité en cours' : 'devis accepté, acompte en cours', public: 'non', particulier: part ? 'oui' : 'non', structure: client.struct, nom: client.rep, fonction: client.fonction, adresse: client.adr, ville: client.ville, mail: client.mail, lignes: lignes.map(x => x.n + ' : ' + x.p + (x.mois ? ' €/mois' : ' €')).join(' ; '), total: T.total + ' €', reglement: T.nb ? 'en ' + T.nb + ' fois sans frais : ' + T.mens + ' €/mois pour ' + T.etale + ' €, plus ' + T.sv + ' €/mois de suivi' : 'en une fois', paiement: 'carte', acompte: T.acompte + ' €', date_souhaitee: PJ[ES.k].date && ES.d != null ? moisTxt() : '', jours: T.q > 1 ? String(T.q) : '', fill: ES.fl ? 'intéressé par Fill' : '', demarrage_anticipe: part ? 'oui' : '' }) }).catch(() => {});
-      const corps = { action: 'creer', cles: T.c, dossier: 'commander', devis: num, structure: client.struct || client.rep, nom: client.rep, email: client.mail, total: T.total, particulier: part, demarrage_anticipe: part, retour: location.origin + location.pathname };
+      const corps = { action: 'creer', reprise: ES, cles: T.c, dossier: 'commander', devis: num, structure: client.struct || client.rep, nom: client.rep, email: client.mail, total: T.total, particulier: part, demarrage_anticipe: part, retour: location.origin + location.pathname };
       if (T.nb) Object.assign(corps, { etale: T.etale, echeances: T.nb, suivi: T.sv });
       const r = await fetch(ACOMPTE, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corps) });
       const j = await r.json().catch(() => ({}));
@@ -576,6 +576,15 @@
     return `<div class="fin2"><h3 class="d">Vérification du paiement…</h3><p class="cm-n">${j.lent ? 'La confirmation prend un peu de temps : vous recevrez un e-mail dès qu’elle arrive.' : 'Un instant.'}</p></div>`;
   };
   const retourPaiement = () => {
+    let rep = ''; try { const u = new URL(location.href); rep = u.searchParams.get('reprendre') || ''; if (rep) { u.searchParams.delete('reprendre'); history.replaceState(null, '', u.pathname + u.search + u.hash); } } catch (e) {}
+    if (/^[0-9a-f-]{36}$/.test(rep)) {
+      fetch(ACOMPTE + '?reprendre=' + encodeURIComponent(rep), { cache: 'no-store' }).then(r => r.json()).then(j => {
+        if (j.statut === 'a_reprendre' && j.reprise && typeof j.reprise === 'object') { ES = Object.assign({}, ES, j.reprise); delete ES.py; rendE(); ouvreF('#shE'); compte('commande-reprise', 'Commande reprise depuis le mail'); setTimeout(() => { erreur('Votre commande est reprise telle que vous l’aviez laissée. Vérifiez vos coordonnées, puis réglez quand vous le souhaitez.'); }, 400); }
+        else if (j.statut === 'paye') { ouvreF('#shE'); setTimeout(() => erreur('Cette commande est déjà réglée. Merci.'), 400); }
+        else { ouvreF('#shE'); setTimeout(() => erreur('Ce lien a expiré. Vous pouvez refaire votre devis en quelques clics, ou écrire à <a href="mailto:contact@studioes.fr">contact@studioes.fr</a>.'), 400); }
+      }).catch(() => {});
+      return;
+    }
     let ses = ''; try { const u = new URL(location.href); ses = u.searchParams.get('paye') || ''; if (ses) { u.searchParams.delete('paye'); history.replaceState(null, '', u.pathname + u.search + u.hash); } } catch (e) {}
     if (!/^cs_(live|test)_/.test(ses)) {
       /* retour de Stripe sans paiement (bouton retour, page fermée) : la commande reprend où elle en était */
