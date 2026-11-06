@@ -76,7 +76,7 @@ ph += '''
 </section>
 ''' + croise('Web et digital<span class="it">Le studio conçoit aussi des sites et des applications.</span>', 'Un site clair et bien référencé, ou une application qui fait gagner du temps. Et quand il faut de belles photos pour l’habiller, elles sont déjà là.', '/metiers/sites-et-outils/', 'Découvrir le web', '/projets/pierceval-tattoo/img/cover-800.webp', 'u-lilas') + '\n' + \
     contact_m('Événement, suivi annuel ou mariage : quelques choix, une estimation immédiate.', 'Photographie')
-page('metiers/photographie', 'Photographe de concert, d’événement et de mariage en Bretagne · Studio ES', 'Reportages photo en Bretagne : concerts et festivals (Philippe Katerine, Gaël Faye, Matmatah), événements, entreprises, portraits et mariages. Dès 250 €.', 'https://studioes.fr/metiers/photographie/', ph, og='og-photo.jpg',
+page('metiers/photographie', 'Photographe d’événement et de mariage en Bretagne · Studio ES', 'Reportages photo en Bretagne : concerts et festivals (Philippe Katerine, Gaël Faye, Matmatah), événements, entreprises, portraits et mariages. Dès 250 €.', 'https://studioes.fr/metiers/photographie/', ph, og='og-photo.jpg',
      ld=LD('Photographie', 'https://studioes.fr/metiers/photographie/', 'Reportage photo d’événement, de concert et de mariage', [('Événement', 250), ('Suivi photo annuel', 1290), ('Mariage', 1290)]))
 
 # ---------- Web : trois projets à égalité, la vitrine, puis les offres ----------
@@ -285,7 +285,7 @@ gr += """
   <div class="w fl-ct rv"><p>Pour une production régulière plutôt qu’un projet ponctuel, Studio ES a conçu <b>Fill</b>, un service de communication externalisée pour les communes et les entreprises.</p><div class="ds-ac"><a class="bt" href="https://fill.studioes.fr">Découvrir Fill <span class="ar"><svg class="i"><use href="#ne"/></svg></span></a><a class="bt cl" href="https://fill.studioes.fr/espace/">Espace client Fill <span class="ar"><svg class="i"><use href="#ne"/></svg></span></a><a class="bt ct" href="/projets/fill/">La conception de Fill</a></div></div>
 </section>
 """ + contact_m('Identité, campagne ou édition : décrivez le projet, le devis suit.', 'Design graphique')
-page('metiers/graphisme', 'Design graphique en Bretagne : identités, campagnes, éditions · Studio ES', 'Identités visuelles, campagnes, éditions et signalétique pour les entreprises, lieux culturels et collectivités de Bretagne, présentés en études de cas. Sur devis.', 'https://studioes.fr/metiers/graphisme/', gr,
+page('metiers/graphisme', 'Design graphique en Bretagne · Studio ES', 'Identités visuelles, campagnes, éditions et signalétique pour entreprises, lieux culturels et collectivités de Bretagne. Sur devis.', 'https://studioes.fr/metiers/graphisme/', gr,
      ld=LD('Design graphique', 'https://studioes.fr/metiers/graphisme/', 'Identité visuelle, campagne et édition'))
 
 # ---------- Offres : toutes les formules au même endroit ----------
@@ -312,5 +312,5 @@ of += '''
   </div>
 </section>
 ''' + contact_m('Quelques choix, une estimation immédiate, puis votre demande est envoyée.', '')
-page('offres', 'Offres et tarifs : photographie, sites et applications · Studio ES', 'Formules de Studio ES : reportage photo dès 250 €, suivi annuel, mariage, sites internet dès 490 €, en une fois ou en plusieurs fois sans frais, applications. Graphisme sur devis.', 'https://studioes.fr/offres/', of,
+page('offres', 'Offres et tarifs : photo, sites et applications · Studio ES', 'Reportage photo dès 250 €, mariage, suivi annuel, sites dès 490 € en une ou plusieurs fois sans frais, applications. Graphisme sur devis.', 'https://studioes.fr/offres/', of,
      ld=LD('Offres', 'https://studioes.fr/offres/', 'Photographie, sites internet et applications', [('Événement', 250), ('Suivi photo annuel', 1290), ('Mariage', 1290), ('Site Essentiel', 490), ('Site Vitrine', 990), ('Site sur mesure', 1990), ('Application', 490)]))
