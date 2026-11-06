@@ -1244,7 +1244,7 @@ body{color:var(--encre)}
 .mh h1 .it{font-size:clamp(24px,2.8vw,42px)}
 .mh-ac{display:flex;flex-wrap:wrap;align-items:center;gap:12px 22px;margin-top:clamp(22px,2.4vw,34px)}
 .mh-ph-s .bt{background:var(--menthe);color:#14261D}.mh-ph-s .bt .ar{background:rgba(20,38,29,.1)}
-.mh-wb-s .bt{background:var(--lilas);color:#1C1840}.mh-wb-s .bt .ar{background:rgba(28,24,64,.1)}
+.mh-wb-s .bt{background:var(--menthe);color:#16271F}.mh-wb-s .bt .ar{background:rgba(22,39,31,.1)}
 .mh-gr-s .bt{background:var(--terra3);color:#fff}
 .mh-rl .mh-g{grid-template-columns:1fr}
 @media (max-width:860px){.mh{padding-top:calc(env(safe-area-inset-top,0px) + 84px)}.mh-g{grid-template-columns:1fr}}

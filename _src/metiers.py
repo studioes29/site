@@ -16,7 +16,7 @@ def LD(nom, url, service, offres=()):
     if offres: g[0]["offers"] = [{"@type": "Offer", "name": n, "priceCurrency": "EUR", "price": str(p), "priceSpecification": {"@type": "PriceSpecification", "minPrice": p, "priceCurrency": "EUR"}} for n, p in offres]
     return json.dumps({"@context": "https://schema.org", "@graph": g}, ensure_ascii=False)
 
-def croise(titre, texte, lien, lib, img, u='u-lilas'):
+def croise(titre, texte, lien, lib, img, u='u-menthe'):
     return ('<section class="sec feuille cr-f %s" aria-label="Et aussi"><div class="w croise2 rv"><a class="cr-i" href="%s" aria-label="%s"><img src="%s" alt="" loading="lazy"></a>'
             '<div class="cr-tx"><p class="pt"><i>Et aussi</i><span>Une autre discipline du studio</span></p><h2 class="d">%s</h2><p>%s</p><a class="bt" href="%s">%s %s</a></div></div></section>') % (u, lien, lib, img, titre, texte, lien, lib, ar())
 
@@ -139,16 +139,16 @@ wb_droite = ('<div class="mh-trio" aria-hidden="true">'
              '<span class="tr-c"><img src="/projets/flouz/img/budget.webp" alt="" width="1200" height="1600"></span></div>')
 wb_act = '<div class="mh-ac"><button type="button" class="bt" data-est data-k="site">Démarrer mon site %s</button><a class="bt ct" href="#vitrine">Voir les réalisations</a></div>' % AR
 wb = entete('Web', 'Web', 'Sites et applications sur mesure.', 'Sites internet, outils en ligne et applications : chaque projet part d’un besoin précis et se conçoit avec la même exigence de clarté, pour les entreprises, les lieux culturels et les collectivités.' + ZONE_WB,
-            ' u-nuit mh-wb-s', FG('Web', 'right:-3vw;font-size:calc(var(--fg-t) * 1.25)'), '', wb_act, True)
+            ' u-foret mh-wb-s', FG('Web', 'right:-3vw;font-size:calc(var(--fg-t) * 1.25)'), '', wb_act, True)
 wb += '''
-<section class="sec feuille vi-f u-lilas" id="vitrine" aria-labelledby="t-vi">
+<section class="sec feuille vi-f u-menthe" id="vitrine" aria-labelledby="t-vi">
   ''' + FG('Écrans', 'left:-2vw;bottom:-.34em;--vy:-80px;font-size:calc(var(--fg-t) * .8)') + '''
   <div class="w">
     <div class="sec-t rv"><div><p class="pt"><i>01</i><span>Réalisations</span></p><h2 class="d" id="t-vi">Réalisations web<span class="it">Un projet, un usage.</span></h2></div></div>
     <div class="vi rv">''' + vitrine() + '''</div>
   </div>
 </section>
-<section class="sec feuille libre dk wb-o u-violet" id="web" data-dark aria-labelledby="t-of">
+<section class="sec feuille libre dk wb-o u-foret" id="web" data-dark aria-labelledby="t-of">
   ''' + FG('Sites', 'right:-2vw;bottom:-.4em;--vx:-50px;--vy:-40px;font-size:calc(var(--fg-t) * .85)') + '''
   <div class="w">
     <div class="sec-t rv"><div><p class="pt"><i>02</i><span>Les offres</span></p><h2 class="d" id="t-of">Sites internet<span class="it">Écrits et mis en ligne pour vous.</span></h2></div><p class="lead">Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris.</p></div>
@@ -298,7 +298,7 @@ of += '''
 ''' + offres_ph + '''
   </div>
 </section>
-<section class="sec feuille dk wb-o u-violet" id="of-web" data-dark aria-labelledby="t-ow">
+<section class="sec feuille dk wb-o u-foret" id="of-web" data-dark aria-labelledby="t-ow">
   <div class="w">
     <div class="sec-t rv"><div><p class="pt"><i>02</i><span>Sites internet</span></p><h2 class="d" id="t-ow">Sites internet<span class="it">Écrits et mis en ligne pour vous.</span></h2></div><p class="lead">Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris.</p></div>
 ''' + offres_web.replace('<div class="sous rv"><h3 class="d">Site internet</h3><p>Textes rédigés, référencement local, mise en ligne et une heure de prise en main compris. <button type="button" class="trv" data-est data-swipe>Je ne sais pas ce qu’il me faut</button></p></div>', '<div class="sous rv"><p><button type="button" class="trv" data-est data-swipe>Je ne sais pas ce qu’il me faut</button></p></div>') + '''
