@@ -85,7 +85,7 @@ import { Bureau } from '/js/atelier/bureau.js?v=1';
     /* ---------- shaders ---------- */
     const VS = 'attribute vec2 p;varying vec2 u;void main(){u=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}';
     const FS = `precision highp float;varying vec2 u;
-uniform sampler2D tA,tB,tM,tD,tS,tP,tC,tK;uniform vec4 uR,uDR,uRC,uKR,uAP;uniform vec2 uPar,uTx,uTea;uniform float uMix,uHov,uT,uFl,uNe,uPl,uSt,uDu,uB,uK,uCM,uKF,uKOn,uCZ;
+uniform sampler2D tA,tB,tM,tD,tS,tP,tC,tK,tF,tG;uniform vec4 uW;uniform mat3 uFs,uFp,uFl,uGs,uGp,uGl;uniform vec4 uR,uDR,uRC,uKR,uAP;uniform vec2 uPar,uTx,uTea;uniform float uMix,uHov,uT,uFl,uNe,uPl,uSt,uDu,uB,uK,uCM,uKF,uKOn,uCZ;
 uniform mat3 uHs,uHp,uHl,uHs2,uHp2;
 float zid(vec2 q){return floor(texture2D(tM,q).r*255./20.+.5);}
 float h21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
@@ -95,6 +95,7 @@ vec2 hom(mat3 m,vec2 q){vec3 r=m*vec3(q,1.);return r.xy/r.z;}
 float bord(vec2 s,vec2 k){vec2 e=min(s,1.-s)*k;return clamp(min(e.x,e.y),0.,1.);}
 bool dans(vec2 s){return s.x>0.&&s.x<1.&&s.y>0.&&s.y<1.;}
 vec3 tel(vec2 p){return texture2D(tP,uAP.xy+p*uAP.zw).rgb;}
+vec3 ecr(vec3 c,vec2 q,mat3 hs,mat3 hp,mat3 hl){vec2 s=hom(hs,q);if(dans(s))c=mix(c,texture2D(tS,s).rgb*uB+c*.04,bord(s,vec2(400.,225.)));vec2 p=hom(hp,q);if(dans(p))c=mix(c,tel(p)*uB*.95+c*.05,bord(p,vec2(70.,140.)));vec2 l=hom(hl,q);if(dans(l))c=mix(c,texture2D(tP,vec2(l.x*.829,l.y)).rgb*uB*.9+c*.05,bord(l,vec2(300.,200.)));return c;}
 vec3 grade(vec3 c){c=clamp(c,0.,1.);c=mix(c,c*c*(3.-2.*c),uK);float lu=dot(c,vec3(.299,.587,.114));return mix(vec3(lu),c,1.+uK*.25);}
 void main(){
   vec2 q=uR.xy+u*uR.zw;
@@ -114,11 +115,15 @@ void main(){
   if(z==9.)c*=uNe;
   if(uSt>0.){vec2 l=(q-uTea)/vec2(.022,.07);l.y=-l.y;if(l.y>0.&&l.y<1.4&&abs(l.x)<1.2){float n=fbm(vec2(l.x*2.2+sin(l.y*3.-uT*.8)*.6,l.y*2.-uT*.55));float m=smoothstep(.45,.85,n)*(1.-smoothstep(.2,1.4,l.y))*smoothstep(1.2,.2,abs(l.x))*smoothstep(0.,.15,l.y);c+=vec3(.95)*m*.22*uSt;}}
   if(uDu>0.&&q.x>uDR.x&&q.x<uDR.z&&q.y>uDR.y&&q.y<uDR.w){vec2 g=(q+vec2(uT*.004,-uT*.0025))*vec2(160.,90.);vec2 i=floor(g);vec2 o=vec2(h21(i),h21(i+7.3))*.8+.1;float b=smoothstep(.06,0.,length(fract(g)-o))*step(.86,h21(i+3.1))*(.5+.5*sin(uT*1.5+h21(i)*40.));c+=vec3(1.,.95,.85)*b*.3*uDu;}
-  float zh=z>10.5?2.:z;if(uHov>0.&&uCM<.01&&zh==uHov){vec2 t=uTx*1.5;float e=0.;for(int j=0;j<4;j++){vec2 o=j==0?vec2(t.x,0.):j==1?vec2(-t.x,0.):j==2?vec2(0.,t.y):vec2(0.,-t.y);float n=zid(q+o);n=n>10.5?2.:n;e+=step(.5,abs(n-zh));}c=c*1.06+.02+vec3(1.)*min(e,1.)*.22;}
-  if(uCM>0.){vec2 q2=uRC.xy+u*uRC.zw;vec3 cc=texture2D(tC,q2).rgb;
+  float zh=z>10.5?2.:z;if(uHov>0.&&uW.x>.99&&zh==uHov){vec2 t=uTx*1.5;float e=0.;for(int j=0;j<4;j++){vec2 o=j==0?vec2(t.x,0.):j==1?vec2(-t.x,0.):j==2?vec2(0.,t.y):vec2(0.,-t.y);float n=zid(q+o);n=n>10.5?2.:n;e+=step(.5,abs(n-zh));}c=c*1.06+.02+vec3(1.)*min(e,1.)*.22;}
+  if(uW.x<1.){vec2 q2=uRC.xy+u*uRC.zw;vec3 o=c*uW.x;
+    if(uW.y>0.)o+=grade(ecr(texture2D(tF,q2).rgb,q2,uFs,uFp,uFl))*uW.y;
+    if(uW.z>0.)o+=grade(ecr(texture2D(tG,q2).rgb,q2,uGs,uGp,uGl))*uW.z;
+    if(uW.w>0.){vec3 cc=texture2D(tC,q2).rgb;
     if(uCZ==1.){vec2 s2=hom(uHs2,q2);if(dans(s2))cc=mix(cc,texture2D(tS,s2).rgb*uB+cc*.04,bord(s2,vec2(400.,225.)));}
     if(uCZ==2.){vec2 s2=hom(uHp2,q2);if(dans(s2))cc=mix(cc,tel(s2)*uB*.95+cc*.05,bord(s2,vec2(70.,140.)));}
-    c=mix(c,grade(cc),uCM);}
+    o+=grade(cc)*uW.w;}
+    c=o;}
   c=mix(c,vec3(1.),uFl);
   c+=(h21(u*vec2(1931.,1733.)+fract(uT))-.5)*.016;
   gl_FragColor=vec4(c,1.);
@@ -141,7 +146,7 @@ void main(){
     const T = { A: tex(0, imA), B: tex(1, imA), M: tex(2, imM, true), D: tex(3, imD), S: tex(4, bureau.dessine()), P: tex(5, majAtlas()), C: tex(6, imA), K: tex(7, imD) };
     bureau.pret.then(() => { maj(4, T.S, bureau.dessine()); });
     portable.pret.then(() => { maj(5, T.P, majAtlas()); });
-    ['tA', 'tB', 'tM', 'tD', 'tS', 'tP', 'tC', 'tK'].forEach((n, i) => gl.uniform1i(U(n), i));
+    ['tA', 'tB', 'tM', 'tD', 'tS', 'tP', 'tC', 'tK', 'tF', 'tG'].forEach((n, i) => gl.uniform1i(U(n), i));
     gl.uniform4f(U('uAP'), 1600 / 1930, 0, 330 / 1930, 660 / 1041);
     gl.uniform2f(U('uTx'), 1 / imM.width, 1 / imM.height);
 
@@ -194,34 +199,63 @@ void main(){
       bouge(s2, (x0 + x1) / 2 - ((ax0 + ax1) / 2 / W - .5) * vw, (y0 + y1) / 2 - ((ay0 + ay1) / 2 / Hh - .5) * vh);
       if (d) tw.d = d;
     };
-    /* plans rapprochés de face (ordinateur) : la caméra glisse vers l'objet puis bascule en fondu sur un rendu frontal */
-    const CL = M.close || {}, closeIm = {}, ZONES5 = ['web', 'photo', 'graph', 'fill', 'contact'];
+    /* plans rapprochés de face (ordinateur) : un vrai travelling calculé en rendu (32 images) mène de la vue d'ensemble au plan frontal */
+    const CL = M.close || {}, closeIm = {}, ZONES5 = ['web', 'photo', 'graph', 'fill', 'contact'], VOLS = M.vols || {}, NV = M.nv || 0;
     const chargeClose = (id) => closeIm[id] || (closeIm[id] = charge(R + 'c-' + id + '-' + moment + '.webp').catch(() => null));
-    if (!MOB && M.closeups) setTimeout(() => ZONES5.forEach(chargeClose), 2500);
-    let cz = null, cm = 0, cmT = null, cT0 = 0, jeton = 0;
+    const volIm = {}, unites = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
+    const chargeVol = (id) => volIm[id] || (volIm[id] = (VOLS[id] && unites >= 10 && !RM ? Promise.all(Array.from({ length: NV - 1 }, (_, k) => charge(R + 'v/' + id + '-' + moment + '-' + String(k + 1).padStart(2, '0') + '.webp'))) : Promise.reject()).catch(() => null));
+    if (!MOB && M.closeups) setTimeout(() => { let k = Promise.resolve(); ZONES5.forEach(id => { k = k.then(() => chargeClose(id)).then(() => chargeVol(id)); }); }, 2500);
+    let cz = null, cm = 0, cmT = null, cT0 = 0, jeton = 0, vol = null;
     const HS2 = CL.web ? homo(CL.web.mon_screen) : null; if (HS2) gl.uniformMatrix3fv(U('uHs2'), false, HS2);
     if (CL.contact) gl.uniformMatrix3fv(U('uHp2'), false, homo(CL.contact.ph_scr));
     const fondu = (to, d, quand = 0) => { cmT = { t0: performance.now() + quand, a: cm, b: to, d: RM ? 1 : d }; };
+    /* images du travelling : trois textures tournantes sur les unités 8 et 9 */
+    const NUL = new Float32Array([0, 0, 0, 0, 0, 0, -5, -5, 1]), hCache = {};
+    const TFp = unites >= 10 ? [0, 1, 2].map(() => ({ t: tex(10, imD), k: -1, u: 0 })) : [];
+    const lie = (unit, id, k, garde) => {
+      let e = TFp.find(o => o.k === id + k);
+      if (!e) { e = TFp.filter(o => o.k !== id + garde).sort((a, b) => a.u - b.u)[0]; gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, e.t); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, volIm[id].v[k - 1]); e.k = id + k; }
+      e.u = performance.now(); gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, e.t);
+      const c = hCache[id + k] || (hCache[id + k] = ['mon_screen', 'ph_scr', 'lap_scr'].map(n => { const P = VOLS[id][k][n]; return P.some(p => p[2] <= .02) ? NUL : homo(P); }));
+      const L = unit === 8 ? ['uFs', 'uFp', 'uFl'] : ['uGs', 'uGp', 'uGl']; L.forEach((n, i) => gl.uniformMatrix3fv(U(n), false, c[i]));
+    };
+    const lisse = (x) => x * x * (3 - 2 * x), lerpR = (a, b, e) => a.map((v, i) => v + (b[i] - v) * e);
+    const rectBase = () => rect(1, base.x + glisse, base.y);
+    const volU = (t) => { if (!vol) return 0; const p = Math.min(1, Math.max(0, (t - vol.t0) / vol.d)); return vol.u0 + (vol.u1 - vol.u0) * p; };
+    const decolle = (id, u0, u1, fin) => {
+      const D = u1 > u0 ? 1500 : 1250;
+      vol = { id, u0, u1, t0: performance.now(), d: Math.max(1, Math.abs(u1 - u0) / NV * D), fin };
+      cmT = null; cm = 0; tw = null;
+    };
     const vise = (id) => {
       const j = ++jeton;
-      const sortie = cm > .01 ? 320 : 0;
-      if (sortie) fondu(0, 320);
-      if (!id) { setTimeout(() => { if (j === jeton) { cz = null; bouge(1, base.x + glisse, base.y); } }, sortie); return; }
-      if (id === 'web' && auto) bureau.ouvre('fill');
-      setTimeout(() => {
+      const part = () => {
         if (j !== jeton) return;
-        zoomVers(id, 950);
-        if (MOB || !M.closeups || !ZONES5.includes(id)) return;
-        chargeClose(id).then(im => {
-          if (!im || j !== jeton) return;
-          maj(6, T.C, im); cz = id; cT0 = performance.now(); gl.uniform1f(U('uCZ'), id === 'web' ? 1 : id === 'contact' ? 2 : 0);
-          fondu(1, 520, Math.max(0, 720 - (performance.now() - tw0)));
+        if (!id) { cz = null; vol = null; bouge(1, base.x + glisse, base.y); return; }
+        if (id === 'web' && auto) bureau.ouvre('fill');
+        if (MOB || !M.closeups || !ZONES5.includes(id)) { zoomVers(id, 950); return; }
+        Promise.all([chargeClose(id), chargeVol(id)]).then(([im, fr]) => {
+          if (j !== jeton) return;
+          if (!im) { zoomVers(id, 950); return; }
+          maj(6, T.C, im); gl.uniform1f(U('uCZ'), id === 'web' ? 1 : id === 'contact' ? 2 : 0);
+          if (!fr) { /* repli : glissement puis fondu */ zoomVers(id, 950); cz = id; cT0 = performance.now(); fondu(1, 520, 700); return; }
+          volIm[id].v = fr; cz = id;
+          if (lampe !== lampe0) basculeLampe();
+          vol = null; ec = ech = 1; cx = tcx = base.x + glisse; cy = tcy = base.y;
+          decolle(id, 0, NV, () => { cm = 1; cT0 = performance.now(); });
         });
-      }, sortie);
-      const tw0 = performance.now() + sortie;
+      };
+      /* retour : on refait le chemin à l'envers, depuis là où se trouve la caméra */
+      if (vol || (cz && cm > .01 && volIm[cz] && volIm[cz].v)) {
+        const z = vol ? vol.id : cz, u = vol ? volU(performance.now()) : NV;
+        decolle(z, u, 0, () => { cz = null; vol = null; part(); });
+        return;
+      }
+      if (cm > .01) { fondu(0, 320); setTimeout(() => { if (j === jeton) { cz = null; if (!id) bouge(1, base.x + glisse, base.y); else part(); } }, 320); return; }
+      part();
     };
-    const rectClose = (t) => {
-      const [ax0, ay0, ax1, ay1] = zoneLibre(), sC = 1.1 + Math.min(.05, (t - cT0) / 1000 * .006), r0 = rect(sC, .5, .5);
+    const rectClose = (t, derive = 1) => {
+      const [ax0, ay0, ax1, ay1] = zoneLibre(), sC = 1.1 + (derive ? Math.min(.05, Math.max(0, t - cT0) / 1000 * .006) : 0), r0 = rect(sC, .5, .5);
       return rect(sC, .5 - ((ax0 + ax1) / 2 / W - .5) * r0[2], .5 - ((ay0 + ay1) / 2 / Hh - .5) * r0[3]);
     };
     const versEcran2 = (u, v) => { const k = HS2.js, w = k[6] * u + k[7] * v + k[8]; return [(k[0] * u + k[1] * v + k[2]) / w, (k[3] * u + k[4] * v + k[5]) / w]; };
@@ -233,6 +267,7 @@ void main(){
     let tx = 0, ty = 0, mx = 0, my = 0, survol = 0, flT = -9e9, plT = -9e9, teT = -9e9, neT = -9e9, mixT = -1, chargeB = null, imgB = null, enVue = true;
     const versImage = (e) => { const r = C.getBoundingClientRect(), R0 = rect(ec, cx, cy); return [R0[0] + (e.clientX - r.left) / r.width * R0[2], R0[1] + (e.clientY - r.top) / r.height * R0[3]]; };
     const ecranSous = (e) => {
+      if (vol) return null;
       if (cm > .5 && cz === 'web' && HS2) { const r = C.getBoundingClientRect(), R2 = rectClose(performance.now()); const q2 = [R2[0] + (e.clientX - r.left) / r.width * R2[2], R2[1] + (e.clientY - r.top) / r.height * R2[3]]; const [a, b] = versEcran2(...q2); return a > 0 && a < 1 && b > 0 && b < 1 ? [a, b] : null; }
       if (ouverte === 'web' && cm < .01) return surEcran(...versImage(e));
       return null;
@@ -250,7 +285,7 @@ void main(){
       if (e.pointerType !== 'mouse') return;
       const pi = versImage(e), se = ecranSous(e);
       if (se) { const sur = bureau.survole(...se); C.style.cursor = sur ? 'pointer' : 'default'; if (survol) { survol = 0; eti.classList.remove('on'); } return; } else bureau.survole(null);
-      if (cm > .5) { if (survol) { survol = 0; eti.classList.remove('on'); } C.style.cursor = ''; return; }
+      if (cm > .5 || vol) { if (survol) { survol = 0; eti.classList.remove('on'); } C.style.cursor = ''; return; }
       const z = actif(zoneA(...pi) === 11 ? 2 : zoneA(...pi));
       if (z !== survol) { survol = z; C.style.cursor = z ? 'pointer' : ''; eti.textContent = INFO[ZNOM[z]] || ''; eti.classList.toggle('on', !!z); }
       eti.style.transform = 'translate3d(' + (e.clientX - r.left + 16) + 'px,' + (e.clientY - r.top + 14) + 'px,0)';
@@ -260,6 +295,7 @@ void main(){
       if (dragged) return;
       const pi = versImage(e), se = ecranSous(e);
       if (se) { auto = false; bureau.clic(...se); return; }
+      if (vol) { if (vol.u1 > 0) ferme(); return; }
       if (cm > .5) { ferme(); return; }
       const z0 = zoneA(...pi), z = actif(z0 === 11 ? 2 : z0), n = ZNOM[z], t = performance.now();
       if (!n) { if (ouverte) ferme(); return; }
@@ -326,7 +362,17 @@ void main(){
         if (m >= 1) { lampe = !lampe; maj(0, T.A, imgB); gl.uniform1f(U('uMix'), 0); chargeB = charge(nom(!lampe)); chargeB.catch(() => {}); mixT = -1; }
       } else gl.uniform1f(U('uMix'), 0);
       if (cmT) { const p = Math.min(1, Math.max(0, (t - cmT.t0) / cmT.d)), e = p * p * (3 - 2 * p); cm = cmT.a + (cmT.b - cmT.a) * e; if (p >= 1) cmT = null; }
-      gl.uniform1f(U('uCM'), cm); if (cm > 0) gl.uniform4fv(U('uRC'), rectClose(t));
+      if (vol) {
+        const u = volU(t), fini = (t - vol.t0) >= vol.d, e = lisse(Math.min(1, u / NV));
+        const Rv = lerpR(rectBase(), vol.u1 > vol.u0 ? rectClose(t, 0) : rectClose(t), e);
+        gl.uniform4fv(U('uR'), Rv); gl.uniform4fv(U('uRC'), Rv);
+        const i = Math.min(NV - 1, Math.floor(u)), b = u - i;
+        if (i >= 1) lie(8, vol.id, i, i + 1); if (i + 1 <= NV - 1) lie(9, vol.id, i + 1, i);
+        gl.uniform4f(U('uW'), i === 0 ? 1 - b : 0, i >= 1 ? 1 - b : 0, i + 1 <= NV - 1 ? b : 0, i + 1 === NV ? b : 0);
+        if (fini) { const f = vol.fin; vol = null; if (f) f(); }
+      } else {
+        gl.uniform4f(U('uW'), 1 - cm, 0, 0, cm); if (cm > 0) gl.uniform4fv(U('uRC'), rectClose(t));
+      }
       if (kIm && lampe === lampe0 && mixT < 0 && !RM) { const per = 6.5, tt = el % per; gl.uniform1f(U('uKF'), tt < 2 ? Math.min(23, Math.floor(tt * 12)) : 0); gl.uniform1f(U('uKOn'), 1); } else gl.uniform1f(U('uKOn'), 0);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       requestAnimationFrame(image);
