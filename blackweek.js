@@ -1,4 +1,5 @@
 /* Offre Black Week de Studio ES.
+   Fenêtre promotionnelle (centrée sur ordinateur, plein écran sur mobile), une fois par visite.
    S'affiche seule du lundi 23 novembre 2026, 0 h, au lundi 1er décembre 2026, 0 h (heure de Paris), puis disparaît.
    Aperçu avant la date : ajouter ?blackweek à l'adresse de la page.
    L'option offerte s'applique au devis : aucune automatisation côté paiement. */
@@ -14,29 +15,45 @@
   let clos = false;
 
   const css = `
-.bw{position:fixed;z-index:60;right:24px;bottom:24px;width:min(400px,calc(100vw - 32px));background:#0B0B0D;color:#F4F2F7;border-radius:28px;padding:26px 26px 22px;box-shadow:0 24px 60px rgba(0,0,0,.38);border:1px solid rgba(255,255,255,.08);overflow:hidden;font-family:var(--f,"Inter Tight",Arial,sans-serif);transform:translateY(16px);opacity:0;transition:transform .5s cubic-bezier(.16,1,.3,1),opacity .4s}
-.bw{pointer-events:none}.bw.on{transform:none;opacity:1;pointer-events:auto}
+.bw-o{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:24px;background:rgba(8,8,12,.64);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:0;transition:opacity .45s}
+.bw-o.on{opacity:1}
+.bw{position:relative;width:min(540px,100%);max-height:calc(100dvh - 48px);overflow:auto;background:#0B0B0D;color:#F4F2F7;border-radius:32px;padding:46px 44px 34px;text-align:center;box-shadow:0 40px 120px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.08);font-family:var(--f,"Inter Tight",Arial,sans-serif);transform:translateY(28px) scale(.96);transition:transform .7s cubic-bezier(.16,1,.3,1);overscroll-behavior:contain}
+.bw-o.on .bw{transform:none}
+.bw:focus{outline:none}
 .bw>*{position:relative}
-.bw-h{display:flex;align-items:center;gap:14px;margin:0 0 14px}
-.bw-pa{flex:none;position:relative;width:64px;height:64px;transform:rotate(-10deg);filter:drop-shadow(0 8px 12px rgba(0,0,0,.5))}
-.bw-k{font:500 16px/1.25 var(--sf,"Urbanist",sans-serif);font-style:italic;color:rgba(244,242,247,.75);margin:0}
-.bw-t{font:800 27px/1.02 var(--d,"Bricolage Grotesque",sans-serif);letter-spacing:-.03em;margin:0 0 10px;padding-right:20px;color:#F4F2F7}
-.bw-p{font-size:15px;line-height:1.45;margin:0 0 16px;color:rgba(244,242,247,.78)}
-.bw-a{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.bw-b{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:999px;background:#F4F2F7;color:#0B0B0D;font-weight:700;font-size:15px;text-decoration:none}
-.bw-l{display:inline-flex;align-items:center;min-height:44px;padding:0 6px;color:#F4F2F7;font-weight:600;font-size:15px;text-decoration:underline;text-underline-offset:3px}
-.bw-n{font-size:12px;line-height:1.4;color:rgba(244,242,247,.55);margin:14px 0 0}
-.bw-x{position:absolute;z-index:2;top:14px;right:14px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(255,255,255,.1);color:#F4F2F7;font-size:20px;line-height:1;cursor:pointer}
+.bw-h{display:flex;flex-direction:column;align-items:center;gap:18px;margin:0 0 18px}
+.bw-pa{flex:none;position:relative;width:120px;height:120px;transform:rotate(-10deg);filter:drop-shadow(0 14px 22px rgba(0,0,0,.55))}
+.bw-pa .bw-st{transform:scale(.4)!important}
+.bw-k{font:500 17px/1.25 var(--sf,"Urbanist",sans-serif);font-style:italic;color:rgba(244,242,247,.75);margin:0}
+.bw-t{font:800 clamp(32px,4.4vw,42px)/1 var(--d,"Bricolage Grotesque",sans-serif);letter-spacing:-.035em;margin:0 0 14px;color:#F4F2F7}
+.bw-p{font-size:16px;line-height:1.5;margin:0 auto 24px;max-width:42ch;color:rgba(244,242,247,.8)}
+.bw-a{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:center}
+.bw-b{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 26px;border-radius:999px;background:#F4F2F7;color:#0B0B0D;font-weight:700;font-size:16px;text-decoration:none}
+.bw-l{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 6px;color:#F4F2F7;font-weight:600;font-size:16px;text-decoration:underline;text-underline-offset:3px}
+.bw-n{font-size:12.5px;line-height:1.45;color:rgba(244,242,247,.55);margin:22px auto 0;max-width:46ch}
+.bw-x{position:absolute;z-index:2;top:16px;right:16px;width:40px;height:40px;border:0;border-radius:50%;background:rgba(255,255,255,.1);color:#F4F2F7;font-size:22px;line-height:1;cursor:pointer}
 .bw-x::after{content:"";position:absolute;inset:-4px}
-@media (width<=600px){.bw{right:16px;bottom:16px;padding:22px 20px 18px}.bw-t{font-size:23px}}
-@media (prefers-reduced-motion:reduce){.bw{transition:none}}`;
+@media (width<=600px){
+ .bw-o{padding:0}
+ .bw{width:100%;height:100dvh;max-height:none;border-radius:0;border:0;display:flex;flex-direction:column;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 70px) 24px calc(env(safe-area-inset-bottom,0px) + 28px)}
+ .bw-x{top:calc(env(safe-area-inset-top,0px) + 14px)}
+ .bw-t{font-size:34px}.bw-p{font-size:15.5px}
+ .bw-a{flex-direction:column;align-items:stretch}
+}
+@media (prefers-reduced-motion:reduce){.bw-o,.bw{transition:none}}`;
   const st = document.createElement('style');
   st.textContent = css;
   document.head.appendChild(st);
 
-  const el = document.createElement('aside');
+  const ov = document.createElement('div');
+  ov.className = 'bw-o';
+  const el = document.createElement('div');
   el.className = 'bw';
+  el.setAttribute('role', 'dialog');
+  el.setAttribute('aria-modal', 'true');
   el.setAttribute('aria-label', 'Offre Black Week');
+  el.tabIndex = -1;
+  ov.appendChild(el);
   el.innerHTML = `
 <button class="bw-x" type="button" aria-label="Fermer l’offre">×</button>
 <div class="bw-h"><span class="bw-pa" aria-hidden="true"><span class="bw-st" style="position:absolute;left:0;top:0;width:300px;height:300px;transform:scale(.2133);transform-origin:0 0"><span style="position:absolute;inset:0;clip-path:path('M298.5 150.0 L298.0 153.9 L296.7 157.7 L294.5 161.4 L291.8 164.9 L288.8 168.3 L285.7 171.5 L282.7 174.6 L280.2 177.7 L278.3 180.8 L277.0 184.0 L276.5 187.5 L276.6 191.1 L277.3 195.1 L278.2 199.2 L279.3 203.6 L280.3 208.0 L280.9 212.4 L280.9 216.7 L280.1 220.7 L278.6 224.2 L276.3 227.4 L273.2 230.0 L269.5 232.1 L265.4 233.8 L261.1 235.2 L256.8 236.5 L252.7 237.7 L248.9 239.1 L245.7 240.8 L243.0 243.0 L240.8 245.7 L239.1 248.9 L237.7 252.7 L236.5 256.8 L235.2 261.1 L233.8 265.4 L232.1 269.5 L230.0 273.2 L227.4 276.3 L224.2 278.6 L220.7 280.1 L216.7 280.9 L212.4 280.9 L208.0 280.3 L203.6 279.3 L199.2 278.2 L195.1 277.3 L191.1 276.6 L187.5 276.5 L184.0 277.0 L180.8 278.3 L177.7 280.2 L174.6 282.7 L171.5 285.7 L168.3 288.8 L164.9 291.8 L161.4 294.5 L157.7 296.7 L153.9 298.0 L150.0 298.5 L146.1 298.0 L142.3 296.7 L138.6 294.5 L135.1 291.8 L131.7 288.8 L128.5 285.7 L125.4 282.7 L122.3 280.2 L119.2 278.3 L116.0 277.0 L112.5 276.5 L108.9 276.6 L104.9 277.3 L100.8 278.2 L96.4 279.3 L92.0 280.3 L87.6 280.9 L83.3 280.9 L79.3 280.1 L75.8 278.6 L72.6 276.3 L70.0 273.2 L67.9 269.5 L66.2 265.4 L64.8 261.1 L63.5 256.8 L62.3 252.7 L60.9 248.9 L59.2 245.7 L57.0 243.0 L54.3 240.8 L51.1 239.1 L47.3 237.7 L43.2 236.5 L38.9 235.2 L34.6 233.8 L30.5 232.1 L26.8 230.0 L23.7 227.4 L21.4 224.2 L19.9 220.7 L19.1 216.7 L19.1 212.4 L19.7 208.0 L20.7 203.6 L21.8 199.2 L22.7 195.1 L23.4 191.1 L23.5 187.5 L23.0 184.0 L21.7 180.8 L19.8 177.7 L17.3 174.6 L14.3 171.5 L11.2 168.3 L8.2 164.9 L5.5 161.4 L3.3 157.7 L2.0 153.9 L1.5 150.0 L2.0 146.1 L3.3 142.3 L5.5 138.6 L8.2 135.1 L11.2 131.7 L14.3 128.5 L17.3 125.4 L19.8 122.3 L21.7 119.2 L23.0 116.0 L23.5 112.5 L23.4 108.9 L22.7 104.9 L21.8 100.8 L20.7 96.4 L19.7 92.0 L19.1 87.6 L19.1 83.3 L19.9 79.3 L21.4 75.8 L23.7 72.6 L26.8 70.0 L30.5 67.9 L34.6 66.2 L38.9 64.8 L43.2 63.5 L47.3 62.3 L51.1 60.9 L54.3 59.2 L57.0 57.0 L59.2 54.3 L60.9 51.1 L62.3 47.3 L63.5 43.2 L64.8 38.9 L66.2 34.6 L67.9 30.5 L70.0 26.8 L72.6 23.7 L75.7 21.4 L79.3 19.9 L83.3 19.1 L87.6 19.1 L92.0 19.7 L96.4 20.7 L100.8 21.8 L104.9 22.7 L108.9 23.4 L112.5 23.5 L116.0 23.0 L119.2 21.7 L122.3 19.8 L125.4 17.3 L128.5 14.3 L131.7 11.2 L135.1 8.2 L138.6 5.5 L142.3 3.3 L146.1 2.0 L150.0 1.5 L153.9 2.0 L157.7 3.3 L161.4 5.5 L164.9 8.2 L168.3 11.2 L171.5 14.3 L174.6 17.3 L177.7 19.8 L180.8 21.7 L184.0 23.0 L187.5 23.5 L191.1 23.4 L195.1 22.7 L199.2 21.8 L203.6 20.7 L208.0 19.7 L212.4 19.1 L216.7 19.1 L220.7 19.9 L224.2 21.4 L227.4 23.7 L230.0 26.8 L232.1 30.5 L233.8 34.6 L235.2 38.9 L236.5 43.2 L237.7 47.3 L239.1 51.1 L240.8 54.3 L243.0 57.0 L245.7 59.2 L248.9 60.9 L252.7 62.3 L256.8 63.5 L261.1 64.8 L265.4 66.2 L269.5 67.9 L273.2 70.0 L276.3 72.6 L278.6 75.8 L280.1 79.3 L280.9 83.3 L280.9 87.6 L280.3 92.0 L279.3 96.4 L278.2 100.8 L277.3 104.9 L276.6 108.9 L276.5 112.5 L277.0 116.0 L278.3 119.2 L280.2 122.3 L282.7 125.4 L285.7 128.5 L288.8 131.7 L291.8 135.1 L294.5 138.6 L296.7 142.3 L298.0 146.1Z');background:conic-gradient(from 20deg,#FFFFFF,#AEB2BF 9%,#4F525D 17%,#B3C8FF 25%,#FFFFFF 32%,#E2BDEB 42%,#5D606C 50%,#FFFFFF 57%,#BDEDE6 66%,#7D808C 76%,#F2DCC0 87%,#FFFFFF)"></span><span style="position:absolute;inset:0;clip-path:path('M283.6 150.0 L283.2 153.5 L282.0 156.9 L280.1 160.2 L277.6 163.4 L274.9 166.4 L272.1 169.3 L269.5 172.1 L267.2 174.9 L265.5 177.7 L264.4 180.6 L263.9 183.7 L264.0 187.0 L264.6 190.6 L265.4 194.3 L266.4 198.2 L267.3 202.2 L267.8 206.2 L267.7 210.0 L267.1 213.6 L265.7 216.8 L263.6 219.6 L260.8 222.0 L257.5 223.9 L253.8 225.4 L250.0 226.7 L246.1 227.8 L242.4 228.9 L239.1 230.2 L236.2 231.8 L233.7 233.7 L231.8 236.2 L230.2 239.1 L228.9 242.4 L227.8 246.1 L226.7 250.0 L225.4 253.8 L223.9 257.5 L222.0 260.8 L219.6 263.6 L216.8 265.7 L213.6 267.1 L210.0 267.7 L206.2 267.8 L202.2 267.3 L198.2 266.4 L194.3 265.4 L190.6 264.6 L187.0 264.0 L183.7 263.9 L180.6 264.4 L177.7 265.5 L174.9 267.2 L172.1 269.5 L169.3 272.1 L166.4 274.9 L163.4 277.6 L160.2 280.1 L156.9 282.0 L153.5 283.2 L150.0 283.6 L146.5 283.2 L143.1 282.0 L139.8 280.1 L136.6 277.6 L133.6 274.9 L130.7 272.1 L127.9 269.5 L125.1 267.2 L122.3 265.5 L119.4 264.4 L116.3 263.9 L113.0 264.0 L109.4 264.6 L105.7 265.4 L101.8 266.4 L97.8 267.3 L93.8 267.8 L90.0 267.7 L86.4 267.1 L83.2 265.7 L80.4 263.6 L78.0 260.8 L76.1 257.5 L74.6 253.8 L73.3 250.0 L72.2 246.1 L71.1 242.4 L69.8 239.1 L68.2 236.2 L66.3 233.7 L63.8 231.8 L60.9 230.2 L57.6 228.9 L53.9 227.8 L50.0 226.7 L46.2 225.4 L42.5 223.9 L39.2 222.0 L36.4 219.6 L34.3 216.8 L32.9 213.6 L32.3 210.0 L32.2 206.2 L32.7 202.2 L33.6 198.2 L34.6 194.3 L35.4 190.6 L36.0 187.0 L36.1 183.7 L35.6 180.6 L34.5 177.7 L32.8 174.9 L30.5 172.1 L27.9 169.3 L25.1 166.4 L22.4 163.4 L19.9 160.2 L18.0 156.9 L16.8 153.5 L16.4 150.0 L16.8 146.5 L18.0 143.1 L19.9 139.8 L22.4 136.6 L25.1 133.6 L27.9 130.7 L30.5 127.9 L32.8 125.1 L34.5 122.3 L35.6 119.4 L36.1 116.3 L36.0 113.0 L35.4 109.4 L34.6 105.7 L33.6 101.8 L32.7 97.8 L32.2 93.8 L32.3 90.0 L32.9 86.4 L34.3 83.2 L36.4 80.4 L39.2 78.0 L42.5 76.1 L46.2 74.6 L50.0 73.3 L53.9 72.2 L57.6 71.1 L60.9 69.8 L63.8 68.2 L66.3 66.3 L68.2 63.8 L69.8 60.9 L71.1 57.6 L72.2 53.9 L73.3 50.0 L74.6 46.2 L76.1 42.5 L78.0 39.2 L80.4 36.4 L83.2 34.3 L86.4 32.9 L90.0 32.3 L93.8 32.2 L97.8 32.7 L101.8 33.6 L105.7 34.6 L109.4 35.4 L113.0 36.0 L116.3 36.1 L119.4 35.6 L122.3 34.5 L125.1 32.8 L127.9 30.5 L130.7 27.9 L133.6 25.1 L136.6 22.4 L139.8 19.9 L143.1 18.0 L146.5 16.8 L150.0 16.4 L153.5 16.8 L156.9 18.0 L160.2 19.9 L163.4 22.4 L166.4 25.1 L169.3 27.9 L172.1 30.5 L174.9 32.8 L177.7 34.5 L180.6 35.6 L183.7 36.1 L187.0 36.0 L190.6 35.4 L194.3 34.6 L198.2 33.6 L202.2 32.7 L206.2 32.2 L210.0 32.3 L213.6 32.9 L216.8 34.3 L219.6 36.4 L222.0 39.2 L223.9 42.5 L225.4 46.2 L226.7 50.0 L227.8 53.9 L228.9 57.6 L230.2 60.9 L231.8 63.8 L233.7 66.3 L236.2 68.2 L239.1 69.8 L242.4 71.1 L246.1 72.2 L250.0 73.3 L253.8 74.6 L257.5 76.1 L260.8 78.0 L263.6 80.4 L265.7 83.2 L267.1 86.4 L267.7 90.0 L267.8 93.8 L267.3 97.8 L266.4 101.8 L265.4 105.7 L264.6 109.4 L264.0 113.0 L263.9 116.3 L264.4 119.4 L265.5 122.3 L267.2 125.1 L269.5 127.9 L272.1 130.7 L274.9 133.6 L277.6 136.6 L280.1 139.8 L282.0 143.1 L283.2 146.5Z');background:conic-gradient(from 160deg,#EFF0F3,#B7BAC6 10%,#FFFFFF 17%,#A9C4FF 27%,#5D606C 34%,#F0F1F4 42%,#E3C6EE 52%,#FFFFFF 60%,#B7E6DF 70%,#565964 78%,#C9CCD6 88%,#EFF0F3)"></span><span style="position:absolute;inset:0;clip-path:path('M283.6 150.0 L283.2 153.5 L282.0 156.9 L280.1 160.2 L277.6 163.4 L274.9 166.4 L272.1 169.3 L269.5 172.1 L267.2 174.9 L265.5 177.7 L264.4 180.6 L263.9 183.7 L264.0 187.0 L264.6 190.6 L265.4 194.3 L266.4 198.2 L267.3 202.2 L267.8 206.2 L267.7 210.0 L267.1 213.6 L265.7 216.8 L263.6 219.6 L260.8 222.0 L257.5 223.9 L253.8 225.4 L250.0 226.7 L246.1 227.8 L242.4 228.9 L239.1 230.2 L236.2 231.8 L233.7 233.7 L231.8 236.2 L230.2 239.1 L228.9 242.4 L227.8 246.1 L226.7 250.0 L225.4 253.8 L223.9 257.5 L222.0 260.8 L219.6 263.6 L216.8 265.7 L213.6 267.1 L210.0 267.7 L206.2 267.8 L202.2 267.3 L198.2 266.4 L194.3 265.4 L190.6 264.6 L187.0 264.0 L183.7 263.9 L180.6 264.4 L177.7 265.5 L174.9 267.2 L172.1 269.5 L169.3 272.1 L166.4 274.9 L163.4 277.6 L160.2 280.1 L156.9 282.0 L153.5 283.2 L150.0 283.6 L146.5 283.2 L143.1 282.0 L139.8 280.1 L136.6 277.6 L133.6 274.9 L130.7 272.1 L127.9 269.5 L125.1 267.2 L122.3 265.5 L119.4 264.4 L116.3 263.9 L113.0 264.0 L109.4 264.6 L105.7 265.4 L101.8 266.4 L97.8 267.3 L93.8 267.8 L90.0 267.7 L86.4 267.1 L83.2 265.7 L80.4 263.6 L78.0 260.8 L76.1 257.5 L74.6 253.8 L73.3 250.0 L72.2 246.1 L71.1 242.4 L69.8 239.1 L68.2 236.2 L66.3 233.7 L63.8 231.8 L60.9 230.2 L57.6 228.9 L53.9 227.8 L50.0 226.7 L46.2 225.4 L42.5 223.9 L39.2 222.0 L36.4 219.6 L34.3 216.8 L32.9 213.6 L32.3 210.0 L32.2 206.2 L32.7 202.2 L33.6 198.2 L34.6 194.3 L35.4 190.6 L36.0 187.0 L36.1 183.7 L35.6 180.6 L34.5 177.7 L32.8 174.9 L30.5 172.1 L27.9 169.3 L25.1 166.4 L22.4 163.4 L19.9 160.2 L18.0 156.9 L16.8 153.5 L16.4 150.0 L16.8 146.5 L18.0 143.1 L19.9 139.8 L22.4 136.6 L25.1 133.6 L27.9 130.7 L30.5 127.9 L32.8 125.1 L34.5 122.3 L35.6 119.4 L36.1 116.3 L36.0 113.0 L35.4 109.4 L34.6 105.7 L33.6 101.8 L32.7 97.8 L32.2 93.8 L32.3 90.0 L32.9 86.4 L34.3 83.2 L36.4 80.4 L39.2 78.0 L42.5 76.1 L46.2 74.6 L50.0 73.3 L53.9 72.2 L57.6 71.1 L60.9 69.8 L63.8 68.2 L66.3 66.3 L68.2 63.8 L69.8 60.9 L71.1 57.6 L72.2 53.9 L73.3 50.0 L74.6 46.2 L76.1 42.5 L78.0 39.2 L80.4 36.4 L83.2 34.3 L86.4 32.9 L90.0 32.3 L93.8 32.2 L97.8 32.7 L101.8 33.6 L105.7 34.6 L109.4 35.4 L113.0 36.0 L116.3 36.1 L119.4 35.6 L122.3 34.5 L125.1 32.8 L127.9 30.5 L130.7 27.9 L133.6 25.1 L136.6 22.4 L139.8 19.9 L143.1 18.0 L146.5 16.8 L150.0 16.4 L153.5 16.8 L156.9 18.0 L160.2 19.9 L163.4 22.4 L166.4 25.1 L169.3 27.9 L172.1 30.5 L174.9 32.8 L177.7 34.5 L180.6 35.6 L183.7 36.1 L187.0 36.0 L190.6 35.4 L194.3 34.6 L198.2 33.6 L202.2 32.7 L206.2 32.2 L210.0 32.3 L213.6 32.9 L216.8 34.3 L219.6 36.4 L222.0 39.2 L223.9 42.5 L225.4 46.2 L226.7 50.0 L227.8 53.9 L228.9 57.6 L230.2 60.9 L231.8 63.8 L233.7 66.3 L236.2 68.2 L239.1 69.8 L242.4 71.1 L246.1 72.2 L250.0 73.3 L253.8 74.6 L257.5 76.1 L260.8 78.0 L263.6 80.4 L265.7 83.2 L267.1 86.4 L267.7 90.0 L267.8 93.8 L267.3 97.8 L266.4 101.8 L265.4 105.7 L264.6 109.4 L264.0 113.0 L263.9 116.3 L264.4 119.4 L265.5 122.3 L267.2 125.1 L269.5 127.9 L272.1 130.7 L274.9 133.6 L277.6 136.6 L280.1 139.8 L282.0 143.1 L283.2 146.5Z');background:radial-gradient(120% 90% at 28% 18%,rgba(255,255,255,.75),rgba(255,255,255,0) 45%),radial-gradient(90% 80% at 80% 92%,rgba(40,20,90,.28),rgba(40,20,90,0) 60%);mix-blend-mode:soft-light"></span><span style="position:absolute;inset:0;clip-path:path('M283.6 150.0 L283.2 153.5 L282.0 156.9 L280.1 160.2 L277.6 163.4 L274.9 166.4 L272.1 169.3 L269.5 172.1 L267.2 174.9 L265.5 177.7 L264.4 180.6 L263.9 183.7 L264.0 187.0 L264.6 190.6 L265.4 194.3 L266.4 198.2 L267.3 202.2 L267.8 206.2 L267.7 210.0 L267.1 213.6 L265.7 216.8 L263.6 219.6 L260.8 222.0 L257.5 223.9 L253.8 225.4 L250.0 226.7 L246.1 227.8 L242.4 228.9 L239.1 230.2 L236.2 231.8 L233.7 233.7 L231.8 236.2 L230.2 239.1 L228.9 242.4 L227.8 246.1 L226.7 250.0 L225.4 253.8 L223.9 257.5 L222.0 260.8 L219.6 263.6 L216.8 265.7 L213.6 267.1 L210.0 267.7 L206.2 267.8 L202.2 267.3 L198.2 266.4 L194.3 265.4 L190.6 264.6 L187.0 264.0 L183.7 263.9 L180.6 264.4 L177.7 265.5 L174.9 267.2 L172.1 269.5 L169.3 272.1 L166.4 274.9 L163.4 277.6 L160.2 280.1 L156.9 282.0 L153.5 283.2 L150.0 283.6 L146.5 283.2 L143.1 282.0 L139.8 280.1 L136.6 277.6 L133.6 274.9 L130.7 272.1 L127.9 269.5 L125.1 267.2 L122.3 265.5 L119.4 264.4 L116.3 263.9 L113.0 264.0 L109.4 264.6 L105.7 265.4 L101.8 266.4 L97.8 267.3 L93.8 267.8 L90.0 267.7 L86.4 267.1 L83.2 265.7 L80.4 263.6 L78.0 260.8 L76.1 257.5 L74.6 253.8 L73.3 250.0 L72.2 246.1 L71.1 242.4 L69.8 239.1 L68.2 236.2 L66.3 233.7 L63.8 231.8 L60.9 230.2 L57.6 228.9 L53.9 227.8 L50.0 226.7 L46.2 225.4 L42.5 223.9 L39.2 222.0 L36.4 219.6 L34.3 216.8 L32.9 213.6 L32.3 210.0 L32.2 206.2 L32.7 202.2 L33.6 198.2 L34.6 194.3 L35.4 190.6 L36.0 187.0 L36.1 183.7 L35.6 180.6 L34.5 177.7 L32.8 174.9 L30.5 172.1 L27.9 169.3 L25.1 166.4 L22.4 163.4 L19.9 160.2 L18.0 156.9 L16.8 153.5 L16.4 150.0 L16.8 146.5 L18.0 143.1 L19.9 139.8 L22.4 136.6 L25.1 133.6 L27.9 130.7 L30.5 127.9 L32.8 125.1 L34.5 122.3 L35.6 119.4 L36.1 116.3 L36.0 113.0 L35.4 109.4 L34.6 105.7 L33.6 101.8 L32.7 97.8 L32.2 93.8 L32.3 90.0 L32.9 86.4 L34.3 83.2 L36.4 80.4 L39.2 78.0 L42.5 76.1 L46.2 74.6 L50.0 73.3 L53.9 72.2 L57.6 71.1 L60.9 69.8 L63.8 68.2 L66.3 66.3 L68.2 63.8 L69.8 60.9 L71.1 57.6 L72.2 53.9 L73.3 50.0 L74.6 46.2 L76.1 42.5 L78.0 39.2 L80.4 36.4 L83.2 34.3 L86.4 32.9 L90.0 32.3 L93.8 32.2 L97.8 32.7 L101.8 33.6 L105.7 34.6 L109.4 35.4 L113.0 36.0 L116.3 36.1 L119.4 35.6 L122.3 34.5 L125.1 32.8 L127.9 30.5 L130.7 27.9 L133.6 25.1 L136.6 22.4 L139.8 19.9 L143.1 18.0 L146.5 16.8 L150.0 16.4 L153.5 16.8 L156.9 18.0 L160.2 19.9 L163.4 22.4 L166.4 25.1 L169.3 27.9 L172.1 30.5 L174.9 32.8 L177.7 34.5 L180.6 35.6 L183.7 36.1 L187.0 36.0 L190.6 35.4 L194.3 34.6 L198.2 33.6 L202.2 32.7 L206.2 32.2 L210.0 32.3 L213.6 32.9 L216.8 34.3 L219.6 36.4 L222.0 39.2 L223.9 42.5 L225.4 46.2 L226.7 50.0 L227.8 53.9 L228.9 57.6 L230.2 60.9 L231.8 63.8 L233.7 66.3 L236.2 68.2 L239.1 69.8 L242.4 71.1 L246.1 72.2 L250.0 73.3 L253.8 74.6 L257.5 76.1 L260.8 78.0 L263.6 80.4 L265.7 83.2 L267.1 86.4 L267.7 90.0 L267.8 93.8 L267.3 97.8 L266.4 101.8 L265.4 105.7 L264.6 109.4 L264.0 113.0 L263.9 116.3 L264.4 119.4 L265.5 122.3 L267.2 125.1 L269.5 127.9 L272.1 130.7 L274.9 133.6 L277.6 136.6 L280.1 139.8 L282.0 143.1 L283.2 146.5Z');background:linear-gradient(118deg,rgba(255,255,255,0) 32%,rgba(255,255,255,.9) 41%,rgba(255,255,255,0) 47%,rgba(255,255,255,0) 55%,rgba(255,255,255,.55) 58%,rgba(255,255,255,0) 62%)"></span><svg style="position:absolute;inset:0;" viewBox="0 0 300 300"><circle cx="150" cy="150" r="72" fill="none" stroke="#18181E" stroke-width="13"/><line x1="150.0" y1="78.0" x2="180.2" y2="150.0" stroke="#18181E" stroke-width="11" stroke-linecap="round"/><line x1="212.4" y1="114.0" x2="165.1" y2="176.2" stroke="#18181E" stroke-width="11" stroke-linecap="round"/><line x1="212.4" y1="186.0" x2="134.9" y2="176.2" stroke="#18181E" stroke-width="11" stroke-linecap="round"/><line x1="150.0" y1="222.0" x2="119.8" y2="150.0" stroke="#18181E" stroke-width="11" stroke-linecap="round"/><line x1="87.6" y1="186.0" x2="134.9" y2="123.8" stroke="#18181E" stroke-width="11" stroke-linecap="round"/><line x1="87.6" y1="114.0" x2="165.1" y2="123.8" stroke="#18181E" stroke-width="11" stroke-linecap="round"/><g transform="translate(205 92) scale(30)"><path d="M0 -1 C .12 -.12 .12 -.12 1 0 C .12 .12 .12 .12 0 1 C -.12 .12 -.12 .12 -1 0 C -.12 -.12 -.12 -.12 0 -1Z" fill="#fff"/></g></svg></span></span><p class="bw-k">Black Week, jusqu’au 30 novembre</p></div>
@@ -44,25 +61,35 @@
 <p class="bw-p">Pour toute réservation photo confirmée cette semaine, une première sélection retouchée est livrée le soir même de l’événement, sans supplément. Valable sur un événement de 2026 ou de 2027, mariages compris.</p>
 <div class="bw-a"><a class="bw-b" href="https://cal.com/studioes/30min" target="_blank" rel="noopener">Réserver un échange</a><a class="bw-l" href="/metiers/photographie/">Voir les formules</a></div>
 <p class="bw-n">Réservations confirmées (acompte versé) du 23 au 30 novembre 2026. Option habituellement facturée 150 €.</p>`;
-  el.querySelector('.bw-x').addEventListener('click', () => {
-    clos = true; el.classList.remove('on');
+  let avant = null;
+  const echap = (e) => { if (e.key === 'Escape') ferme_(); };
+  const ferme_ = () => {
+    clos = true; ov.classList.remove('on');
+    document.documentElement.style.overflow = '';
+    removeEventListener('keydown', echap);
     try { sessionStorage.setItem('studioes.bw', '1'); } catch (_) {}
-    setTimeout(() => el.remove(), 500);
-  });
-  const go = () => { document.body.appendChild(el); requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('on'))); };
-  /* page d'accueil : la carte attend qu'on ait dépassé la bannière de l'atelier, et s'efface si on y remonte */
+    setTimeout(() => ov.remove(), 500);
+    if (avant && avant.focus) avant.focus({ preventScroll: true });
+  };
+  el.querySelector('.bw-x').addEventListener('click', ferme_);
+  ov.addEventListener('click', (e) => { if (e.target === ov) ferme_(); });
+  const go = () => {
+    if (clos || ov.isConnected) return;
+    avant = document.activeElement;
+    document.body.appendChild(ov);
+    document.documentElement.style.overflow = 'hidden';
+    addEventListener('keydown', echap);
+    requestAnimationFrame(() => requestAnimationFrame(() => { ov.classList.add('on'); el.focus({ preventScroll: true }); }));
+  };
+  /* fenêtre promotionnelle, une fois par visite : sur l'accueil, quand on a dépassé la bannière de l'atelier ; ailleurs, après quelques secondes */
   const quandPret = () => {
     const ban = document.getElementById('hx');
-    if (!ban) { setTimeout(go, 1200); return; }
+    if (!ban) { setTimeout(go, 2500); return; }
     /* la bannière reste fixe et les sections passent par-dessus : on se fie au défilement */
-    let vue = false, att = false;
-    const verifie = () => {
-      att = false; if (clos) return;
-      const passee = scrollY > ban.offsetHeight * .7;
-      if (passee && !vue) { vue = true; if (!el.isConnected) go(); else el.classList.add('on'); }
-      else if (!passee && vue && el.isConnected) { vue = false; el.classList.remove('on'); }
-    };
-    addEventListener('scroll', () => { if (!att) { att = true; requestAnimationFrame(verifie); } }, { passive: true });
+    let att = false;
+    const verifie = () => { att = false; if (!clos && scrollY > ban.offsetHeight * .7) { removeEventListener('scroll', surDefil); go(); } };
+    const surDefil = () => { if (!att) { att = true; requestAnimationFrame(verifie); } };
+    addEventListener('scroll', surDefil, { passive: true });
     verifie();
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', quandPret);
