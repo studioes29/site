@@ -122,7 +122,7 @@ def page(path, title, desc, canon, main, home=False, ld='', og=''):
     # la rubrique courante est signalée dans le menu
     if path: h = h.replace('<a href="/%s/">' % path, '<a aria-current="page" href="/%s/">' % path)
     # bandeau Black Week : seulement sur l'accueil, les offres et la photographie
-    if path in BLACKWEEK: h = h.replace('</body>', '<script src="/blackweek.js?v=6" defer></script>\n</body>', 1)
+    if path in BLACKWEEK: h = h.replace('</body>', '<script src="/blackweek.js?v=7" defer></script>\n</body>', 1)
     d = os.path.join(OUT, path); os.makedirs(d, exist_ok=True)
     open(os.path.join(d, 'index.html'), 'w', encoding='utf8').write(h)
 
