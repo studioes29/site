@@ -13,7 +13,7 @@ import { Bureau } from '/js/atelier/bureau.js?v=1';
   const now = new Date(), hr = now.getHours() + now.getMinutes() / 60;
   const moment = hr < 6.5 || hr >= 21 ? 'nuit' : hr < 9.5 ? 'matin' : hr < 17.5 ? 'jour' : 'soir';
   H.dataset.moment = moment;
-  if (moment !== 'nuit') { H.removeAttribute('data-dark'); dispatchEvent(new Event('scroll')); }
+  if (moment !== 'nuit' && moment !== 'soir') { H.removeAttribute('data-dark'); dispatchEvent(new Event('scroll')); }
   let lampe = moment === 'soir' || moment === 'nuit';
   const nom = (l) => R + V + '-' + moment + '-' + (MOB || (moment !== 'soir' && moment !== 'nuit') ? (moment === 'soir' || moment === 'nuit' ? 1 : 0) : (l ? 1 : 0)) + '.webp';
   H.style.setProperty('--at-img', 'url("' + nom(lampe) + '")');
