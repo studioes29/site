@@ -276,13 +276,37 @@ void main(){
     };
     const actif = (z) => { const n = ZNOM[z]; if (!n) return 0; if ((n === 'neon' || n === 'lampe') && moment !== 'nuit' && moment !== 'soir') return 0; if (n === 'lampe' && MOB) return 0; if (n === 'chat') return 0; return z; };
     /* mobile : on parcourt la pièce au doigt, avec un peu d'inertie au lâcher */
-    let dragX = null, dragged = false, dragT = 0, vx = 0;
+    let dragX = null, dragY = 0, dragged = false, dragT = 0, vx = 0, pince = null;
+    const doigts = new Map();
     const borneG = (g) => { const w = rect(1, .5, .5)[2]; return Math.max(w / 2 - base.x, Math.min(1 - w / 2 - base.x, g)); };
-    C.addEventListener('pointerdown', e => { dragX = e.clientX; dragT = performance.now(); dragged = false; vx = 0; });
-    addEventListener('pointerup', () => { dragX = null; });
-    addEventListener('pointercancel', () => { dragX = null; });
+    const centre = (s, x, y) => { const q = rect(s, x, y); return [q[0] + q[2] / 2, q[1] + q[3] / 2]; };
+    /* deux doigts : zoom dans la pièce, sans rien sélectionner (on se déplace en bougeant les deux doigts) ; en dessous de 1,12 la vue revient au plan large */
+    const milieu = () => { const [a, b] = [...doigts.values()], rc = C.getBoundingClientRect(); return [(a[0] + b[0]) / 2 - rc.left, (a[1] + b[1]) / 2 - rc.top, Math.hypot(a[0] - b[0], a[1] - b[1]) || 1]; };
+    const finPince = () => { pince = null; if (ech < 1.12) { glisse = borneG(cx - base.x); bouge(1, base.x + glisse, base.y); tw.d = 450; } };
+    C.addEventListener('pointerdown', e => {
+      doigts.set(e.pointerId, [e.clientX, e.clientY]);
+      if (MOB && !ouverte && !vol && doigts.size === 2) {
+        const [mx, my, d] = milieu(), q = rect(ec, cx, cy);
+        pince = { d0: d, s0: ec, ix: q[0] + mx / W * q[2], iy: q[1] + my / Hh * q[3] }; tw = null; dragged = true; dragX = null; vx = 0; return;
+      }
+      dragX = e.clientX; dragY = e.clientY; dragT = performance.now(); dragged = false; vx = 0;
+    });
+    const leve = (e) => { doigts.delete(e.pointerId); if (pince && doigts.size < 2) finPince(); dragX = null; };
+    addEventListener('pointerup', leve); addEventListener('pointercancel', leve);
+    const bloque = (e) => { if (MOB && !ouverte && (pince || (e.touches && e.touches.length > 1))) e.preventDefault(); };
+    C.addEventListener('touchstart', bloque, { passive: false }); C.addEventListener('touchmove', bloque, { passive: false }); C.addEventListener('gesturestart', e => { if (MOB) e.preventDefault(); });
     C.addEventListener('pointermove', e => {
       const r = C.getBoundingClientRect(); tx = ((e.clientX - r.left) / r.width) * 2 - 1; ty = ((e.clientY - r.top) / r.height) * 2 - 1;
+      if (doigts.has(e.pointerId)) doigts.set(e.pointerId, [e.clientX, e.clientY]);
+      if (MOB && pince && doigts.size >= 2) {
+        const [mx, my, d] = milieu(), s = Math.max(1, Math.min(3, pince.s0 * d / pince.d0)), q = rect(s, .5, .5);
+        const [nx, ny] = centre(s, pince.ix - mx / W * q[2] + q[2] / 2, pince.iy - my / Hh * q[3] + q[3] / 2);
+        ec = ech = s; cx = tcx = nx; cy = tcy = ny; return;
+      }
+      if (MOB && dragX !== null && !ouverte && ec > 1.02) {
+        const q = rect(ec, cx, cy), dx = e.clientX - dragX, dy = 0; /* à un doigt : de côté seulement, le défilement vertical reste à la page */ if (Math.abs(dx) > 4) dragged = true; dragX = e.clientX; dragY = e.clientY;
+        const [nx, ny] = centre(ec, cx - dx / W * q[2], cy - dy / Hh * q[3]); cx = tcx = nx; cy = tcy = ny; return;
+      }
       if (MOB && dragX !== null && !ouverte) {
         const dx = e.clientX - dragX, tn = performance.now(), dd = -dx / W * rect(1, .5, .5)[2]; if (Math.abs(dx) > 4) dragged = true; dragX = e.clientX;
         const g2 = borneG(glisse + dd); vx = vx * .6 + ((g2 - glisse) / Math.max(.008, (tn - dragT) / 1000)) * .4; dragT = tn;
