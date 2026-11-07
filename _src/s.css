@@ -2484,7 +2484,7 @@ body{color:var(--encre)}
 .at[data-moment=nuit]:before{mix-blend-mode:screen}
 .at-c{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .8s var(--e);touch-action:pan-y}
 .at.at-pret .at-c{opacity:1}
-.at .hv-t{pointer-events:none;padding-bottom:clamp(26px,3.4vw,52px);transition:opacity .5s,transform .6s var(--e)}
+.at .hv-t{pointer-events:none;padding-bottom:clamp(84px,8vw,124px);transition:opacity .5s,transform .6s var(--e)}
 .at .hv-n{font-size:clamp(56px,8.5vw,150px)}
 .at .hv-t h1 .it{color:inherit;opacity:.72;font-size:clamp(20px,2vw,30px)}
 .at .hv-t h1,.at .hv-b .lead{text-shadow:0 1px 24px rgba(16,17,21,.28)}
