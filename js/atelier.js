@@ -195,7 +195,7 @@ void main(){
     const zoomVers = (id, d) => {
       const b = (M.cibles && M.cibles[id]) || M.zones[id]; if (!b) return;
       const [ax0, ay0, ax1, ay1] = zoneLibre(), [x0, y0, x1, y1] = b, zw = x1 - x0, zh = y1 - y0, r0 = rect(1, .5, .5);
-      const s2 = Math.max(1, Math.min(id === 'web' ? 2.6 : 2.2, Math.min((ax1 - ax0) / W * r0[2] / zw, (ay1 - ay0) / Hh * r0[3] / zh) * .94));
+      const s2 = Math.max(1, Math.min(id === 'web' ? 2.6 : id === 'contact' ? 3.2 : 2.2, Math.min((ax1 - ax0) / W * r0[2] / zw, (ay1 - ay0) / Hh * r0[3] / zh) * .94));
       const vw = r0[2] / s2, vh = r0[3] / s2;
       bouge(s2, (x0 + x1) / 2 - ((ax0 + ax1) / 2 / W - .5) * vw, (y0 + y1) / 2 - ((ay0 + ay1) / 2 / Hh - .5) * vh);
       if (d) tw.d = d;
