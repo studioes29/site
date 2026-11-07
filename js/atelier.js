@@ -1,7 +1,7 @@
 /* L'atelier de Studio ES : une photographie de synthèse (rendu Cycles) rendue vivante en WebGL.
    Parallaxe par carte de profondeur, zones cliquables par carte d'identifiants, écran, horloge et téléphone en direct,
    lampe allumable, vapeur, poussière, néon. Quatre ambiances selon l'heure du visiteur. */
-import { Bureau } from '/js/atelier/bureau.js?v=1';
+import { Bureau } from '/js/atelier/bureau.js?v=2';
 (() => {
   const H = document.getElementById('hx'); if (!H) return;
   const C = H.querySelector('.at-c'), eti = H.querySelector('.at-eti'), pan = H.querySelector('.at-pan');
@@ -57,6 +57,7 @@ import { Bureau } from '/js/atelier/bureau.js?v=1';
     const pc = document.createElement('canvas'); pc.width = 330; pc.height = 660; const px = pc.getContext('2d');
     const JOURS = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'], MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
     const fonte = (getComputedStyle(document.documentElement).getPropertyValue('--d') || '').trim() || 'sans-serif';
+    const MSG = ['« On se cale un shooting ? »', '« Galerie bien reçue, merci ! »', '« Le site est en ligne ? »', '« Dispo pour notre gala en mai ? »'];
     const dessineTel = () => {
       const d = new Date(), s = Math.max(330 / imP.width, 660 / imP.height);
       px.fillStyle = '#000'; px.fillRect(0, 0, 330, 660);
@@ -65,7 +66,7 @@ import { Bureau } from '/js/atelier/bureau.js?v=1';
       px.font = '700 84px ' + fonte; px.fillText(String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'), 165, 150);
       px.font = '500 20px ' + fonte; px.fillText(JOURS[d.getDay()] + ' ' + d.getDate() + ' ' + MOIS[d.getMonth()], 165, 186);
       px.fillStyle = 'rgba(255,255,255,.88)'; px.beginPath(); px.roundRect ? px.roundRect(26, 268, 278, 76, 20) : px.rect(26, 268, 278, 76); px.fill();
-      px.fillStyle = '#111'; px.textAlign = 'left'; px.font = '700 16px ' + fonte; px.fillText('Nouveau message', 44, 296); px.fillStyle = '#444'; px.font = '400 15px ' + fonte; px.fillText('« On se cale un shooting ? »', 44, 322);
+      px.fillStyle = '#111'; px.textAlign = 'left'; px.font = '700 16px ' + fonte; px.fillText('Nouveau message', 44, 296); px.fillStyle = '#444'; px.font = '400 15px ' + fonte; px.fillText(MSG[Math.floor(Date.now() / 11000) % MSG.length], 44, 322);
     };
     dessineTel();
 
@@ -313,7 +314,7 @@ void main(){
       }
       if (e.pointerType !== 'mouse') return;
       const pi = versImage(e), se = ecranSous(e);
-      if (se) { const sur = bureau.survole(...se); C.style.cursor = sur ? 'pointer' : 'default'; if (survol) { survol = 0; eti.classList.remove('on'); } return; } else bureau.survole(null);
+      if (se) { mainT = performance.now(); const sur = bureau.survole(...se); C.style.cursor = sur ? 'pointer' : 'default'; if (survol) { survol = 0; eti.classList.remove('on'); } return; } else bureau.survole(null);
       if (cm > .5 || vol) { if (survol) { survol = 0; eti.classList.remove('on'); } C.style.cursor = ''; return; }
       const z = actif(zoneA(...pi) === 11 ? 2 : zoneA(...pi));
       if (z !== survol) { survol = z; C.style.cursor = z ? 'pointer' : ''; eti.textContent = INFO[ZNOM[z]] || ''; eti.classList.toggle('on', !!z); }
@@ -361,7 +362,7 @@ void main(){
     if (ouverte) vise(ouverte);
 
     /* ---------- boucle ---------- */
-    const t0 = performance.now(); let tp = 0;
+    const t0 = performance.now(); let tp = 0, demoT = 0, mainT = -9e9, msgI = Math.floor(Date.now() / 11000);
     if ('IntersectionObserver' in window) new IntersectionObserver(es => { const v = es[0].isIntersecting; if (v && !enVue) { enVue = true; requestAnimationFrame(image); } enVue = v; }).observe(H);
     H.classList.add('at-pret');
     function image(t) {
@@ -384,10 +385,17 @@ void main(){
         gl.uniform1f(U('uHov'), hovZ); gl.uniform1f(U('uHovA'), hovA * hovA * (3 - 2 * hovA)); }
       const fa = (t - flT) / 1000; gl.uniform1f(U('uFl'), fa < .45 ? Math.pow(1 - fa / .45, 2) * .75 : 0);
       const pa = (t - plT) / 1000; gl.uniform1f(U('uPl'), (survol === 7 ? .6 : 0) + (pa < 2 ? (1 - pa / 2) * 2.5 : 0) + .15);
-      const ta = (t - teT) / 1000; gl.uniform1f(U('uSt'), Math.max(moment === 'matin' || moment === 'jour' ? .8 : 0, ta < 6 ? 1.3 * (1 - ta / 6) : 0));
+      const ta = (t - teT) / 1000; gl.uniform1f(U('uSt'), Math.max({ matin: 1, jour: 1, soir: .85, nuit: .7 }[moment], ta < 6 ? 1.4 * (1 - ta / 6) : 0));
       const na = (t - neT) / 1000; let ne = 1;
       if (na < 1.6 && (moment === 'soir' || moment === 'nuit')) ne = (Math.sin(na * 47) > .2 || na > 1.2) ? 1 : .25;
       gl.uniform1f(U('uNe'), ne);
+      /* la pièce vit : curseur sur le site Fill, diaporama sur le portable, messages sur le téléphone */
+      if (!RM && t - demoT > (MOB ? 50 : 33)) {
+        demoT = t;
+        if (auto && t - mainT > 9000) bureau.demo(t - t0);
+        if (portable.diaporama(t - t0)) maj(5, T.P, majAtlas());
+        const mi = Math.floor(Date.now() / 11000); if (mi !== msgI) { msgI = mi; dessineTel(); maj(5, T.P, majAtlas()); }
+      }
       if (bureau.sale) maj(4, T.S, bureau.dessine());
       if (mixT >= 0) {
         const m = Math.min(1, (t - mixT) / 700); gl.uniform1f(U('uMix'), m * m * (3 - 2 * m));

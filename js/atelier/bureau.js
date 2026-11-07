@@ -22,6 +22,16 @@ const SITES = [
   { t: 'Plateforme interne', u: 'outil interne', im: '/projets/plateforme-interne/img/d-maintenant.webp', go: '/projets/plateforme-interne/' }
 ];
 const PHOTOS = [['franglish', 'franglish-3'], ['helena', 'helena-7'], ['rimk', 'rimk-1'], ['genezio', 'genezio-7'], ['matmatah', 'matmatah-10'], ['philippe-katerine', 'philippe-katerine-2'], ['la-fouine', 'la-fouine-7'], ['fatal-bazooka', 'fatal-bazooka-10']];
+/* pages du site Fill parcourues par le curseur de démonstration */
+const FILLP = [
+  { u: 'fill.studioes.fr', im: '/projets/fill/img/d-accueil.webp' },
+  { u: 'fill.studioes.fr/fonctionnement', im: '/projets/fill/img/d-fonctionnement.webp' },
+  { u: 'fill.studioes.fr/estimer', im: '/projets/fill/img/d-simulateur.webp' }
+];
+/* trajet du curseur (temps en ms, position sur l'écran 1600 × 900) : clics sur « Fonctionnement », « Estimer », puis le logo */
+const P0 = [700, 540], L1 = [804, 185], R1 = [1060, 470], L2 = [889, 185], R2 = [529, 610], L0 = [291, 185];
+const TRAJ = [[0, P0], [3800, P0], [5100, L1], [6600, L1], [7700, R1], [10400, R1], [11600, L2], [13000, L2], [14100, R2], [16900, R2], [18200, L0], [19300, L0], [20500, P0], [21600, P0]];
+const CLICS = [[5100, 1], [11600, 2], [18200, 0]], PERIODE = 21600;
 const GRAPH = [
   { t: 'L’Ellipse', im: '/projets/saisons-ellipse/img/cover-800.webp', go: '/projets/saisons-ellipse/' },
   { t: 'Académie des sports', im: '/projets/academie-des-sports/img/cover-800.webp', go: '/projets/academie-des-sports/' },
@@ -32,8 +42,8 @@ const GRAPH = [
 export class Bureau {
   constructor({ fonte = 'sans-serif', fond = '/p/t/jahneration-6.webp', actions = {}, h = 900 } = {}) {
     this.H = h; this.c = document.createElement('canvas'); this.c.width = W; this.c.height = h; this.x = this.c.getContext('2d');
-    this.f = fonte; this.act = actions; this.im = {}; this.app = 'fill'; this.onglet = 0; this.survol = null; this.zones = []; this.sale = true;
-    this.pret = Promise.all([fond, ...SITES.map(s => s.im), ...PHOTOS.map(p => '/p/t/' + p[1] + '.webp'), ...GRAPH.map(g => g.im)]
+    this.f = fonte; this.act = actions; this.im = {}; this.app = 'fill'; this.onglet = 0; this.page = 0; this.curseur = null; this.anneau = 0; this.vue = null; this.survol = null; this.zones = []; this.sale = true;
+    this.pret = Promise.all([fond, ...SITES.map(s => s.im), ...FILLP.map(s => s.im), ...PHOTOS.map(p => '/p/t/' + p[1] + '.webp'), ...GRAPH.map(g => g.im)]
       .map(u => charge(u).then(i => { this.im[u] = i; }).catch(() => {}))).then(() => { this.fond = this.im[fond]; this.sale = true; });
   }
   ouvre(id) { this.app = id; this.sale = true; }
@@ -89,7 +99,7 @@ export class Bureau {
     /* fenêtre ouverte */
     const A = this.app;
     if (A === 'fill' || A === 'web') {
-      const S = A === 'fill' ? SITES[1] : SITES[this.onglet];
+      const S = A === 'fill' ? { ...SITES[1], ...FILLP[this.page] } : SITES[this.onglet];
       const f = this.fenetre(A === 'fill' ? 'Fill' : 'Navigateur', 230, 70, 1140, 690);
       if (A === 'web') {
         SITES.filter(s => s.t !== 'Fill').forEach((s, i) => { const on = SITES[this.onglet] === s, tx = f.x + 150 + i * 210; this.rr(tx, f.y - 40, 200, 30, 8); c.fillStyle = on ? '#F6F4EF' : 'rgba(0,0,0,.05)'; c.fill(); this.texte(s.t, tx + 100, f.y - 25, 13, on ? 600 : 400, '#3A3A3A', 'center'); this.zone(tx, f.y - 40, 200, 30, () => { this.onglet = SITES.indexOf(s); this.sale = true; }); });
@@ -99,7 +109,8 @@ export class Bureau {
       this.zone(f.x, f.y + 46, f.w, f.h - 46, () => this.act.lien && this.act.lien(S.go));
     } else if (A === 'photos') {
       const f = this.fenetre('Photos · Reportages', 230, 70, 1140, 690);
-      PHOTOS.forEach(([id, n], i) => { const cw = 262, ch = 300, x = f.x + 24 + (i % 4) * (cw + 12), y = f.y + 18 + Math.floor(i / 4) * (ch + 12); this.couvre(this.im['/p/t/' + n + '.webp'], x, y, cw, ch); if (this.survol === 'p' + i) { c.strokeStyle = '#fff'; c.lineWidth = 4; c.strokeRect(x + 2, y + 2, cw - 4, ch - 4); } this.zone(x, y, cw, ch, () => this.act.reportage && this.act.reportage(id), 'p' + i); });
+      if (this.vue !== null) { c.fillStyle = '#141414'; c.fillRect(f.x, f.y, f.w, f.h); const im = this.im['/p/t/' + PHOTOS[this.vue][1] + '.webp']; if (im) { const k = Math.min((f.w - 48) / im.width, (f.h - 48) / im.height), iw = im.width * k, ih = im.height * k; c.drawImage(im, f.x + (f.w - iw) / 2, f.y + (f.h - ih) / 2, iw, ih); } } else
+      PHOTOS.forEach(([id, n], i) => { const cw = 262, ch = 300, x = f.x + 24 + (i % 4) * (cw + 12), y = f.y + 18 + Math.floor(i / 4) * (ch + 12); this.couvre(this.im['/p/t/' + n + '.webp'], x, y, cw, ch); if (this.survol === 'p' + i) { const l = this.choix === i ? 12 : 4; c.strokeStyle = this.choix === i ? '#4C8DFF' : '#fff'; c.lineWidth = l; c.strokeRect(x + l / 2, y + l / 2, cw - l, ch - l); } this.zone(x, y, cw, ch, () => this.act.reportage && this.act.reportage(id), 'p' + i); });
     } else if (A === 'graph') {
       const f = this.fenetre('Graphisme · Projets', 230, 70, 1140, 690);
       GRAPH.forEach((g, i) => { const cw = 534, ch = 290, x = f.x + 24 + (i % 2) * (cw + 24), y = f.y + 20 + Math.floor(i / 2) * (ch + 22); this.couvre(this.im[g.im], x, y, cw, ch); c.fillStyle = 'rgba(0,0,0,.45)'; c.fillRect(x, y + ch - 40, cw, 40); this.texte(g.t, x + 16, y + ch - 20, 17, 600); this.zone(x, y, cw, ch, () => this.act.lien && this.act.lien(g.go)); });
@@ -138,11 +149,39 @@ export class Bureau {
       this.zone(dx, dy, s, DOCK_H, () => this.ouvre(p.id), p.id);
       dx += s + gap;
     });
+    /* curseur de démonstration */
+    if (this.curseur) {
+      const [x, y] = this.curseur;
+      if (this.anneau > 0 && this.anneau < 1) { c.beginPath(); c.arc(x + 2, y + 2, 10 + this.anneau * 34, 0, 7); c.strokeStyle = 'rgba(40,40,40,' + (.55 * (1 - this.anneau)) + ')'; c.lineWidth = 5; c.stroke(); }
+      c.save(); c.translate(x, y); c.scale(1.6, 1.6);
+      c.beginPath(); c.moveTo(0, 0); c.lineTo(0, 22); c.lineTo(5.5, 17); c.lineTo(9.5, 25.5); c.lineTo(13, 24); c.lineTo(9.2, 15.8); c.lineTo(16, 15.8); c.closePath();
+      c.shadowColor = 'rgba(0,0,0,.35)'; c.shadowBlur = 6; c.shadowOffsetY = 2; c.fillStyle = '#111'; c.fill(); c.shadowColor = 'transparent';
+      c.lineJoin = 'round'; c.lineWidth = 2; c.strokeStyle = '#fff'; c.stroke(); c.restore();
+    }
     this.sale = false;
     return this.c;
   }
+  /* ---------- démonstrations (tant que personne ne touche à l'écran) ---------- */
+  /* le site Fill parcouru au curseur ; renvoie vrai si l'image a changé */
+  demo(t) {
+    if (this.app !== 'fill') { if (this.curseur) { this.curseur = null; this.sale = true; } return this.sale; }
+    const T = t % PERIODE; let i = 0; while (i < TRAJ.length - 2 && TRAJ[i + 1][0] <= T) i++;
+    const [ta, a] = TRAJ[i], [tb, b] = TRAJ[i + 1], p = Math.min(1, Math.max(0, (T - ta) / (tb - ta))), e = p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+    const x = a[0] + (b[0] - a[0]) * e, y = a[1] + (b[1] - a[1]) * e;
+    let page = 0, an = 0; for (const [tc, pg] of CLICS) { if (T >= tc + 160) page = pg; if (T >= tc && T < tc + 420) an = (T - tc) / 420; }
+    const c0 = this.curseur;
+    if (!c0 || Math.abs(c0[0] - x) > .4 || Math.abs(c0[1] - y) > .4 || an !== this.anneau || page !== this.page) { this.curseur = [x, y]; this.anneau = an; this.page = page; this.sale = true; }
+    return this.sale;
+  }
+  /* la bibliothèque photo : une vignette est choisie, s'ouvre en grand, puis on revient à la grille */
+  diaporama(t) {
+    const n = Math.floor(t / 6500), T = t % 6500, i = (n * 3) % PHOTOS.length;
+    const choix = T < 1900 ? i : null, vue = T >= 1900 && T < 5300 ? i : null;
+    if (choix !== this.choix || vue !== this.vue) { this.choix = choix; this.survol = choix === null ? null : 'p' + choix; this.vue = vue; this.sale = true; }
+    return this.sale;
+  }
   /* ---------- interactions (u, v entre 0 et 1) ---------- */
   touche(u, v) { const x = u * W, y = v * this.H; for (let i = this.zones.length - 1; i >= 0; i--) { const z = this.zones[i]; if (x >= z.x && x <= z.x + z.w && y >= z.y && y <= z.y + z.h) return z; } return null; }
-  survole(u, v) { const z = u === null ? null : this.touche(u, v), id = z ? (z.id || 'z') : null; if (id !== this.survol) { this.survol = id; this.sale = true; } return !!z; }
+  survole(u, v) { if (u !== null && this.curseur) { this.curseur = null; this.sale = true; } const z = u === null ? null : this.touche(u, v), id = z ? (z.id || 'z') : null; if (id !== this.survol) { this.survol = id; this.sale = true; } return !!z; }
   clic(u, v) { const z = this.touche(u, v); if (z) { z.fn(); this.sale = true; return true; } return false; }
 }
