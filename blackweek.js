@@ -11,10 +11,11 @@
   let ferme = false;
   try { ferme = sessionStorage.getItem('studioes.bw') === '1'; } catch (_) {}
   if (ferme && !apercu) return;
+  let clos = false;
 
   const css = `
 .bw{position:fixed;z-index:60;right:24px;bottom:24px;width:min(400px,calc(100vw - 32px));background:#0B0B0D;color:#F4F2F7;border-radius:28px;padding:26px 26px 22px;box-shadow:0 24px 60px rgba(0,0,0,.38);border:1px solid rgba(255,255,255,.08);overflow:hidden;font-family:var(--f,"Inter Tight",Arial,sans-serif);transform:translateY(16px);opacity:0;transition:transform .5s cubic-bezier(.16,1,.3,1),opacity .4s}
-.bw.on{transform:none;opacity:1}
+.bw{pointer-events:none}.bw.on{transform:none;opacity:1;pointer-events:auto}
 .bw>*{position:relative}
 .bw-h{display:flex;align-items:center;gap:14px;margin:0 0 14px}
 .bw-pa{flex:none;position:relative;width:64px;height:64px;transform:rotate(-10deg);filter:drop-shadow(0 8px 12px rgba(0,0,0,.5))}
@@ -25,7 +26,7 @@
 .bw-b{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:999px;background:#F4F2F7;color:#0B0B0D;font-weight:700;font-size:15px;text-decoration:none}
 .bw-l{display:inline-flex;align-items:center;min-height:44px;padding:0 6px;color:#F4F2F7;font-weight:600;font-size:15px;text-decoration:underline;text-underline-offset:3px}
 .bw-n{font-size:12px;line-height:1.4;color:rgba(244,242,247,.55);margin:14px 0 0}
-.bw-x{position:absolute;top:14px;right:14px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(255,255,255,.1);color:#F4F2F7;font-size:20px;line-height:1;cursor:pointer}
+.bw-x{position:absolute;z-index:2;top:14px;right:14px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(255,255,255,.1);color:#F4F2F7;font-size:20px;line-height:1;cursor:pointer}
 .bw-x::after{content:"";position:absolute;inset:-4px}
 @media (width<=600px){.bw{right:16px;bottom:16px;padding:22px 20px 18px}.bw-t{font-size:23px}}
 @media (prefers-reduced-motion:reduce){.bw{transition:none}}`;
@@ -44,11 +45,26 @@
 <div class="bw-a"><a class="bw-b" href="https://cal.com/studioes/30min" target="_blank" rel="noopener">Réserver un échange</a><a class="bw-l" href="/metiers/photographie/">Voir les formules</a></div>
 <p class="bw-n">Réservations confirmées (acompte versé) du 23 au 30 novembre 2026. Option habituellement facturée 150 €.</p>`;
   el.querySelector('.bw-x').addEventListener('click', () => {
-    el.classList.remove('on');
+    clos = true; el.classList.remove('on');
     try { sessionStorage.setItem('studioes.bw', '1'); } catch (_) {}
     setTimeout(() => el.remove(), 500);
   });
   const go = () => { document.body.appendChild(el); requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('on'))); };
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => setTimeout(go, 1200));
-  else setTimeout(go, 1200);
+  /* page d'accueil : la carte attend qu'on ait dépassé la bannière de l'atelier, et s'efface si on y remonte */
+  const quandPret = () => {
+    const ban = document.getElementById('hx');
+    if (!ban) { setTimeout(go, 1200); return; }
+    /* la bannière reste fixe et les sections passent par-dessus : on se fie au défilement */
+    let vue = false, att = false;
+    const verifie = () => {
+      att = false; if (clos) return;
+      const passee = scrollY > ban.offsetHeight * .7;
+      if (passee && !vue) { vue = true; if (!el.isConnected) go(); else el.classList.add('on'); }
+      else if (!passee && vue && el.isConnected) { vue = false; el.classList.remove('on'); }
+    };
+    addEventListener('scroll', () => { if (!att) { att = true; requestAnimationFrame(verifie); } }, { passive: true });
+    verifie();
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', quandPret);
+  else quandPret();
 })();
