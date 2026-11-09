@@ -16,7 +16,7 @@
   var adresse = document.createElement('b');
   adresse.textContent = e;
   texte.textContent = '';
-  texte.append('Confirmez que ', adresse, ' ne doit plus recevoir de message d’Ewen Soupault (Studio ES et Fill).');
+  texte.append('Confirmez que ', adresse, ' ne doit plus recevoir de message de Studio ES ni de Fill.');
   ok.hidden = false;
 
   ok.addEventListener('click', function () {
@@ -26,7 +26,7 @@
       .then(function (r) { return r.json().then(function (j) { return r.ok && j && j.ok === true; }); })
       .then(function (bien) {
         ok.hidden = true;
-        if (bien) dire('C’est noté', 'Vous ne recevrez plus de message de ma part. Bonne continuation.');
+        if (bien) dire('C’est noté', 'Cette adresse ne recevra plus de message de Studio ES ni de Fill.');
         else dire('Lien invalide', 'Ce lien n’est pas valable ou a été modifié. ' + secours);
       })
       .catch(function () {
