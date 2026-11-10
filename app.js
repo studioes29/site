@@ -300,7 +300,7 @@
     const L = filtre === 'tout' ? REPS : REPS.filter(r => CAT(r) === filtre);
     let h = '';
     L.forEach((r, i) => {
-      h += `<button class="rc" data-r="${r.id}" aria-label="Voir le reportage ${r.t}"><span class="im"><img src="/p/t/${r.ph[0]}.webp" alt="" loading="${i < 8 ? 'eager' : 'lazy'}" decoding="async"><span class="rafale" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></span></span><span class="lab"><b>${r.t}</b><span>${K[r.k] || ''}</span><small>${r.ph.length} photos</small></span></button>`;
+      h += `<a class="rc" href="/${r.id}/" data-r="${r.id}"><span class="im"><img src="/p/t/${r.ph[0]}.webp" alt="" loading="${i < 8 ? 'eager' : 'lazy'}" decoding="async"><span class="rafale" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></span></span><span class="lab"><b>${r.t}</b><span>${K[r.k] || ''}</span><small>${r.ph.length} photos</small></span></a>`;
     });
     railR.innerHTML = h; rangs(railR); if (railR.classList.contains('vu') && !reduit) { railR.classList.remove('vu'); void railR.offsetWidth; requestAnimationFrame(() => railR.classList.add('vu')); } railR.scrollLeft = 0; const R = rails.find(x => x.el === railR); if (R) { R.pos = 0; R.fin = 0; R.attente = performance.now() + 1500; }
   };
@@ -326,7 +326,7 @@
       railR.addEventListener('pointerleave', stop);
       railR.addEventListener('pointerout', e => { if (raf && !raf.c.contains(e.relatedTarget)) stop(); });
     }
-    railR.addEventListener('click', e => { const c = e.target.closest('[data-r]'); if (c) ouvreGal(REPS.find(r => r.id === c.dataset.r)); });
+    railR.addEventListener('click', e => { const c = e.target.closest('[data-r]'); if (c) { e.preventDefault(); ouvreGal(REPS.find(r => r.id === c.dataset.r)); } });
   }
   rail($('#usages')); rail($('#reals'));
   /* toutes les cartes de rail arrivent de la même façon, l'une après l'autre, dès que le rail entre à l'écran */
@@ -368,6 +368,9 @@
     const c = e.target.closest('[data-r]'); if (!c || c.closest('#rail') || c.closest('#gpSim') || !gp) return;
     const r = trouve(c.dataset.r); if (!r) return; e.preventDefault(); ouvreGal(r);
   });
+  /* page d'un reportage : les photos s'ouvrent en grand dans la même visionneuse */
+  const rp = $('[data-rp]');
+  if (rp && lb) rp.addEventListener('click', e => { const a = e.target.closest('[data-i]'); const r = trouve(rp.dataset.rp); if (!a || !r) return; e.preventDefault(); G.r = r; ouvreLb(+a.dataset.i); });
   const h = location.hash.match(/^#r=([\w-]+)/);
   if (h) { const r = trouve(h[1]); if (r && gp) setTimeout(() => ouvreGal(r), 300); else { const go = { soute: '/projets/la-soute/', marelle: '/projets/mjc-la-marelle/' }[h[1]]; if (go) location.replace(go); else { const t = $('#travaux'); if (t) setTimeout(() => t.scrollIntoView(), 200); } } }
 

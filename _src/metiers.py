@@ -37,19 +37,25 @@ SELPH = [('philippe-katerine', 'Philippe Katerine', 'Concert', '/p/philippe-kate
          ('pub-eucalyptus', 'Le Chant de l’Eucalyptus', 'Festival', '/p/pub-eucalyptus-2.jpg'), ('gael-faye', 'Gaël Faye', 'Concert', '/p/gael-faye-1.jpg'),
          ('fl-auto-photo', 'FL Auto', 'Portrait de métier', '/p/fl-auto-photo-2.jpg'), ('voeux-ph', 'Cérémonie des vœux', 'Institution', '/p/voeux-ph-2.jpg'),
          ('mentissa', 'Mentissa', 'Concert', '/p/mentissa-2.jpg'), ('forum-asso', 'Forum des associations', 'Événement', '/p/forum-asso-11.jpg')]
-tetes = ''.join('<button type="button" class="ta ta%d" data-r="%s" aria-label="Voir le reportage %s"><img src="%s" alt="" loading="lazy"><span><b class="d">%s</b><small>%s</small></span></button>' % (
-    i + 1, r, t, im, t, k) for i, (r, t, k, im) in enumerate(SELPH))
+tetes = ''.join('<a class="ta ta%d" href="/%s/" data-r="%s"><img src="%s" alt="" loading="lazy"><span><b class="d">%s</b><small>%s</small></span></a>' % (
+    i + 1, r, r, im, t, k) for i, (r, t, k, im) in enumerate(SELPH))
 AUDELA = [('pub-petites-folies', 'Festivals', 'Les Petites Folies, Le Chant de l’Eucalyptus, Festidreuz', '/p/t/pub-petites-folies-2.webp'),
           ('inauguration', 'Institutions', 'Inaugurations, cérémonies des vœux, commémorations', '/p/t/voeux-ph-2.webp'),
           ('fl-auto-photo', 'Entreprises et portraits', 'Un atelier, une équipe, des gestes de métier', '/projets/fl-auto/img/photo-2.webp'),
           ('', 'Mariages', 'Des préparatifs à l’ouverture du bal, sur le vif', '/h/mariage-800.webp')]
 def ad(r, t, l, im):
-    o = '<button type="button" class="ad" data-r="%s" aria-label="Voir : %s">' % (r, t) if r else '<a class="ad" href="#formules">'
-    f = '</button>' if r else '</a>'
+    o = '<a class="ad" href="/%s/" data-r="%s">' % (r, r) if r else '<a class="ad" href="#formules">'
+    f = '</a>'
     return o + '<span class="ad-i"><img src="%s" alt="" loading="lazy"></span><span class="ad-l"><b class="d">%s</b><span>%s</span></span>' % (im, t, l) + f
 audela = ''.join(ad(*x) for x in AUDELA)
 ph_droite = '<figure class="mh-ph" aria-hidden="true"><img class="a" src="/p/helena-3.jpg" alt="" fetchpriority="high" width="825" height="1100"><img class="b" src="/p/t/voeux-ph-2.webp" alt=""><img class="c" src="/projets/fl-auto/img/photo-2.webp" alt=""></figure>'
 ph_act = '<div class="mh-ac"><button type="button" class="bt" data-est data-k="evenement">Demander un devis %s</button><a class="bt ct" href="#reportages">Voir les reportages</a></div>' % AR
+# la liste « Tous les reportages » est écrite dans la page (liens lisibles sans JavaScript) ; le script la redessine ensuite pour les filtres
+_rs = open(os.path.join(RACINE, 'reps.js'), encoding='utf8').read(); _R = json.loads(_rs[_rs.index('['):_rs.index('];') + 1])
+_KR = {'scene': 'Concert', 'public': 'Festival', 'corp': 'Événementiel et institutions'}
+_rail = ''.join('<a class="rc" href="/%s/" data-r="%s"><span class="im"><img src="/p/t/%s.webp" alt="" loading="%s" decoding="async"><span class="rafale" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></span></span><span class="lab"><b>%s</b><span>%s</span><small>%d photos</small></span></a>' % (
+    r['id'], r['id'], r['ph'][0], 'eager' if i < 8 else 'lazy', r['t'], _KR.get(r['k'], ''), len(r['ph'])) for i, r in enumerate(_R))
+travaux = travaux.replace('aria-label="Reportages"></div>', 'aria-label="Reportages">' + _rail + '</div>', 1)
 ph = entete('Photographie', 'Photographie', 'Vos moments forts, sur le vif.', 'Concerts, festivals, cérémonies, vie d’une entreprise, mariages : un reportage discret en Bretagne, sans poses ni mise en scène, puis une sélection resserrée et retouchée, prête à servir.' + ZONE_PH,
             ' u-noir mh-ph-s', FG('Photo', 'right:-2vw;font-size:calc(var(--fg-t) * 1.1)'), '', ph_act, True)
 ph += '''
@@ -249,7 +255,7 @@ def pk(t, i):
     nom, lien, img, c, ligne, nat = t
     gal = lien.startswith('#r=')
     src = '/p/%s.webp' % img if gal else '/p/n/%s.webp' % img
-    attr = ' href="/%s" data-r="%s"' % (lien, lien[3:]) if gal else ' href="%s"' % lien
+    attr = ' href="/%s/" data-r="%s"' % (lien[3:], lien[3:]) if gal else ' href="%s"' % lien
     fin = '<em>Voir la galerie</em>' if gal else ''
     return ('<a class="pk" style="--c:%s;--i:%d"%s><span class="pk-i"><img src="%s" alt="%s" loading="lazy" decoding="async" width="640" height="640"></span>'
             '<span class="pk-l"><b>%s</b><span>%s</span><small><i></i>%s</small>%s</span></a>') % (c, i, attr, src, nom, nom, ligne, nat, fin)
@@ -289,7 +295,7 @@ page('metiers/graphisme', 'Design graphique en Bretagne · Studio ES', 'Identit�
      ld=LD('Design graphique', 'https://studioes.fr/metiers/graphisme/', 'Identité visuelle, campagne et édition'))
 
 # ---------- Offres : toutes les formules au même endroit ----------
-of = entete('Offres', 'Offres', '', 'Photographie, sites et applications : les formules et leurs options, avec le prix de départ, les abonnements et les durées d’engagement. Le design graphique est chiffré sur devis.', ' u-noir mh-of',
+of = entete('Offres', 'Offres', 'Prix de départ et formules.', 'Photographie, sites et applications : les formules et leurs options, avec le prix de départ, les abonnements et les durées d’engagement. Le design graphique est chiffré sur devis.', ' u-noir mh-of',
             FG('Offres', 'right:-2vw;bottom:-.42em;font-size:calc(var(--fg-t) * .95)'), '', '<div class="mh-ac of-nav"><a class="bt" href="#of-photo">Photographie ' + AR + '</a><a class="bt" href="#of-web">Sites ' + AR + '</a><a class="bt" href="#applications">Applications ' + AR + '</a><a class="bt ct" href="#of-graph">Design graphique</a></div>', True)
 of += '''
 <section class="sec feuille fo-f u-menthe" id="of-photo" aria-labelledby="t-op">

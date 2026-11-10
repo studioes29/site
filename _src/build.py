@@ -37,7 +37,7 @@ def taille(chemin):
 # (titre, lien ou galerie, image, étiquettes, ligne)
 TR = [
     ('Pierceval Tattoo', '/projets/pierceval-tattoo/', '/projets/pierceval-tattoo/img/cover-800.webp', 'web graph', 'Site, réservation en ligne et carte cadeau'),
-    ('Matmatah', '#r=matmatah', '/p/matmatah-10.jpg', 'photo', 'Concert'),
+    ('Matmatah', '#r=matmatah', '/p/t/matmatah-10.webp', 'photo', 'Concert'),
     ('La Soute', '/projets/la-soute/', '/projets/la-soute/img/cover-800.webp', 'web graph photo', 'Identité, saison culturelle et site'),
     ('Les Petites Folies', '#r=pub-petites-folies', '/p/t/pub-petites-folies-1.webp', 'photo', 'Festival'),
     ('MJC La Marelle', '/projets/mjc-la-marelle/', '/projets/mjc-la-marelle/img/cover-800.webp', 'graph', 'Brochure de saison'),
@@ -82,7 +82,7 @@ def tuile(t, cls='', n=0):
     g = lien[3:] if lien.startswith('#r=') else ''
     T = tags.split()
     lab = ''.join('<em class="k-%s">%s</em>' % (x, NOM[x]) for x in T)
-    href = '/' + lien if g else lien
+    href = '/%s/' % g if g else lien
     # ce que la carte ouvre, dit avant le clic : une galerie (visionneuse) ou une page d'étude de cas
     badge = '<span class="nu-b">%s</span>' % (('Reportage' if T[0] == 'photo' else 'Galerie') if g else 'Étude de cas')
     return ('<a class="nu nu-%s%s%s" href="%s"%s data-t="%s"><span class="nu-i"><img src="%s" alt="%s, %s" loading="lazy" decoding="async" width="%d" height="%d">%s</span>'
@@ -104,6 +104,52 @@ HOME = HOME.replace('{SELECTION}', selection)
 # l'animation démarre avant le premier affichage, sauf si le visiteur a demandé moins de mouvement
 HOME = HOME.replace('<section class="hero sx" id="hx" data-dark aria-labelledby="h1">', '<section class="hero sx" id="hx" data-dark aria-labelledby="h1"><script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches){var s=document.currentScript.parentNode;s.classList.add("vol");setTimeout(function(){if(!s.dataset.m)s.classList.remove("vol")},2500)}</script>')
 
+
+# ---------- images adaptées à l'écran : chaque grande image reçoit une version plus légère, le navigateur choisit ----------
+_VAR = {}
+def _variante(src, largeur):
+    """Version WebP de `largeur` px à côté de l'original (créée une fois), ou None."""
+    f = os.path.join(RACINE, src.lstrip('/'))
+    base, ext = os.path.splitext(src)
+    if base.endswith('-800'): base = base[:-4]
+    v = '%s-%d.webp' % (base, largeur)
+    fv = os.path.join(RACINE, v.lstrip('/'))
+    if not os.path.exists(fv):
+        try:
+            im = Image.open(f)
+            if im.width <= largeur * 1.15: return None
+            im = im.convert('RGB') if im.mode not in ('RGB', 'RGBA') else im
+            im.resize((largeur, round(im.height * largeur / im.width)), Image.LANCZOS).save(fv, 'WEBP', quality=80, method=6)
+        except Exception: return None
+    return v
+def _taille_aff(ctx, defaut):
+    """Largeur d'affichage selon le conteneur (mesurée sur ordinateur et téléphone)."""
+    if 'class="ta ta1' in ctx: return '(max-width:860px) 90vw, 40vw'
+    if 'class="ta ' in ctx: return '(max-width:860px) 45vw, 32vw'
+    if 'class="pk ak' in ctx: return '(max-width:860px) 62vw, 22vw'
+    if 'class="nu ' in ctx: return '(max-width:860px) 72vw, 45vw' if ' nu-x' in ctx.split('>')[0] else '(max-width:860px) 72vw, 22vw'
+    return defaut
+def _srcset(m, h=''):
+    tag, src = m.group(0), m.group(1)
+    a = h.rfind('<a ', 0, m.start()); ctx = h[a:m.start()] if a >= 0 and '</a>' not in h[a:m.start()] else ''
+    if 'class="rc' in ctx: return tag
+    if 'srcset=' in tag or 'fetchpriority=' in tag or src.startswith('/h/'): return tag  # /h/ : la bannière, intouchable
+    f = os.path.join(RACINE, src.lstrip('/'))
+    if not os.path.exists(f): return tag
+    if src.startswith('/p/') and src.endswith('.jpg') and os.path.exists(os.path.join(RACINE, 'p/t/%s.webp' % src[3:-4])):
+        w = _VAR.setdefault(src, Image.open(f).width)
+        jeu, sizes = '/p/t/%s.webp 640w, %s %dw' % (src[3:-4], src, w), _taille_aff(ctx, '(max-width:860px) 62vw, 32vw')
+    else:
+        w = _VAR.setdefault(src, Image.open(f).width)
+        if w < 760: return tag
+        pts = [(x, _variante(src, x)) for x in ((480,) if w <= 900 else (800,))]
+        pts = [(x, v) for x, v in pts if v]
+        if not pts: return tag
+        jeu = ', '.join('%s %dw' % (v, x) for x, v in pts) + ', %s %dw' % (src, w)
+        sizes = _taille_aff(ctx, '(max-width:860px) 72vw, 32vw' if w <= 900 else '(max-width:860px) 92vw, 50vw')
+    return tag.replace(' src="%s"' % src, ' src="%s" srcset="%s" sizes="%s"' % (src, jeu, sizes), 1)
+def adapte(h): return re.sub(r'<img [^>]*?src="(/[^"]+\.(?:jpg|webp))"[^>]*>', lambda m: _srcset(m, h), h)
+
 BLACKWEEK = ('', 'offres', 'metiers/photographie')
 HEAD_END = T.index('<main id="haut">'); FOOT = T.index('</main>')
 def page(path, title, desc, canon, main, home=False, ld='', og=''):
@@ -123,6 +169,7 @@ def page(path, title, desc, canon, main, home=False, ld='', og=''):
     if path: h = h.replace('<a href="/%s/">' % path, '<a aria-current="page" href="/%s/">' % path)
     # bandeau Black Week : seulement sur l'accueil, les offres et la photographie
     if path in BLACKWEEK: h = h.replace('</body>', '<script src="/blackweek.js?v=8" defer></script>\n</body>', 1)
+    h = adapte(h)
     d = os.path.join(OUT, path); os.makedirs(d, exist_ok=True)
     open(os.path.join(d, 'index.html'), 'w', encoding='utf8').write(h)
 
@@ -135,6 +182,7 @@ def nettoie(s):
     return s
 contact_p = nettoie(contact).replace('<div class="ct">', '<div class="sec-t rv"><h2 class="d" id="t-ct">Contact<span class="it">Parlons de votre projet.</span></h2><p class="lead">Réponse sous 48 h, devis gratuit et sans engagement.</p></div>\n    <div class="ct">', 1)
 exec(open(os.path.join(D, 'metiers.py'), encoding='utf8').read())
+exec(open(os.path.join(D, 'reportages.py'), encoding='utf8').read())
 
 # ---------- Réalisations : toutes disciplines, plusieurs étiquettes par projet ----------
 n = {k: sum(1 for t in TR if k in t[3].split()) for k in NOM}
@@ -146,9 +194,10 @@ rl = entete('Réalisations', 'Réalisations', 'Toutes disciplines.', 'Reportages
   <div class="nu-g rl-g" data-grp aria-label="Réalisations">%s</div>
   <div class="dots" aria-hidden="true"></div>
 </section>
-''' % (len(TR), ''.join('<button type="button" aria-pressed="false" data-f="%s">%s<small>%d</small></button>' % (k, NOM[k], n[k]) for k in NOM), ''.join(tuile(t) for t in TR)) + contact_p
-page('realisations', 'Réalisations · Studio ES', 'Portfolio de Studio ES : reportages photo, sites et applications, identités, campagnes et éditions, en Bretagne.', 'https://studioes.fr/realisations/', rl, ld=LD('Réalisations', 'https://studioes.fr/realisations/', 'Portfolio photographie, web et design graphique'))
+''' % (len(TR), ''.join('<button type="button" aria-pressed="false" data-f="%s">%s<small>%d</small></button>' % (k, NOM[k], n[k]) for k in NOM), ''.join(tuile(t) for t in TR).replace(' loading="lazy" decoding="async"', ' fetchpriority="high" decoding="async"', 1)) + contact_p
+page('realisations', 'Réalisations : photo, web et design graphique · Studio ES', 'Portfolio de Studio ES : reportages photo, sites et applications, identités, campagnes et éditions, en Bretagne.', 'https://studioes.fr/realisations/', rl, ld=LD('Réalisations', 'https://studioes.fr/realisations/', 'Portfolio photographie, web et design graphique'))
+exec(open(os.path.join(D, 'voisins.py'), encoding='utf8').read())
 # sécurité : CSP par empreintes et politique de référent, sur les pages générées uniquement
 import subprocess
-subprocess.run([sys.executable, os.path.join(D, 'securite.py')] + [os.path.join(OUT, x, 'index.html') for x in ('', 'metiers/photographie', 'metiers/sites-et-outils', 'metiers/graphisme', 'offres', 'realisations')], check=True)
+subprocess.run([sys.executable, os.path.join(D, 'securite.py')] + [os.path.join(OUT, x, 'index.html') for x in ('', 'metiers/photographie', 'metiers/sites-et-outils', 'metiers/graphisme', 'offres', 'realisations') + tuple(i for i, _ in RP_PAGES)], check=True)
 print('ok')

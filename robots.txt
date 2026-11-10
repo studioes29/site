@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /_src/
+Disallow: /conditions/page.tpl.html
 
 Sitemap: https://studioes.fr/sitemap.xml

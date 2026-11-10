@@ -1459,6 +1459,21 @@ body{color:var(--encre)}
 #gpSim button{background:rgba(255,255,255,.06);color:var(--ntx)}
 .gp-s h3{color:var(--ntx)}
 @media (max-width:600px){.gp-g{columns:2;column-gap:6px}.gp-g button{margin-bottom:6px}}
+/* page d'un reportage : la même planche que la visionneuse, écrite dans la page */
+.gp-g a{display:block;width:100%;margin:0 0 12px;border-radius:3px;overflow:hidden;break-inside:avoid;background:#1d1f1d}
+.gp-g a.une{column-span:all;max-height:84vh;width:auto;max-width:100%;margin-inline:auto}
+.gp-g a.une img{object-fit:contain;max-height:84vh;width:auto;margin:0 auto;background:#121312}
+.rp-g img{opacity:1}
+@media (hover:hover){.gp-g a:hover img{transform:scale(1.04)}.gp-g a.une:hover img{transform:none}}
+@media (max-width:600px){.gp-g a{margin-bottom:6px}}
+.rp-f{--fond:#121312;padding-top:clamp(28px,3vw,48px)}
+.mh-rp .lead a,.rp-s a{text-decoration:underline;text-underline-offset:3px}
+.rp-s{margin-top:14px;max-width:34em;color:var(--tm);font-size:clamp(15px,1.1vw,17px);line-height:1.55}
+.mh-rp .mh-g{grid-template-columns:1fr}
+.rp-sim{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(170px,42vw),1fr));gap:10px}
+.rp-sim .rc{width:auto}
+.rp-sim .rc .im img{filter:none}
+@media (max-width:860px){.mh .rp-s{order:4}}
 /* planche d'identité : une grille à rangées fixes, chaque pièce cadrée */
 .sys{grid-auto-rows:clamp(110px,10.5vw,160px)}
 .sys .sy{aspect-ratio:auto!important}
