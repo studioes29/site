@@ -1473,6 +1473,7 @@ body{color:var(--encre)}
 .rp-sim{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(170px,42vw),1fr));gap:10px}
 .rp-sim .rc{width:auto}
 .rp-sim .rc .im img{filter:none}
+.rp-sim .rc .lab small{color:var(--mu)}
 @media (max-width:860px){.mh .rp-s{order:4}}
 /* planche d'identité : une grille à rangées fixes, chaque pièce cadrée */
 .sys{grid-auto-rows:clamp(110px,10.5vw,160px)}
