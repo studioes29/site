@@ -19,6 +19,16 @@ Moments : `matin`, `jour`, `soir`, `nuit`. Variables d'environnement :
 - `PORTRAIT=1` : vue mobile (de face, 16:10) ; `CLOSE=<zone>` : plan rapproché de face (`web`, `photo`, `graph`, `fill`, `contact`) ;
 - `FLIGHT=<zone>` avec `F0`, `F1`, `NF` : travelling de la vue d'ensemble au plan rapproché ; `CATANIM=48` : boucle du chat ;
 - `NOFUR=1` : chat sans fourrure, pour les essais rapides.
+- `NEON=x,z,corps` : position et taille de l'enseigne (par défaut à droite de la galerie sur ordinateur, au-dessus sur mobile) ;
+  `NEON_ON=0` : enseigne éteinte (rendu « tout éteint » de l'arrivée, fichiers `-n`) ; `NEON_E`, `NEON_C` : intensité et couleur.
+
+## Lots et intégration
+- `lot.sh a|b|c` : rendus de la vue d'ensemble (a), de la vue mobile (b), des autres moments (c). Reprise possible, journal dans `fin/log.txt`.
+- `lot_vols.sh` : travellings et plans rapprochés vers le mur de photos.
+- `integre.py` : lance `process.py` puis copie le résultat dans `js/atelier/r/` en conservant les métadonnées déjà publiées
+  (plans rapprochés, chat, travellings) que le lot en cours ne recalcule pas.
+- `banc.py` : banc d'essai à horloge virtuelle (Playwright). Il avance le temps de la page image par image, ce qui permet de
+  vérifier et de filmer l'arrivée et le défilement sur une machine lente : `python3 banc.py 22 planche.jpg --plan "4.5,1.6@520"`.
 
 Réglages des rendus en ligne : vue d'ensemble 2240 px et 44 échantillons ; plans rapprochés 1600 px et 32 ; chat 2240 px et 40 ;
 vue mobile 2400 px et 36 ; travellings 800 px, 10 échantillons, 32 images ; carte des zones et profondeur 4 échantillons.

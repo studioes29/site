@@ -388,7 +388,8 @@ void main(){
     if (soirI) { maj(0, T.A, imN); maj(1, T.B, im0 || imA); }
     const TN = it.m === 2 ? .55 : .15, TL = it.m === 2 ? 2.35 : .95, TFIN = it.m === 2 ? 3.7 : 1.5;
     const sm = (a, b, x) => { x = Math.min(1, Math.max(0, (x - a) / (b - a))); return x * x * (3 - 2 * x); };
-    const clign = (x) => x < 0 ? 0 : x < .06 ? .85 : x < .2 ? 0 : x < .28 ? .9 : x < .45 ? .04 : x < .5 ? 1 : x < .62 ? .3 : 1;
+    /* amorçage du tube : deux étincelles brèves puis l'allumage franc (pas plus de deux éclairs, par égard pour les yeux sensibles) */
+    const clign = (x) => x < 0 ? 0 : x < .06 ? .55 : x < .2 ? 0 : x < .28 ? .8 : x < .42 ? .1 : .1 + .9 * sm(.42, .6, x);
     const reveil = (a, d) => a < d ? 0 : a < d + .07 ? .5 : a < d + .14 ? .15 : sm(d + .14, d + .45, a);
     /* plan de départ : près de l'enseigne */
     const vI = (() => { const sI = MOB ? 1.16 : 1.9, r0 = rect(sI, .5, .5), q = rect(sI, NEON[0] - (MOB ? 0 : .1) * r0[2], NEON[1] + (MOB ? .16 : .1) * r0[3]); return [sI, q[0] + q[2] / 2, q[1] + q[3] / 2]; })();
