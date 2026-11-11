@@ -1,12 +1,13 @@
 import json, sys, os, numpy as np
 from PIL import Image, ImageFilter
-D='/tmp/rd/fin'; O='/home/claude/site_h/js/atelier/r'; os.makedirs(O,exist_ok=True)
-ZC={'photo':1,'web':2,'graph':3,'fill':4,'contact':5}
+D=os.environ.get('FIN','/tmp/rd/fin'); O=os.environ.get('SORTIE','/home/claude/site/js/atelier/r'); os.makedirs(O,exist_ok=True)
+ZC={'photo':[1],'web':[2,11],'graph':[3],'fill':[4],'contact':[5],'ecran':[11]}
 for v,pre,meta in (('l','', '/tmp/rd/meta.json'),('p','p-','/tmp/rd/meta-p.json')):
     mp=f'{D}/{pre}mask.png'
     if not os.path.exists(mp): continue
     m=np.array(Image.open(mp).convert('L')).astype(float)
-    EX=np.array([0,79,110,133,152,168,182,196,208,219,229],float)
+    f=lambda x:(1.055*x**(1/2.4)-.055)*255 if x>.0031308 else 12.92*x*255
+    EX=np.array([f(i*20/255) for i in range(13)],float)
     ids=np.abs(m[...,None]-EX[None,None,:]).argmin(-1).astype(np.uint8)
     ids[m<66]=0
     im=Image.fromarray(ids).filter(ImageFilter.MedianFilter(5))
@@ -22,10 +23,10 @@ for v,pre,meta in (('l','', '/tmp/rd/meta.json'),('p','p-','/tmp/rd/meta-p.json'
     W,H=im.size
     # mask downscaled x0.5 nearest for weight
     small=im.resize((W//2,H//2),Image.NEAREST)
-    Image.fromarray((np.array(small)*20).astype(np.uint8)).save(f'{O}/{v}-mask.png',optimize=True)
+    Image.fromarray((np.array(small).astype(np.uint16)*20).clip(0,255).astype(np.uint8)).save(f'{O}/{v}-mask.png',optimize=True)
     Z={}
     for k,i in ZC.items():
-        bm=Image.fromarray(((ids==i)*255).astype(np.uint8)).filter(ImageFilter.MinFilter(7)).filter(ImageFilter.MaxFilter(7))
+        bm=Image.fromarray((np.isin(ids,i)*255).astype(np.uint8)).filter(ImageFilter.MinFilter(7)).filter(ImageFilter.MaxFilter(7))
         ys,xs=np.nonzero(np.array(bm)>0)
         if len(xs)<50: continue
         Z[k]=[round(float(np.percentile(xs,1))/W,4),round(float(np.percentile(ys,1))/H,4),round(float(np.percentile(xs,99))/W,4),round(float(np.percentile(ys,99))/H,4)]

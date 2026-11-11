@@ -1,6 +1,6 @@
 from PIL import Image, ImageDraw, ImageFont, ImageOps, ImageFilter
 import math
-S='/home/claude/site_h'; BR='/tmp/rd/br.ttf'; F=lambda s: ImageFont.truetype(BR,s)
+S='/home/claude/site'; BR='/tmp/rd/br.ttf'; F=lambda s: ImageFont.truetype(BR,s)
 # clock
 W=900; im=Image.new('RGB',(W,W),'#F2ECE1'); d=ImageDraw.Draw(im); c=W/2
 for k in range(60):

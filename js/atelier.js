@@ -15,7 +15,12 @@ import { Bureau } from '/js/atelier/bureau.js?v=2';
   H.dataset.moment = moment;
   let lampe = moment === 'soir' || moment === 'nuit';
   const nom = (l) => R + V + '-' + moment + '-' + (MOB || (moment !== 'soir' && moment !== 'nuit') ? (moment === 'soir' || moment === 'nuit' ? 1 : 0) : (l ? 1 : 0)) + '.webp';
-  H.style.setProperty('--at-img', 'url("' + nom(lampe) + '")');
+  /* arrivée : à la première visite de la session, la pièce s'ouvre dans la pénombre, l'enseigne s'allume, puis la caméra recule ; ensuite une version courte */
+  const SOIR = moment === 'soir' || moment === 'nuit';
+  let dejaVu = false; try { dejaVu = !!sessionStorage.getItem('at-vu'); sessionStorage.setItem('at-vu', '1'); } catch (e) {}
+  const INTRO = RM ? 0 : (dejaVu && !/[?&]arrivee/.test(location.search)) ? 1 : 2;
+  const poseFond = () => { H.style.setProperty('--at-img', 'url("' + nom(lampe) + '")'); H.style.removeProperty('background'); };
+  if (INTRO) { H.classList.add('at-intro'); H.style.background = '#0F1013'; } else poseFond();
 
   /* ---------- panneau et puces (fonctionnent même sans WebGL) ---------- */
   let ouverte = null, vue = null;
@@ -37,16 +42,17 @@ import { Bureau } from '/js/atelier/bureau.js?v=2';
 
   /* ---------- WebGL ---------- */
   const gl = C.getContext('webgl', { antialias: false, alpha: false, preserveDrawingBuffer: false });
-  if (!gl) return;
+  if (!gl) { H.classList.remove('at-intro'); poseFond(); return; }
   const charge = (u) => new Promise((ok, ko) => { const i = new Image(); i.decoding = 'async'; i.onload = () => ok(i); i.onerror = ko; i.src = u; });
   const ZID = { photo: 1, web: 2, graph: 3, fill: 4, contact: 5, lampe: 6, plante: 7, tasse: 8, neon: 9, declic: 10 };
   const ZNOM = Object.fromEntries(Object.entries(ZID).map(([k, v]) => [v, k])); ZNOM[11] = 'web'; ZNOM[12] = 'chat';
   const INFO = { photo: 'Photographie · les reportages', web: 'Web · sites et applications', graph: 'Design graphique · identités et campagnes', fill: 'Fill · la communication externalisée', contact: 'Contact · parlons de votre projet', declic: 'Déclic · le jeu', lampe: 'La lampe', tasse: 'Un café ?', neon: 'Le néon', plante: 'La plante', chat: 'Le chat' };
 
-  Promise.all([fetch(R + V + '.json').then(r => r.json()), charge(nom(lampe)).catch(() => charge(R + V + '-jour-0.webp')), charge(R + V + '-mask.png'), charge(R + V + '-depth.webp'), charge('/p/t/helena-7.webp')])
-    .then(a => demarre(...a)).catch(e => console.warn('atelier', e));
+  Promise.all([fetch(R + V + '.json').then(r => r.json()), charge(nom(lampe)).catch(() => charge(R + V + '-jour-0.webp')), charge(R + V + '-mask.png'), charge(R + V + '-depth.webp'), charge('/p/t/helena-7.webp'),
+    INTRO && SOIR ? charge(R + V + '-' + moment + '-n.webp').catch(() => null) : null, INTRO && SOIR && !MOB ? charge(nom(false)).catch(() => null) : null])
+    .then(a => demarre(...a)).catch(e => { H.classList.remove('at-intro'); poseFond(); console.warn('atelier', e); });
 
-  function demarre(M, imA, imM, imD, imP) {
+  function demarre(M, imA, imM, imD, imP, imN, im0) {
     /* carte des zones côté processeur pour le survol */
     const mc = document.createElement('canvas'); mc.width = imM.width; mc.height = imM.height;
     const mx2 = mc.getContext('2d', { willReadFrequently: true }); mx2.drawImage(imM, 0, 0);
@@ -85,7 +91,7 @@ import { Bureau } from '/js/atelier/bureau.js?v=2';
     /* ---------- shaders ---------- */
     const VS = 'attribute vec2 p;varying vec2 u;void main(){u=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}';
     const FS = `precision highp float;varying vec2 u;
-uniform sampler2D tA,tB,tM,tD,tS,tP,tC,tK,tF,tG;uniform vec4 uW;uniform mat3 uFs,uFp,uFq,uGs,uGp,uGq;uniform vec4 uR,uDR,uRC,uKR,uAP;uniform vec2 uPar,uTx,uTea;uniform float uHovA,uMix,uHov,uT,uFl,uNe,uPl,uSt,uDu,uB,uK,uCM,uKF,uKOn,uCZ;
+uniform sampler2D tA,tB,tM,tD,tS,tP,tC,tK,tF,tG;uniform vec4 uW;uniform mat3 uFs,uFp,uFq,uGs,uGp,uGq;uniform vec4 uR,uDR,uRC,uKR,uAP;uniform vec2 uPar,uTx,uTea;uniform float uHovA,uMix,uHov,uT,uFl,uNe,uPl,uSt,uDu,uB,uK,uCM,uKF,uKOn,uCZ,uOn,uNm,uNj;uniform vec3 uE;uniform vec4 uNR;
 uniform mat3 uHs,uHp,uHl,uHs2,uHp2;
 float zid(vec2 q){return floor(texture2D(tM,q).r*255./20.+.5);}
 float h21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
@@ -95,7 +101,7 @@ vec2 hom(mat3 m,vec2 q){vec3 r=m*vec3(q,1.);return r.xy/r.z;}
 float bord(vec2 s,vec2 k){vec2 e=min(s,1.-s)*k;return clamp(min(e.x,e.y),0.,1.);}
 bool dans(vec2 s){return s.x>0.&&s.x<1.&&s.y>0.&&s.y<1.;}
 vec3 tel(vec2 p){return texture2D(tP,uAP.xy+p*uAP.zw).rgb;}
-vec3 ecr(vec3 c,vec2 q,mat3 hs,mat3 hp,mat3 hl){vec2 s=hom(hs,q);if(dans(s))c=mix(c,texture2D(tS,s).rgb*uB+c*.04,bord(s,vec2(400.,225.)));vec2 p=hom(hp,q);if(dans(p))c=mix(c,tel(p)*uB*.95+c*.05,bord(p,vec2(70.,140.)));vec2 l=hom(hl,q);if(dans(l))c=mix(c,texture2D(tP,vec2(l.x*.829,l.y)).rgb*uB*.9+c*.05,bord(l,vec2(300.,200.)));return c;}
+vec3 ecr(vec3 c,vec2 q,mat3 hs,mat3 hp,mat3 hl){vec2 s=hom(hs,q);if(dans(s))c=mix(c,texture2D(tS,s).rgb*uB*uE.x+c*.04,bord(s,vec2(400.,225.)));vec2 p=hom(hp,q);if(dans(p))c=mix(c,tel(p)*uB*.95*uE.y+c*.05,bord(p,vec2(70.,140.)));vec2 l=hom(hl,q);if(dans(l))c=mix(c,texture2D(tP,vec2(l.x*.829,l.y)).rgb*uB*.9*uE.z+c*.05,bord(l,vec2(300.,200.)));return c;}
 vec3 grade(vec3 c){c=clamp(c,0.,1.);c=mix(c,c*c*(3.-2.*c),uK);float lu=dot(c,vec3(.299,.587,.114));return mix(vec3(lu),c,1.+uK*.25);}
 void main(){
   vec2 q=uR.xy+u*uR.zw;
@@ -103,16 +109,17 @@ void main(){
   q+=uPar*(dep-.62)*vec2(.016,.011);
   float z=zid(q);
   if(z==7.)q.x+=sin(uT*2.1+q.y*60.)*.0007*uPl;
-  vec3 c=mix(texture2D(tA,q).rgb,texture2D(tB,q).rgb,uMix);
+  vec2 dn=max(abs(q-uNR.xy)-uNR.zw,0.);dn.x*=uTx.y/uTx.x;float nh=exp(-length(dn)/(uNR.w*3.+.015));
+  vec3 c=mix(texture2D(tA,q).rgb,texture2D(tB,q).rgb,max(uMix,uNm*nh));
   if(uKOn>.5){vec2 kl=(q-uKR.xy)/uKR.zw;if(dans(kl)){float f0=floor(uKF),f1=mod(f0+1.,48.),fb=uKF-f0;vec2 kc=clamp(kl,.004,.996);vec2 k0=(vec2(mod(f0,8.),floor(f0/8.))+kc)/vec2(8.,6.),k1=(vec2(mod(f1,8.),floor(f1/8.))+kc)/vec2(8.,6.);float fe=smoothstep(0.,.14,min(min(kl.x,1.-kl.x),min(kl.y,1.-kl.y)));c=mix(c,mix(texture2D(tK,k0).rgb,texture2D(tK,k1).rgb,fb),fe*uKOn);}}
   vec2 s=hom(uHs,q);
-  if(dans(s)&&z>10.5){vec3 e=texture2D(tS,s).rgb;c=mix(c,e*uB+c*.04,bord(s,vec2(400.,225.)));}
+  if(dans(s)&&z>10.5){vec3 e=texture2D(tS,s).rgb;c=mix(c,e*uB*uE.x+c*.04,bord(s,vec2(400.,225.)));}
   vec2 p2=hom(uHp,q);
-  if(dans(p2)&&z==5.){c=mix(c,tel(p2)*uB*.95+c*.05,bord(p2,vec2(70.,140.)));}
+  if(dans(p2)&&z==5.){c=mix(c,tel(p2)*uB*.95*uE.y+c*.05,bord(p2,vec2(70.,140.)));}
   vec2 l2=hom(uHl,q);
-  if(dans(l2)&&z==2.){vec2 la=vec2(l2.x*.829,l2.y);c=mix(c,texture2D(tP,la).rgb*uB*.9+c*.05,bord(l2,vec2(300.,200.)));}
+  if(dans(l2)&&z==2.){vec2 la=vec2(l2.x*.829,l2.y);c=mix(c,texture2D(tP,la).rgb*uB*.9*uE.z+c*.05,bord(l2,vec2(300.,200.)));}
   c=grade(c);
-  if(z==9.)c*=uNe;
+  if(z==9.)c=uNj>.5?mix(vec3(.74,.71,.68),c,uNe):c*uNe;
   if(uSt>0.){vec2 l=(q-uTea)/vec2(.022,.07);l.y=-l.y;if(l.y>0.&&l.y<1.4&&abs(l.x)<1.2){float n=fbm(vec2(l.x*2.2+sin(l.y*3.-uT*.8)*.6,l.y*2.-uT*.55));float m=smoothstep(.45,.85,n)*(1.-smoothstep(.2,1.4,l.y))*smoothstep(1.2,.2,abs(l.x))*smoothstep(0.,.15,l.y);c+=vec3(.95)*m*.22*uSt;}}
   if(uDu>0.&&q.x>uDR.x&&q.x<uDR.z&&q.y>uDR.y&&q.y<uDR.w){vec2 g=(q+vec2(uT*.004,-uT*.0025))*vec2(160.,90.);vec2 i=floor(g);vec2 o=vec2(h21(i),h21(i+7.3))*.8+.1;float b=smoothstep(.06,0.,length(fract(g)-o))*step(.86,h21(i+3.1))*(.5+.5*sin(uT*1.5+h21(i)*40.));c+=vec3(1.,.95,.85)*b*.3*uDu;}
   float zh=z>10.5?2.:z;if(uHov>0.&&uW.x>.99&&uHovA>.001&&zh==uHov){c=c*(1.+.035*uHovA)+.008*uHovA;}
@@ -124,6 +131,7 @@ void main(){
     if(uCZ==2.){vec2 s2=hom(uHp2,q2);if(dans(s2))cc=mix(cc,tel(s2)*uB*.95+cc*.05,bord(s2,vec2(70.,140.)));}
     o+=grade(cc)*uW.w;}
     c=o;}
+  c*=uOn;
   c=mix(c,vec3(1.),uFl);
   c+=(h21(u*vec2(1931.,1733.)+fract(uT))-.5)*.016;
   gl_FragColor=vec4(c,1.);
@@ -149,6 +157,11 @@ void main(){
     ['tA', 'tB', 'tM', 'tD', 'tS', 'tP', 'tC', 'tK', 'tF', 'tG'].forEach((n, i) => gl.uniform1i(U(n), i));
     gl.uniform4f(U('uAP'), 1600 / 1930, 0, 330 / 1930, 660 / 1041);
     gl.uniform2f(U('uTx'), 1 / imM.width, 1 / imM.height);
+    /* l'enseigne : son rectangle dans l'image, lu dans la carte des zones */
+    let nx0 = 1e9, ny0 = 1e9, nx1 = -1, ny1 = -1;
+    for (let y = 0; y < mc.height; y++) for (let x = 0; x < mc.width; x++) if (Math.round(md[(y * mc.width + x) * 4] / 20) === 9) { if (x < nx0) nx0 = x; if (x > nx1) nx1 = x; if (y < ny0) ny0 = y; if (y > ny1) ny1 = y; }
+    const NEON = nx1 > nx0 ? [(nx0 + nx1) / 2 / mc.width, (ny0 + ny1) / 2 / mc.height, (nx1 - nx0) / 2 / mc.width, (ny1 - ny0) / 2 / mc.height] : [.5, .12, .08, .03];
+    gl.uniform4fv(U('uNR'), NEON); gl.uniform1f(U('uNj'), SOIR ? 0 : 1); gl.uniform1f(U('uOn'), INTRO ? 0 : 1); gl.uniform3f(U('uE'), 1, 1, 1); gl.uniform1f(U('uNm'), 0);
 
     /* homographies : coordonnées image -> carré unité de chaque écran (coins HG, HD, BD, BG) */
     const homo = (P) => {
@@ -205,7 +218,11 @@ void main(){
     const chargeClose = (id) => closeIm[id] || (closeIm[id] = charge(R + 'c-' + id + '-' + moment + '.webp').catch(() => null));
     const volIm = {}, unites = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
     const chargeVol = (id) => volIm[id] || (volIm[id] = (VOLS[id] && unites >= 10 && !RM ? Promise.all(Array.from({ length: NV - 1 }, (_, k) => charge(R + 'v/' + id + '-' + moment + '-' + String(k + 1).padStart(2, '0') + '.webp'))) : Promise.reject()).catch(() => null));
-    if (!MOB && M.closeups) setTimeout(() => { let k = Promise.resolve(); ZONES5.forEach(id => { k = k.then(() => chargeClose(id)).then(() => chargeVol(id)); }); }, 2500);
+    let dMode = null, defile = false, spD = -1, imPh = null, enC = null;
+    if (!MOB && M.closeups) setTimeout(() => {
+      let k = chargeClose('photo').then(im => { imPh = im; }).then(() => chargeVol('photo')).then(fr => { if (fr) volIm.photo.v = fr; });
+      ['web', 'graph', 'fill', 'contact'].forEach(id => { k = k.then(() => chargeClose(id)).then(() => chargeVol(id)); });
+    }, 1200);
     let cz = null, cm = 0, cmT = null, cT0 = 0, jeton = 0, vol = null;
     const HS2 = CL.web ? homo(CL.web.mon_screen) : null; if (HS2) gl.uniformMatrix3fv(U('uHs2'), false, HS2);
     if (CL.contact) gl.uniformMatrix3fv(U('uHp2'), false, homo(CL.contact.ph_scr));
@@ -238,7 +255,7 @@ void main(){
         Promise.all([chargeClose(id), chargeVol(id)]).then(([im, fr]) => {
           if (j !== jeton) return;
           if (!im) { zoomVers(id, 950); return; }
-          maj(6, T.C, im); gl.uniform1f(U('uCZ'), id === 'web' ? 1 : id === 'contact' ? 2 : 0);
+          enC = id; maj(6, T.C, im); gl.uniform1f(U('uCZ'), id === 'web' ? 1 : id === 'contact' ? 2 : 0);
           if (!fr) { /* repli : glissement puis fondu */ zoomVers(id, 950); cz = id; cT0 = performance.now(); fondu(1, 520, 700); return; }
           volIm[id].v = fr; cz = id;
           if (lampe !== lampe0) basculeLampe();
@@ -274,7 +291,7 @@ void main(){
       if (ouverte === 'web' && cm < .01) return surEcran(...versImage(e));
       return null;
     };
-    const actif = (z) => { const n = ZNOM[z]; if (!n) return 0; if ((n === 'neon' || n === 'lampe') && moment !== 'nuit' && moment !== 'soir') return 0; if (n === 'lampe' && MOB) return 0; if (n === 'chat') return 0; return z; };
+    const actif = (z) => { const n = ZNOM[z]; if (!n) return 0; if (n === 'lampe' && !SOIR) return 0; if (n === 'lampe' && MOB) return 0; if (n === 'chat') return 0; return z; };
     /* mobile : on parcourt la pièce au doigt, avec un peu d'inertie au lâcher */
     let dragX = null, dragY = 0, dragged = false, dragT = 0, vx = 0, pince = null;
     const doigts = new Map();
@@ -315,14 +332,14 @@ void main(){
       if (e.pointerType !== 'mouse') return;
       const pi = versImage(e), se = ecranSous(e);
       if (se) { mainT = performance.now(); const sur = bureau.survole(...se); C.style.cursor = sur ? 'pointer' : 'default'; if (survol) { survol = 0; eti.classList.remove('on'); } return; } else bureau.survole(null);
-      if (cm > .5 || vol) { if (survol) { survol = 0; eti.classList.remove('on'); } C.style.cursor = ''; return; }
+      if (cm > .5 || vol || defile) { if (survol) { survol = 0; eti.classList.remove('on'); } C.style.cursor = ''; return; }
       const z = actif(zoneA(...pi) === 11 ? 2 : zoneA(...pi));
       if (z !== survol) { survol = z; C.style.cursor = z ? 'pointer' : ''; eti.textContent = INFO[ZNOM[z]] || ''; eti.classList.toggle('on', !!z); }
       eti.style.transform = 'translate3d(' + (e.clientX - r.left + 16) + 'px,' + (e.clientY - r.top + 14) + 'px,0)';
     }, { passive: true });
     C.addEventListener('pointerleave', () => { tx = ty = 0; survol = 0; eti.classList.remove('on'); C.style.cursor = ''; });
     C.addEventListener('click', e => {
-      if (dragged) return;
+      if (dragged || defile) return;
       const pi = versImage(e), se = ecranSous(e);
       if (se) { auto = false; bureau.clic(...se); return; }
       if (vol) { if (vol.u1 > 0) ferme(); return; }
@@ -361,8 +378,29 @@ void main(){
     } };
     if (ouverte) vise(ouverte);
 
+    /* ---------- arrivée ---------- */
+    const it = { m: INTRO, t0: -1, fin: !INTRO, e: 0, mix: 0, saute: false, titre: false };
+    const soirI = !!(it.m && SOIR && imN);
+    if (soirI) { maj(0, T.A, imN); maj(1, T.B, im0 || imA); }
+    const TN = it.m === 2 ? .55 : .15, TL = it.m === 2 ? 2.35 : .95, TFIN = it.m === 2 ? 3.7 : 1.5;
+    const sm = (a, b, x) => { x = Math.min(1, Math.max(0, (x - a) / (b - a))); return x * x * (3 - 2 * x); };
+    const clign = (x) => x < 0 ? 0 : x < .06 ? .85 : x < .2 ? 0 : x < .28 ? .9 : x < .45 ? .04 : x < .5 ? 1 : x < .62 ? .3 : 1;
+    const reveil = (a, d) => a < d ? 0 : a < d + .07 ? .5 : a < d + .14 ? .15 : sm(d + .14, d + .45, a);
+    /* plan de départ : près de l'enseigne */
+    const vI = (() => { const sI = MOB ? 1.16 : 1.9, r0 = rect(sI, .5, .5), q = rect(sI, NEON[0] - (MOB ? 0 : .1) * r0[2], NEON[1] + (MOB ? .16 : .1) * r0[3]); return [sI, q[0] + q[2] / 2, q[1] + q[3] / 2]; })();
+    if (it.m === 2) { ec = ech = vI[0]; cx = tcx = vI[1]; cy = tcy = vI[2]; }
+    const finIntro = (vite) => {
+      if (it.fin) return; it.fin = true;
+      if (soirI) { maj(0, T.A, imA); if (im0) { maj(1, T.B, im0); chargeB = Promise.resolve(im0); } }
+      gl.uniform1f(U('uOn'), 1); gl.uniform3f(U('uE'), 1, 1, 1); gl.uniform1f(U('uNm'), 0); it.mix = 0;
+      H.classList.remove('at-intro'); poseFond();
+      if (vite && it.m === 2) { bouge(1, base.x + glisse, base.y); tw.d = 600; } else { ech = 1; tcx = base.x + glisse; tcy = base.y; }
+    };
+    C.addEventListener('pointerdown', () => { it.saute = true; }); addEventListener('keydown', () => { it.saute = true; });
+    if (location.search.includes('atdbg')) window.__arrivee = it;
+
     /* ---------- boucle ---------- */
-    const t0 = performance.now(); let tp = 0, demoT = 0, mainT = -9e9, msgI = Math.floor(Date.now() / 11000);
+    const t0 = performance.now(); let tp = 0, demoT = 0, telT = -9e9, mainT = -9e9, msgI = Math.floor(Date.now() / 11000);
     if ('IntersectionObserver' in window) new IntersectionObserver(es => { const v = es[0].isIntersecting; if (v && !enVue) { enVue = true; requestAnimationFrame(image); } enVue = v; }).observe(H);
     H.classList.add('at-pret');
     function image(t) {
@@ -371,6 +409,33 @@ void main(){
       const ax = MOB ? Math.sin(el * .35) * .22 : tx, ay = MOB ? Math.cos(el * .27) * .14 : ty;
       if (MOB && dragX === null && !ouverte && Math.abs(vx) > 1e-4) { const g2 = borneG(glisse + vx * dt); if (g2 === glisse) vx = 0; glisse = g2; vx *= Math.exp(-dt * 4.5); cx = tcx = base.x + glisse; }
       mx += (ax - mx) * k2; my += (ay - my) * k2;
+      let ne0 = 1;
+      if (!it.fin) {
+        if (it.t0 < 0) it.t0 = t;
+        const a = (t - it.t0) / 1000;
+        if (it.saute || scrollY > 8 || ouverte) finIntro(true);
+        else {
+          gl.uniform1f(U('uOn'), sm(0, SOIR ? .5 : .8, a));
+          const f = clign(a - TN);
+          if (soirI && im0) {
+            if (it.e === 0) { it.mix = f; if (a > TN + .7) { it.e = 1; maj(0, T.A, im0); maj(1, T.B, imA); it.mix = 0; } }
+            else it.mix = sm(TL, TL + .3, a);
+          } else if (soirI) { gl.uniform1f(U('uNm'), f); it.mix = sm(TL, TL + .5, a); }
+          else ne0 = f;
+          if (it.m === 2) {
+            gl.uniform3f(U('uE'), reveil(a, 1.7), reveil(a, 2.1), reveil(a, 1.95));
+            const p = Math.min(1, Math.max(0, (a - 1.35) / 2.2)), e = p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+            ec = ech = vI[0] + (1 - vI[0]) * e; cx = tcx = vI[1] + (base.x + glisse - vI[1]) * e; cy = tcy = vI[2] + (base.y - vI[2]) * e;
+          }
+          if (!it.titre && a > (it.m === 2 ? 2.7 : .4)) { it.titre = true; H.classList.remove('at-intro'); }
+          if (a >= TFIN) finIntro(false);
+        }
+      }
+      /* défilement : la caméra entre dans la pièce, vers le mur de photos */
+      const sp = it.fin ? Math.min(1, Math.max(0, scrollY / (Hh * .8))) : 0;
+      if (sp <= 0) dMode = null; else if (!dMode) dMode = (!MOB && imPh && NV && volIm.photo && volIm.photo.v) ? 'vol' : 'zoom';
+      defile = sp > 0 && !ouverte && !vol && cm < .01;
+      if (sp !== spD) { spD = sp; H.style.setProperty('--sd', sp.toFixed(3)); }
       if (tw) {
         const p = Math.min(1, (t - tw.t0) / tw.d), e = p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
         ec = tw.a[0] + (tw.b[0] - tw.a[0]) * e; cx = tw.a[1] + (tw.b[1] - tw.a[1]) * e; cy = tw.a[2] + (tw.b[2] - tw.a[2]) * e;
@@ -386,21 +451,26 @@ void main(){
       const fa = (t - flT) / 1000; gl.uniform1f(U('uFl'), fa < .45 ? Math.pow(1 - fa / .45, 2) * .75 : 0);
       const pa = (t - plT) / 1000; gl.uniform1f(U('uPl'), (survol === 7 ? .6 : 0) + (pa < 2 ? (1 - pa / 2) * 2.5 : 0) + .15);
       const ta = (t - teT) / 1000; gl.uniform1f(U('uSt'), Math.max({ matin: 1, jour: 1, soir: .85, nuit: .7 }[moment], ta < 6 ? 1.4 * (1 - ta / 6) : 0));
-      const na = (t - neT) / 1000; let ne = 1;
-      if (na < 1.6 && (moment === 'soir' || moment === 'nuit')) ne = (Math.sin(na * 47) > .2 || na > 1.2) ? 1 : .25;
+      const na = (t - neT) / 1000; let ne = ne0;
+      if (na < 1.6) ne = (Math.sin(na * 47) > .2 || na > 1.2) ? 1 : .25;
+      /* l'enseigne vit : un léger frémissement du tube, le soir */
+      if (SOIR && it.fin && !RM) ne *= 1 - .04 * (.5 + .5 * Math.sin(el * 11.3)) * (.5 + .5 * Math.sin(el * 2.3 + 1));
       gl.uniform1f(U('uNe'), ne);
       /* la pièce vit : curseur sur le site Fill, diaporama sur le portable, messages sur le téléphone */
       if (!RM && t - demoT > (MOB ? 50 : 33)) {
         demoT = t;
         if (auto && t - mainT > 9000) bureau.demo(t - t0);
         if (portable.diaporama(t - t0)) maj(5, T.P, majAtlas());
-        const mi = Math.floor(Date.now() / 11000); if (mi !== msgI) { msgI = mi; dessineTel(); maj(5, T.P, majAtlas()); }
+        const mi = Math.floor(Date.now() / 11000); if (mi !== msgI) { msgI = mi; dessineTel(); maj(5, T.P, majAtlas()); telT = t; }
       }
       if (bureau.sale) maj(4, T.S, bureau.dessine());
       if (mixT >= 0) {
         const m = Math.min(1, (t - mixT) / 700); gl.uniform1f(U('uMix'), m * m * (3 - 2 * m));
         if (m >= 1) { lampe = !lampe; maj(0, T.A, imgB); gl.uniform1f(U('uMix'), 0); chargeB = charge(nom(!lampe)); chargeB.catch(() => {}); mixT = -1; }
       } else gl.uniform1f(U('uMix'), 0);
+      if (!it.fin) gl.uniform1f(U('uMix'), it.mix);
+      /* un message arrive : l'écran du téléphone s'éclaire un instant */
+      else { const pu = (t - telT) / 1000; gl.uniform3f(U('uE'), 1, 1 + (pu < 2.4 ? .22 * (1 - pu / 2.4) : 0), 1); }
       if (cmT) { const p = Math.min(1, Math.max(0, (t - cmT.t0) / cmT.d)), e = p * p * (3 - 2 * p); cm = cmT.a + (cmT.b - cmT.a) * e; if (p >= 1) cmT = null; }
       if (vol) {
         const u = volU(t), fini = (t - vol.t0) >= vol.d, e = lisse(Math.min(1, u / NV));
@@ -410,10 +480,21 @@ void main(){
         if (i >= 1) lie(8, vol.id, i, i + 1); if (i + 1 <= NV - 1) lie(9, vol.id, i + 1, i);
         gl.uniform4f(U('uW'), i === 0 ? 1 - b : 0, i >= 1 ? 1 - b : 0, i + 1 <= NV - 1 ? b : 0, i + 1 === NV ? b : 0);
         if (fini) { const f = vol.fin; vol = null; if (f) f(); }
+      } else if (defile && dMode === 'vol') {
+        if (enC !== 'photo') { maj(6, T.C, imPh); gl.uniform1f(U('uCZ'), 0); enC = 'photo'; }
+        const u = NV * sp, Rv = lerpR(rectBase(), rectClose(t, 0), lisse(sp));
+        gl.uniform4fv(U('uR'), Rv); gl.uniform4fv(U('uRC'), Rv);
+        const i = Math.min(NV - 1, Math.floor(u)), b = u - i;
+        if (i >= 1) lie(8, 'photo', i, i + 1); if (i + 1 <= NV - 1) lie(9, 'photo', i + 1, i);
+        gl.uniform4f(U('uW'), i === 0 ? 1 - b : 0, i >= 1 ? 1 - b : 0, i + 1 <= NV - 1 ? b : 0, i + 1 === NV ? b : 0);
       } else {
         gl.uniform4f(U('uW'), 1 - cm, 0, 0, cm); if (cm > 0) gl.uniform4fv(U('uRC'), rectClose(t));
+        if (defile) { /* sans travelling rendu (mobile) : une poussée vers le mur de photos et l'enseigne */
+          const b = (M.cibles && M.cibles.photo) || [.3, .1, .7, .3], e = lisse(sp), ty2 = MOB ? (NEON[1] + (b[1] + b[3]) / 2) / 2 : (b[1] + b[3]) / 2;
+          gl.uniform4fv(U('uR'), rect(ec + (MOB ? .32 : .5) * e, cx + (MOB ? 0 : ((b[0] + b[2]) / 2 - cx) * e), cy + (ty2 - cy) * e));
+        }
       }
-      if (kIm && lampe === lampe0 && mixT < 0 && !RM) { gl.uniform1f(U('uKF'), (el * 6) % 48); gl.uniform1f(U('uKOn'), 1); } else gl.uniform1f(U('uKOn'), 0);
+      if (kIm && lampe === lampe0 && mixT < 0 && !RM && it.fin) { gl.uniform1f(U('uKF'), (el * 6) % 48); gl.uniform1f(U('uKOn'), 1); } else gl.uniform1f(U('uKOn'), 0);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       requestAnimationFrame(image);
     }

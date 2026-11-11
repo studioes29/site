@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageOps
 import random, math
 random.seed(3)
-S='/home/claude/site_h'
+S='/home/claude/site'
 BR='/tmp/rd/br.ttf'; UR='/tmp/rd/ur.ttf'
 F=lambda p,s: ImageFont.truetype(p,s)
 def thumb(n,w,h):

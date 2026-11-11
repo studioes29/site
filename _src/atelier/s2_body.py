@@ -280,16 +280,19 @@ if LAMPE:
     bpy.ops.object.light_add(type='POINT', location=(0, 0, -.01)); pl = bpy.context.object; pl.parent = hd; pl.data.energy = 18; pl.data.color = (1, .74, .48); pl.data.shadow_soft_size = .03
 
 # wall clock, on the same axis as the frames
-# neon below the clock
-neon_on = MOMENT in ('soir', 'nuit')
-bpy.ops.object.text_add(location=(.8, WALL - .008, 1.7), rotation=(math.pi / 2, 0, 0)); tx = bpy.context.object; tx.name = 'neon'
-tx.data.body = 'Studio ES'; tx.data.font = bpy.data.fonts.load('/tmp/rd/ur.ttf'); tx.data.size = .09; tx.data.align_x = 'CENTER'
-tx.data.extrude = .0; tx.data.bevel_depth = .0028; tx.data.fill_mode = 'NONE'
-tx.data.materials.append(emis('neonm', (1, .42, .5), 12) if neon_on else mat('neonoff', hexc('#E6DCD6'), .15, trans=.5))
+# enseigne au néon : le titre de la bannière. Ordinateur : à droite de la galerie, au-dessus de l'étagère ; mobile : au-dessus de la galerie, dans l'axe de l'écran.
+# NEON=x,z,corps la déplace ; NEON_ON=0 l'éteint (pour la mise en scène de l'arrivée), NEON_ON=1 la force allumée.
+NX, NZ, NS = [float(v) for v in os.environ.get('NEON', '-.01,1.89,.2' if os.environ.get('PORTRAIT') else '.83,1.57,.14').split(',')]
+neon_on = {'0': False, '1': True}.get(os.environ.get('NEON_ON', ''), True)
+NK = NS / .09; NJ = MOMENT in ('jour', 'matin')
+bpy.ops.object.text_add(location=(NX, WALL - .008, NZ), rotation=(math.pi / 2, 0, 0)); tx = bpy.context.object; tx.name = 'neon'
+tx.data.body = 'Studio ES'; tx.data.font = bpy.data.fonts.load('/tmp/rd/ur.ttf'); tx.data.size = NS; tx.data.align_x = 'CENTER'
+tx.data.extrude = .0; tx.data.bevel_depth = .0028 * NK ** .5; tx.data.fill_mode = 'NONE'
+tx.data.materials.append(emis('neonm', tuple(float(v) for v in os.environ.get('NEON_C', '1,.3,.42' if NJ else '1,.42,.5').split(',')), float(os.environ.get('NEON_E', {'jour': 5.5, 'matin': 8}.get(MOMENT, 12)))) if neon_on else mat('neonoff', hexc('#E6DCD6'), .15, trans=.5))
 zone(tx, 'neon')
 if neon_on:
-    bpy.ops.object.light_add(type='AREA', location=(.8, WALL - .12, 1.73)); nl = bpy.context.object; nl.data.size = .4; nl.data.size_y = .12
-    nl.rotation_euler = (math.radians(-90), 0, 0); nl.data.energy = 3.5; nl.data.color = (1, .45, .55); nl.visible_camera = False
+    bpy.ops.object.light_add(type='AREA', location=(NX, WALL - .12, NZ + .03 * NK)); nl = bpy.context.object; nl.data.size = .4 * NK; nl.data.size_y = .12 * NK
+    nl.rotation_euler = (math.radians(-90), 0, 0); nl.data.energy = 3.5 * NK * (2.2 if NJ else 1); nl.data.color = (1, .45, .55); nl.visible_camera = False
 
 # ---------------------------------------------------------------- the cat (seal-point Birman) looking out of the window
 def hairmat(name, mel, red=.35, rough=.35):
@@ -471,8 +474,8 @@ vz = cyl('sh_vase', .045, .16, (.1, .0, .094), mat('vaseM', hexc('#D8CBB7'), .5,
 stemM = mat('stem', hexc('#B89A6E'), .7)
 for k in range(9):
     a = k * .7; tilt = .15 + .05 * (k % 3)
-    st = cyl('stem%d' % k, .0018, .24, (.1 + math.sin(a) * .03, math.cos(a) * .015, .25), stemM, rot=(math.cos(a) * tilt, math.sin(a) * tilt, 0), v=6, bev=0, parent=shf)
-    bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=2, radius=.018, location=(0, 0, .12)); fl_ = bpy.context.object; fl_.parent = st; fl_.scale = (.6, .6, 1.5); fl_.data.materials.append(mat('pampas', hexc('#E3D3B5'), .9, sss=.4))
+    st = cyl('stem%d' % k, .0018, .1, (.1 + math.sin(a) * .03, math.cos(a) * .015, .19), stemM, rot=(math.cos(a) * tilt, math.sin(a) * tilt, 0), v=6, bev=0, parent=shf)
+    bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=2, radius=.018, location=(0, 0, .05)); fl_ = bpy.context.object; fl_.parent = st; fl_.scale = (.6, .6, 1.5); fl_.data.materials.append(mat('pampas', hexc('#E3D3B5'), .9, sss=.4))
 
 # ---------------------------------------------------------------- fine details
 def img_alpha(name, path, rough=.5):

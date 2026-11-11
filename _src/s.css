@@ -2575,3 +2575,11 @@ body{color:var(--encre)}
 .lb.on .lb-x,.lb.on .lb-n,.lb.on .lb-c{opacity:1}
 .lb.tire .lb-x,.lb.tire .lb-n,.lb.tire .lb-c{opacity:0}
 .lb-src img{visibility:hidden}
+/* bannière : l'enseigne au néon tient lieu de titre, la pièce s'ouvre dans la pénombre, le défilement entre dans la pièce */
+.at .hv-n{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.at .hv-t h1 .it{margin-top:0;opacity:.9}
+.at .hv-t{opacity:calc(1 - var(--sd,0)*2.6)}
+.at.at-intro .hv-t{opacity:0;transform:translateY(10px)}
+.at .at-vo{transition:opacity .9s var(--e)}
+.at.at-intro:after,.at.at-intro .at-vo{opacity:0}
+.at.at-intro .at-c{transition-duration:.25s}
