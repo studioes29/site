@@ -288,7 +288,7 @@ NK = NS / .09; NJ = MOMENT in ('jour', 'matin')
 bpy.ops.object.text_add(location=(NX, WALL - .008, NZ), rotation=(math.pi / 2, 0, 0)); tx = bpy.context.object; tx.name = 'neon'
 tx.data.body = 'Studio ES'; tx.data.font = bpy.data.fonts.load('/tmp/rd/ur.ttf'); tx.data.size = NS; tx.data.align_x = 'CENTER'
 tx.data.extrude = .0; tx.data.bevel_depth = .0028 * NK ** .5; tx.data.fill_mode = 'NONE'
-tx.data.materials.append(emis('neonm', tuple(float(v) for v in os.environ.get('NEON_C', '1,.3,.42' if NJ else '1,.42,.5').split(',')), float(os.environ.get('NEON_E', {'jour': 5.5, 'matin': 8}.get(MOMENT, 12)))) if neon_on else mat('neonoff', hexc('#E6DCD6'), .15, trans=.5))
+tx.data.materials.append(emis('neonm', tuple(float(v) for v in os.environ.get('NEON_C', '1,.3,.42' if NJ else '1,.36,.46').split(',')), float(os.environ.get('NEON_E', {'jour': 5.5, 'matin': 8}.get(MOMENT, 9)))) if neon_on else mat('neonoff', hexc('#EFE7E2'), .32, sss=.2))
 zone(tx, 'neon')
 if neon_on:
     bpy.ops.object.light_add(type='AREA', location=(NX, WALL - .12, NZ + .03 * NK)); nl = bpy.context.object; nl.data.size = .4 * NK; nl.data.size_y = .12 * NK
@@ -603,7 +603,21 @@ box('mat_stitch_in', .772, .312, .0005, (.06, -.02, YB + .00325), leather, .0002
 pp_ = empty('pothos', (.885, WALL - .1, 1.25 + .014))
 cyl('po_pot', .05, .085, (.0, .0, .0425), mat('terraPot', hexc('#A65A3A'), .7), r2=.04, v=48, parent=pp_)
 cyl('po_soil', .046, .003, (0, 0, .083), mat('soil2', hexc('#3A2B20'), 1), v=32, bev=0, parent=pp_)
-leafP = mat('leafP', hexc('#3F6B3A'), .38, sss=.15, coat=.3)
+leafP = mat('leafP', hexc('#3F6B3A'), .34, coat=.35, coatr=.2)
+N_, L_, b_ = nodes(leafP); tc_ = N_.new('ShaderNodeTexCoord'); oi_ = N_.new('ShaderNodeObjectInfo')
+nz_ = N_.new('ShaderNodeTexNoise'); nz_.inputs['Scale'].default_value = 38; nz_.inputs['Detail'].default_value = 5; nz_.inputs['Distortion'].default_value = .8; L_.new(tc_.outputs['Object'], nz_.inputs['Vector'])
+vert_ = N_.new('ShaderNodeValToRGB'); vert_.color_ramp.elements[0].color = (*hexc('#2C5330'), 1); vert_.color_ramp.elements[1].color = (*hexc('#5C8A45'), 1); L_.new(oi_.outputs['Random'], vert_.inputs['Fac'])
+pan_ = N_.new('ShaderNodeValToRGB'); pan_.color_ramp.elements[0].position = .6; pan_.color_ramp.elements[1].position = .7; L_.new(nz_.outputs['Fac'], pan_.inputs['Fac'])   # panachure dorée, par taches
+mxp_ = N_.new('ShaderNodeMixRGB'); mxp_.inputs[2].default_value = (*hexc('#C9CF7A'), 1); L_.new(pan_.outputs['Color'], mxp_.inputs['Fac']); L_.new(vert_.outputs['Color'], mxp_.inputs[1])
+sx_ = N_.new('ShaderNodeSeparateXYZ'); L_.new(tc_.outputs['Object'], sx_.inputs['Vector'])   # nervure centrale plus claire
+ab_ = N_.new('ShaderNodeMath'); ab_.operation = 'ABSOLUTE'; L_.new(sx_.outputs['X'], ab_.inputs[0])
+nv_ = N_.new('ShaderNodeMapRange'); nv_.inputs['From Min'].default_value = 0; nv_.inputs['From Max'].default_value = .0016; nv_.inputs['To Min'].default_value = .5; nv_.inputs['To Max'].default_value = 0; L_.new(ab_.outputs[0], nv_.inputs['Value'])
+mxn_ = N_.new('ShaderNodeMixRGB'); mxn_.inputs[2].default_value = (*hexc('#9DB86A'), 1); L_.new(nv_.outputs['Result'], mxn_.inputs['Fac']); L_.new(mxp_.outputs['Color'], mxn_.inputs[1])
+L_.new(mxn_.outputs['Color'], b_.inputs['Base Color'])
+tl_ = N_.new('ShaderNodeBsdfTranslucent'); L_.new(mxn_.outputs['Color'], tl_.inputs['Color']); ms_ = N_.new('ShaderNodeMixShader'); ms_.inputs['Fac'].default_value = .28
+L_.new(b_.outputs['BSDF'], ms_.inputs[1]); L_.new(tl_.outputs['BSDF'], ms_.inputs[2]); L_.new(ms_.outputs['Shader'], N_['Material Output'].inputs['Surface'])
+bp_ = N_.new('ShaderNodeBump'); bp_.inputs['Strength'].default_value = .25; bp_.inputs['Distance'].default_value = .0006
+nf_ = N_.new('ShaderNodeTexNoise'); nf_.inputs['Scale'].default_value = 260; nf_.inputs['Detail'].default_value = 3; L_.new(tc_.outputs['Object'], nf_.inputs['Vector']); L_.new(nf_.outputs['Fac'], bp_.inputs['Height']); L_.new(bp_.outputs['Normal'], b_.inputs['Normal'])
 def heart_leaf(L):
     # pothos leaf : heart outline, midrib fold, cupped, hanging from its petiole at the top (origin)
     me = bpy.data.meshes.new('leaf'); bm = bmesh.new(); N = 28; rings = 6; prev = None; ctr = bm.verts.new((0, 0, -L * .42))

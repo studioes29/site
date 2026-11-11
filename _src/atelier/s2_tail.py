@@ -41,7 +41,7 @@ S.render.resolution_x = RX; S.render.resolution_y = int(RX * 10 / 16) if PORT el
 
 # ---------------------------------------------------------------- render settings
 S.render.engine = 'CYCLES'; S.cycles.device = 'CPU'
-S.cycles.samples = SAMP; S.cycles.use_adaptive_sampling = True; S.cycles.adaptive_threshold = .02
+S.cycles.samples = SAMP; S.cycles.use_adaptive_sampling = True; S.cycles.adaptive_threshold = float(os.environ.get('SEUIL', '.02'))
 S.cycles.use_denoising = MODE == 'beauty'
 S.cycles.use_auto_tile = True; S.cycles.tile_size = 768
 S.cycles.max_bounces = 8; S.cycles.diffuse_bounces = 4; S.cycles.glossy_bounces = 4; S.cycles.transmission_bounces = 8; S.cycles.caustics_reflective = False; S.cycles.caustics_refractive = False
@@ -214,6 +214,22 @@ if CATANIM:
     S.render.use_border = True; S.render.use_crop_to_border = True
     S.render.border_min_x, S.render.border_max_x, S.render.border_min_y, S.render.border_max_y = max(0, x0), min(1, x1), max(0, y0), min(1, y1)
     json.dump({'rect': [round(max(0, x0), 5), round(1 - min(1, y1), 5), round(min(1, x1) - max(0, x0), 5), round(min(1, y1) - max(0, y0), 5)], 'n': CATANIM}, open('/tmp/rd/meta-cat.json', 'w'))
+if os.environ.get('BORDER') and not CATANIM:   # essai sur une portion du cadre : BORDER=x0,y0,x1,y1 (fractions, origine en haut à gauche)
+    bx_ = [float(v) for v in os.environ['BORDER'].split(',')]; S.render.use_border = True; S.render.use_crop_to_border = True
+    S.render.border_min_x, S.render.border_max_x, S.render.border_min_y, S.render.border_max_y = bx_[0], bx_[2], 1 - bx_[3], 1 - bx_[1]
+if MODE == 'beauty' and os.environ.get('HALO', '1') == '1':
+    # finition photo : halo des sources (enseigne, lampe, écrans), calculé en lumière linéaire avant la courbe de rendu
+    try:
+        ng_ = bpy.data.node_groups.new('finition', 'CompositorNodeTree'); S.compositing_node_group = ng_
+        ng_.interface.new_socket('Image', in_out='OUTPUT', socket_type='NodeSocketColor')
+        rl_ = ng_.nodes.new('CompositorNodeRLayers'); gl_ = ng_.nodes.new('CompositorNodeGlare'); go_ = ng_.nodes.new('NodeGroupOutput')
+        for k_, v_ in (('Type', 'Bloom'), ('Quality', 'High'), ('Threshold', float(os.environ.get('HALO_S', '2.2'))), ('Smoothness', .6), ('Strength', float(os.environ.get('HALO_F', '.45'))), ('Saturation', 1.0), ('Size', float(os.environ.get('HALO_T', '.42')))):
+            if k_ in gl_.inputs: gl_.inputs[k_].default_value = v_
+            else: print('HALO: entrée absente', k_)
+        ng_.links.new(rl_.outputs['Image'], gl_.inputs['Image']); ng_.links.new(gl_.outputs['Image'], go_.inputs[0])
+        print('HALO ok', [i.name for i in gl_.inputs])
+    except Exception as e_:
+        print('HALO indisponible', e_)
 if MODE != 'beauty': S.render.dither_intensity = 0
 S.render.filepath = OUT
 import time; t = time.time()
