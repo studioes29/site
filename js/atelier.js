@@ -429,7 +429,7 @@ void main(){
           else ne0 = f;
           if (it.m === 2) {
             /* de jour, les écrans se réveillent l'un après l'autre ; le soir ils veillent déjà, seule lumière de la pièce */
-            if (!SOIR) gl.uniform3f(U('uE'), reveil(a, 1.7), reveil(a, 2.1), reveil(a, 1.95));
+            if (!SOIR) { const d0 = MOB ? 1.3 : 1.7; gl.uniform3f(U('uE'), reveil(a, d0), reveil(a, d0 + .4), reveil(a, d0 + .25)); }
             const p = Math.min(1, Math.max(0, (a - 1.35) / 2.2)), e = p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
             ec = ech = vI[0] + (1 - vI[0]) * e; cx = tcx = vI[1] + (base.x + glisse - vI[1]) * e; cy = tcy = vI[2] + (base.y - vI[2]) * e;
           }

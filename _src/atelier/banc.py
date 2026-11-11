@@ -6,7 +6,7 @@ from playwright.sync_api import sync_playwright
 from PIL import Image
 ap = argparse.ArgumentParser(); ap.add_argument('heure', type=int); ap.add_argument('sortie'); ap.add_argument('--mob', action='store_true')
 ap.add_argument('--pas', type=float, default=250); ap.add_argument('--plan', default='4.6,2.4@640,1.2@0'); ap.add_argument('--film', default='')
-ap.add_argument('--url', default='?arrivee&atdbg'); ap.add_argument('--port', default='8768'); ap.add_argument('--rm', action='store_true'); ap.add_argument('--vu', action='store_true'); ap.add_argument('--col', type=int, default=6)
+ap.add_argument('--url', default='?arrivee&atdbg'); ap.add_argument('--port', default='8768'); ap.add_argument('--rm', action='store_true'); ap.add_argument('--vu', action='store_true'); ap.add_argument('--vp', default='1440x810'); ap.add_argument('--col', type=int, default=6)
 A = ap.parse_args()
 HORLOGE = """(h=>{const D=Date,off=new D(2026,10,5,h,20).getTime()-D.now();let vt=0;const q=new Map();let id=0;
 class FD extends D{constructor(...a){if(a.length)super(...a);else super(D.now()+off)}static now(){return D.now()+off}};window.Date=FD;
@@ -19,7 +19,7 @@ try:
     with sync_playwright() as p:
         b = p.chromium.launch(executable_path='/usr/bin/google-chrome', args=['--no-sandbox','--hide-scrollbars','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist'])
         kw = dict(reduced_motion='reduce') if A.rm else {}
-        cx = b.new_context(viewport={'width':390,'height':844}, device_scale_factor=2, is_mobile=True, has_touch=True, **kw) if A.mob else b.new_context(viewport={'width':1440,'height':810}, **kw)
+        cx = b.new_context(viewport={'width':390,'height':844}, device_scale_factor=2, is_mobile=True, has_touch=True, **kw) if A.mob else b.new_context(viewport={'width':int(A.vp.split('x')[0]),'height':int(A.vp.split('x')[1])}, **kw)
         cx.add_init_script(HORLOGE % A.heure)
         if A.vu: cx.add_init_script("try{sessionStorage.setItem('at-vu','1')}catch(e){}")
         pg = cx.new_page(); errs = []
@@ -33,6 +33,9 @@ try:
         ims = []; n = 0; y = 0
         if A.film: os.makedirs(A.film, exist_ok=True)
         for seg in A.plan.split(','):
+            if seg[0] in 'cm':  # c:x:y clic, m:x:y survol (fractions de la fenêtre)
+                _, fx, fy = seg.split(':'); vw = pg.viewport_size; X, Y = float(fx) * vw['width'], float(fy) * vw['height']
+                (pg.touchscreen.tap(X, Y) if (A.mob and seg[0] == 'c') else pg.mouse.click(X, Y) if seg[0] == 'c' else pg.mouse.move(X, Y)); continue
             d, _, yf = seg.partition('@'); d = float(d); k = max(1, round(d * 1000 / A.pas)); y0 = y; y1 = float(yf) if yf else y
             for i in range(k):
                 if y1 != y0:
