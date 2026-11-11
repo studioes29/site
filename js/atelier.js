@@ -20,7 +20,7 @@ import { Bureau } from '/js/atelier/bureau.js?v=2';
   let dejaVu = false; try { dejaVu = !!sessionStorage.getItem('at-vu'); sessionStorage.setItem('at-vu', '1'); } catch (e) {}
   const INTRO = RM ? 0 : (dejaVu && !/[?&]arrivee/.test(location.search)) ? 1 : 2;
   const poseFond = () => { H.style.setProperty('--at-img', 'url("' + nom(lampe) + '")'); H.style.removeProperty('background'); };
-  if (INTRO) { H.classList.add('at-intro'); H.style.background = '#0F1013'; } else poseFond();
+  if (INTRO) { H.classList.add('at-intro'); H.style.background = SOIR ? '#0F1013' : '#16150F'; } else poseFond();
 
   /* ---------- panneau et puces (fonctionnent même sans WebGL) ---------- */
   let ouverte = null, vue = null;
@@ -91,7 +91,7 @@ import { Bureau } from '/js/atelier/bureau.js?v=2';
     /* ---------- shaders ---------- */
     const VS = 'attribute vec2 p;varying vec2 u;void main(){u=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}';
     const FS = `precision highp float;varying vec2 u;
-uniform sampler2D tA,tB,tM,tD,tS,tP,tC,tK,tF,tG;uniform vec4 uW;uniform mat3 uFs,uFp,uFq,uGs,uGp,uGq;uniform vec4 uR,uDR,uRC,uKR,uAP;uniform vec2 uPar,uTx,uTea;uniform float uHovA,uMix,uHov,uT,uFl,uNe,uPl,uSt,uDu,uB,uK,uCM,uKF,uKOn,uCZ,uOn,uNm,uNj;uniform vec3 uE;uniform vec4 uNR;
+uniform sampler2D tA,tB,tM,tD,tS,tP,tC,tK,tF,tG;uniform vec4 uW;uniform mat3 uFs,uFp,uFq,uGs,uGp,uGq;uniform vec4 uR,uDR,uRC,uKR,uAP;uniform vec2 uPar,uTx,uTea;uniform float uHovA,uMix,uHov,uT,uFl,uNe,uPl,uSt,uDu,uB,uK,uCM,uKF,uKOn,uCZ,uOn,uNm,uNj;uniform vec3 uDol;uniform vec3 uE;uniform vec4 uNR;
 uniform mat3 uHs,uHp,uHl,uHs2,uHp2;
 float zid(vec2 q){return floor(texture2D(tM,q).r*255./20.+.5);}
 float h21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
@@ -107,6 +107,7 @@ void main(){
   vec2 q=uR.xy+u*uR.zw;
   float dep=texture2D(tD,q).r;
   q+=uPar*(dep-.62)*vec2(.016,.011);
+  q-=(q-uDol.xy)*(dep-.76)*uDol.z;
   float z=zid(q);
   if(z==7.)q.x+=sin(uT*2.1+q.y*60.)*.0007*uPl;
   vec2 dn=max(abs(q-uNR.xy)-uNR.zw,0.);dn.x*=uTx.y/uTx.x;float nh=exp(-length(dn)/(uNR.w*3.+.015));
@@ -187,6 +188,7 @@ void main(){
     const IA = imA.width / imA.height, base = { x: (M.cadre || [.5, .5])[0], y: (M.cadre || [.5, .5])[1] };
     if (MOB && M.cibles && M.cibles.web) base.x = (M.cibles.web[0] + M.cibles.web[2]) / 2; /* mobile : de face, centré sur l'écran */
     let W = 1, Hh = 1, ech = 1, ec = 1, cx = base.x, cy = base.y, tcx = base.x, tcy = base.y, glisse = 0;
+    const cadreX = base.x;
     const rect = (s, x, y) => {
       const ca = W / Hh; let w = 1, h = 1; if (ca > IA) h = IA / ca; else w = ca / IA;
       w /= s * 1.035; h /= s * 1.035;
@@ -196,6 +198,8 @@ void main(){
     const taille = () => {
       const d = Math.min(devicePixelRatio || 1, MOB ? 2 : 1.75); W = H.clientWidth; Hh = H.clientHeight;
       C.width = Math.round(W * d); C.height = Math.round(Hh * d); gl.viewport(0, 0, C.width, C.height);
+      /* l'enseigne tient lieu de titre : dans une fenêtre étroite, le cadre glisse à droite pour la garder entière */
+      if (!MOB) { const w = Math.min(1, W / Hh / IA) / 1.035, bx = Math.max(cadreX, Math.min(1 - w / 2, NEON[0] + NEON[2] + .014 - w / 2)), dx = bx - base.x; base.x = bx; cx += dx; tcx += dx; }
     };
     taille(); addEventListener('resize', taille);
     let tw = null; // mouvement de caméra en cours
@@ -218,10 +222,10 @@ void main(){
     const chargeClose = (id) => closeIm[id] || (closeIm[id] = charge(R + 'c-' + id + '-' + moment + '.webp').catch(() => null));
     const volIm = {}, unites = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
     const chargeVol = (id) => volIm[id] || (volIm[id] = (VOLS[id] && unites >= 10 && !RM ? Promise.all(Array.from({ length: NV - 1 }, (_, k) => charge(R + 'v/' + id + '-' + moment + '-' + String(k + 1).padStart(2, '0') + '.webp'))) : Promise.reject()).catch(() => null));
-    let dMode = null, defile = false, spD = -1, imPh = null, enC = null;
+    let defile = false, spD = -1, enC = null, dolOn = false;
     if (!MOB && M.closeups) setTimeout(() => {
-      let k = chargeClose('photo').then(im => { imPh = im; }).then(() => chargeVol('photo')).then(fr => { if (fr) volIm.photo.v = fr; });
-      ['web', 'graph', 'fill', 'contact'].forEach(id => { k = k.then(() => chargeClose(id)).then(() => chargeVol(id)); });
+      let k = Promise.resolve();
+      ['photo', 'web', 'graph', 'fill', 'contact'].forEach(id => { k = k.then(() => chargeClose(id)).then(() => chargeVol(id)); });
     }, 1200);
     let cz = null, cm = 0, cmT = null, cT0 = 0, jeton = 0, vol = null;
     const HS2 = CL.web ? homo(CL.web.mon_screen) : null; if (HS2) gl.uniformMatrix3fv(U('uHs2'), false, HS2);
@@ -423,7 +427,8 @@ void main(){
           } else if (soirI) { gl.uniform1f(U('uNm'), f); it.mix = sm(TL, TL + .5, a); }
           else ne0 = f;
           if (it.m === 2) {
-            gl.uniform3f(U('uE'), reveil(a, 1.7), reveil(a, 2.1), reveil(a, 1.95));
+            /* de jour, les écrans se réveillent l'un après l'autre ; le soir ils veillent déjà, seule lumière de la pièce */
+            if (!SOIR) gl.uniform3f(U('uE'), reveil(a, 1.7), reveil(a, 2.1), reveil(a, 1.95));
             const p = Math.min(1, Math.max(0, (a - 1.35) / 2.2)), e = p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
             ec = ech = vI[0] + (1 - vI[0]) * e; cx = tcx = vI[1] + (base.x + glisse - vI[1]) * e; cy = tcy = vI[2] + (base.y - vI[2]) * e;
           }
@@ -433,7 +438,6 @@ void main(){
       }
       /* défilement : la caméra entre dans la pièce, vers le mur de photos */
       const sp = it.fin ? Math.min(1, Math.max(0, scrollY / (Hh * .8))) : 0;
-      if (sp <= 0) dMode = null; else if (!dMode) dMode = (!MOB && imPh && NV && volIm.photo && volIm.photo.v) ? 'vol' : 'zoom';
       defile = sp > 0 && !ouverte && !vol && cm < .01;
       if (sp !== spD) { spD = sp; H.style.setProperty('--sd', sp.toFixed(3)); }
       if (tw) {
@@ -480,19 +484,12 @@ void main(){
         if (i >= 1) lie(8, vol.id, i, i + 1); if (i + 1 <= NV - 1) lie(9, vol.id, i + 1, i);
         gl.uniform4f(U('uW'), i === 0 ? 1 - b : 0, i >= 1 ? 1 - b : 0, i + 1 <= NV - 1 ? b : 0, i + 1 === NV ? b : 0);
         if (fini) { const f = vol.fin; vol = null; if (f) f(); }
-      } else if (defile && dMode === 'vol') {
-        if (enC !== 'photo') { maj(6, T.C, imPh); gl.uniform1f(U('uCZ'), 0); enC = 'photo'; }
-        const u = NV * sp, Rv = lerpR(rectBase(), rectClose(t, 0), lisse(sp));
-        gl.uniform4fv(U('uR'), Rv); gl.uniform4fv(U('uRC'), Rv);
-        const i = Math.min(NV - 1, Math.floor(u)), b = u - i;
-        if (i >= 1) lie(8, 'photo', i, i + 1); if (i + 1 <= NV - 1) lie(9, 'photo', i + 1, i);
-        gl.uniform4f(U('uW'), i === 0 ? 1 - b : 0, i >= 1 ? 1 - b : 0, i + 1 <= NV - 1 ? b : 0, i + 1 === NV ? b : 0);
       } else {
         gl.uniform4f(U('uW'), 1 - cm, 0, 0, cm); if (cm > 0) gl.uniform4fv(U('uRC'), rectClose(t));
-        if (defile) { /* sans travelling rendu (mobile) : une poussée vers le mur de photos et l'enseigne */
-          const b = (M.cibles && M.cibles.photo) || [.3, .1, .7, .3], e = lisse(sp), ty2 = MOB ? (NEON[1] + (b[1] + b[3]) / 2) / 2 : (b[1] + b[3]) / 2;
-          gl.uniform4fv(U('uR'), rect(ec + (MOB ? .32 : .5) * e, cx + (MOB ? 0 : ((b[0] + b[2]) / 2 - cx) * e), cy + (ty2 - cy) * e));
-        }
+        if (defile) { /* la caméra avance vers le mur de photos : poussée nette sur le rendu, les plans proches glissent plus vite (profondeur) */
+          const b = (M.cibles && M.cibles.photo) || [.3, .1, .7, .3], e = lisse(sp), ty2 = MOB ? (NEON[1] + (b[1] + b[3]) / 2) / 2 : (b[1] + b[3]) / 2, fx = MOB ? cx : cx + ((b[0] + NEON[0] + NEON[2]) / 2 - cx) * e, fy = cy + (ty2 - cy) * e;
+          gl.uniform4fv(U('uR'), rect(ec + (MOB ? .32 : .42) * e, fx, fy)); gl.uniform3f(U('uDol'), fx, fy, (MOB ? .24 : .3) * e); dolOn = true;
+        } else if (dolOn) { gl.uniform3f(U('uDol'), .5, .5, 0); dolOn = false; }
       }
       if (kIm && lampe === lampe0 && mixT < 0 && !RM && it.fin) { gl.uniform1f(U('uKF'), (el * 6) % 48); gl.uniform1f(U('uKOn'), 1); } else gl.uniform1f(U('uKOn'), 0);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
