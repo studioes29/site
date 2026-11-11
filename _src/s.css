@@ -2563,3 +2563,15 @@ body{color:var(--encre)}
   .at-m{margin-top:12px;font-size:13.5px}
 }
 
+/* visionneuse : la photo part de sa vignette, suit le doigt, et y retourne */
+.lb{display:block;background:none;opacity:1;overflow:hidden;overscroll-behavior:contain}
+.lb-f{position:absolute;inset:0;background:rgba(12,12,12,.95);opacity:0;transition:opacity .34s}
+.lb.on .lb-f{opacity:1}
+.lb-s,.lb-v{position:absolute;inset:0}
+.lb-s{will-change:transform}
+.lb-v{display:grid;place-items:center;pointer-events:none}
+.lb .lb-v img{pointer-events:auto;max-width:none;max-height:none;object-fit:cover;transition:none;will-change:transform;user-select:none;-webkit-user-select:none;-webkit-user-drag:none}
+.lb-x,.lb-n,.lb-c{opacity:0;transition:opacity .3s}
+.lb.on .lb-x,.lb.on .lb-n,.lb.on .lb-c{opacity:1}
+.lb.tire .lb-x,.lb.tire .lb-n,.lb.tire .lb-c{opacity:0}
+.lb-src img{visibility:hidden}

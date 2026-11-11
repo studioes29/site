@@ -352,17 +352,102 @@
     compte('/galerie/' + r.id, 'Galerie : ' + r.t);
   };
   const fermeGal = () => { if (!gp || gp.hidden) return; fermeLb(); gp.classList.remove('on'); document.documentElement.style.overflow = ''; if (dock) dock.classList.remove('cache'); setTimeout(() => gp.hidden = true, 400); try { history.replaceState(null, '', location.pathname); } catch (e) {} if (avantG) avantG.focus({ preventScroll: true }); };
-  const ouvreLb = i => { const r = G.r; G.i = (i + r.ph.length) % r.ph.length; lbI.style.opacity = .25; lbI.onload = () => lbI.style.opacity = 1; lbI.src = `/p/${r.ph[G.i]}.jpg`; lbI.alt = `${r.t}, photo ${G.i + 1} sur ${r.ph.length}`; $('#lbC').textContent = (G.i + 1) + ' / ' + r.ph.length; if (lb.hidden) { lb.hidden = false; requestAnimationFrame(() => lb.classList.add('on')); $('#lbX').focus({ preventScroll: true }); } const n = new Image(); n.src = `/p/${r.ph[(G.i + 1) % r.ph.length]}.jpg`; };
-  const fermeLb = () => { if (!lb || lb.hidden) return; lb.classList.remove('on'); setTimeout(() => lb.hidden = true, 300); };
+  /* visionneuse : la photo part de sa vignette, suit le doigt d'une image à l'autre, et retourne à sa place quand on la tire vers le bas */
+  const RMV = matchMedia('(prefers-reduced-motion: reduce)').matches, ECART = 28;
+  let V = null, fermant = 0;
+  const monteLb = () => {
+    if (V) return V;
+    const f = document.createElement('div'); f.className = 'lb-f'; const st = document.createElement('div'); st.className = 'lb-s';
+    const ims = [lbI, lbI.cloneNode(), lbI.cloneNode()]; ims[1].removeAttribute('id'); ims[2].removeAttribute('id');
+    const vs = ims.map(im => { const v = document.createElement('div'); v.className = 'lb-v'; v.appendChild(im); st.appendChild(v); im.draggable = false; return v; });
+    lb.prepend(st); lb.prepend(f);
+    return V = { f, st, vs, ims, o: [0, 1, 2], x: 0, a: 0 };
+  };
+  const pasLb = () => innerWidth + ECART;
+  const poseLb = x => { V.x = x; V.st.style.transform = x ? `translate3d(${x}px,0,0)` : ''; };
+  const rangeLb = () => V.o.forEach((k, j) => { V.vs[k].style.transform = j === 1 ? '' : `translate3d(${(j - 1) * pasLb()}px,0,0)`; });
+  const tailleLb = (im, q) => { const lw = innerWidth > 600 ? Math.min(innerWidth * .94, 1400) : innerWidth, lh = innerHeight * .86, w = Math.min(lw, lh * q); im.style.width = Math.round(w) + 'px'; im.style.height = Math.round(w / q) + 'px'; im.style.borderRadius = w >= innerWidth - 1 ? '0' : '6px'; };
+  const vignLb = i => { const z = gp && !gp.hidden ? gpG : $('[data-rp]'); return z ? z.querySelector(`[data-i="${i}"] img`) : null; };
+  const chargeLb = (k, i) => {
+    const r = G.r, n = r.ph.length, p = r.ph[(i + n) % n], im = V.ims[k], RAT = window.RAT || {};
+    if (im.dataset.p === p) { tailleLb(im, +im.dataset.q); return; }
+    const v = vignLb((i + n) % n), q = RAT[p] || (v && v.naturalWidth ? v.naturalWidth / v.naturalHeight : .75);
+    im.dataset.p = p; im.dataset.q = q; tailleLb(im, q); im.alt = `${r.t}, photo ${(i + n) % n + 1} sur ${n}`;
+    im.src = v && v.complete && v.naturalWidth ? (v.currentSrc || v.src) : `/p/t/${p}.webp`;
+    const g = new Image(); g.src = `/p/${p}.jpg`; const pret = () => { if (im.dataset.p !== p) return; if (!RAT[p] && g.naturalWidth) { im.dataset.q = g.naturalWidth / g.naturalHeight; tailleLb(im, +im.dataset.q); } im.src = g.src; };
+    if (g.decode) g.decode().then(pret, pret); else g.onload = pret;
+  };
+  const marqueLb = () => { $$('.lb-src').forEach(e => e.classList.remove('lb-src')); const v = vignLb(G.i); if (v && !lb.hidden) v.parentNode.classList.add('lb-src'); };
+  const majLb = () => { const n = G.r.ph.length; $('#lbC').textContent = (G.i + 1) + ' / ' + n; V.vs[V.o[0]].style.visibility = V.vs[V.o[2]].style.visibility = n > 1 ? '' : 'hidden'; V.ims.forEach((im, k) => im.setAttribute('aria-hidden', k === V.o[1] ? 'false' : 'true')); marqueLb(); };
+  /* trajet entre la vignette et la photo en grand : même cadrage au départ, le recadrage s'ouvre en route */
+  const trajetLb = (im, v) => {
+    const a = v.getBoundingClientRect(), b = im.getBoundingClientRect(); if (!a.width || !b.width) return null;
+    const e = Math.max(a.width / b.width, a.height / b.height), ix = Math.max(0, (b.width - a.width / e) / 2), iy = Math.max(0, (b.height - a.height / e) / 2), ry = parseFloat(getComputedStyle(v).borderTopLeftRadius) || parseFloat(getComputedStyle(v.parentNode).borderTopLeftRadius) || 0;
+    return { transform: `translate(${a.left + a.width / 2 - b.left - b.width / 2}px,${a.top + a.height / 2 - b.top - b.height / 2}px) scale(${e})`, clipPath: `inset(${iy}px ${ix}px ${iy}px ${ix}px round ${ry / e}px)` };
+  };
+  const PLEIN = im => ({ transform: 'translate(0px,0px) scale(1)', clipPath: `inset(0px 0px 0px 0px round ${im.style.borderRadius || '0px'})` });
+  const arretLb = () => { if (V && V.a) { cancelAnimationFrame(V.a); V.a = 0; } };
+  const ressortLb = (v0, fin) => {
+    arretLb(); if (RMV) { poseLb(0); if (fin) fin(); return; }
+    let x = V.x, v = v0, t0 = performance.now();
+    const f = t => { let dt = Math.min(.12, (t - t0) / 1000); t0 = t; for (let n = Math.max(1, Math.ceil(dt / .006)), h = dt / n, i = 0; i < n; i++) { v += (-240 * x - 29 * v) * h; x += v * h; } if (Math.abs(x) < .5 && Math.abs(v) < 12) { V.a = 0; poseLb(0); if (fin) fin(); return; } poseLb(x); V.a = requestAnimationFrame(f); };
+    V.a = requestAnimationFrame(f);
+  };
+  /* photo suivante ou précédente : les rôles tournent tout de suite, la rangée rattrape sa place avec l'élan du geste */
+  const vaLb = (d, v0) => {
+    const n = G.r.ph.length; if (n < 2 || fermant) return; arretLb();
+    G.i = (G.i + d + n) % n; V.o = d > 0 ? [V.o[1], V.o[2], V.o[0]] : [V.o[2], V.o[0], V.o[1]];
+    chargeLb(V.o[d > 0 ? 2 : 0], G.i + d); rangeLb(); poseLb(V.x + d * pasLb()); majLb(); ressortLb(v0 || 0);
+  };
+  const finLb = () => { fermant = 0; lb.hidden = true; lb.classList.remove('tire'); $$('.lb-src').forEach(e => e.classList.remove('lb-src')); if (V) { V.ims.forEach(im => { im.getAnimations().forEach(a => a.cancel()); im.style.transform = ''; }); V.f.style.cssText = ''; poseLb(0); } };
+  const ouvreLb = i => {
+    const r = G.r, n = r.ph.length; if (fermant) { clearTimeout(fermant); finLb(); }
+    monteLb(); arretLb(); G.i = (i + n) % n; chargeLb(V.o[1], G.i); if (n > 1) { chargeLb(V.o[0], G.i - 1); chargeLb(V.o[2], G.i + 1); } rangeLb(); poseLb(0);
+    const neuf = lb.hidden; if (neuf) { lb.hidden = false; lb.offsetWidth; lb.classList.add('on'); $('#lbX').focus({ preventScroll: true }); }
+    const im = V.ims[V.o[1]], v = vignLb(G.i), de = neuf && !RMV && v ? trajetLb(im, v) : null;
+    majLb();
+    if (de) im.animate([de, PLEIN(im)], { duration: 520, easing: 'cubic-bezier(.2,.85,.2,1)' });
+    else if (neuf) im.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260, easing: 'ease-out' });
+  };
+  const fermeLb = () => {
+    if (!lb || lb.hidden || fermant) return; arretLb(); poseLb(0);
+    const im = V.ims[V.o[1]], v = vignLb(G.i), ici = im.style.transform || 'translate(0px,0px) scale(1)';
+    if (v && !RMV) v.scrollIntoView({ block: 'nearest', behavior: 'instant' });
+    im.style.transform = ''; const vers = v && !RMV ? trajetLb(im, v) : null;
+    V.f.style.transition = ''; V.f.style.opacity = ''; lb.classList.remove('on');
+    if (vers) { im.animate([Object.assign(PLEIN(im), { transform: ici }), vers], { duration: 420, easing: 'cubic-bezier(.3,.75,.2,1)', fill: 'forwards' }); }
+    else im.animate([{ transform: ici, opacity: 1 }, { transform: ici, opacity: 0 }], { duration: 240, fill: 'forwards' });
+    fermant = setTimeout(() => { finLb(); if (v && v.parentNode.focus) v.parentNode.focus({ preventScroll: true }); }, vers ? 430 : 250);
+  };
   if (gp) {
     $('#gpB').addEventListener('click', fermeGal);
     gpG.addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (b) ouvreLb(+b.dataset.i); });
     $('#gpSim').addEventListener('click', e => { const b = e.target.closest('[data-r]'); if (b) ouvreGal(trouve(b.dataset.r)); });
     $('#gpGo').addEventListener('click', () => { const r = G.r; fermeGal(); const gk = r && { ident: 'identite', camp: 'campagne', edit: 'edition' }[r.k]; ouvreDevis(gk ? { k: gk, f: 0, o: [] } : { k: 'evenement', f: r && r.k === 'public' ? 2 : 0, o: [] }); });
-    $('#lbP').addEventListener('click', () => ouvreLb(G.i - 1)); $('#lbN').addEventListener('click', () => ouvreLb(G.i + 1)); $('#lbX').addEventListener('click', fermeLb);
-    lb.addEventListener('click', e => { if (e.target === lb) fermeLb(); });
-    let x0 = null; lb.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true }); lb.addEventListener('touchend', e => { if (x0 == null) return; const d = e.changedTouches[0].clientX - x0; if (Math.abs(d) > 50) ouvreLb(G.i + (d < 0 ? 1 : -1)); x0 = null; }, { passive: true });
-    addEventListener('keydown', e => { if (!lb.hidden) { if (e.key === 'ArrowRight') ouvreLb(G.i + 1); else if (e.key === 'ArrowLeft') ouvreLb(G.i - 1); else if (e.key === 'Escape') fermeLb(); } else if (!gp.hidden && e.key === 'Escape') fermeGal(); });
+    $('#lbP').addEventListener('click', () => vaLb(-1)); $('#lbN').addEventListener('click', () => vaLb(1)); $('#lbX').addEventListener('click', fermeLb);
+    lb.addEventListener('click', e => { if (!e.target.closest('img,button')) fermeLb(); });
+    /* geste : le sens est décidé au départ ; à l'horizontale la rangée suit le doigt, vers le bas la photo se détache et le fond s'éclaircit */
+    let g = null;
+    const zoome = () => window.visualViewport && visualViewport.scale > 1.02;
+    lb.addEventListener('touchstart', e => { if (e.touches.length > 1 || zoome() || fermant || !V) { g = null; return; } const t = e.touches[0]; arretLb(); g = { x: t.clientX, y: t.clientY, x0: V.x, s: 0, dx: 0, dy: 0, vx: 0, vy: 0, lx: t.clientX, ly: t.clientY, lt: e.timeStamp }; }, { passive: true });
+    lb.addEventListener('touchmove', e => {
+      if (!g) return; if (e.touches.length > 1) { const s = g.s; g = null; if (s === 1) ressortLb(0); else if (s === 2) lacheLb(); return; }
+      const t = e.touches[0]; g.dx = t.clientX - g.x; g.dy = t.clientY - g.y;
+      if (!g.s) { if (Math.hypot(g.dx, g.dy) < 8) return; g.s = Math.abs(g.dx) > Math.abs(g.dy) ? 1 : g.dy > 0 ? 2 : 3; if (g.s === 2) lb.classList.add('tire'); }
+      if (e.cancelable) e.preventDefault();
+      const dt = e.timeStamp - g.lt; if (dt > 0) { g.vx = .6 * (t.clientX - g.lx) / dt + .4 * g.vx; g.vy = .6 * (t.clientY - g.ly) / dt + .4 * g.vy; g.lx = t.clientX; g.ly = t.clientY; g.lt = e.timeStamp; }
+      if (g.s === 1) poseLb(g.x0 + (G.r.ph.length > 1 ? g.dx : g.dx * .25));
+      else if (g.s === 2) { const dy = Math.max(0, g.dy), k = Math.max(.5, 1 - dy / innerHeight * .8); V.ims[V.o[1]].style.transform = `translate(${g.dx * .9}px,${dy}px) scale(${k})`; V.f.style.transition = 'none'; V.f.style.opacity = Math.max(0, 1 - dy / (innerHeight * .45)); }
+    }, { passive: false });
+    const lacheLb = () => { const im = V.ims[V.o[1]], ici = im.style.transform; lb.classList.remove('tire'); V.f.style.transition = ''; V.f.style.opacity = ''; im.style.transform = ''; if (ici && !RMV) im.animate([{ transform: ici }, { transform: 'translate(0px,0px) scale(1)' }], { duration: 420, easing: 'cubic-bezier(.3,1.35,.5,1)' }); };
+    const finGeste = e => {
+      if (!g) return; const o = g; g = null;
+      if (o.s === 1) { const W = innerWidth, seul = G.r.ph.length < 2, d = seul ? 0 : (V.x < -W * .2 || o.vx < -.45) && V.x < 0 ? 1 : (V.x > W * .2 || o.vx > .45) && V.x > 0 ? -1 : 0; if (d) vaLb(d, o.vx * 1000); else ressortLb(o.vx * 1000); }
+      else if (o.s === 2) { if (e.type === 'touchend' && (o.dy > 110 || o.vy > .55)) fermeLb(); else lacheLb(); }
+    };
+    lb.addEventListener('touchend', finGeste, { passive: true }); lb.addEventListener('touchcancel', finGeste, { passive: true });
+    addEventListener('resize', () => { if (V && !lb.hidden) { V.ims.forEach(im => im.dataset.q && tailleLb(im, +im.dataset.q)); rangeLb(); } });
+    addEventListener('keydown', e => { if (!lb.hidden) { if (e.key === 'ArrowRight') vaLb(1); else if (e.key === 'ArrowLeft') vaLb(-1); else if (e.key === 'Escape') fermeLb(); } else if (!gp.hidden && e.key === 'Escape') fermeGal(); });
   }
   document.addEventListener('click', e => {
     const c = e.target.closest('[data-r]'); if (!c || c.closest('#rail') || c.closest('#gpSim') || !gp) return;
