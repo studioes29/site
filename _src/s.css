@@ -2514,8 +2514,11 @@ body{color:var(--encre)}
 .at:after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(62% 52% at 0% 100%,rgba(16,17,21,.58),rgba(16,17,21,.26) 50%,rgba(16,17,21,0) 82%);transition:opacity .9s var(--e)}
 .at[data-moment=nuit]:after,.at[data-moment=soir]:after{background:radial-gradient(58% 46% at 0% 100%,rgba(16,17,21,.7),rgba(16,17,21,.32) 50%,rgba(16,17,21,0) 82%)}
 .at[data-moment=soir]{color:#F0EEE9}
-.at-vo{position:absolute;inset:0 0 auto;height:170px;z-index:1;pointer-events:none;background:linear-gradient(rgba(16,17,21,.56),rgba(16,17,21,.24) 74px,rgba(16,17,21,0))}
-.at[data-moment=nuit] .at-vo,.at[data-moment=soir] .at-vo{background:linear-gradient(rgba(16,17,21,.78),rgba(16,17,21,.34) 70px,rgba(16,17,21,0))}
+/* voile de lisibilité du menu : il s'arrête au-dessus de l'enseigne, qui tient lieu de titre et ne doit pas être ternie */
+.at-vo{position:absolute;inset:0 0 auto;height:124px;z-index:1;pointer-events:none;background:linear-gradient(rgba(16,17,21,.56),rgba(16,17,21,.22) 62px,rgba(16,17,21,0))}
+.at[data-moment=nuit] .at-vo,.at[data-moment=soir] .at-vo{background:linear-gradient(rgba(16,17,21,.78),rgba(16,17,21,.3) 60px,rgba(16,17,21,0))}
+@media (max-width:860px){.at-vo{height:92px;background:linear-gradient(rgba(16,17,21,.5),rgba(16,17,21,.2) 50px,rgba(16,17,21,0))}
+.at[data-moment=nuit] .at-vo,.at[data-moment=soir] .at-vo{background:linear-gradient(rgba(16,17,21,.7),rgba(16,17,21,.28) 50px,rgba(16,17,21,0))}}
 .at.at-zoom:after{opacity:0}
 .at:before{opacity:.05;mix-blend-mode:multiply}
 .at[data-moment=nuit]:before{mix-blend-mode:screen}

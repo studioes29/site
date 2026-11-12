@@ -91,7 +91,7 @@ import { Bureau } from '/js/atelier/bureau.js?v=2';
     /* ---------- shaders ---------- */
     const VS = 'attribute vec2 p;varying vec2 u;void main(){u=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}';
     const FS = `precision highp float;varying vec2 u;
-uniform sampler2D tA,tB,tM,tD,tS,tP,tC,tK,tF,tG;uniform vec4 uW;uniform mat3 uFs,uFp,uFq,uGs,uGp,uGq;uniform vec4 uR,uDR,uRC,uKR,uAP;uniform vec2 uPar,uTx,uTea;uniform float uHovA,uMix,uHov,uT,uFl,uNe,uPl,uSt,uDu,uB,uK,uCM,uKF,uKOn,uCZ,uOn,uNm,uNj;uniform vec3 uDol;uniform vec3 uE;uniform vec4 uNR;
+uniform sampler2D tA,tB,tM,tD,tS,tP,tC,tK,tF,tG;uniform vec4 uW;uniform mat3 uFs,uFp,uFq,uGs,uGp,uGq;uniform vec4 uR,uDR,uRC,uKR,uAP;uniform vec2 uPar,uTx,uTea;uniform float uHovA,uMix,uHov,uT,uFl,uNe,uPl,uSt,uDu,uB,uK,uCM,uKF,uKOn,uCZ,uOn,uNm,uNj,uHum;uniform vec3 uDol;uniform vec3 uE;uniform vec4 uNR;
 uniform mat3 uHs,uHp,uHl,uHs2,uHp2;
 float zid(vec2 q){return floor(texture2D(tM,q).r*255./20.+.5);}
 float h21(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
@@ -121,6 +121,7 @@ void main(){
   if(dans(l2)&&z==2.){vec2 la=vec2(l2.x*.829,l2.y);c=mix(c,texture2D(tP,la).rgb*uB*.9*uE.z+c*.05,bord(l2,vec2(300.,200.)));}
   c=grade(c);
   if(z==9.)c=uNj>.5?mix(vec3(.74,.71,.68),c,uNe):c*uNe;
+  c*=1.-uHum*nh;
   if(uSt>0.){vec2 l=(q-uTea)/vec2(.022,.07);l.y=-l.y;if(l.y>0.&&l.y<1.4&&abs(l.x)<1.2){float n=fbm(vec2(l.x*2.2+sin(l.y*3.-uT*.8)*.6,l.y*2.-uT*.55));float m=smoothstep(.45,.85,n)*(1.-smoothstep(.2,1.4,l.y))*smoothstep(1.2,.2,abs(l.x))*smoothstep(0.,.15,l.y);c+=vec3(.95)*m*.22*uSt;}}
   if(uDu>0.&&q.x>uDR.x&&q.x<uDR.z&&q.y>uDR.y&&q.y<uDR.w){vec2 g=(q+vec2(uT*.004,-uT*.0025))*vec2(160.,90.);vec2 i=floor(g);vec2 o=vec2(h21(i),h21(i+7.3))*.8+.1;float b=smoothstep(.06,0.,length(fract(g)-o))*step(.86,h21(i+3.1))*(.5+.5*sin(uT*1.5+h21(i)*40.));c+=vec3(1.,.95,.85)*b*.3*uDu;}
   float zh=z>10.5?2.:z;if(uHov>0.&&uW.x>.99&&uHovA>.001&&zh==uHov){c=c*(1.+.035*uHovA)+.008*uHovA;}
@@ -459,7 +460,8 @@ void main(){
       const na = (t - neT) / 1000; let ne = ne0;
       if (na < 1.6) ne = (Math.sin(na * 47) > .2 || na > 1.2) ? 1 : .25;
       /* l'enseigne vit : un léger frémissement du tube, le soir */
-      if (SOIR && it.fin && !RM) ne *= 1 - .04 * (.5 + .5 * Math.sin(el * 11.3)) * (.5 + .5 * Math.sin(el * 2.3 + 1));
+      /* le frémissement passe par le halo entier, lettres et lueur ensemble : modulé au pixel par le masque, il pointillait le bord des tubes */
+      gl.uniform1f(U('uHum'), SOIR && it.fin && !RM ? .035 * (.5 + .5 * Math.sin(el * 11.3)) * (.5 + .5 * Math.sin(el * 2.3 + 1)) : 0);
       gl.uniform1f(U('uNe'), ne);
       /* la pièce vit : curseur sur le site Fill, diaporama sur le portable, messages sur le téléphone */
       if (!RM && t - demoT > (MOB ? 50 : 33)) {
