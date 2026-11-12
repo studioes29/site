@@ -7,6 +7,7 @@ import { Bureau } from '/js/atelier/bureau.js?v=2';
   const C = H.querySelector('.at-c'), eti = H.querySelector('.at-eti'), pan = H.querySelector('.at-pan');
   const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const MOB = matchMedia('(max-width: 860px)').matches, V = MOB ? 'p' : 'l';
+  const VR = '?2';   /* version des rendus : à changer quand les images sont recalculées, pour ne pas mêler anciens et nouveaux fichiers en cache */
   const R = '/js/atelier/r/', LENT = +(new URLSearchParams(location.search).get('lent') || 1);
 
   /* ---------- l'heure du visiteur ---------- */
@@ -19,7 +20,7 @@ import { Bureau } from '/js/atelier/bureau.js?v=2';
   const SOIR = moment === 'soir' || moment === 'nuit';
   let dejaVu = false; try { dejaVu = !!sessionStorage.getItem('at-vu'); sessionStorage.setItem('at-vu', '1'); } catch (e) {}
   const INTRO = RM ? 0 : (dejaVu && !/[?&]arrivee/.test(location.search)) ? 1 : 2;
-  const poseFond = () => { H.style.setProperty('--at-img', 'url("' + nom(lampe) + '")'); H.style.removeProperty('background'); };
+  const poseFond = () => { H.style.setProperty('--at-img', 'url("' + nom(lampe) + VR + '")'); H.style.removeProperty('background'); };
   if (INTRO) { H.classList.add('at-intro'); H.style.background = SOIR ? '#0F1013' : '#16150F'; } else poseFond();
 
   /* ---------- panneau et puces (fonctionnent même sans WebGL) ---------- */
@@ -43,12 +44,12 @@ import { Bureau } from '/js/atelier/bureau.js?v=2';
   /* ---------- WebGL ---------- */
   const gl = C.getContext('webgl', { antialias: false, alpha: false, preserveDrawingBuffer: false });
   if (!gl) { H.classList.remove('at-intro'); poseFond(); return; }
-  const charge = (u) => new Promise((ok, ko) => { const i = new Image(); i.decoding = 'async'; i.onload = () => ok(i); i.onerror = ko; i.src = u; });
+  const charge = (u) => new Promise((ok, ko) => { const i = new Image(); i.decoding = 'async'; i.onload = () => ok(i); i.onerror = ko; i.src = u.indexOf(R) === 0 ? u + VR : u; });
   const ZID = { photo: 1, web: 2, graph: 3, fill: 4, contact: 5, lampe: 6, plante: 7, tasse: 8, neon: 9, declic: 10 };
   const ZNOM = Object.fromEntries(Object.entries(ZID).map(([k, v]) => [v, k])); ZNOM[11] = 'web'; ZNOM[12] = 'chat';
   const INFO = { photo: 'Photographie · les reportages', web: 'Web · sites et applications', graph: 'Design graphique · identités et campagnes', fill: 'Fill · la communication externalisée', contact: 'Contact · parlons de votre projet', declic: 'Déclic · le jeu', lampe: 'La lampe', tasse: 'Un café ?', neon: 'Le néon', plante: 'La plante', chat: 'Le chat' };
 
-  Promise.all([fetch(R + V + '.json').then(r => r.json()), charge(nom(lampe)).catch(() => charge(R + V + '-jour-0.webp')), charge(R + V + '-mask.png'), charge(R + V + '-depth.webp'), charge('/p/t/helena-7.webp'),
+  Promise.all([fetch(R + V + '.json' + VR).then(r => r.json()), charge(nom(lampe)).catch(() => charge(R + V + '-jour-0.webp')), charge(R + V + '-mask.png'), charge(R + V + '-depth.webp'), charge('/p/t/helena-7.webp'),
     INTRO && SOIR ? charge(R + V + '-' + moment + '-n.webp').catch(() => null) : null, INTRO && SOIR && !MOB ? charge(nom(false)).catch(() => null) : null])
     .then(a => demarre(...a)).catch(e => { H.classList.remove('at-intro'); poseFond(); console.warn('atelier', e); });
 

@@ -288,7 +288,7 @@ NK = NS / .09; NJ = MOMENT in ('jour', 'matin')
 bpy.ops.object.text_add(location=(NX, WALL - .008, NZ), rotation=(math.pi / 2, 0, 0)); tx = bpy.context.object; tx.name = 'neon'
 tx.data.body = 'Studio ES'; tx.data.font = bpy.data.fonts.load('/tmp/rd/ur.ttf'); tx.data.size = NS; tx.data.align_x = 'CENTER'
 tx.data.extrude = .0; tx.data.bevel_depth = .0028 * NK ** .5; tx.data.fill_mode = 'NONE'
-tx.data.materials.append(emis('neonm', tuple(float(v) for v in os.environ.get('NEON_C', ('1,.13,.33' if MOMENT == 'jour' else '1,.3,.42') if NJ else '1,.36,.46').split(',')), float(os.environ.get('NEON_E', {'jour': 2.9, 'matin': 8}.get(MOMENT, 9)))) if neon_on else mat('neonoff', hexc('#EFE7E2'), .32, sss=.2))
+tx.data.materials.append(emis('neonm', tuple(float(v) for v in os.environ.get('NEON_C', '1,.3,.42' if NJ else '1,.36,.46').split(',')), float(os.environ.get('NEON_E', {'jour': 5.5, 'matin': 8}.get(MOMENT, 9)))) if neon_on else mat('neonoff', hexc('#EFE7E2'), .32, sss=.2))
 zone(tx, 'neon')
 if neon_on:
     bpy.ops.object.light_add(type='AREA', location=(NX, WALL - .12, NZ + .03 * NK)); nl = bpy.context.object; nl.data.size = .4 * NK; nl.data.size_y = .12 * NK
