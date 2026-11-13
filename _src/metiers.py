@@ -106,7 +106,7 @@ VITRINE = [
     ('fill', 'Fill', 'Marque, site et simulateur', '/projets/fill/',
      'Un nom qui se lit deux fois : « fil » en plein, le second « l » au trait. Un fond lavande, un violet franc pour l’action.', [
         ('Accueil', 'Une bascule commune ou entreprise change les exemples, les supports et le vocabulaire de toute la page.', 'ecran', '/projets/fill/img/' + 'd-accueil.webp', '/projets/fill/img/' + 't-accueil.webp', 'fill.studioes.fr'),
-        ('Simulateur', 'Quatre questions ou une composition libre : une formule recommandée, justifiée unité par unité.', 'ecran', '/projets/fill/img/' + 'd-simulateur.webp', '/projets/fill/img/' + 't-simulateur.webp', 'fill.studioes.fr'),
+        ('Simulateur', 'Cinq questions ou une composition libre : une formule recommandée, justifiée unité par unité.', 'ecran', '/projets/fill/img/' + 'd-simulateur.webp', '/projets/fill/img/' + 't-simulateur.webp', 'fill.studioes.fr'),
         ('Fonctionnement', 'Comment une demande arrive, qui la traite et en combien de temps, écrit d’avance.', 'ecran', '/projets/fill/img/' + 'd-fonctionnement.webp', '/projets/fill/img/' + 't-fonctionnement.webp', 'fill.studioes.fr'),
         ('Calendrier', 'Les temps forts de la saison, pour anticiper les campagnes.', 'ecran', '/projets/fill/img/' + 'd-calendrier.webp', '/projets/fill/img/' + 't-calendrier.webp', 'fill.studioes.fr')]),
     ('flouz', 'flouz.', 'Application de budget', '/projets/flouz/',

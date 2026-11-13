@@ -26,7 +26,7 @@ const PHOTOS = [['franglish', 'franglish-3'], ['helena', 'helena-7'], ['rimk', '
 const FILLP = [
   { u: 'fill.studioes.fr', im: '/projets/fill/img/d-accueil.webp' },
   { u: 'fill.studioes.fr/fonctionnement', im: '/projets/fill/img/d-fonctionnement.webp' },
-  { u: 'fill.studioes.fr/estimer', im: '/projets/fill/img/d-simulateur.webp' }
+  { u: 'fill.studioes.fr/simulateur', im: '/projets/fill/img/d-simulateur.webp' }
 ];
 /* trajet du curseur (temps en ms, position sur l'écran 1600 × 900) : clics sur « Fonctionnement », « Estimer », puis le logo */
 const P0 = [700, 540], L1 = [804, 185], R1 = [1060, 470], L2 = [889, 185], R2 = [529, 610], L0 = [291, 185];
