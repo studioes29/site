@@ -429,8 +429,9 @@
     /* geste : le sens est décidé au départ ; à l'horizontale la rangée suit le doigt, vers le bas la photo se détache et le fond s'éclaircit */
     let g = null;
     const zoome = () => window.visualViewport && visualViewport.scale > 1.02;
-    lb.addEventListener('touchstart', e => { if (e.touches.length > 1 || zoome() || fermant || !V) { g = null; return; } const t = e.touches[0]; arretLb(); g = { x: t.clientX, y: t.clientY, x0: V.x, s: 0, dx: 0, dy: 0, vx: 0, vy: 0, lx: t.clientX, ly: t.clientY, lt: e.timeStamp }; }, { passive: true });
-    lb.addEventListener('touchmove', e => {
+    const gDeb = e => { if (e.touches.length > 1 || zoome() || fermant || !V) { g = null; return; } const t = e.touches[0]; arretLb(); g = { x: t.clientX, y: t.clientY, x0: V.x, s: 0, dx: 0, dy: 0, vx: 0, vy: 0, lx: t.clientX, ly: t.clientY, lt: e.timeStamp }; };
+    lb.addEventListener('touchstart', gDeb, { passive: true });
+    const gMvt = e => {
       if (!g) return; if (e.touches.length > 1) { const s = g.s; g = null; if (s === 1) ressortLb(0); else if (s === 2) lacheLb(); return; }
       const t = e.touches[0]; g.dx = t.clientX - g.x; g.dy = t.clientY - g.y;
       if (!g.s) { if (Math.hypot(g.dx, g.dy) < 8) return; g.s = Math.abs(g.dx) > Math.abs(g.dy) ? 1 : g.dy > 0 ? 2 : 3; if (g.s === 2) lb.classList.add('tire'); }
@@ -438,7 +439,8 @@
       const dt = e.timeStamp - g.lt; if (dt > 0) { g.vx = .6 * (t.clientX - g.lx) / dt + .4 * g.vx; g.vy = .6 * (t.clientY - g.ly) / dt + .4 * g.vy; g.lx = t.clientX; g.ly = t.clientY; g.lt = e.timeStamp; }
       if (g.s === 1) poseLb(g.x0 + (G.r.ph.length > 1 ? g.dx : g.dx * .25));
       else if (g.s === 2) { const dy = Math.max(0, g.dy), k = Math.max(.5, 1 - dy / innerHeight * .8); V.ims[V.o[1]].style.transform = `translate(${g.dx * .9}px,${dy}px) scale(${k})`; V.f.style.transition = 'none'; V.f.style.opacity = Math.max(0, 1 - dy / (innerHeight * .45)); }
-    }, { passive: false });
+    };
+    lb.addEventListener('touchmove', gMvt, { passive: false });
     const lacheLb = () => { const im = V.ims[V.o[1]], ici = im.style.transform; lb.classList.remove('tire'); V.f.style.transition = ''; V.f.style.opacity = ''; im.style.transform = ''; if (ici && !RMV) im.animate([{ transform: ici }, { transform: 'translate(0px,0px) scale(1)' }], { duration: 420, easing: 'cubic-bezier(.3,1.35,.5,1)' }); };
     const finGeste = e => {
       if (!g) return; const o = g; g = null;
@@ -446,6 +448,15 @@
       else if (o.s === 2) { if (e.type === 'touchend' && (o.dy > 110 || o.vy > .55)) fermeLb(); else lacheLb(); }
     };
     lb.addEventListener('touchend', finGeste, { passive: true }); lb.addEventListener('touchcancel', finGeste, { passive: true });
+    /* à la souris, le même geste : on attrape la photo, on la lance vers la suivante ou on la tire vers le bas pour refermer */
+    let souris = 0, glisse = 0;
+    const faux = (e, type) => ({ touches: [{ clientX: e.clientX, clientY: e.clientY }], timeStamp: e.timeStamp, type, cancelable: false });
+    lb.addEventListener('dragstart', e => e.preventDefault());
+    lb.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse' || e.button || !e.target.closest('img')) return; souris = 1; glisse = 0; gDeb(faux(e, 'touchstart')); });
+    lb.addEventListener('pointermove', e => { if (!souris) return; gMvt(faux(e, 'touchmove')); if (g && g.s && !glisse) { glisse = 1; lb.classList.add('saisi'); try { lb.setPointerCapture(e.pointerId); } catch (_) {} } });
+    const finSouris = e => { if (!souris) return; souris = 0; lb.classList.remove('saisi'); finGeste(faux(e, e.type === 'pointerup' ? 'touchend' : 'touchcancel')); };
+    lb.addEventListener('pointerup', finSouris); lb.addEventListener('pointercancel', finSouris);
+    lb.addEventListener('click', e => { if (glisse) { glisse = 0; e.stopImmediatePropagation(); } }, true);
     addEventListener('resize', () => { if (V && !lb.hidden) { V.ims.forEach(im => im.dataset.q && tailleLb(im, +im.dataset.q)); rangeLb(); } });
     addEventListener('keydown', e => { if (!lb.hidden) { if (e.key === 'ArrowRight') vaLb(1); else if (e.key === 'ArrowLeft') vaLb(-1); else if (e.key === 'Escape') fermeLb(); } else if (!gp.hidden && e.key === 'Escape') fermeGal(); });
   }
